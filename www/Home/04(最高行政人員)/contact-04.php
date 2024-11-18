@@ -7,11 +7,7 @@ $userData = $_SESSION['user'];
 $userId = $userData['user'];
 $query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
-//if (mysqli_num_rows($result) > 0) {
-// $userDetails = mysqli_fetch_assoc($result);  
-//} else {
-// echo "找不到使用者的詳細資料";
-//}
+
 ?>
 <!Doctype html>
 <html class="no-js" lang="">
