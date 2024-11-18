@@ -1,0 +1,177 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>競賽歷程上傳</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
+        <!-- 引入CSS樣式 -->
+        <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
+        <link rel="stylesheet" href="assets/css/LineIcons.2.0.css">
+        <link rel="stylesheet" href="assets/css/animate.css">
+        <link rel="stylesheet" href="assets/css/main.css">
+    </head>
+    <body>
+
+        <!-- 頁首區塊 -->
+        <header class="header navbar-area">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg">
+                    <a class="navbar-brand" href="index-01.html">
+                        <img src="schoolimages/uknlogo.png" alt="Logo">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="toggler-icon"></span>
+                        <span class="toggler-icon"></span>
+                        <span class="toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                        <ul id="nav" class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a href="Access-Control.html" class="page-scroll">權限管理</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- 標題區塊 -->
+        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="banner-content">
+                            <h2 class="text-white">競賽歷程上傳</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 表單區塊 -->
+        <section id="service" class="service-section pt-130 pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
+                        <div class="section-title text-center mb-55">
+                            <span class="wow fadeInDown" data-wow-delay=".2s">競賽歷程上傳</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <form id="permission-form" action="Change-permissions.php" method="POST" enctype="multipart/form-data">
+                        <div class="form-group mb-3">
+                            <label for="username">學號：</label>
+                            <input type="text" id="username" name="username" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="username">年級：</label>
+                            <input type="text" id="grade" name="grade" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="username">姓名：</label>
+                            <input type="text" id="name" name="name" class="form-control" readonly>
+                        </div>
+                
+                        <!-- 競賽名稱欄位 -->
+                        <div class="form-group mb-3">
+                            <label for="competition-name">競賽名稱：</label>
+                            <input type="text" id="competition-name" name="competition_name" class="form-control" required>
+                        </div>
+                
+                        <!-- 上傳圖片按鈕 -->
+                        <div class="form-group mb-3">
+                            <label for="competition-image">上傳競賽圖片：</label>
+                            <input type="file" id="competition-image" name="competition_image" class="form-control" accept="image/*">
+                        </div>
+                
+                        <button type="submit" class="btn btn-primary">點擊上傳</button>
+                    </form>
+                </div>
+                
+            </div>
+        </section>
+
+    <!-- ========================= footer start ========================= -->
+    <footer class="footer pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
+                        <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
+                        
+                        <ul class="footer-contact"> 
+                            <h3>關於我們</h3>                                                        
+                            <p>(02)2632-1181/0986-212-566</p>                                
+                                <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>                             
+                        </ul>
+                        <style>
+                            .footer .row {
+                            display: flex;
+                            align-items: center; /* 垂直居中 */
+                            justify-content: space-between; /* 讓兩個區塊分居左右 */
+                            }
+                            .footer-widget {                                   
+                            text-align: right; /* 讓「關於學校」內容靠右對齊 */
+                            }
+                        </style>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright-area">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="footer-social-links">
+                            <ul class="d-flex">
+                                <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ========================= footer end ========================= -->
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // 解析 URL 中的參數
+                var urlParams = new URLSearchParams(window.location.search);
+                var username = urlParams.get('user');
+                var username = urlParams.get('grade');
+
+                // 將參數填入表單
+                if (username && currentPermission) {
+                    document.getElementById('user').value = username;
+                    document.getElementById('grade').value = grade;
+                }
+            });
+        </script>
+		<script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
+		<script src="assets/js/contact-form.js"></script>
+        <script src="assets/js/count-up.min.js"></script>
+        <script src="assets/js/tiny-slider.js"></script>
+        <script src="assets/js/isotope.min.js"></script>
+        <script src="assets/js/glightbox.min.js"></script>
+        <script src="assets/js/wow.min.js"></script>
+		<script src="assets/js/imagesloaded.min.js"></script>
+		<script src="assets/js/main.js"></script>      
+    </body>
+</html>
