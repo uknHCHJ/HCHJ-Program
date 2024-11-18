@@ -12,6 +12,7 @@ $user = $_POST['user'];
 $oldpass = $_POST['oldpass'];
 $newpass = $_POST['newpass'];
 
+
 if (empty($oldpass) || empty($newpass)) {
     echo "<script>alert('請輸入所有欄位'); window.location.href = 'changepassword-01.html';</script>";
     exit();
