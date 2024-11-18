@@ -10,7 +10,6 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-
 $userData = $_SESSION['user']; //
 
 // 在SESSION 中儲存了唯一識別符（例如 user_id 或 username）
