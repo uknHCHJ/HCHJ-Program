@@ -7,6 +7,7 @@ $dbname = "HCHJ";
 // 建立資料庫連線
 $link = new mysqli($servername, $username, $password, $dbname);
 
+
 // 檢查連線
 if ($link){
     mysqli_query($link,'SET NAMES UTF8');
