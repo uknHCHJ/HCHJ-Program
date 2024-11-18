@@ -84,26 +84,33 @@ $result = mysqli_query($link, $query2);
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="contact02-1.php">個人資料</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">比賽資訊</a>
+                                    <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="blog-03(競賽).php">比賽資訊</a></li>
-                                        <li class="nav-item"><a href="create-03.php">新增</a></li>
-                                        <li class="nav-item"><a href="delete-03.php">編輯比賽資訊</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="blog-03(競賽).php">新增校園</a></li>
-                                        <li class="nav-item"><a href="create-03.php">編輯詳細資料</a></li>
+                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
                                     <a class="page-scroll" href="student02-1.php">學生管理</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">二技校園網</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Schoolnetwork1.php">首頁</a></li>
+                                        <li class="nav-item"><a href="AddSchool1.php">新增校園</a></li>
+                                        <li class="nav-item"><a href="SchoolDepartment1.php">編輯詳細資料</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">比賽資訊</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog1.php">查看</a></li>
+                                        <li class="nav-item"><a href="AddContest1.php">新增</a></li>
+                                        <li class="nav-item"><a href="ContestEdin1.php">編輯</a></li>
+                                    </ul>
+                                </li>
+
+
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
