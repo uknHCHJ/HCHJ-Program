@@ -23,7 +23,7 @@ $sql = "UPDATE School SET school_name = '".$name."',location = '".$location."',i
 
 if ($conn->query($sql) === TRUE) {
   echo "刪除成功";
-    header("Location:SchoolUpdate1-04.php?school_id=" . $ID);
+    header("Location:SchoolEdit1-04.php?school_id=" . $ID);
   }else{
     echo "刪除失敗";
     header("Location:SchoolUpdate1-04.php?school_id=" . $ID);
