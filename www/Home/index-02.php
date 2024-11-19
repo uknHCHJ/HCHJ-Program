@@ -98,7 +98,7 @@ $result = mysqli_query($link, $query2);
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="Schoolnetwork1.php">首頁</a></li>
                                         <li class="nav-item"><a href="AddSchool1.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolDepartment1.php">編輯詳細資料</a></li>
+                                        <li class="nav-item"><a href="SchoolEdit1.php">編輯詳細資料</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
@@ -118,10 +118,6 @@ $result = mysqli_query($link, $query2);
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                         </div> <!-- navbar collapse -->
-                    </nav> <!-- navbar -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
 
     </header>
     <!-- ========================= header end ========================= -->
