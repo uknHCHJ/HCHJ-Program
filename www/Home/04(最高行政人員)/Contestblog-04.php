@@ -13,6 +13,16 @@ $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
+$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
+
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -20,7 +30,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>編輯</title>
+        <title>比賽資訊</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -33,9 +43,154 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 		<link rel="stylesheet" href="assets/css/animate.css">
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
-		<link rel="stylesheet" href="assets/css/main.css">
-    </head>
+        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet" />
+       
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.js"></script>
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+    </script>
+        <link rel="stylesheet" href="assets/css/main.css">
+        <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Inline CSS for simplicity */
+        .portfolio-section {
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .portfolio-item-wrapper {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            max-width: 600px;  /* 控制卡片寬度 */
+            margin: 10px auto; /* 讓卡片居中，每個卡片之間有間距 */
+        }
+
+        .portfolio-item-wrapper:hover {
+            transform: translateY(-3px);
+        }
+
+        .portfolio-img img {
+            width: 100%;  /* 縮小圖片寬度 */
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .portfolio-content {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .portfolio-content h5 {
+            font-size: 1.2rem;  /* 調小標題字體大小 */
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .portfolio-content .small-text {
+            font-size: 0.9rem;  /* 調小描述文字大小 */
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .theme-btn {
+            font-size: 0.85rem;  /* 按鈕字體變小 */
+            padding: 6px 12px;   /* 調整按鈕的內邊距 */
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .theme-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<?php
+// 資料庫連接設置
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
+
+// 建立資料庫連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("連線失敗: " . $conn->connect_error);
+}
+
+// 設定時區
+date_default_timezone_set('Asia/Taipei');
+$currentDate = date('Y-m-d');  // 獲取當前日期
+// 查詢未過期的比賽資訊
+$sql = "SELECT name, inform, link, image FROM information WHERE display_end_time >= ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $currentDate);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// 檢查是否有資料
+$competitions = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $competitions[] = $row;
+    }
+} else {
+    echo "目前沒有未過期的比賽資訊。";
+}
+
+// 取得當前年份和月份
+$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+$month = isset($_GET['month']) ? $_GET['month'] : date('m');
+
+// 計算這個月的第一天是星期幾
+$firstDayOfMonth = strtotime("$year-$month-01");
+$firstDayOfWeek = date('w', $firstDayOfMonth); // 0 (星期天) 到 6 (星期六)
+
+// 計算當月的總天數
+$totalDaysInMonth = date('t', $firstDayOfMonth);
+
+// 計算上一個月和下一個月
+$prevMonth = date('m', strtotime("-1 month", strtotime("$year-$month-01")));
+$prevYear = date('Y', strtotime("-1 month", strtotime("$year-$month-01")));
+$nextMonth = date('m', strtotime("+1 month", strtotime("$year-$month-01")));
+$nextYear = date('Y', strtotime("+1 month", strtotime("$year-$month-01")));
+
+// 取得今天的日期
+$today = date('Y-m-d');
+// 關閉資料庫連線
+$conn->close();
+?>
     <body>
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -55,9 +210,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 </div>
             </div>
         <!-- preloader end -->
-
-         <!-- ========================= header start ========================= -->
-         <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -133,13 +287,9 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">二技科系</h2>
+                            <h2 class="text-white">比賽資訊</h2>
                             <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
-                                    </ol>
+                                <nav aria-label="breadcrumb">                                    
                                 </nav>
                             </div>
                         </div>
@@ -148,81 +298,83 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
+       
+        <!-- ========================= blog-section end ========================= -->
+        <section class="blog-section pt-130">
+    <div class="container">
+        <div class="row">
+            <!-- Blog Content -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="left-side-wrapper">
+                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".2s">
+                            <section class="portfolio-section pt-130">
+                                <div class="container">
+                                    <div class="row">
+                                        <?php foreach ($competitions as $competition): ?>
+                                            <div class="col-12 mb-4">
+                                                <div class="portfolio-item-wrapper">
+                                                    <div class="portfolio-img">
+                                                        <img src="data:image/jpeg;base64,<?= base64_encode($competition['image']) ?>" alt="<?= htmlspecialchars($competition['name']) ?>" class="img-fluid">
+                                                    </div>
+                                                    <div class="portfolio-content mt-2">
+                                                        <h5><?= htmlspecialchars($competition['name']) ?></h5>
+                                                        <p class="small-text"><?= htmlspecialchars($competition['inform']) ?></p>
+                                                        <a href="<?= htmlspecialchars($competition['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            
 
-        <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
+            <!-- Sidebar -->
+            <div class="col-xl-4 col-lg-5">
+    <div class="sidebar-wrapper">
+        <!-- 搜索表單 -->
+        <div class="sidebar-box search-form-box mb-30">
+            <form action="Contestsearch.php" method="GET" class="search-form">
+            <input type="text" placeholder="Search..." name="keyword" required>
+                <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
+            </form>
+        </div>
+        <style>
+            #calendar {
+                max-width: 100%;   /* 設定為最大寬度，這樣它會根據容器大小自動調整 */
+                width: 100%;       /* 設定為 100%，使其自動適應容器寬度 */
+                height: 500px;     /* 設定固定高度，也可以根據需求進行調整 */
+                margin: 0 auto;    /* 使日曆水平居中 */
+            }
+        </style>
+            <!-- 當月日曆 -->
+            <div class="sidebar-box recent-blog-box mb-100">
+            <div id="calendar"></div>
+            <!-- 小月曆樣式 -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var calendarEl = document.getElementById('calendar');  // 選擇 id 為 calendar 的 div 元素
 
-//建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',  // 設定預設視圖為月份視圖
+                        locale: 'zh-tw',  // 設定語言為中文
+                    });
 
-//確認連線成功或失敗
-if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
-}
-//echo "連線成功";
-
-// 接收school_id參數
-$school_id = $_GET['school_id'];
-$department_id = $_GET['department_id'];
-$ID = isset($_POST["school_id"]) ? $_POST["school_id"] : NULL;
-
-// 抓取對應學校的科系
-$sql = "SELECT department_id ,department_name FROM Department WHERE school_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $school_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// 準備科系資料陣列
-$departments = array();
-
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $departments[] = $row;
-    }
-    mysqli_free_result($result);
-}
-
-// 抓取學校名稱
-$sql_school = "SELECT school_name FROM School WHERE school_id = ?";
-$stmt_school = $conn->prepare($sql_school);
-$stmt_school->bind_param("i", $school_id);
-$stmt_school->execute();
-$result_school = $stmt_school->get_result();
-$school_name = $result_school->fetch_assoc()['school_name'];
-
-?>
-      <!-- ========================= service-section start ========================= -->
-      <body>
-      <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
-    <h2 class="text-center" style="font-size: 3em; line-height: 1.2;"><?= $school_name ?></h2><br>
-    <table class="table table-hover text-center" style="width: 50%; font-size: 1.4em; line-height: 1.5;">
-        <thead>
-            <tr>
-                <th>序號</th>
-                <th>科系名稱</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $index = 1; ?>
-            <?php foreach ($departments as $department) : ?>
-                <tr>
-                    <td><?= $index++ ?></td>
-                    <td><?= htmlspecialchars($department['department_name']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <a href="Schoolnetwork1-04.php" class="btn btn-secondary">返回上一頁</a>
+                    calendar.render();  // 渲染日曆
+                });
+            </script>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+        </div>
+    </div>
 </section>
-</body>
-<!-- ========================= service-section end ========================= -->
-
-
-
+        <!-- ========================= blog-section end ========================= -->
 
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
@@ -264,7 +416,7 @@ $school_name = $result_school->fetch_assoc()['school_name'];
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>
