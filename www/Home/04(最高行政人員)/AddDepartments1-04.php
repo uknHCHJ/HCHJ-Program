@@ -12,26 +12,19 @@ $userData = $_SESSION['user'];
 
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (mysqli_num_rows($result) > 0) {
-    $userDetails = mysqli_fetch_assoc($result);  
-}
-
 ?>
 
-<!DOCTYPE html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>升學競賽全方位資源網-首頁</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html>
+<html lang="zh-Hant">
 
-		<link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>新增學校科系</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
+
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
         <!-- Place favicon.ico in the root directory -->
 
 		<!-- ========================= CSS here ========================= -->
@@ -41,33 +34,68 @@ if (mysqli_num_rows($result) > 0) {
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
 		<link rel="stylesheet" href="assets/css/main.css">
-    </head>
-    <body>
-        <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
 
-        <!-- ========================= preloader start ========================= -->
-            <div class="preloader">
-                <div class="loader">
-                    <div class="ytp-spinner">
-                        <div class="ytp-spinner-container">
-                            <div class="ytp-spinner-rotator">
-                                <div class="ytp-spinner-left">
-                                    <div class="ytp-spinner-circle"></div>
-                                </div>
-                                <div class="ytp-spinner-right">
-                                    <div class="ytp-spinner-circle"></div>
-                                </div>
-                            </div>
+<?php
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
+
+// 建立資料庫連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查連線
+if ($conn->connect_error) {
+    die("連線失敗: " . $conn->connect_error);
+}
+
+$school_id = $_GET['school_id'];
+
+// 查詢科系資料
+$sql = "SELECT department_name FROM department";
+$result = $conn->query($sql);
+
+// 查詢該校已選擇的科系
+$existingDepartments = [];
+$checkSql = "SELECT department_name FROM Department WHERE school_id = ?";
+$checkStmt = $conn->prepare($checkSql);
+$checkStmt->bind_param("s", $school_id);
+$checkStmt->execute();
+$checkResult = $checkStmt->get_result();
+
+while ($row = $checkResult->fetch_assoc()) {
+    $existingDepartments[] = $row['department_name'];
+}
+?>
+
+    <!-- Header 部分省略，保持不變 -->
+
+    <!-- ========================= page-banner-section start ========================= -->
+    <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white">二技學校</h2>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index-03.php">首頁</a></li>
+                                    <li class="breadcrumb-item active">二技校園網介紹</li>
+                                </ol>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
-        <!-- preloader end -->
-
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+        </div>
+    </section>
+    <!-- ========================= page-banner-section end ========================= -->
+    <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -127,40 +155,86 @@ if (mysqli_num_rows($result) > 0) {
             </div> <!-- container -->
         
         </header>
-        <!-- ========================= header end ========================= -->
+        <section id="service" class="service-section pt-20 pb-10"> 
+    <div style="text-align:center;width:100%;height:50px;">
+        <div style="width:70%;height:20px;margin:0 auto;">
+            <span class="wow fadeInDown" data-wow-delay=".2s">
+                <h2>新增科系</h2>
+            </span>
+            <br><br>
+            <form action="AddDepartments2-04.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="school_id" value="<?php echo htmlspecialchars($school_id); ?>">
+                <label for="numChoices">科系數量：</label>
+                <input type="number" id="numChoices" name="numChoices" min="1" max="10" required><br>
+                <div id="selectContainer"></div><br>
+                <button class="btn btn-success" type="submit" onclick="return confirm('確定要新增這些科系嗎？')">送出</button>
+                <br><br>
+                <a href="SchoolDepartment1-04.php?school_id=<?= $school_id ?>" class="btn btn-secondary">返回上一頁</a>
 
-        <!-- ========================= hero-section start ========================= -->
-        <section id="home" class="hero-section">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-5 col-lg-6">
-                        <div class="hero-content-wrapper">
+        </div>
+    </div>
+</section>
 
-                            <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $userDetails['name']; ?></h2>
-                            <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
+<script>
+    // 監聽 "numChoices" 的輸入事件，當用戶更改科系數量時觸發
+    document.getElementById('numChoices').addEventListener('input', function () {
+        var numChoices = parseInt(this.value); // 取得用戶輸入的科系數量，並轉換為整數
+        if (numChoices > 10) { // 如果科系數量超過 10，顯示警告並限制數量
+            alert("最多只能新增 10 筆科系！"); // 提示用戶
+            this.value = 10; // 將輸入值設為 10
+            numChoices = 10; // 更新 numChoices 變量的值
+        }
+        var selectContainer = document.getElementById('selectContainer'); // 取得下拉選單的容器
+        selectContainer.innerHTML = ''; // 清空容器中的所有內容
 
-                            <script>
-                                // JavaScript 函数触发表单提交
-                                function submitLogout() {
-                                    document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                                }
-                            </script>
-                                <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                                <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
-                        </div>
-                    </div>  
-                    <div class="col-xl-7 col-lg-6">
-                        <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                                <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center" data-wow-delay=".5s">                                                          
-                           <!-- </div>
-                        </div>-->
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- ========================= hero-section end ========================= -->
+        // 根據用戶輸入的數量，動態生成下拉選單
+        for (var i = 1; i <= numChoices; i++) {
+            var label = document.createElement('label'); // 創建標籤元素
+            label.innerHTML = ' 科系 ' + i; // 設置標籤的文字
 
+            var select = document.createElement('select'); // 創建下拉選單
+            select.name = 'choice' + i; // 設定下拉選單的 name 屬性
+            select.className = "form-select mb-3"; // 設置下拉選單的樣式
+
+            <?php
+            // 從資料庫抓取科系選項
+            if ($result->num_rows > 0) {
+                echo 'var options = `<option value="">請選擇科系</option>`;'; // 預設選項
+                while($row = $result->fetch_assoc()) {
+                    $departmentName = htmlspecialchars($row["department_name"]);
+                    // 檢查科系是否已存在，並設置相應的樣式
+                    $disabled = in_array($departmentName, $existingDepartments) ? 'style="background-color: lightgray; color: darkgray;" disabled' : '';
+                    echo 'options += `<option value="' . $departmentName . '" ' . $disabled . '>' . $departmentName . '</option>`;';
+                }
+            } else {
+                echo 'var options = `<option value="">無科系資料</option>`;'; // 無科系資料的選項
+            }
+            ?>
+
+            select.innerHTML = options; // 將生成的選項加入到下拉選單中
+            selectContainer.appendChild(label); // 將標籤加入到容器中
+            selectContainer.appendChild(select); // 將下拉選單加入到容器中
+        }
+    });
+</script>
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br>
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
             <div class="container">
@@ -194,8 +268,6 @@ if (mysqli_num_rows($result) > 0) {
             </div>
         </section>
         <!-- ========================= client-logo-section end ========================= -->
-
-
 
         <!-- ========================= footer start ========================= -->
         <footer class="footer pt-100">
@@ -245,6 +317,7 @@ if (mysqli_num_rows($result) > 0) {
         </footer>
         <!-- ========================= footer end ========================= -->
 
+
         <!-- ========================= scroll-top ========================= -->
         <a href="#" class="scroll-top">
             <i class="lni lni-arrow-up"></i>
@@ -258,54 +331,7 @@ if (mysqli_num_rows($result) > 0) {
         <script src="assets/js/isotope.min.js"></script>
         <script src="assets/js/glightbox.min.js"></script>
         <script src="assets/js/wow.min.js"></script>
-        <script src="assets/js/imagesloaded.min.js"></script>
+		<script src="assets/js/imagesloaded.min.js"></script>
 		<script src="assets/js/main.js"></script>
-        
-        <script>
-            //========= glightbox
-            GLightbox({
-                'href': '#',
-                'type': 'video',
-                'source': 'youtube', //vimeo, youtube or local
-                'width': 900,
-                'autoplayVideos': true,
-            });
-
-            //========= testimonial 
-            tns({
-                container: '.testimonial-active',
-                items: 1,
-                slideBy: 'page',
-                autoplay: false,
-                mouseDrag: true,
-                gutter: 0,
-                nav: false,
-                controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-            });
-
-            //============== isotope masonry js with imagesloaded
-            imagesLoaded( '#container', function() {
-                var elem = document.querySelector('.grid');
-                var iso = new Isotope(elem, {
-                    // options
-                    itemSelector: '.grid-item',
-                    masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                    }
-                });
-
-                let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-                filterButtons.forEach(e =>
-                    e.addEventListener('click', () => {
-
-                        let filterValue = event.target.getAttribute('data-filter');
-                        iso.arrange({
-                            filter: filterValue
-                        });
-                    })
-                );
-            });
-        </script>
     </body>
 </html>

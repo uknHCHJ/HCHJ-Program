@@ -12,22 +12,14 @@ $userData = $_SESSION['user'];
 
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (mysqli_num_rows($result) > 0) {
-    $userDetails = mysqli_fetch_assoc($result);  
-}
-
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>升學競賽全方位資源網-首頁</title>
+        <title>修改資料</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,9 +35,6 @@ if (mysqli_num_rows($result) > 0) {
 		<link rel="stylesheet" href="assets/css/main.css">
     </head>
     <body>
-        <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -129,38 +118,121 @@ if (mysqli_num_rows($result) > 0) {
         </header>
         <!-- ========================= header end ========================= -->
 
-        <!-- ========================= hero-section start ========================= -->
-        <section id="home" class="hero-section">
+        <!-- ========================= page-banner-section start ========================= -->
+        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-5 col-lg-6">
-                        <div class="hero-content-wrapper">
-
-                            <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $userDetails['name']; ?></h2>
-                            <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
-
-                            <script>
-                                // JavaScript 函数触发表单提交
-                                function submitLogout() {
-                                    document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                                }
-                            </script>
-                                <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                                <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="banner-content">
+                            <h2 class="text-white">修改</h2>
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">二技學校</li><a href="blog-03(競賽).php"></a></li>
+                                    </ol>
+                                </nav>
+                            </div>
                         </div>
-                    </div>  
-                    <div class="col-xl-7 col-lg-6">
-                        <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                                <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center" data-wow-delay=".5s">                                                          
-                           <!-- </div>
-                        </div>-->
                     </div>
                 </div>
             </div>
         </section>
-        <!-- ========================= hero-section end ========================= -->
+        <!-- ========================= page-banner-section end ========================= -->
 
+        <?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
+
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+//echo "連線成功";
+
+$adm_pk=$_GET['school_id'];
+//echo $adm_pk;
+// 設置一個空陣列來放資料
+$datas = array();
+
+$sql = "SELECT * FROM School WHERE school_id='".$adm_pk."'"; // sql語法存在變數中
+//$sql = "SELECT ID, name, inform, link FROM information";// sql語法存在變數中
+//$sql = "UPDATE `information` SET `name` = '457', `inform` = '4567', `link` = '4567', `image_path` = '4567' WHERE `information`.`ID` = 68";
+//$sql = "SELECT ID, name, inform, link FROM information WHERE ID='".$adm_pk."'";// sql語法存在變數中
+
+$result = mysqli_query($conn, $sql); // 用mysqli_query方法執行(sql語法)將結果存在變數中
+
+// 如果有資料
+if ($result) {
+    // mysqli_num_rows方法可以回傳我們結果總共有幾筆資料
+    if (mysqli_num_rows($result) > 0) {
+        // 取得大於0代表有資料
+        // while迴圈會根據資料數量，決定跑的次數
+        // mysqli_fetch_assoc方法可取得一筆值
+        while ($row = mysqli_fetch_assoc($result)) {
+            // 每跑一次迴圈就抓一筆值，最後放進data陣列中
+            $datas[] = $row;
+        }
+    }
+    // 釋放資料庫查到的記憶體
+    mysqli_free_result($result);
+} else {
+    echo "{$sql} 語法執行失敗，錯誤訊息: " . mysqli_error($link);
+}
+// 處理完後印出資料
+if (!empty($result)) {
+    // 如果結果不為空，就利用print_r方法印出資料
+    // print_r($datas);
+    //echo($datas[0]['adm_name']);
+} else {
+    // 為空表示沒資料
+    echo "查無資料";
+}
+echo "<br><br>";
+//echo $datas[0]['sf_name']; // 印出第0筆資料中的sf_name欄位值
+
+//使用表格排版用while印出
+$datas_len = count($datas); //目前資料筆數
+
+?>
+      <!-- ========================= service-section start ========================= -->
+      <body>        
+    <div style="text-align:center;width:100%;height:50px;">
+        　<div style="width:30%;height:10px;margin:0 auto;">
+        <h2 class="margin_top50">二技校園</h2><br>
+            <form method="post" action="SchoolUpdate2-04.php?school_id=<?php echo $datas[0]['school_id']?>">
+                學校名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['school_name'] ?>" name="school_name"><br>
+                地區：<input type="text" class="form-control" value="<?php echo $datas[0]['location'] ?>" name="location"><br>
+                學校資訊： <textarea class="form-control" name="inform" rows="5"><?php echo $datas[0]['inform'] ?></textarea><br>
+                連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
+                <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該學校相關資料嗎？')" value="修改">
+                
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+        </div>
+    </div>
+</section>
+<!-- ========================= service-section end ========================= -->
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br>
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
             <div class="container">
@@ -194,8 +266,6 @@ if (mysqli_num_rows($result) > 0) {
             </div>
         </section>
         <!-- ========================= client-logo-section end ========================= -->
-
-
 
         <!-- ========================= footer start ========================= -->
         <footer class="footer pt-100">
@@ -245,6 +315,7 @@ if (mysqli_num_rows($result) > 0) {
         </footer>
         <!-- ========================= footer end ========================= -->
 
+
         <!-- ========================= scroll-top ========================= -->
         <a href="#" class="scroll-top">
             <i class="lni lni-arrow-up"></i>
@@ -258,54 +329,7 @@ if (mysqli_num_rows($result) > 0) {
         <script src="assets/js/isotope.min.js"></script>
         <script src="assets/js/glightbox.min.js"></script>
         <script src="assets/js/wow.min.js"></script>
-        <script src="assets/js/imagesloaded.min.js"></script>
+		<script src="assets/js/imagesloaded.min.js"></script>
 		<script src="assets/js/main.js"></script>
-        
-        <script>
-            //========= glightbox
-            GLightbox({
-                'href': '#',
-                'type': 'video',
-                'source': 'youtube', //vimeo, youtube or local
-                'width': 900,
-                'autoplayVideos': true,
-            });
-
-            //========= testimonial 
-            tns({
-                container: '.testimonial-active',
-                items: 1,
-                slideBy: 'page',
-                autoplay: false,
-                mouseDrag: true,
-                gutter: 0,
-                nav: false,
-                controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-            });
-
-            //============== isotope masonry js with imagesloaded
-            imagesLoaded( '#container', function() {
-                var elem = document.querySelector('.grid');
-                var iso = new Isotope(elem, {
-                    // options
-                    itemSelector: '.grid-item',
-                    masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                    }
-                });
-
-                let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-                filterButtons.forEach(e =>
-                    e.addEventListener('click', () => {
-
-                        let filterValue = event.target.getAttribute('data-filter');
-                        iso.arrange({
-                            filter: filterValue
-                        });
-                    })
-                );
-            });
-        </script>
     </body>
 </html>

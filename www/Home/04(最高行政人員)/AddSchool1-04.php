@@ -13,21 +13,14 @@ $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (mysqli_num_rows($result) > 0) {
-    $userDetails = mysqli_fetch_assoc($result);  
-}
-
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>升學競賽全方位資源網-首頁</title>
+        <title>新增二技校園</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -41,11 +34,61 @@ if (mysqli_num_rows($result) > 0) {
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
 		<link rel="stylesheet" href="assets/css/main.css">
+
+        <style>
+    /* 設定容器和表單樣式 */
+    .form-container {
+        text-align: center;
+        width: 100%;
+        max-width: 500px; /* 設定最大寬度 */
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* 調整標籤樣式 */
+    label {
+        display: block;
+        text-align: left;
+        font-weight: bold;
+        font-size: 1.2em; /* 增加字型大小 */
+        margin-top: 10px;
+    }
+
+    /* 設定 select、input 和 textarea 的樣式與大小 */
+    select, input[type="text"], textarea, input[type="file"], input[type="date"] {
+        width: 100%;
+        max-width: 500px; /* 設定欄位最大寬度 */
+        margin-top: 10px;
+        padding: 8px;
+        font-size: 1em;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    /* 設定按鈕樣式 */
+    button {
+        font-size: 1.2em; /* 增加按鈕字型大小 */
+        padding: 10px 20px;
+    }
+</style>
     </head>
+    <?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
+
+
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+?>
+
     <body>
-        <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -65,7 +108,6 @@ if (mysqli_num_rows($result) > 0) {
                 </div>
             </div>
         <!-- preloader end -->
-
         <!-- ========================= header start ========================= -->
         <header class="header navbar-area">
             <div class="container">
@@ -129,38 +171,55 @@ if (mysqli_num_rows($result) > 0) {
         </header>
         <!-- ========================= header end ========================= -->
 
-        <!-- ========================= hero-section start ========================= -->
-        <section id="home" class="hero-section">
+        <!-- ========================= page-banner-section start ========================= -->
+        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-5 col-lg-6">
-                        <div class="hero-content-wrapper">
-
-                            <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $userDetails['name']; ?></h2>
-                            <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
-
-                            <script>
-                                // JavaScript 函数触发表单提交
-                                function submitLogout() {
-                                    document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                                }
-                            </script>
-                                <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                                <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="banner-content">
+                            <h2 class="text-white">新增</h2>
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
+                                    </ol>
+                                </nav>
+                            </div>
                         </div>
-                    </div>  
-                    <div class="col-xl-7 col-lg-6">
-                        <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                                <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center" data-wow-delay=".5s">                                                          
-                           <!-- </div>
-                        </div>-->
                     </div>
                 </div>
             </div>
         </section>
-        <!-- ========================= hero-section end ========================= -->
-
+        <!-- ========================= page-banner-section end ========================= -->
+        <section  class="service-section pt-20 pb-10">
+    <div class="form-container">
+        <h2>二技校園</h2>
+        <form action="AddSchool2-04.php" method="post" enctype="multipart/form-data"><br>
+            <label for="location">學校所在區域：</label>
+            <select name="location" id="location" required>
+                <option value="北部">北部</option>
+                <option value="中部">中部</option>
+                <option value="南部">南部</option>
+                <option value="東部">東部</option>
+                <option value="離島">離島</option>
+            </select><br>
+            <label for="school_name">學校名稱：</label>
+            <input type="text" id="school_name" name="school_name" required><br>
+            <label for="inform">學校資訊：</label>
+            <textarea id="inform" name="inform" rows="3" required></textarea><br>
+            <label for="link">學校連結：</label>
+            <input type="text" id="link" name="link" required><br>
+            <label for="image">校徽圖片：</label>
+            <input type="file" id="image" name="image" required><br>
+            <br>
+            <button class='btn btn-success' onclick="return confirm('確定要新增該學校嗎？')">送出</button>
+        </form>
+    </div>
+    </div>
+    </div>
+    </div>
+        <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
             <div class="container">
@@ -187,15 +246,11 @@ if (mysqli_num_rows($result) > 0) {
                         <div class="client-logo">
                             <img src="schoolimages/uknnurse.jpg" alt="">
                         </div>
-
-                        
                     </div>
                 </div>
             </div>
         </section>
         <!-- ========================= client-logo-section end ========================= -->
-
-
 
         <!-- ========================= footer start ========================= -->
         <footer class="footer pt-100">
@@ -245,6 +300,7 @@ if (mysqli_num_rows($result) > 0) {
         </footer>
         <!-- ========================= footer end ========================= -->
 
+
         <!-- ========================= scroll-top ========================= -->
         <a href="#" class="scroll-top">
             <i class="lni lni-arrow-up"></i>
@@ -258,54 +314,7 @@ if (mysqli_num_rows($result) > 0) {
         <script src="assets/js/isotope.min.js"></script>
         <script src="assets/js/glightbox.min.js"></script>
         <script src="assets/js/wow.min.js"></script>
-        <script src="assets/js/imagesloaded.min.js"></script>
+		<script src="assets/js/imagesloaded.min.js"></script>
 		<script src="assets/js/main.js"></script>
-        
-        <script>
-            //========= glightbox
-            GLightbox({
-                'href': '#',
-                'type': 'video',
-                'source': 'youtube', //vimeo, youtube or local
-                'width': 900,
-                'autoplayVideos': true,
-            });
-
-            //========= testimonial 
-            tns({
-                container: '.testimonial-active',
-                items: 1,
-                slideBy: 'page',
-                autoplay: false,
-                mouseDrag: true,
-                gutter: 0,
-                nav: false,
-                controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-            });
-
-            //============== isotope masonry js with imagesloaded
-            imagesLoaded( '#container', function() {
-                var elem = document.querySelector('.grid');
-                var iso = new Isotope(elem, {
-                    // options
-                    itemSelector: '.grid-item',
-                    masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                    }
-                });
-
-                let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-                filterButtons.forEach(e =>
-                    e.addEventListener('click', () => {
-
-                        let filterValue = event.target.getAttribute('data-filter');
-                        iso.arrange({
-                            filter: filterValue
-                        });
-                    })
-                );
-            });
-        </script>
     </body>
 </html>

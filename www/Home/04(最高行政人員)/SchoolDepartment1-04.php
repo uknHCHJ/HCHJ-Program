@@ -12,22 +12,14 @@ $userData = $_SESSION['user'];
 
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (mysqli_num_rows($result) > 0) {
-    $userDetails = mysqli_fetch_assoc($result);  
-}
-
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>升學競賽全方位資源網-首頁</title>
+        <title>編輯</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,9 +35,6 @@ if (mysqli_num_rows($result) > 0) {
 		<link rel="stylesheet" href="assets/css/main.css">
     </head>
     <body>
-        <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -129,37 +118,109 @@ if (mysqli_num_rows($result) > 0) {
         </header>
         <!-- ========================= header end ========================= -->
 
-        <!-- ========================= hero-section start ========================= -->
-        <section id="home" class="hero-section">
+        <!-- ========================= page-banner-section start ========================= -->
+        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-5 col-lg-6">
-                        <div class="hero-content-wrapper">
-
-                            <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $userDetails['name']; ?></h2>
-                            <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
-
-                            <script>
-                                // JavaScript 函数触发表单提交
-                                function submitLogout() {
-                                    document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                                }
-                            </script>
-                                <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                                <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="banner-content">
+                            <h2 class="text-white">科系</h2>
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
+                                    </ol>
+                                </nav>
+                            </div>
                         </div>
-                    </div>  
-                    <div class="col-xl-7 col-lg-6">
-                        <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                                <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center" data-wow-delay=".5s">                                                          
-                           <!-- </div>
-                        </div>-->
                     </div>
                 </div>
             </div>
         </section>
-        <!-- ========================= hero-section end ========================= -->
+        <!-- ========================= page-banner-section end ========================= -->
+
+        <?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
+
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+//echo "連線成功";
+
+// 接收school_id參數
+$school_id = $_GET['school_id'];
+$department_id = $_GET['department_id'];
+$ID = isset($_POST["school_id"]) ? $_POST["school_id"] : NULL;
+
+// 抓取對應學校的科系
+$sql = "SELECT department_id ,department_name FROM Department WHERE school_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $school_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// 準備科系資料陣列
+$departments = array();
+
+if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $departments[] = $row;
+    }
+    mysqli_free_result($result);
+}
+
+// 抓取學校名稱
+$sql_school = "SELECT school_name FROM School WHERE school_id = ?";
+$stmt_school = $conn->prepare($sql_school);
+$stmt_school->bind_param("i", $school_id);
+$stmt_school->execute();
+$result_school = $stmt_school->get_result();
+$school_name = $result_school->fetch_assoc()['school_name'];
+
+?>
+      <!-- ========================= service-section start ========================= -->
+      <body>
+      <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
+    <h2 class="text-center" style="font-size: 2rem;"><?= $school_name ?></h2>
+    <table class="table table-hover text-center" style="width: 70%; font-size: 1.2rem;">
+        <thead>
+            <tr>
+                <th>序號</th>
+                <th>科系名稱</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $index = 1; ?>
+            <?php foreach ($departments as $department) : ?>
+                <tr>
+                    <td><?= $index++ ?></td>
+                    <td><?= htmlspecialchars($department['department_name']) ?></td>
+                    <td>
+                        <!-- 傳送 school_id 和 department_id 到 dbportfolio(刪除科系)-03.php -->
+                        <a href="DeleteDepartment2-04.php?department_id=<?= $department['department_id'] ?>&school_id=<?= $school_id ?>" class="btn btn-primary" onclick="return confirm('確定要刪除該科系資料嗎？')">刪除</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+  
+    <a href="AddDepartments1-04.php?school_id=<?= $school_id ?>" class="btn btn-success">新增</a><br>
+    <a href="SchoolEdit1-04.php" class="btn btn-secondary">返回上一頁</a>
+</section>
+</body>
+<!-- ========================= service-section end ========================= -->
+
+
+
 
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
@@ -186,16 +247,12 @@ if (mysqli_num_rows($result) > 0) {
                         </div>
                         <div class="client-logo">
                             <img src="schoolimages/uknnurse.jpg" alt="">
-                        </div>
-
-                        
+                        </div>                        
                     </div>
                 </div>
             </div>
         </section>
         <!-- ========================= client-logo-section end ========================= -->
-
-
 
         <!-- ========================= footer start ========================= -->
         <footer class="footer pt-100">
@@ -245,6 +302,7 @@ if (mysqli_num_rows($result) > 0) {
         </footer>
         <!-- ========================= footer end ========================= -->
 
+
         <!-- ========================= scroll-top ========================= -->
         <a href="#" class="scroll-top">
             <i class="lni lni-arrow-up"></i>
@@ -258,54 +316,7 @@ if (mysqli_num_rows($result) > 0) {
         <script src="assets/js/isotope.min.js"></script>
         <script src="assets/js/glightbox.min.js"></script>
         <script src="assets/js/wow.min.js"></script>
-        <script src="assets/js/imagesloaded.min.js"></script>
+		<script src="assets/js/imagesloaded.min.js"></script>
 		<script src="assets/js/main.js"></script>
-        
-        <script>
-            //========= glightbox
-            GLightbox({
-                'href': '#',
-                'type': 'video',
-                'source': 'youtube', //vimeo, youtube or local
-                'width': 900,
-                'autoplayVideos': true,
-            });
-
-            //========= testimonial 
-            tns({
-                container: '.testimonial-active',
-                items: 1,
-                slideBy: 'page',
-                autoplay: false,
-                mouseDrag: true,
-                gutter: 0,
-                nav: false,
-                controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-            });
-
-            //============== isotope masonry js with imagesloaded
-            imagesLoaded( '#container', function() {
-                var elem = document.querySelector('.grid');
-                var iso = new Isotope(elem, {
-                    // options
-                    itemSelector: '.grid-item',
-                    masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                    }
-                });
-
-                let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-                filterButtons.forEach(e =>
-                    e.addEventListener('click', () => {
-
-                        let filterValue = event.target.getAttribute('data-filter');
-                        iso.arrange({
-                            filter: filterValue
-                        });
-                    })
-                );
-            });
-        </script>
     </body>
 </html>
