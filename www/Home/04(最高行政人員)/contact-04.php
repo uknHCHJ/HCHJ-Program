@@ -94,17 +94,17 @@ $result = mysqli_query($link, $query);
                                         <ul class="sub-menu">
                                         <li class="nav-item"><a href="Schoolnetwork1-04.php">首頁</a></li>
                                         <li class="nav-item"><a href="AddSchool1-04.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="portfolio delete-04(編輯).php">編輯資訊</a></li>                                        
+                                        <li class="nav-item"><a href="SchoolEdit1-04.php">編輯資訊</a></li>                                        
                                         </ul>
-                                    </li>
+                                    </li> 
                                     <li class="nav-item">
-                                        <a class="page-scroll dd-menu" href="javascript:void(0)">比賽資訊</a>
+                                        <a class="nav-item dd-menu" >比賽資訊</a>           
                                         <ul class="sub-menu">
-                                        <li class="nav-item"><a href="blog-04(競賽).php">查看</a></li>
-                                            <li class="nav-item"><a href="create-04.php">新增</a></li>
-                                            <li class="nav-item"><a href="delete-04.php">編輯</a></li>
-                                        </ul>                                      
-                                    </li>
+                                        <li class="nav-item"><a href="Contestblog1-04.php">查看</a></li>
+                                            <li class="nav-item"><a href="AddContest1-04.php">新增</a></li>
+                                            <li class="nav-item"><a href="ContestEdin1-04.php">編輯</a></li>
+                                        </ul>
+                                    </li>  
                                     <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
                                     </li>
