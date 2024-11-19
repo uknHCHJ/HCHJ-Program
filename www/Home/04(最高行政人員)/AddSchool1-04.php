@@ -12,17 +12,6 @@ $userData = $_SESSION['user'];
 
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (!isset($_SESSION['user'])) {
-    echo("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
-    exit();
-}
 ?>
 
 <!doctype html>
@@ -124,7 +113,7 @@ if ($conn->connect_error) {
                 <div class="row align-items-center">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="index-03.php">
+                            <a class="navbar-brand" href="index-04.php">
                                 <img src="schoolimages/uknlogo.png" alt="Logo">
                             </a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -134,41 +123,52 @@ if ($conn->connect_error) {
                                 <span class="toggler-icon"></span>
                                 <span class="toggler-icon"></span>
                             </button>
-
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                                <ul id="nav" class="navbar-nav ml-auto">                                    
+                                <ul id="nav" class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <li class="nav-item"><a href="index-03.php">首頁</a></li>
+                                        <a href="index-04.php">首頁</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-item dd-menu">個人資料</a>           
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
                                         <ul class="sub-menu">
-                                        <li class="nav-item"><a href="contact-03(個人資料).php">查看個人資料</a></li>
-                                        <li class="nav-item"><a href="changepassword-01.html(修改密碼)">修改密碼</a></li>
+                                            <li class="nav-item"><a href="contact-04.php">查看個人資料</a></li>
+                                            <li class="nav-item"><a href="../changepassword-01.html">修改密碼</a></li>
                                         </ul>
-                                    </li>       
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">班級管理</a>
+                                        <ul class="sub-menu">
+                                            <li class="nav-item"><a href="Contest-history1.php">查看學生備審資料</a></li>
+                                            <li class="nav-item"><a href="order1.php">查看志願序</a></li>
+                                            <li class="nav-item"><a href="Contest-history1.php">查看競賽歷程</a></li>
+                                        </ul>
+                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-item dd-menu">二技校園網</a>           
                                         <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="portfolio delete-03(編輯).php">編輯資訊</a></li>
+                                        <li class="nav-item"><a href="Schoolnetwork1-04.php">首頁</a></li>
+                                        <li class="nav-item"><a href="AddSchool1-04.php">新增校園</a></li>
+                                        <li class="nav-item"><a href="portfolio delete-04(編輯).php">編輯資訊</a></li>                                        
                                         </ul>
-                                    </li>        
+                                    </li>
                                     <li class="nav-item">
-                                        <a class="nav-item dd-menu" >比賽資訊</a>           
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">比賽資訊</a>
                                         <ul class="sub-menu">
-                                        <li class="nav-item"><a href="blog-03(競賽).php">查看</a></li>
-                                            <li class="nav-item"><a href="create-03.php">新增</a></li>
-                                            <li class="nav-item"><a href="delete-03.php">編輯</a></li>
-                                        </ul>
-                                    </li>              
+                                        <li class="nav-item"><a href="blog-04(競賽).php">查看</a></li>
+                                            <li class="nav-item"><a href="create-04.php">新增</a></li>
+                                            <li class="nav-item"><a href="delete-04.php">編輯</a></li>
+                                        </ul>                                      
+                                    </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
-                                    </li>              
+                                    </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
-                                    </li>                                                                                                   
+                                    </li> 
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="../logout.php" >登出</a>
+                                    </li>                           
+                                </ul>
                             </div> <!-- navbar collapse -->
                         </nav> <!-- navbar -->
                     </div>
@@ -188,7 +188,7 @@ if ($conn->connect_error) {
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
                                     </ol>
                                 </nav>
@@ -265,7 +265,7 @@ if ($conn->connect_error) {
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>

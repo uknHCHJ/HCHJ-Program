@@ -114,9 +114,9 @@ $userId= $userData['user'];
                                     <li class="nav-item">
                                         <a class="page-scroll dd-menu" href="javascript:void(0)">比賽資訊</a>
                                         <ul class="sub-menu">
-                                        <li class="nav-item"><a href="blog-03(競賽).php">查看</a></li>
-                                            <li class="nav-item"><a href="create-03.php">新增</a></li>
-                                            <li class="nav-item"><a href="delete-03.php">編輯</a></li>
+                                        <li class="nav-item"><a href="blog-04(競賽).php">查看</a></li>
+                                            <li class="nav-item"><a href="create-04.php">新增</a></li>
+                                            <li class="nav-item"><a href="delete-04.php">編輯</a></li>
                                         </ul>                                      
                                     </li>
                                     <li class="nav-item">

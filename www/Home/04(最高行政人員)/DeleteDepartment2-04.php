@@ -23,7 +23,7 @@ $sql ="DELETE FROM Department WHERE department_id = '".$department_id."'";
 
 if ($conn->query($sql) === TRUE) {
     echo "刪除成功";
-    header("Location: portfolio create-03(顯示科系).php?school_id=" . $school_id);
+    header("Location: portfolio create-04(顯示科系).php?school_id=" . $school_id);
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
