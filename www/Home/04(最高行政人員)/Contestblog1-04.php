@@ -327,7 +327,7 @@ $conn->close();
     <div class="sidebar-wrapper">
         <!-- 搜索表單 -->
         <div class="sidebar-box search-form-box mb-30">
-            <form action="Contestsearch1.php" method="GET" class="search-form">
+            <form action="Contestsearch1-04.php" method="GET" class="search-form">
             <input type="text" placeholder="Search..." name="keyword" required>
                 <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
             </form>
