@@ -1,35 +1,36 @@
 <?php
 session_start();
-/** 資料庫連線 */
-$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if ($link) {
-  mysqli_query($link, 'SET NAMES UTF8');
+include 'db.php';
 
-} else {
-  echo "資料庫連接失敗: " . mysqli_connect_error();
+if (!isset($_SESSION['user'])) {
+    echo "未登入";
+    header("Location:/~HCHJ/index.html");
+    exit();
 }
+
 $userData = $_SESSION['user'];
+
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
-$userId= $userData['user'];
-$query1 = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$query2 = sprintf("SELECT name FROM `user` WHERE name = '%s'", mysqli_real_escape_string($link, $username));
-$result = mysqli_query($link, $query1);
-$result = mysqli_query($link, $query2);
-//if (mysqli_num_rows($result) > 0) {
-   // $userDetails = mysqli_fetch_assoc($result);  
-//} else {
-   // echo "找不到使用者的詳細資料";
-//}
+$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
+$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
+
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 ?>
-
-<!DOCTYPE html>
+<!Doctype html>
 <html class="no-js" lang="">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>升學競賽全方位資源網</title>
+    <title>二技校園介紹網</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -46,11 +47,6 @@ $result = mysqli_query($link, $query2);
 </head>
 
 <body>
-    <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
-
-    <!-- ========================= preloader start ========================= -->
     <div class="preloader">
         <div class="loader">
             <div class="ytp-spinner">
@@ -69,8 +65,8 @@ $result = mysqli_query($link, $query2);
     </div>
     <!-- preloader end -->
 
-   <!-- ========================= header start ========================= -->
-   <header class="header navbar-area">
+<!-- ========================= header start ========================= -->
+<header class="header navbar-area">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-12">
@@ -131,30 +127,108 @@ $result = mysqli_query($link, $query2);
 
 </header>
 <!-- ========================= header end ========================= -->
+<?php
+$servername = "127.0.0.1"; // 伺服器IP或localhost
+$username = "HCHJ"; // 資料庫登入帳號
+$password = "xx435kKHq"; // 資料庫密碼
+$dbname = "HCHJ"; // 資料庫名稱
+
+// 建立與資料庫的連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查連線是否成功
+if ($conn->connect_error) {
+    die("連線失敗: " . $conn->connect_error);
+}
 
 
-    <!-- ========================= hero-section start ========================= -->
-    <section id="home" class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-5 col-lg-6">
-                    <div class="hero-content-wrapper">
-                        <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎</h2>
-                        <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s"><?php echo "歡迎使用者 " . $username;?> </h1>
-                        <a href="/~HCHJ/Home/Schoolnetwork-01.php" class="theme-btn" >二技校園網介紹</a>
-                        <a href="/~HCHJ/logout.php" class="theme-btn" >登出</a>
-                    </div>
-                </div>
-                <div class="col-xl-7 col-lg-6">
-                            <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" data-wow-delay=".5s"> 
-                </div>
-            </div>
+// SQL 查詢語句，用來獲取學校資訊
+$sql = "SELECT school_id, school_name, location, inform, link FROM School";
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    // 將每筆資料放入資料陣列中
+    $schools = array();
+    while ($row = $result->fetch_assoc()) {
+        $schools[] = $row;
+    }
+    $result->free();
+} else {
+    echo "<p>目前無學校資料顯示。</p>";
+}
+
+// 關閉資料庫連線
+$conn->close();
+?>
+
+<!-- ========================= portfolio-section start ========================= -->
+<section class="portfolio-section pt-130">
+    <div id="container" class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="portfolio-btn-wrapper">
+                    <button class="portfolio-btn active" data-filter="*">全部</button>
+                    <button class="portfolio-btn" data-filter=".north">北部</button>
+                    <button class="portfolio-btn" data-filter=".central">中部</button>
+                    <button class="portfolio-btn" data-filter=".south">南部</button>
+                    <button class="portfolio-btn" data-filter=".east">東部</button>
+                    <button class="portfolio-btn" data-filter=".islands">離島</button>
+                    <div class="row grid">
+    <?php
+    // 顯示每筆學校資料
+    foreach ($schools as $school) {
+        // 取得地區並轉成小寫進行判斷
+        $location = strtolower($school["location"]);
+        
+        // 設置地區分類
+        switch ($location) {
+            case "北部":
+                $location_class = "north";
+                break;
+            case "中部":
+                $location_class = "central";
+                break;
+            case "南部":
+                $location_class = "south";
+                break;
+            case "東部":
+                $location_class = "east";
+                break;
+            case "離島":
+                $location_class = "islands";
+                break;
+            default:
+                $location_class = "unknown"; // 可選的預設值
+                break;
+        }
+
+        // 顯示學校圖片及資訊
+        echo "<div class='col-lg-4 col-md-10 grid-item $location_class'>";
+        echo "    <div class='portfolio-item-wrapper'>";
+        echo "        <div class='portfolio-img'>";
+        // 動態顯示圖片的 URL，指向顯示圖片的 PHP 文件
+        echo "            <img src='dbportfolio_image2.php?id=" . $school['school_id'] . "' alt='" . htmlspecialchars($school["school_name"]) . "'>";
+        echo "        </div>";
+        echo "        <div class='portfolio-overlay'>";
+        echo "            <div class='overlay-content'>";
+        echo "                <h4>" . htmlspecialchars($school["school_name"]) . "</h4>";
+        echo "                <p>" . htmlspecialchars($school["inform"]) . "</p>";
+        echo "<a href='" . htmlspecialchars($school["link"]) . "' class='theme-btn border-btn' target='_blank'>查看詳細資料</a>";
+        echo "<a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='theme-btn border-btn' target='_blank'>二技科系</a>";
+        echo "            </div>";
+        echo "        </div>";
+        echo "    </div>";
+        echo "</div>";
+    }
+    ?>
+</div>
         </div>
-    </section>
-    <!-- ========================= hero-section end ========================= -->
+    </div>
+</section>
+    <!-- ========================= portfolio-section end ========================= -->
 
-    <!-- ========================= client-logo-section start ========================= -->
-    <section class="client-logo-section pt-100">
+     <!-- ========================= client-logo-section start ========================= -->
+     <section class="client-logo-section pt-100">
             <div class="container">
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
@@ -254,27 +328,6 @@ $result = mysqli_query($link, $query2);
     <script src="assets/js/main.js"></script>
 
     <script>
-        //========= glightbox
-        GLightbox({
-            'href': '#',
-            'type': 'video',
-            'source': 'youtube', //vimeo, youtube or local
-            'width': 900,
-            'autoplayVideos': true,
-        });
-
-        //========= testimonial 
-        tns({
-            container: '.testimonial-active',
-            items: 1,
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            nav: false,
-            controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-        });
-
         //============== isotope masonry js with imagesloaded
         imagesLoaded('#container', function () {
             var elem = document.querySelector('.grid');

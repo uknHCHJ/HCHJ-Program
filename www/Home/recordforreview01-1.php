@@ -12,8 +12,8 @@ $userData = $_SESSION['user']; //
 
 // 在SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 從 SESSION 中獲取 user_id 
-
-?>
+$username = $userData['name']
+    ?>
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -56,69 +56,68 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
         </div>
     </div>
     <!-- preloader end -->
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-01.php">
-                            <img src="schoolimages/uknlogo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
+   <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg">
+                    <a class="navbar-brand" href="index-01.php">
+                        <img src="schoolimages/uknlogo.png" alt="Logo">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="toggler-icon"></span>
+                        <span class="toggler-icon"></span>
+                        <span class="toggler-icon"></span>
+                    </button>
 
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                            <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">查看個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="/~HCHJ/changepassword-01.html">修改密碼</a>
-                                        </li>
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">個人資料</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">備審資料</a>
-                                    <ul class="sub-menu">
-                                        
-                                        <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/blog-01(比賽資訊).php">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">志願序</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a
-                                                href="/~HCHJ/Home/optional(填選志願1)-01.php">選填志願</a></li>
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional(志願顯示).php">編輯</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
+                    <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                        <ul id="nav" class="navbar-nav ml-auto">
 
-                            </ul>
-                        </div> <!-- navbar collapse -->
-                    </nav> <!-- navbar -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
+                        <li class="nav-item">
+                        <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a></li>                                </ul> 
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-item dd-menu">備審資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板(無使用)</a></li>
+                                </ul> 
+                            </li>
+                            <li class="nav-item"> 
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a></li>
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a></li>
+                                </ul> 
+                            </li>
+                            <li class="nav-item">
+                            <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                          
+                            </li>
+                        </ul>
+                    </div> <!-- navbar collapse -->
+                </nav> <!-- navbar -->
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
 
-    </header>
-    <!-- ========================= header end ========================= -->
+</header>
+<!-- ========================= header end ========================= -->
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
@@ -131,7 +130,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">學生競賽歷程</li>
+                                    <li class="breadcrumb-item active" aria-current="page">備審紀錄</li>
                                 </ol>
                             </nav>
                         </div>
@@ -210,9 +209,9 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 
                 /* 表格樣式設定 */
                 #table-select {
-                    width: 7000px;
+                    width: 5000px;
                     /* 設定下拉式選單寬度為 100% */
-                    max-width: 7000px;
+                    max-width: 600px;
                     /* 可以根據需要設定最大寬度 */
                     margin: 20px auto;
                     /* 讓下拉式選單居中 */
@@ -305,27 +304,27 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 
                 /* 設定欄位寬度   上傳次數 */
                 #data-table th:nth-child(1) {
-                    width: 900px;
+                    width: 800px;
                 }
 
                 /* 日期 */
                 #data-table th:nth-child(2) {
-                    width: 600px;
+                    width: 400px;
                 }
 
                 /* 檔名 */
                 #data-table th:nth-child(3) {
-                    width: 3000px;
+                    width: 1000px;
                 }
 
                 /* 下載備審 */
                 #data-table th:nth-child(4) {
-                    width: 1200px;
+                    width: 1500px;
                 }
 
                 /* 刪除備審 */
                 #data-table th:nth-child(5) {
-                    width: 1200px;
+                    width: 1500px;
                 }
             </style>
 
@@ -345,7 +344,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                         </tr>
                     </thead>
                     <?php
-                    $sql = "SELECT * FROM file ORDER BY id DESC";
+                    $sql = "SELECT * FROM `file` WHERE `username`='$username' ORDER BY `file`.`upload_date` DESC";
                     $result = mysqli_query($link, $sql);
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo '<tr>';
@@ -369,9 +368,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                         </td>';
 
                         echo '</tr>';
-
                     }
-
                     ?>
                     <script>
                         // 函數用來顯示兩次確認的彈出視窗
@@ -388,7 +385,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                             return false; // 如果取消，則阻止表單提交
                         }
                     </script>
-                    
+
                     <tbody>
 
                     </tbody>
@@ -427,7 +424,8 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                 </nav>
 
                 <div class="button-container">
-                    <button type="submit" class="download-button" onclick="window.location.href='/~HCHJ/Home/upload01-1php';">新增備審</button>
+                    <button type="submit" class="download-button"
+                        onclick="window.location.href='upload01-1.php';">新增備審</button>
                 </div>
             </div>
 </body>
@@ -436,7 +434,6 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 
 </section>
 <!-- ========================= service-section end ========================= -->
-
 
 
 

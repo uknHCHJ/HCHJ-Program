@@ -4,22 +4,33 @@ include 'db.php';
 
 if (!isset($_SESSION['user'])) {
     echo "未登入";
-    header("Location:/~HCHJ/index.php");
+    header("Location:/~HCHJ/index.html");
     exit();
 }
 
-$userData = $_SESSION['user']; 
+$userData = $_SESSION['user'];
 
-// 在SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$userId = $userData['user']; // 從 SESSION 中獲取 user_id
-$username=$userData['name']; 
+// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
+
+$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
+
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 ?>
+
 <!doctype html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>查看競賽紀錄</title>
+        <title>比賽資訊</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -32,9 +43,154 @@ $username=$userData['name'];
 		<link rel="stylesheet" href="assets/css/animate.css">
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
-		<link rel="stylesheet" href="assets/css/main.css">
-    </head>
+        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet" />
+       
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.js"></script>
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+    </script>
+        <link rel="stylesheet" href="assets/css/main.css">
+        <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Inline CSS for simplicity */
+        .portfolio-section {
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .portfolio-item-wrapper {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            max-width: 600px;  /* 控制卡片寬度 */
+            margin: 10px auto; /* 讓卡片居中，每個卡片之間有間距 */
+        }
+
+        .portfolio-item-wrapper:hover {
+            transform: translateY(-3px);
+        }
+
+        .portfolio-img img {
+            width: 100%;  /* 縮小圖片寬度 */
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .portfolio-content {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .portfolio-content h5 {
+            font-size: 1.2rem;  /* 調小標題字體大小 */
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .portfolio-content .small-text {
+            font-size: 0.9rem;  /* 調小描述文字大小 */
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .theme-btn {
+            font-size: 0.85rem;  /* 按鈕字體變小 */
+            padding: 6px 12px;   /* 調整按鈕的內邊距 */
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .theme-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<?php
+// 資料庫連接設置
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
+
+// 建立資料庫連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("連線失敗: " . $conn->connect_error);
+}
+
+// 設定時區
+date_default_timezone_set('Asia/Taipei');
+$currentDate = date('Y-m-d');  // 獲取當前日期
+// 查詢未過期的比賽資訊
+$sql = "SELECT name, inform, link, image FROM information WHERE display_end_time >= ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $currentDate);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// 檢查是否有資料
+$competitions = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $competitions[] = $row;
+    }
+} else {
+    echo "目前沒有未過期的比賽資訊。";
+}
+
+// 取得當前年份和月份
+$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+$month = isset($_GET['month']) ? $_GET['month'] : date('m');
+
+// 計算這個月的第一天是星期幾
+$firstDayOfMonth = strtotime("$year-$month-01");
+$firstDayOfWeek = date('w', $firstDayOfMonth); // 0 (星期天) 到 6 (星期六)
+
+// 計算當月的總天數
+$totalDaysInMonth = date('t', $firstDayOfMonth);
+
+// 計算上一個月和下一個月
+$prevMonth = date('m', strtotime("-1 month", strtotime("$year-$month-01")));
+$prevYear = date('Y', strtotime("-1 month", strtotime("$year-$month-01")));
+$nextMonth = date('m', strtotime("+1 month", strtotime("$year-$month-01")));
+$nextYear = date('Y', strtotime("+1 month", strtotime("$year-$month-01")));
+
+// 取得今天的日期
+$today = date('Y-m-d');
+// 關閉資料庫連線
+$conn->close();
+?>
     <body>
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -54,9 +210,8 @@ $username=$userData['name'];
                 </div>
             </div>
         <!-- preloader end -->
-
-    <!-- ========================= header start ========================= -->
-   <header class="header navbar-area">
+  <!-- ========================= header start ========================= -->
+  <header class="header navbar-area">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-12">
@@ -118,20 +273,15 @@ $username=$userData['name'];
 </header>
 <!-- ========================= header end ========================= -->
 
-
         <!-- ========================= page-banner-section start ========================= -->
-        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
+        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">查看競賽紀錄</h2>
+                            <h2 class="text-white">比賽資訊</h2>
                             <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">查看競賽紀錄</li>
-                                    </ol>
+                                <nav aria-label="breadcrumb">                                    
                                 </nav>
                             </div>
                         </div>
@@ -140,297 +290,83 @@ $username=$userData['name'];
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
-
-
-      <!-- ========================= service-section start ========================= -->
-<section id="service" class="service-section pt-130 pb-100">
+       
+        <!-- ========================= blog-section end ========================= -->
+        <section class="blog-section pt-130">
     <div class="container">
         <div class="row">
-            <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
-                <div class="section-title text-center mb-55">
-                    <span class="wow fadeInDown" data-wow-delay=".2s">查看競賽紀錄</span>
+            <!-- Blog Content -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="left-side-wrapper">
+                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".2s">
+                            <section class="portfolio-section pt-130">
+                                <div class="container">
+                                    <div class="row">
+                                        <?php foreach ($competitions as $competition): ?>
+                                            <div class="col-12 mb-4">
+                                                <div class="portfolio-item-wrapper">
+                                                    <div class="portfolio-img">
+                                                        <img src="data:image/jpeg;base64,<?= base64_encode($competition['image']) ?>" alt="<?= htmlspecialchars($competition['name']) ?>" class="img-fluid">
+                                                    </div>
+                                                    <div class="portfolio-content mt-2">
+                                                        <h5><?= htmlspecialchars($competition['name']) ?></h5>
+                                                        <p class="small-text"><?= htmlspecialchars($competition['inform']) ?></p>
+                                                        <a href="<?= htmlspecialchars($competition['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            
+
+            <!-- Sidebar -->
+            <div class="col-xl-4 col-lg-5">
+    <div class="sidebar-wrapper">
+        <!-- 搜索表單 -->
+        <div class="sidebar-box search-form-box mb-30">
+            <form action="Contestsearch.php" method="GET" class="search-form">
+            <input type="text" placeholder="Search..." name="keyword" required>
+                <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
+            </form>
+        </div>
+        <style>
+            #calendar {
+                max-width: 100%;   /* 設定為最大寬度，這樣它會根據容器大小自動調整 */
+                width: 100%;       /* 設定為 100%，使其自動適應容器寬度 */
+                height: 500px;     /* 設定固定高度，也可以根據需求進行調整 */
+                margin: 0 auto;    /* 使日曆水平居中 */
+            }
+        </style>
+            <!-- 當月日曆 -->
+            <div class="sidebar-box recent-blog-box mb-100">
+            <div id="calendar"></div>
+            <!-- 小月曆樣式 -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var calendarEl = document.getElementById('calendar');  // 選擇 id 為 calendar 的 div 元素
+
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',  // 設定預設視圖為月份視圖
+                        locale: 'zh-tw',  // 設定語言為中文
+                    });
+
+                    calendar.render();  // 渲染日曆
+                });
+            </script>
+                    </div>
                 </div>
             </div>
-                                    
-        </div>
-
-        <style>
-            /* 表格樣式設定 */
-            #table-select {
-                width: 100%; /* 設定下拉式選單寬度為 100% */
-                max-width: 600px; /* 可以根據需要設定最大寬度 */
-                margin: 20px auto; /* 讓下拉式選單居中 */
-            }
-            .table-container {
-                max-width: 600px;
-                margin: 0 auto; /* 表格居中 */
-                padding: 20px;
-                background-color: white;
-                border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            }
-
-            table {
-                table-layout: auto;
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            th, td {
-                padding: 10px;
-                border: 1px solid #ccc;
-                text-align: center;
-                white-space: nowrap;
-            }
-
-            th {
-                background-color: #6A7C92;
-                color: white;
-            }
-
-            td {
-                background-color: #f9f9f9;
-            }
-
-            /* 表格淡入動畫 */
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(-20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .table-container {
-                animation: fadeIn 1s ease-in-out;
-            }
-
-             /* ... (other styles) */
-
-      #loading {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 10; /* Place the loading indicator on top of other content */
-        justify-content: center;
-        align-items: center;
-      }
-
-      #loading:before {
-        content: "";
-        display: inline-block;
-        border-radius: 4px;
-        width: 100px;
-        height: 100px;
-        border: 6px solid #f3f3f3;
-        border-color: #f3f3f3 transparent #f3f3f3 transparent;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-        </style>
-
-        <div id="loading">   
-            <p>正在載入資料...</p>
-        </div>
-
-    <div class="table-container">
-        <table id="data-table">
-            <thead>
-                <tr>
-                    <th>上傳時間</th> 
-                    <th>競賽名稱</th>
-                    <th>查看競賽圖片</th>
-                    <th>刪除</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
     </div>
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    // 顯示載入動畫
-    document.getElementById('loading').style.display = 'flex';
-
-    // 發送請求到後端取出資料
-    fetch('Contest-history2(學生).php')
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        // 更新表格資料
-        updateStudentTable(data);
-
-        // 隱藏載入動畫
-        document.getElementById('loading').style.display = 'none';
-      })
-      .catch(function(error) {
-        console.error('錯誤:', error);
-        // 隱藏載入動畫
-        document.getElementById('loading').style.display = 'none';
-      });
-  });
-
-  function updateStudentTable(data) {
-    var tbody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
-    tbody.innerHTML = ''; // 清空表格內容
-
-    data.forEach(function(item) {  // 修正：將 `)` 移到這一行的結尾
-        console.log('正在處理項目:', item); // 檢查每一行資料
-        var user = "<?php echo $userId; ?>";
-        var row = tbody.insertRow();
-        var uploadTimeCell = row.insertCell(0);
-        uploadTimeCell.textContent = item.upload_date; // 顯示上傳時間
-        row.insertCell(1).textContent = item.name;
-        var cell = row.insertCell(2);
-        var button = document.createElement('button');
-        button.textContent = '查看圖片';
-        button.classList.add('btn', 'btn-primary');
-
-
-        // 按下按鈕時彈出新視窗顯示圖片並提供下載按鈕
-        button.onclick = function() {
-            var imageUrl = 'download_image.php?competition=' + encodeURIComponent(item.name) + '&user=' + encodeURIComponent(user);
-            openImagePopup(imageUrl);
-        };
-        cell.appendChild(button);
-
-
-        /*button.onclick = function() {
-            var url = 'download_image.php?competition=' + encodeURIComponent(item.name)+'&user=' + encodeURIComponent(user);
-            window.location.href = url; // 重定向到修改權限頁面
-        };
-        cell.appendChild(button);*/
-
-        var deleteCell = row.insertCell(3);
-        var deleteButton = document.createElement('button');
-        deleteButton.textContent = '刪除競賽歷程';
-        deleteButton.classList.add('btn', 'btn-danger');
-        deleteButton.onclick = function() {
-            if (confirm("確定要刪除此競賽歷程嗎？")) {
-                deleteUser(item.username, item.name,item.upload_date); 
-            }
-        };
-        deleteCell.appendChild(deleteButton);
-    });
-
-    function deleteUser(username, name, upload_date) {
-    fetch('delete-Contest.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'username=' + encodeURIComponent(username) + '&name=' + encodeURIComponent(name)+ '&upload_date=' + encodeURIComponent(upload_date) // 修正name的傳遞
-    })
-    .then(function(response) {
-        return response.text();
-    })
-    .then(function(result) {
-        alert(result);
-        // 重新加載資料
-        location.reload();
-    })
-    .catch(function(error) {
-        console.error('錯誤:', error);
-    });
-}
-
-function openImagePopup(imageUrl) {
-    var popup = window.open('', 'ImagePreview', 'width=800,height=600,scrollbars=yes,resizable=yes');
-    
-    popup.document.write(`
-        <html>
-        <head>
-            <title>圖片預覽</title>
-            <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    background-color: #f4f4f9;
-                    padding: 20px;
-                    color: #333;
-                    margin: 0;
-                }
-                img {
-                    max-width: 100%;
-                    height: auto;
-                    border-radius: 10px;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                    margin-bottom: 20px;
-                }
-                .btn {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    text-align: center;
-                    color: #fff;
-                    background-color: #6A7C92;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    text-decoration: none;
-                }
-                .btn:hover {
-                    background-color: #5b6a82;
-                }
-                h1 {
-                    font-size: 24px;
-                    margin-bottom: 10px;
-                    color: #6A7C92;
-                }
-            </style>
-        </head>
-        <body>
-            <h1>競賽資訊預覽</h1>
-            <img src="${imageUrl}" alt="競賽圖片" />
-            <a href="${imageUrl}" download>
-                <button class="btn">下載圖片</button>
-            </a>
-        </body>
-        </html>
-    `);
-    popup.document.close();
-}
-
-}
-</script>
-<div class="text-center mt-4">
-    <button id="upload-record-btn" class="btn btn-success">上傳競賽紀錄</button>
 </div>
-<script>
-document.getElementById('upload-record-btn').onclick = function() {
-    var user = "<?php echo $userId; ?>";
-    var username = "<?php echo $username; ?>"; // 從 PHP 中取到 username
-    window.location.href = 'Upload-Contest(學生).php?user=' + encodeURIComponent(user)+ '&name=' + encodeURIComponent(username);
-};
-</script>
-
-</script>
-</body>
         </div>
     </div>
 </section>
-<!-- ========================= service-section end ========================= -->
-
-
-
+        <!-- ========================= blog-section end ========================= -->
 
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
@@ -472,7 +408,7 @@ document.getElementById('upload-record-btn').onclick = function() {
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-0.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>

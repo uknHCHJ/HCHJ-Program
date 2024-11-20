@@ -60,80 +60,92 @@ $result = mysqli_query($link, $query);
   </div>
   <!-- preloader end -->
 
-  <!-- ========================= header start ========================= -->
-  <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-12">
-          <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="index-01.php">
-              <img src="schoolimages/uknlogo.png" alt="Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-            </button>
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg">
+                    <a class="navbar-brand" href="index-01.php">
+                        <img src="schoolimages/uknlogo.png" alt="Logo">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="toggler-icon"></span>
+                        <span class="toggler-icon"></span>
+                        <span class="toggler-icon"></span>
+                    </button>
 
-            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-              <ul id="nav" class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">查看個人資料</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item active"><a href="/~HCHJ/changepassword-01.html">修改密碼</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">備審資料</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
-                    <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="/~HCHJ/Home/blog-01(比賽資訊).php">比賽資訊</a>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">志願序</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item active"><a href="/~HCHJ/Home/optional(填選志願1)-01.php">選填志願</a></li>
-                    <li class="nav-item active"><a href="/~HCHJ/Home/optional(志願顯示).php">編輯</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                </li>
+                    <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                        <ul id="nav" class="navbar-nav ml-auto">
 
-              </ul>
-            </div> <!-- navbar collapse -->
-          </nav> <!-- navbar -->
-        </div>
-      </div> <!-- row -->
+                        <li class="nav-item">
+                        <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a></li>                                </ul> 
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-item dd-menu">備審資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板(無使用)</a></li>
+                                </ul> 
+                            </li>
+                            <li class="nav-item"> 
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a></li>
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a></li>
+                                </ul> 
+                            </li>
+                            <li class="nav-item">
+                            <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                          
+                            </li>
+                        </ul>
+                    </div> <!-- navbar collapse -->
+                </nav> <!-- navbar -->
+            </div>
+        </div> <!-- row -->
     </div> <!-- container -->
 
-  </header>
-  <!-- ========================= header end ========================= -->
-
+</header>
+<!-- ========================= header end ========================= -->
 
 
 
   <!-- ========================= 橫幅(大標題) start ========================= -->
-  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-12">
-          <div class="banner-content">
-            <h2 class="text-white">個人資料</h2>
-
-          </div>
+  <section class="page-banner-section pt-75 pb-75 img-bg"
+        style="background-image: url('assets/img/bg/common-bg.svg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white">個人資料</h2>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">個人資料</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
   <!-- ========================= 橫幅(大標題) end ========================= -->
   <style>
     /* 按鈕樣式 */
@@ -201,7 +213,7 @@ $result = mysqli_query($link, $query);
                       ?>
 
                       <!-- HTML 和 JavaScript -->
-                      <form enctype="multipart/form-data" action="/~HCHJ/Home/contact-01(個人資料後端).php" method="POST"
+                      <form enctype="multipart/form-data" action="/~HCHJ/Home/contact01-2.php" method="POST"
                         style="height: 200px; max-width: 1000px; margin: auto">
                         <!-- 隱藏的檔案選擇框 -->
                         <input type="file" id="file-input" name="image" accept=".jpg,.jpeg,.png" style="display: none;"
@@ -328,8 +340,8 @@ $result = mysqli_query($link, $query);
                     }
 
                     // 從陣列中顯示班導的名字
-                    echo "班導: " . $teachers[0] . "、". $teachers[1] ;
-                    
+                    echo "班導: " . $teachers[0] . "、" . $teachers[1];
+
                     ?>
                   </p>
                 </div>

@@ -44,12 +44,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
     if ($stmt->execute()) {
       echo "<script>
                   alert('檔案上傳成功');
-                  window.location.href = '/~HCHJ/Home/recordforreview-01(備審紀錄).php';
+                  window.location.href = '/~HCHJ/Home/recordforreview01-1.php';
                 </script>";
     } else {
       echo "<script>
                   alert('檔案上傳失敗: " . $stmt->error . "');
-                  window.location.href = '/~HCHJ/Home/upload-01(上傳備審).php';
+                  window.location.href = '/~HCHJ/Home/upload01-1.php';
                 </script>";
     }
     $stmt->close();
