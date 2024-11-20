@@ -399,7 +399,9 @@ function openImagePopup(imageUrl) {
 
 </script>
 </body>
-<button type="button" class="btn btn-secondary" onclick="window.location.href='Contest-history1.php';">返回上一頁</button>
+<div class="d-flex justify-content-center">
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='Contest-history1.php';">返回上一頁</button>
+</div>
 </section>
 <!-- ========================= service-section end ========================= -->
 
