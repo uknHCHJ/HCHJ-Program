@@ -136,7 +136,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a href="blog-03(競賽).php"></a></li>
                                     </ol>
                                 </nav>
@@ -294,7 +294,7 @@ $total_pages = ceil($total_records / $records_per_page);//假設總記錄數是 
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>

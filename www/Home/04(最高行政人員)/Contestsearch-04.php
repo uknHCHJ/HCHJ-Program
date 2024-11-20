@@ -12,17 +12,6 @@ $userData = $_SESSION['user'];
 
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (!isset($_SESSION['user'])) {
-    echo("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
-    exit();
-}
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -437,7 +426,7 @@ $conn->close();
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>
