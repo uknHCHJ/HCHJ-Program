@@ -23,6 +23,36 @@ if (!isset($_SESSION['user'])) {
                   </script>");
     exit();
 }
+
+
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+
+// SQL 查詢語句，用來獲取學校資訊
+$sql = "SELECT school_id, school_name, location, inform, link FROM School";
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    // 將每筆資料放入資料陣列中
+    $schools = array();
+    while ($row = $result->fetch_assoc()) {
+        $schools[] = $row;
+    }
+    $result->free();
+} else {
+    echo "<p>目前無學校資料顯示。</p>";
+}
+
+// 關閉資料庫連線
+$conn->close();
 ?>
 
 <!doctype html>
@@ -87,9 +117,9 @@ if (!isset($_SESSION['user'])) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                </li>
+                            <li class="nav-item">
+                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                    </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -112,7 +142,7 @@ if (!isset($_SESSION['user'])) {
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="AddCompetition1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
                                 </li>
@@ -125,7 +155,7 @@ if (!isset($_SESSION['user'])) {
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                         </div> <!-- navbar collapse -->
-
+                   
 
     </header>
     <!-- ========================= header end ========================= -->
@@ -142,8 +172,8 @@ if (!isset($_SESSION['user'])) {
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a
-                                        href="blog-03(競賽).php"></a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a
+                                        href="portfolio-03(二技校園網介紹).php"></a></li>
                                 </ol>
                             </nav>
                         </div>
@@ -154,115 +184,82 @@ if (!isset($_SESSION['user'])) {
     </section>
     <!-- ========================= page-banner-section end ========================= -->
 
-    <?php
-    $servername = "127.0.0.1"; //伺服器ip或本地端localhost
-    $username = "HCHJ"; //登入帳號
-    $password = "xx435kKHq"; //密碼
-    $dbname = "HCHJ"; //資料表名稱
-    
-    //建立連線
-    $conn = new mysqli($servername, $username, $password, $dbname);
 
-    //確認連線成功或失敗
-    if ($conn->connect_error) {
-        die("連線失敗" . $conn->connect_error);
-    }
-    //echo "連線成功";
-// 確定當前頁面，默認為第 1 頁
-    $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; //將 page 參數轉換為整數
-    $records_per_page = 10; // 每頁顯示 10 筆資料
-    $offset = ($page - 1) * $records_per_page; //參數沒有傳遞（即 isset() 返回 false），則會使用 1 作為預設值，這意味著當用戶沒有指定頁數時，會顯示第 1 頁
-    
-    // 查詢資料總數
-    $sql_total = "SELECT COUNT(*) AS total FROM School";
-    $result_total = mysqli_query($conn, $sql_total);
-    $row_total = mysqli_fetch_assoc($result_total);
-    $total_records = $row_total['total'];
-
-    // 設置一個空陣列來放資料
-    $sql = "SELECT ID, name FROM information";
-    $result = mysqli_query($conn, $sql);
-
-    // 準備資料陣列
-    $datas = array();
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $datas[] = $row;
-        }
-        mysqli_free_result($result);
-    }
-
-    // 計算總頁數
-    $total_pages = ceil($total_records / $records_per_page);//假設總記錄數是 53 條，每頁顯示 10 條記錄：53 / 10 = 5.3。使用 ceil() 之後，會變成 6，也就是總頁數為 6。
-    
-    ?>
     <!-- ========================= service-section start ========================= -->
 
     <body>
-
         <section id="service" class="service-section pt-10 pb-5">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-6 col-lg-7 col-md-9">
-                        <div class="section-title text-center mb-55">
-                            <span class="wow fadeInDown" data-wow-delay=".2s">
-                                <h2 style="font-size: 1.4em;">詳細資料</h2>
-                            </span>
+                        <div class="section-title text-center mb-30"> <!-- 調整 margin-bottom -->
+                            <h2>二技學校</h2> <!-- 調整標題底部間距 -->
+                            <!-- 分頁標籤導航 -->
+                            <div class="tab-navigation" style="margin-bottom: 15px;"> <!-- 調整導航間距 -->
+                                <ul class="nav nav-pills justify-content-center" id="schoolTabs" role="tablist">
+                                    <?php
+                                    // 生成地區標籤
+                                    $regions = ["北部", "中部", "南部", "東部", "離島"];
+                                    foreach ($regions as $index => $region): ?>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link <?= $index === 0 ? 'active' : '' ?>"
+                                                id="<?= strtolower($region) ?>-tab" data-toggle="tab"
+                                                href="#<?= strtolower($region) ?>" role="tab"
+                                                aria-controls="<?= strtolower($region) ?>"
+                                                aria-selected="<?= $index === 0 ? 'true' : 'false' ?>">
+                                                <?= $region ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <table class="table table-hover text-center" id="list_table"
-                            style="font-size: 1.3em; line-height: 1.5;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%;">序號</th>
-                                    <th style="width: 40%;">比賽名稱</th>
-                                    <th style="width: 20%;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($datas as $index => $data): ?>
-                                    <tr>
-                                        <td><?= $index + 1 ?></td>
-                                        <td><?= $data['name'] ?></td>
-                                        <td>
-                                            <a href="ContestContent1-02.php?ID=<?= $data['ID'] ?>"
-                                                class="btn btn-secondary">詳細</a>
-                                            <a href="Contestupdate1-02.php?ID=<?= $data['ID'] ?>"
-                                                class="btn btn-success">修改</a>
-                                            <a href="ContestDelete2-02.php?pk=<?= $data['ID'] ?>"
-                                                onclick="return confirm('確定要刪除該比賽資訊嗎？')" class="btn btn-danger">刪除</a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <!-- 上一頁按鈕，當前頁為1時禁用 -->
-                                <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <!-- 分頁顯示：動態生成每一頁的頁碼 -->
-                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                    <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-                                        <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-                                    </li>
-                                <?php endfor; ?>
-                                <!-- 下一頁按鈕，當前頁為最後一頁時禁用 -->
-                                <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+
+                <!-- 分頁內容 -->
+                <div class="tab-content" id="schoolTabsContent" style="margin-top: 10px;"> <!-- 調整分頁內容頂部間距 -->
+                    <?php
+                    // Displaying schools by region
+                    foreach ($regions as $index => $region):
+                        $location_class = strtolower($region);
+                        $filtered_schools = array_filter($schools, function ($school) use ($location_class) {
+                            return strtolower($school['location']) === $location_class;
+                        });
+                        ?>
+                        <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>" id="<?= strtolower($region) ?>"
+                            role="tabpanel" aria-labelledby="<?= strtolower($region) ?>-tab">
+                            <div class="row justify-content-center mt-3"> <!-- 調整分頁內容行的頂部間距 -->
+                                <div class="col-md-8">
+                                    <table class="table table-hover text-center"
+                                        style="font-size: 1.2em; line-height: 1.4;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40%;">學校名稱</th>
+                                                <th style="width: 30%;">內容</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($filtered_schools as $index => $school): ?>
+                                                <tr>
+                                                    <td><?= $school['school_name'] ?></td>
+                                                    <td>
+                                                        <a href="SchoolDepartment-02.php?school_id=<?= $school['school_id'] ?>"
+                                                            class="btn btn-info">科系</a>
+                                                        <a href="SchoolUpdate-02.php?school_id=<?= $school['school_id'] ?>"
+                                                            class="btn btn-success">修改</a>
+                                                        <a href="SchoolDelete2-02.php?school_id=<?= $school['school_id'] ?>"
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('確定要刪除該學校及其關聯科系資料嗎？')">刪除</a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
@@ -307,7 +304,7 @@ if (!isset($_SESSION['user'])) {
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png"
+                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png"
                                     alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>

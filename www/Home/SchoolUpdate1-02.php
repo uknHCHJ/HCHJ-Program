@@ -24,12 +24,13 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 ?>
+
 <!doctype html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>比賽資訊</title>
+        <title>修改資料</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -42,129 +43,9 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/animate.css">
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet">
-
-        <!-- 引入 FullCalendar 的 JavaScript -->
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.js"></script>
-        <link rel="stylesheet" href="assets/css/main.css">
-        <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Inline CSS for simplicity */
-        .portfolio-section {
-            padding-top: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .portfolio-item-wrapper {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-            max-width: 600px;  /* 控制卡片寬度 */
-            margin: 10px auto; /* 讓卡片居中，每個卡片之間有間距 */
-        }
-
-        .portfolio-item-wrapper:hover {
-            transform: translateY(-3px);
-        }
-
-        .portfolio-img img {
-            width: 100%;  /* 縮小圖片寬度 */
-            height: auto;
-            border-radius: 4px;
-        }
-
-        .portfolio-content {
-            text-align: left;
-            margin-top: 10px;
-        }
-
-        .portfolio-content h5 {
-            font-size: 1.2rem;  /* 調小標題字體大小 */
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .portfolio-content .small-text {
-            font-size: 0.9rem;  /* 調小描述文字大小 */
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
-
-        .theme-btn {
-            font-size: 0.85rem;  /* 按鈕字體變小 */
-            padding: 6px 12px;   /* 調整按鈕的內邊距 */
-            color: #fff;
-            background-color: #007bff;
-            border-radius: 4px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .theme-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-    <?php
-// 資料庫連接設置
-$servername = "127.0.0.1";
-$username = "HCHJ";
-$password = "xx435kKHq";
-$dbname = "HCHJ";
-
-// 建立資料庫連線
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("連線失敗: " . $conn->connect_error);
-}
-
-// 查詢比賽資訊
-if (isset($_GET['keyword'])) {
-    $keyword = mysqli_real_escape_string($conn, $_GET['keyword']);
-    $sql = "SELECT * FROM information WHERE name LIKE '%$keyword%' OR inform LIKE '%$keyword%'";
-    $result = $conn->query($sql);
-} else {
-    echo "請返回並輸入關鍵字來搜尋。";
-    exit;
-}
-
-date_default_timezone_set('Asia/Taipei');
-
-// 取得當前月份和年份
-$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-$month = isset($_GET['month']) ? $_GET['month'] : date('m');
-
-// 計算這個月的第一天是星期幾
-$firstDayOfMonth = strtotime("$year-$month-01");
-$firstDayOfWeek = date('w', $firstDayOfMonth); // 0 (星期天) 到 6 (星期六)
-
-// 計算當月的總天數
-$totalDaysInMonth = date('t', $firstDayOfMonth);
-
-// 計算上一個月和下一個月
-$prevMonth = date('m', strtotime("-1 month", strtotime("$year-$month-01")));
-$prevYear = date('Y', strtotime("-1 month", strtotime("$year-$month-01")));
-$nextMonth = date('m', strtotime("+1 month", strtotime("$year-$month-01")));
-$nextYear = date('Y', strtotime("+1 month", strtotime("$year-$month-01")));
-
-$conn->close();
-?>
-
+		<link rel="stylesheet" href="assets/css/main.css">
+    </head>
     <body>
-        <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -204,9 +85,9 @@ $conn->close();
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                </li>
+                            <li class="nav-item">
+                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                    </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -242,7 +123,7 @@ $conn->close();
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                         </div> <!-- navbar collapse -->
-
+                   
 
     </header>
         <!-- ========================= header end ========================= -->
@@ -253,9 +134,13 @@ $conn->close();
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">比賽資訊</h2>
+                            <h2 class="text-white">修改</h2>
                             <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">                                    
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">二技學校</li><a href="blog-03(競賽).php"></a></li>
+                                    </ol>
                                 </nav>
                             </div>
                         </div>
@@ -264,130 +149,100 @@ $conn->close();
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
-       
-        <!-- ========================= blog-section end ========================= -->
-        <section class="blog-section pt-130">
-    <div class="container">
-        <div class="row">
-            <!-- Blog Content -->
-            <div class="col-xl-8 col-lg-7">
-                <div class="left-side-wrapper">
-                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".1s">
-                            <section class="portfolio-section pt-130">
-                                <div class="container">
-                                    <div class="row">
-                                    <h1>搜尋結果</h1><br>
 
-            <?php if ($result->num_rows > 0): ?>
-                <?php while($row = $result->fetch_assoc()): ?>
-                    <div style="border:1px solid #ddd; padding: 10px; margin: 10px 0;">
-                        <h3><?= htmlspecialchars($row['name']) ?></h3><br>
-                        <p><?= htmlspecialchars($row['inform']) ?></p><br>
-                        <div>
-                            <img src="data:image/jpeg;base64,<?= base64_encode($row['image']) ?>" alt="<?= htmlspecialchars($row['name']) ?>" style="width:200px; height:auto;">
-                        </div><br>
-                        <a href="<?= htmlspecialchars($row['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>找不到相關結果。</p>
-            <?php endif; ?>
+        <?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
 
-            <!-- 返回搜尋頁面的按鈕 -->
-            <div style="margin-top: 20px;">
-                <a href="Contestblog-02.php"><button style="padding: 10px 15px; font-size: 16px;" class="btn btn-secondary" >返回搜尋頁面</button></a>
-            </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                    </div>
-                                </div>
-                            </div>
-                        
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-                        <!-- Sidebar -->
-                        <div class="col-xl-4 col-lg-5">
-                    <!-- 最近公告 -->
-                    <div class="sidebar-box recent-blog-box mb-30">
-                        <h4>新公告</h4>
-                        <!-- 月份導航 -->
-                        <a href="?year=<?= $prevYear ?>&month=<?= $prevMonth ?>">上一月</a> |
-                        <span><?= $year ?>年 <?= $month ?>月</span> |
-                        <a href="?year=<?= $nextYear ?>&month=<?= $nextMonth ?>">下一月</a>
-                        
-                        <div class="recent-blog-items">
-                            <div class="recent-blog mb-30">
-                                <!-- 在這裡嵌入小月曆 -->
-                                <style>
-                                    table {
-                                        width: 100%;
-                                        border-collapse: collapse;
-                                    }
-                                    th, td {
-                                        padding: 10px;
-                                        text-align: center;
-                                        border: 1px solid #ddd;
-                                    }
-                                    th {
-                                        background-color: #f2f2f2;
-                                    }
-                                    .month-nav {
-                                        text-align: center;
-                                        margin-bottom: 20px;
-                                    }
-                                </style>
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+//echo "連線成功";
 
-                                <!-- 顯示日曆表格 -->
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>日</th>
-                                            <th>一</th>
-                                            <th>二</th>
-                                            <th>三</th>
-                                            <th>四</th>
-                                            <th>五</th>
-                                            <th>六</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        // 設置當前顯示的日期為1
-                                        $currentDay = 1;
-                                        // 循環顯示最多6行（如果有6行，則表示本月有6周）
-                                        for ($row = 0; $row < 6; $row++) {
-                                            echo "<tr>";  // 每行開頭
-                                            
-                                            // 顯示一週中的七天
-                                            for ($col = 0; $col < 7; $col++) {
-                                                // 當前行是否為該月的第一行且日期還沒到第一個日曆日期
-                                                // 或當前日期大於當月總天數
-                                                if (($row == 0 && $col < $firstDayOfWeek) || $currentDay > $totalDaysInMonth) {
-                                                    echo "<td></td>";  // 空白格子（這些格子不顯示日期）
-                                                } else {
-                                                    // 顯示當前的日期
-                                                    echo "<td>" . $currentDay . "</td>";
-                                                    // 增加日期
-                                                    $currentDay++;
-                                                }
-                                            }
-                                            echo "</tr>";  // 每行結束
-                                            // 當天數超過總天數時停止顯示
-                                            if ($currentDay > $totalDaysInMonth) break;
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+$adm_pk=$_GET['school_id'];
+//echo $adm_pk;
+// 設置一個空陣列來放資料
+$datas = array();
+
+$sql = "SELECT * FROM School WHERE school_id='".$adm_pk."'"; // sql語法存在變數中
+//$sql = "SELECT ID, name, inform, link FROM information";// sql語法存在變數中
+//$sql = "UPDATE `information` SET `name` = '457', `inform` = '4567', `link` = '4567', `image_path` = '4567' WHERE `information`.`ID` = 68";
+//$sql = "SELECT ID, name, inform, link FROM information WHERE ID='".$adm_pk."'";// sql語法存在變數中
+
+$result = mysqli_query($conn, $sql); // 用mysqli_query方法執行(sql語法)將結果存在變數中
+
+// 如果有資料
+if ($result) {
+    // mysqli_num_rows方法可以回傳我們結果總共有幾筆資料
+    if (mysqli_num_rows($result) > 0) {
+        // 取得大於0代表有資料
+        // while迴圈會根據資料數量，決定跑的次數
+        // mysqli_fetch_assoc方法可取得一筆值
+        while ($row = mysqli_fetch_assoc($result)) {
+            // 每跑一次迴圈就抓一筆值，最後放進data陣列中
+            $datas[] = $row;
+        }
+    }
+    // 釋放資料庫查到的記憶體
+    mysqli_free_result($result);
+} else {
+    echo "{$sql} 語法執行失敗，錯誤訊息: " . mysqli_error($link);
+}
+// 處理完後印出資料
+if (!empty($result)) {
+    // 如果結果不為空，就利用print_r方法印出資料
+    // print_r($datas);
+    //echo($datas[0]['adm_name']);
+} else {
+    // 為空表示沒資料
+    echo "查無資料";
+}
+echo "<br><br>";
+//echo $datas[0]['sf_name']; // 印出第0筆資料中的sf_name欄位值
+
+//使用表格排版用while印出
+$datas_len = count($datas); //目前資料筆數
+
+?>
+      <!-- ========================= service-section start ========================= -->
+      <body>        
+    <div style="text-align:center;width:100%;height:50px;">
+        　<div style="width:30%;height:10px;margin:0 auto;">
+        <h2 class="margin_top50">二技校園</h2><br>
+            <form method="post" action="SchoolUpdate2-02.php?school_id=<?php echo $datas[0]['school_id']?>">
+                學校名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['school_name'] ?>" name="school_name"><br>
+                地區：<input type="text" class="form-control" value="<?php echo $datas[0]['location'] ?>" name="location"><br>
+                學校資訊： <textarea class="form-control" name="inform" rows="5"><?php echo $datas[0]['inform'] ?></textarea><br>
+                連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
+                <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該學校相關資料嗎？')" value="修改">
+                
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
         </div>
     </div>
 </section>
-        <!-- ========================= blog-section end ========================= -->
-
+<!-- ========================= service-section end ========================= -->
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br>
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
             <div class="container">

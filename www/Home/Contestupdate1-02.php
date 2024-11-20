@@ -110,7 +110,7 @@ if (!isset($_SESSION['user'])) {
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddCompetition1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
                                 </li>
@@ -138,7 +138,7 @@ if (!isset($_SESSION['user'])) {
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a href="blog-03(競賽).php"></a></li>
                                     </ol>
                                 </nav>
@@ -211,7 +211,7 @@ $datas_len = count($datas); //目前資料筆數
     <div style="text-align:center;width:100%;height:50px;">
         <div style="width:30%;height:20px;margin:0 auto;">
             <h2 class="margin_top50">比賽資訊</h2><br>
-            <form method="post" action="Contestupdate2.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
+            <form method="post" action="Contestupdate2-02.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
                 比賽名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['name'] ?>" name="name"><br>
                 比賽資訊： <textarea class="form-control" name="inform" rows="5"><?php echo $datas[0]['inform'] ?></textarea><br>
                 比賽連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
@@ -278,7 +278,7 @@ $datas_len = count($datas); //目前資料筆數
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>

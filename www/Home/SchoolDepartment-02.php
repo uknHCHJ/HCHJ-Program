@@ -24,12 +24,13 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 ?>
+
 <!doctype html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>詳細資料</title>
+        <title>編輯</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -67,22 +68,22 @@ if (!isset($_SESSION['user'])) {
 
         <!-- ========================= header start ========================= -->
         <header class="header navbar-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-02.php">
-                            <img src="schoolimages/uknlogo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="index-02.php">
+                                <img src="schoolimages/uknlogo.png" alt="Logo">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
 
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
                             <li class="nav-item">
                                     <li class="nav-item"><a href="index-02.php">首頁</a></li>
@@ -109,7 +110,7 @@ if (!isset($_SESSION['user'])) {
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="AddCompetition1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
                                 </li>
@@ -122,9 +123,8 @@ if (!isset($_SESSION['user'])) {
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                         </div> <!-- navbar collapse -->
-                   
-
-    </header>
+        
+        </header>
         <!-- ========================= header end ========================= -->
 
         <!-- ========================= page-banner-section start ========================= -->
@@ -133,12 +133,12 @@ if (!isset($_SESSION['user'])) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">比賽資訊</h2>
+                            <h2 class="text-white">科系</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a href="blog-03(競賽).php"></a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
                                     </ol>
                                 </nav>
                             </div>
@@ -164,82 +164,71 @@ if ($conn->connect_error) {
 }
 //echo "連線成功";
 
-$adm_pk=$_GET['ID'];
-//echo $adm_pk;
-// 設置一個空陣列來放資料
-$datas = array();
+// 接收school_id參數
+$school_id = $_GET['school_id'];
+$department_id = $_GET['department_id'];
+$ID = isset($_POST["school_id"]) ? $_POST["school_id"] : NULL;
 
-$sql = "SELECT * FROM information WHERE ID='".$adm_pk."'"; // sql語法存在變數中
-//$sql = "SELECT ID, name, inform, link FROM information";// sql語法存在變數中
-//$sql = "UPDATE `information` SET `name` = '457', `inform` = '4567', `link` = '4567', `image_path` = '4567' WHERE `information`.`ID` = 68";
-//$sql = "SELECT ID, name, inform, link FROM information WHERE ID='".$adm_pk."'";// sql語法存在變數中
+// 抓取對應學校的科系
+$sql = "SELECT department_id ,department_name FROM Department WHERE school_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $school_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-$result = mysqli_query($conn, $sql); // 用mysqli_query方法執行(sql語法)將結果存在變數中
+// 準備科系資料陣列
+$departments = array();
 
-// 如果有資料
-if ($result) {
-    // mysqli_num_rows方法可以回傳我們結果總共有幾筆資料
-    if (mysqli_num_rows($result) > 0) {
-        // 取得大於0代表有資料
-        // while迴圈會根據資料數量，決定跑的次數
-        // mysqli_fetch_assoc方法可取得一筆值
-        while ($row = mysqli_fetch_assoc($result)) {
-            // 每跑一次迴圈就抓一筆值，最後放進data陣列中
-            $datas[] = $row;
-        }
+if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $departments[] = $row;
     }
-    // 釋放資料庫查到的記憶體
     mysqli_free_result($result);
-} else {
-    echo "{$sql} 語法執行失敗，錯誤訊息: " . mysqli_error($link);
 }
-// 處理完後印出資料
-if (!empty($result)) {
-    // 如果結果不為空，就利用print_r方法印出資料
-    // print_r($datas);
-    //echo($datas[0]['adm_name']);
-} else {
-    // 為空表示沒資料
-    echo "查無資料";
-}
-echo "<br><br>";
-//echo $datas[0]['sf_name']; // 印出第0筆資料中的sf_name欄位值
 
-//使用表格排版用while印出
-$datas_len = count($datas); //目前資料筆數
+// 抓取學校名稱
+$sql_school = "SELECT school_name FROM School WHERE school_id = ?";
+$stmt_school = $conn->prepare($sql_school);
+$stmt_school->bind_param("i", $school_id);
+$stmt_school->execute();
+$result_school = $stmt_school->get_result();
+$school_name = $result_school->fetch_assoc()['school_name'];
 
 ?>
-<body>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <h2 class="text-center">詳細內容</h2>
-        <form>
-          <div class="form-group">
-            <label for="name">比賽名稱：</label>
-            <input type="text" class="form-control" id="name" value="<?php echo $datas[0]['name'] ?>" disabled>
-          </div><br>
-          <div class="form-group">
-            <label for="inform">比賽資訊：</label>
-            <input type="text" class="form-control" id="inform" value="<?php echo $datas[0]['inform'] ?>" disabled>
-          </div><br>
-          <div class="form-group">
-            <label for="link">比賽連結：</label>
-            <input type="text" class="form-control" id="link" value="<?php echo $datas[0]['link'] ?>" disabled>
-          </div><br>
-          <div class="form-group">
-            <label for="imgname">圖片：</label>
-            <input type="file" class="form-control-file" id="imgname" value="<?php echo $datas[0]['imgname'] ?>" disabled>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</body>
-        </div>
-    </div>
+      <!-- ========================= service-section start ========================= -->
+      <body>
+      <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
+    <h2 class="text-center" style="font-size: 2rem;"><?= $school_name ?></h2>
+    <table class="table table-hover text-center" style="width: 70%; font-size: 1.2rem;">
+        <thead>
+            <tr>
+                <th>序號</th>
+                <th>科系名稱</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $index = 1; ?>
+            <?php foreach ($departments as $department) : ?>
+                <tr>
+                    <td><?= $index++ ?></td>
+                    <td><?= htmlspecialchars($department['department_name']) ?></td>
+                    <td>
+                        <!-- 傳送 school_id 和 department_id 到 dbportfolio(刪除科系)-03.php -->
+                        <a href="DeleteDepartment2-02.php?department_id=<?= $department['department_id'] ?>&school_id=<?= $school_id ?>" class="btn btn-primary" onclick="return confirm('確定要刪除該科系資料嗎？')">刪除</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+  
+    <a href="AddDepartments1-02.php?school_id=<?= $school_id ?>" class="btn btn-success">新增</a><br>
+    <a href="SchoolEdit1-02.php" class="btn btn-secondary">返回上一頁</a>
 </section>
+</body>
 <!-- ========================= service-section end ========================= -->
+
+
 
 
         <!-- ========================= client-logo-section start ========================= -->
@@ -282,7 +271,7 @@ $datas_len = count($datas); //目前資料筆數
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>

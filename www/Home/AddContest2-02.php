@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 驗證連結格式
     if (!filter_var($link, FILTER_VALIDATE_URL)) {
         echo "<script>alert('請輸入有效的網址。');</script>";
-        header("Location: create-03.php");
+        header("Location:AddContest1-02.php");
         exit;
     }
 
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $imageData = file_get_contents($imageTmpName);
     } else {
         echo "<script>alert('請選擇一個有效的圖片檔案。');</script>";
-        header("Location: create-03.php");
+        header("Location:AddContest1-02.php");
         exit;
     }
 
@@ -45,16 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         echo "<script>alert('比賽資訊新增成功！');</script>";
-        header("Location:Contestblog1.php");
+        header("Location:Contestblog-02.php");
         exit;
     } else {
         echo "<script>alert('新增失敗，請檢查資料格式。');</script>";
-        header("Location:AddContest1.php");
+        header("Location:Contestblog-02.php");
         exit;
     }
-
-    // 關閉語句
-    $stmt->close();
 }
 
 // 關閉資料庫連線

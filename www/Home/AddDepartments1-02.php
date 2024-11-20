@@ -24,16 +24,18 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 ?>
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>詳細資料</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>新增學校科系</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
+
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
         <!-- Place favicon.ico in the root directory -->
 
 		<!-- ========================= CSS here ========================= -->
@@ -43,30 +45,68 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
 		<link rel="stylesheet" href="assets/css/main.css">
-    </head>
-    <body>
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
 
-        <!-- ========================= preloader start ========================= -->
-            <div class="preloader">
-                <div class="loader">
-                    <div class="ytp-spinner">
-                        <div class="ytp-spinner-container">
-                            <div class="ytp-spinner-rotator">
-                                <div class="ytp-spinner-left">
-                                    <div class="ytp-spinner-circle"></div>
-                                </div>
-                                <div class="ytp-spinner-right">
-                                    <div class="ytp-spinner-circle"></div>
-                                </div>
-                            </div>
+<?php
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
+
+// 建立資料庫連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查連線
+if ($conn->connect_error) {
+    die("連線失敗: " . $conn->connect_error);
+}
+
+$school_id = $_GET['school_id'];
+
+// 查詢科系資料
+$sql = "SELECT department_name FROM department";
+$result = $conn->query($sql);
+
+// 查詢該校已選擇的科系
+$existingDepartments = [];
+$checkSql = "SELECT department_name FROM Department WHERE school_id = ?";
+$checkStmt = $conn->prepare($checkSql);
+$checkStmt->bind_param("s", $school_id);
+$checkStmt->execute();
+$checkResult = $checkStmt->get_result();
+
+while ($row = $checkResult->fetch_assoc()) {
+    $existingDepartments[] = $row['department_name'];
+}
+?>
+
+    <!-- Header 部分省略，保持不變 -->
+
+    <!-- ========================= page-banner-section start ========================= -->
+    <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white">二技學校</h2>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index-03.php">首頁</a></li>
+                                    <li class="breadcrumb-item active">二技校園網介紹</li>
+                                </ol>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
-        <!-- preloader end -->
-
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+        </div>
+    </section>
+    <!-- ========================= page-banner-section end ========================= -->
+    <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -125,123 +165,86 @@ if (!isset($_SESSION['user'])) {
                    
 
     </header>
-        <!-- ========================= header end ========================= -->
+        <section id="service" class="service-section pt-20 pb-10"> 
+    <div style="text-align:center;width:100%;height:50px;">
+        <div style="width:70%;height:20px;margin:0 auto;">
+            <span class="wow fadeInDown" data-wow-delay=".2s">
+                <h2>新增科系</h2>
+            </span>
+            <br><br>
+            <form action="AddDepartments2-02.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="school_id" value="<?php echo htmlspecialchars($school_id); ?>">
+                <label for="numChoices">科系數量：</label>
+                <input type="number" id="numChoices" name="numChoices" min="1" max="10" required><br>
+                <div id="selectContainer"></div><br>
+                <button class="btn btn-success" type="submit" onclick="return confirm('確定要新增這些科系嗎？')">送出</button>
+                <br><br>
+                <a href="SchoolDepartment-02.php?school_id=<?= $school_id ?>" class="btn btn-secondary">返回上一頁</a>
 
-        <!-- ========================= page-banner-section start ========================= -->
-        <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="banner-content">
-                            <h2 class="text-white">比賽資訊</h2>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a href="blog-03(競賽).php"></a></li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- ========================= page-banner-section end ========================= -->
-
-        <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-//建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-//確認連線成功或失敗
-if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
-}
-//echo "連線成功";
-
-$adm_pk=$_GET['ID'];
-//echo $adm_pk;
-// 設置一個空陣列來放資料
-$datas = array();
-
-$sql = "SELECT * FROM information WHERE ID='".$adm_pk."'"; // sql語法存在變數中
-//$sql = "SELECT ID, name, inform, link FROM information";// sql語法存在變數中
-//$sql = "UPDATE `information` SET `name` = '457', `inform` = '4567', `link` = '4567', `image_path` = '4567' WHERE `information`.`ID` = 68";
-//$sql = "SELECT ID, name, inform, link FROM information WHERE ID='".$adm_pk."'";// sql語法存在變數中
-
-$result = mysqli_query($conn, $sql); // 用mysqli_query方法執行(sql語法)將結果存在變數中
-
-// 如果有資料
-if ($result) {
-    // mysqli_num_rows方法可以回傳我們結果總共有幾筆資料
-    if (mysqli_num_rows($result) > 0) {
-        // 取得大於0代表有資料
-        // while迴圈會根據資料數量，決定跑的次數
-        // mysqli_fetch_assoc方法可取得一筆值
-        while ($row = mysqli_fetch_assoc($result)) {
-            // 每跑一次迴圈就抓一筆值，最後放進data陣列中
-            $datas[] = $row;
-        }
-    }
-    // 釋放資料庫查到的記憶體
-    mysqli_free_result($result);
-} else {
-    echo "{$sql} 語法執行失敗，錯誤訊息: " . mysqli_error($link);
-}
-// 處理完後印出資料
-if (!empty($result)) {
-    // 如果結果不為空，就利用print_r方法印出資料
-    // print_r($datas);
-    //echo($datas[0]['adm_name']);
-} else {
-    // 為空表示沒資料
-    echo "查無資料";
-}
-echo "<br><br>";
-//echo $datas[0]['sf_name']; // 印出第0筆資料中的sf_name欄位值
-
-//使用表格排版用while印出
-$datas_len = count($datas); //目前資料筆數
-
-?>
-<body>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <h2 class="text-center">詳細內容</h2>
-        <form>
-          <div class="form-group">
-            <label for="name">比賽名稱：</label>
-            <input type="text" class="form-control" id="name" value="<?php echo $datas[0]['name'] ?>" disabled>
-          </div><br>
-          <div class="form-group">
-            <label for="inform">比賽資訊：</label>
-            <input type="text" class="form-control" id="inform" value="<?php echo $datas[0]['inform'] ?>" disabled>
-          </div><br>
-          <div class="form-group">
-            <label for="link">比賽連結：</label>
-            <input type="text" class="form-control" id="link" value="<?php echo $datas[0]['link'] ?>" disabled>
-          </div><br>
-          <div class="form-group">
-            <label for="imgname">圖片：</label>
-            <input type="file" class="form-control-file" id="imgname" value="<?php echo $datas[0]['imgname'] ?>" disabled>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</body>
         </div>
     </div>
 </section>
-<!-- ========================= service-section end ========================= -->
 
+<script>
+    // 監聽 "numChoices" 的輸入事件，當用戶更改科系數量時觸發
+    document.getElementById('numChoices').addEventListener('input', function () {
+        var numChoices = parseInt(this.value); // 取得用戶輸入的科系數量，並轉換為整數
+        if (numChoices > 10) { // 如果科系數量超過 10，顯示警告並限制數量
+            alert("最多只能新增 10 筆科系！"); // 提示用戶
+            this.value = 10; // 將輸入值設為 10
+            numChoices = 10; // 更新 numChoices 變量的值
+        }
+        var selectContainer = document.getElementById('selectContainer'); // 取得下拉選單的容器
+        selectContainer.innerHTML = ''; // 清空容器中的所有內容
 
+        // 根據用戶輸入的數量，動態生成下拉選單
+        for (var i = 1; i <= numChoices; i++) {
+            var label = document.createElement('label'); // 創建標籤元素
+            label.innerHTML = ' 科系 ' + i; // 設置標籤的文字
+
+            var select = document.createElement('select'); // 創建下拉選單
+            select.name = 'choice' + i; // 設定下拉選單的 name 屬性
+            select.className = "form-select mb-3"; // 設置下拉選單的樣式
+
+            <?php
+            // 從資料庫抓取科系選項
+            if ($result->num_rows > 0) {
+                echo 'var options = `<option value="">請選擇科系</option>`;'; // 預設選項
+                while($row = $result->fetch_assoc()) {
+                    $departmentName = htmlspecialchars($row["department_name"]);
+                    // 檢查科系是否已存在，並設置相應的樣式
+                    $disabled = in_array($departmentName, $existingDepartments) ? 'style="background-color: lightgray; color: darkgray;" disabled' : '';
+                    echo 'options += `<option value="' . $departmentName . '" ' . $disabled . '>' . $departmentName . '</option>`;';
+                }
+            } else {
+                echo 'var options = `<option value="">無科系資料</option>`;'; // 無科系資料的選項
+            }
+            ?>
+
+            select.innerHTML = options; // 將生成的選項加入到下拉選單中
+            selectContainer.appendChild(label); // 將標籤加入到容器中
+            selectContainer.appendChild(select); // 將下拉選單加入到容器中
+        }
+    });
+</script>
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br>
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
             <div class="container">

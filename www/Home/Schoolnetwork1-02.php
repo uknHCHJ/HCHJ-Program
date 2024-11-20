@@ -24,14 +24,13 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 ?>
-
-<!doctype html>
+<!Doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>新增比賽資訊</title>
+    <title>二技校園介紹網</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -45,71 +44,9 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="assets/css/tiny-slider.css">
     <link rel="stylesheet" href="assets/css/glightbox.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <style>
-        /* 設定容器和表單樣式 */
-        .form-container {
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-            /* 設定最大寬度 */
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 調整標籤樣式 */
-        label {
-            display: block;
-            text-align: left;
-            font-weight: bold;
-            font-size: 1.2em;
-            /* 增加字型大小 */
-            margin-top: 10px;
-        }
-
-        /* 設定 select、input 和 textarea 的樣式與大小 */
-        select,
-        input[type="text"],
-        textarea,
-        input[type="file"],
-        input[type="date"] {
-            width: 100%;
-            max-width: 500px;
-            /* 設定欄位最大寬度 */
-            margin-top: 10px;
-            padding: 8px;
-            font-size: 1em;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-        }
-
-        /* 設定按鈕樣式 */
-        button {
-            font-size: 1.2em;
-            /* 增加按鈕字型大小 */
-            padding: 10px 20px;
-        }
-    </style>
-
 </head>
-<?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-
-//建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-//確認連線成功或失敗
-if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
-}
-?>
 
 <body>
-
-    <!-- ========================= preloader start ========================= -->
     <div class="preloader">
         <div class="loader">
             <div class="ytp-spinner">
@@ -127,6 +64,7 @@ if ($conn->connect_error) {
         </div>
     </div>
     <!-- preloader end -->
+
     <!-- ========================= header start ========================= -->
     <header class="header navbar-area">
         <div class="container">
@@ -188,59 +126,105 @@ if ($conn->connect_error) {
 
     </header>
     <!-- ========================= header end ========================= -->
+    <?php
+    $servername = "127.0.0.1"; // 伺服器IP或localhost
+    $username = "HCHJ"; // 資料庫登入帳號
+    $password = "xx435kKHq"; // 資料庫密碼
+    $dbname = "HCHJ"; // 資料庫名稱
+    
+    // 建立與資料庫的連線
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-    <!-- ========================= page-banner-section start ========================= -->
-    <section class="page-banner-section pt-75 pb-75 img-bg"
-        style="background-image: url('assets/img/bg/common-bg.svg')">
-        <div class="container">
+    // 檢查連線是否成功
+    if ($conn->connect_error) {
+        die("連線失敗: " . $conn->connect_error);
+    }
+
+
+    // SQL 查詢語句，用來獲取學校資訊
+    $sql = "SELECT school_id, school_name, location, inform, link FROM School";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        // 將每筆資料放入資料陣列中
+        $schools = array();
+        while ($row = $result->fetch_assoc()) {
+            $schools[] = $row;
+        }
+        $result->free();
+    } else {
+        echo "<p>目前無學校資料顯示。</p>";
+    }
+
+    // 關閉資料庫連線
+    $conn->close();
+    ?>
+
+    <!-- ========================= portfolio-section start ========================= -->
+    <section class="portfolio-section pt-130">
+        <div id="container" class="container">
             <div class="row">
-                <div class="col-xl-12">
-                    <div class="banner-content">
-                        <h2 class="text-white">新增</h2>
-                        <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a
-                                        href="blog-03(競賽).php"></a></li>
-                                </ol>
-                            </nav>
+                <div class="col-12">
+                    <div class="portfolio-btn-wrapper">
+                        <button class="portfolio-btn active" data-filter="*">全部</button>
+                        <button class="portfolio-btn" data-filter=".north">北部</button>
+                        <button class="portfolio-btn" data-filter=".central">中部</button>
+                        <button class="portfolio-btn" data-filter=".south">南部</button>
+                        <button class="portfolio-btn" data-filter=".east">東部</button>
+                        <button class="portfolio-btn" data-filter=".islands">離島</button>
+                        <div class="row grid">
+                            <?php
+                            // 顯示每筆學校資料
+                            foreach ($schools as $school) {
+                                // 取得地區並轉成小寫進行判斷
+                                $location = strtolower($school["location"]);
+
+                                // 設置地區分類
+                                switch ($location) {
+                                    case "北部":
+                                        $location_class = "north";
+                                        break;
+                                    case "中部":
+                                        $location_class = "central";
+                                        break;
+                                    case "南部":
+                                        $location_class = "south";
+                                        break;
+                                    case "東部":
+                                        $location_class = "east";
+                                        break;
+                                    case "離島":
+                                        $location_class = "islands";
+                                        break;
+                                    default:
+                                        $location_class = "unknown"; // 可選的預設值
+                                        break;
+                                }
+
+                                // 顯示學校圖片及資訊
+                                echo "<div class='col-lg-4 col-md-10 grid-item $location_class'>";
+                                echo "    <div class='portfolio-item-wrapper'>";
+                                echo "        <div class='portfolio-img'>";
+                                // 動態顯示圖片的 URL，指向顯示圖片的 PHP 文件
+                                echo "            <img src='dbportfolio_image2.php?id=" . $school['school_id'] . "' alt='" . htmlspecialchars($school["school_name"]) . "'>";
+                                echo "        </div>";
+                                echo "        <div class='portfolio-overlay'>";
+                                echo "            <div class='overlay-content'>";
+                                echo "                <h4>" . htmlspecialchars($school["school_name"]) . "</h4>";
+                                echo "                <p>" . htmlspecialchars($school["inform"]) . "</p>";
+                                echo "<a href='" . htmlspecialchars($school["link"]) . "' class='theme-btn border-btn' target='_blank'>查看詳細資料</a>";
+                                echo "<a href='Schoolnetwork2-02.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='theme-btn border-btn' target='_blank'>二技科系</a>";
+                                echo "            </div>";
+                                echo "        </div>";
+                                echo "    </div>";
+                                echo "</div>";
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </section>
-    <!-- ========================= page-banner-section end ========================= -->
-
-    <section class="service-section pt-20 pb-10">
-        <div class="form-container">
-            <h2>比賽資訊</h2>
-            <form action="AddContest2-02.php" method="post" enctype="multipart/form-data"><br>
-                <label for="name">比賽名稱：</label>
-                <input type="text" id="name" name="name" required><br>
-
-                <label for="inform">比賽資訊：</label>
-                <textarea id="inform" name="inform" rows="3" required></textarea><br>
-
-                <label for="link">報名連結：</label>
-                <input type="text" id="link" name="link" required><br><br>
-
-                <label for="display_end_time">顯示截止日期：</label>
-                <input type="date" id="display_end_time" name="display_end_time" required><br><br>
-
-                <label for="image">選擇圖片：</label>
-                <input type="file" id="image" name="image" required><br><br>
-
-                <button class="btn btn-success" onclick="return confirm('確定要新增該比賽嗎？')">送出</button>
-            </form>
-        </div>
-    </section>
-    </div>
-    </div>
-    </div>
-    </div>
-    <!-- ========================= service-section end ========================= -->
+    <!-- ========================= portfolio-section end ========================= -->
 
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">
@@ -275,6 +259,8 @@ if ($conn->connect_error) {
         </div>
     </section>
     <!-- ========================= client-logo-section end ========================= -->
+
+
 
     <!-- ========================= footer start ========================= -->
     <footer class="footer pt-100">
@@ -330,7 +316,6 @@ if ($conn->connect_error) {
     </footer>
     <!-- ========================= footer end ========================= -->
 
-
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
         <i class="lni lni-arrow-up"></i>
@@ -346,6 +331,32 @@ if ($conn->connect_error) {
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
+
+    <script>
+        //============== isotope masonry js with imagesloaded
+        imagesLoaded('#container', function () {
+            var elem = document.querySelector('.grid');
+            var iso = new Isotope(elem, {
+                // options
+                itemSelector: '.grid-item',
+                masonry: {
+                    // use outer width of grid-sizer for columnWidth
+                    columnWidth: '.grid-item'
+                }
+            });
+
+            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
+            filterButtons.forEach(e =>
+                e.addEventListener('click', () => {
+
+                    let filterValue = event.target.getAttribute('data-filter');
+                    iso.arrange({
+                        filter: filterValue
+                    });
+                })
+            );
+        });
+    </script>
 </body>
 
 </html>
