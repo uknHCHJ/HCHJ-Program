@@ -133,7 +133,7 @@ if ($conn->connect_error) {
                                         <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
                                         <ul class="sub-menu">
                                             <li class="nav-item"><a href="contact-04.php">查看個人資料</a></li>
-                                            <li class="nav-item"><a href="../changepassword-01.html">修改密碼</a></li>
+                                            <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
