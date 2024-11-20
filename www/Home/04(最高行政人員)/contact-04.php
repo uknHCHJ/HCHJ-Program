@@ -272,7 +272,7 @@ $result = mysqli_query($link, $query);
                     </div>
                   </div>
 
-                  <h2 class="wow fadeInUp" data-wow-delay=".4s"><?php echo $userData['name']; ?>先生/小姐
+                  <h2 class="wow fadeInUp" data-wow-delay=".4s">您好，<?php echo $userData['name']; ?>
 
                   </h2>
 
@@ -288,7 +288,7 @@ $result = mysqli_query($link, $query);
                 </div>
                 <div class="col-md-6">
                   <p class="wow fadeInUp" data-wow-delay=".2s">
-                    班級：<?php echo $userData['grade'], $userData['class']; ?>
+                    科系：<?php echo $userData['department'];?>
                   </p>
                 </div>
               </div>
@@ -340,20 +340,6 @@ $result = mysqli_query($link, $query);
 
 
               <div class="row">
-                <div class="col-md-6">
-                  <p class="wow fadeInUp" data-wow-delay=".2s">
-                    <?php
-                    // 確保陣列長度正好為 2
-                    if (count($teachers) < 2) {
-                      $teachers[] = '無';  // 若符合條件的班導少於兩位，新增 "無" 作為占位
-                    }
-
-                    // 從陣列中顯示班導的名字
-                    echo "班導: " . $teachers[0] . "、" . $teachers[1];
-
-                    ?>
-                  </p>
-                </div>
                 <div class="col-md-6">
                   <p class="wow fadeInUp" data-wow-delay=".2s">帳號名稱：<?php echo $userData['user']; ?>
                   </p>
@@ -411,7 +397,7 @@ $result = mysqli_query($link, $query);
       <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-6">
           <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
           </div>
         </div>
