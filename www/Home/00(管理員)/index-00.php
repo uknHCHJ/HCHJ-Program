@@ -95,7 +95,7 @@ $userId= $userData['user'];
                                         <a href="contact-00.php">個人資料</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="../changepassword-01.html">修改密碼</a>
+                                        <a href="../changepassword.html">修改密碼</a>
                                     </li>  
                                     <li class="nav-item">
                                         <a href="Adduser.php">新增人員</a>
@@ -118,21 +118,6 @@ $userId= $userData['user'];
                     </div>
                 </div> <!-- row -->
             </div> <!-- container -->
-            <!--<style>
-            .header.navbar-area {
-                background-color: #2c3e50; /* 更改背景色 */
-                color: #ffffff; /* 調整文字顏色 */
-            }
-
-            .header.navbar-area a {
-                color: #ffffff; /* 讓連結的文字顏色與背景色協調 */
-            }
-
-            .header.navbar-area a:hover {
-                color: #f39c12; /* 滑鼠懸停時的文字顏色 */
-            }
-            </style>-->
-
         </header>
         <!-- ========================= header end ========================= -->
 

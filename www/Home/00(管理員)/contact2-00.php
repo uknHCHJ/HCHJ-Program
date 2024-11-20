@@ -48,13 +48,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
             if ($stmt->execute()) {
                echo" <script>
                   alert('頭貼上傳成功！');
-                  window.location.href = '/~HCHJ/Home/contact-04.php';
+                  window.location.href = '/~HCHJ/Home/contact-00.php';
                 </script>";
       
             } else {
                 echo" <script>
                   alert('資料庫更新錯誤：');
-                  window.location.href = '/~HCHJ/Home/contact-04.php';
+                  window.location.href = '/~HCHJ/Home/contact-00.php';
                 </script>". $stmt->error;
  
             }
@@ -63,19 +63,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
         } else {
             echo" <script>
                   alert('不支援的檔案格式！請選擇 JPG, JPEG, 或 PNG 格式的檔案。');
-                  window.location.href = '/~HCHJ/Home/contact-04.php';
+                  window.location.href = '/~HCHJ/Home/contact-00.php';
                 </script>";
         }
     } else {
         echo" <script>
         alert('檔案上傳錯誤，錯誤代碼：" . $_FILES['image']['error']."');
-        window.location.href = '/~HCHJ/Home/contact-04.php';
+        window.location.href = '/~HCHJ/Home/contact-00.php';
       </script>";
     }
 } else {
     echo" <script>
     alert('無法接收到檔案');
-    window.location.href = '/~HCHJ/Home/contact-04.php';
+    window.location.href = '/~HCHJ/Home/contact-00.php';
   </script>";
 
 }

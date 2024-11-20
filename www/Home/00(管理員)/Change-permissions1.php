@@ -34,8 +34,8 @@ $username=$userData['name'];
     </head>
     <body>
 
-  <!-- ========================= header start ========================= -->
-  <header class="header navbar-area">
+   <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -60,7 +60,7 @@ $username=$userData['name'];
                                         <a href="contact-00.php">個人資料</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="../changepassword-01.html">修改密碼</a>
+                                        <a href="../changepassword.html">修改密碼</a>
                                     </li>  
                                     <li class="nav-item">
                                         <a href="Adduser.php">新增人員</a>
@@ -83,7 +83,6 @@ $username=$userData['name'];
                     </div>
                 </div> <!-- row -->
             </div> <!-- container -->
-        
         </header>
         <!-- ========================= header end ========================= -->
 

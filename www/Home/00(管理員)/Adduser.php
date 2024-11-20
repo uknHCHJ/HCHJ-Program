@@ -61,7 +61,7 @@ $username=$userData['name'];
                                         <a href="contact-00.php">個人資料</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="../changepassword-01.html">修改密碼</a>
+                                        <a href="../changepassword.html">修改密碼</a>
                                     </li>  
                                     <li class="nav-item">
                                         <a href="Adduser.php">新增人員</a>
@@ -74,17 +74,16 @@ $username=$userData['name'];
                                     </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
-                                    </li>  
+                                    </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="../logout.php" >登出</a>
-                                    </li>                        
+                                    </li>                          
                                 </ul>                                    
                             </div> <!-- navbar collapse -->
                         </nav> <!-- navbar -->
                     </div>
                 </div> <!-- row -->
             </div> <!-- container -->
-        
         </header>
         <!-- ========================= header end ========================= -->
 
