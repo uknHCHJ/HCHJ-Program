@@ -99,7 +99,7 @@ $result = mysqli_query($link, $query2);
                             <a class="nav-item dd-menu">備審資料</a>
                                 <ul class="sub-menu">
                                     <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板(無使用)</a></li>
+                                    
                                 </ul> 
                             </li>
                             <li class="nav-item"> 
