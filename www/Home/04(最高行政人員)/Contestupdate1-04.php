@@ -216,6 +216,8 @@ $datas_len = count($datas); //目前資料筆數
                 <label for="image">圖片：</label>
                 <input type="file" id="image" name="image" required><br><br>
                 <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該比賽資訊嗎？')" value="修改">
+                <br><br>
+                <a href="ContestEdin1-04.php" class="btn btn-secondary">返回上一頁</a>
             </form>
         </div>
     </div>
