@@ -223,6 +223,7 @@ $total_pages = ceil($total_records / $records_per_page);//假設總記錄數是 
                                     <a href="ContestDelete2-04.php?pk=<?= $data['ID'] ?>" onclick="return confirm('確定要刪除該比賽資訊嗎？')" class="btn btn-danger">刪除</a>
                                 </td>
                             </tr>
+                            
                         <?php endforeach; ?>
                     </tbody>
                 </table>
