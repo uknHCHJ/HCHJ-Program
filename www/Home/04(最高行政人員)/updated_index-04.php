@@ -100,8 +100,8 @@ $username = $userData['name'];
 </head>
 <body>
 
-     <!-- ========================= header start ========================= -->
-     <header class="header navbar-area">
+      <!-- ========================= header start ========================= -->
+      <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -131,7 +131,7 @@ $username = $userData['name'];
                                     <li class="nav-item">
                                         <a class="page-scroll dd-menu" href="javascript:void(0)">班級管理</a>
                                         <ul class="sub-menu">
-                                            <li class="nav-item"><a href="Contest-history1.php">查看學生備審資料</a></li>
+                                            <li class="nav-item"><a href="Preparation1-04.php">查看學生備審資料</a></li>
                                             <li class="nav-item"><a href="order1.php">查看志願序</a></li>
                                             <li class="nav-item"><a href="Contest-history1.php">查看競賽歷程</a></li>
                                         </ul>

@@ -23,7 +23,7 @@ $stduentuser = $_POST['username'];
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>查看競賽紀錄</title>
+        <title>查看學生備審資料</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -59,8 +59,8 @@ $stduentuser = $_POST['username'];
             </div>
         <!-- preloader end -->
 
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+         <!-- ========================= header start ========================= -->
+         <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -90,7 +90,7 @@ $stduentuser = $_POST['username'];
                                     <li class="nav-item">
                                         <a class="page-scroll dd-menu" href="javascript:void(0)">班級管理</a>
                                         <ul class="sub-menu">
-                                            <li class="nav-item"><a href="Contest-history1.php">查看學生備審資料</a></li>
+                                            <li class="nav-item"><a href="Preparation1-04.php">查看學生備審資料</a></li>
                                             <li class="nav-item"><a href="order1.php">查看志願序</a></li>
                                             <li class="nav-item"><a href="Contest-history1.php">查看競賽歷程</a></li>
                                         </ul>
@@ -136,12 +136,12 @@ $stduentuser = $_POST['username'];
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">查看競賽紀錄</h2>
+                            <h2 class="text-white">查看學生備審資料</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">查看競賽紀錄</li>
+                                        <li class="breadcrumb-item active" aria-current="page">查看學生備審資料</li>
                                     </ol>
                                 </nav>
                             </div>
@@ -167,7 +167,7 @@ $stduentuser = $_POST['username'];
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                 <div class="section-title text-center mb-55">
-                    <span class="wow fadeInDown" data-wow-delay=".2s">查看競賽紀錄</span>
+                    <span class="wow fadeInDown" data-wow-delay=".2s">查看學生備審資料</span>
                 </div>
             </div>
                                     
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 <div class="d-flex justify-content-center">
-    <button type="button" class="btn btn-secondary" onclick="window.location.href='Contest-history1.php';">返回上一頁</button>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='Preparation1-04.php';">返回上一頁</button>
 </div>
 </section>
 <!-- ========================= service-section end ========================= -->
