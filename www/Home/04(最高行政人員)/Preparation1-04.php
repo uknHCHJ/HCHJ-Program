@@ -314,7 +314,7 @@ function updateStudentTable(data) {
     // 新增查看歷程按鈕
     var cell = row.insertCell(3);
     var button = document.createElement('button');
-    button.textContent = '查看歷程';
+    button.textContent = '查看備審';
     button.classList.add('btn', 'btn-primary');
 
     // 設定按鈕點擊事件，跳轉到查看學生歷程的頁面
