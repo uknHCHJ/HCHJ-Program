@@ -20,7 +20,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>我的二技志願序</title>
+    <title>查看志願序</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -135,7 +135,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">我的二技志願序</h2>
+                        <h2 class="text-white">查看志願序</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
 
@@ -166,7 +166,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <div class="row">
                 <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                     <div class="section-title text-center mb-55">
-                        <span class="wow fadeInDown" data-wow-delay=".2s">查看學生志願序</span>
+                        <span class="wow fadeInDown" data-wow-delay=".2s">查看志願序</span>
                     </div>
                 </div>
             </div>

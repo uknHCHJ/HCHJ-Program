@@ -24,7 +24,7 @@ $result = mysqli_query($link, $query2);
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>查看志願序</title>
+  <title>查看學生志願序</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -123,12 +123,12 @@ $result = mysqli_query($link, $query2);
       <div class="row">
         <div class="col-xl-12">
           <div class="banner-content">
-            <h2 class="text-white">查看志願序</h2>
+            <h2 class="text-white">查看學生志願序</h2>
             <div class="page-breadcrumb">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">查看志願序</li>
+                  <li class="breadcrumb-item active" aria-current="page">查看學生志願序</li>
                 </ol>
               </nav>
             </div>
@@ -145,7 +145,7 @@ $result = mysqli_query($link, $query2);
       <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
           <div class="section-title text-center mb-55">
-            <span class="wow fadeInDown" data-wow-delay=".2s">查看志願序</span>
+            <span class="wow fadeInDown" data-wow-delay=".2s">查看學生志願序</span>
           </div>
         </div>
       </div>

@@ -77,60 +77,71 @@ foreach ($grades as $grade) {
 
   <!-- ========================= header start ========================= -->
   <header class="header navbar-area">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-12">
-          <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="index-02.php">
-              <img src="schoolimages/uknlogo.png" alt="Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-            </button>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand" href="index-02.php">
+                            <img src="schoolimages/uknlogo.png" alt="Logo">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                        </button>
 
-            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-              <ul id="nav" class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">個人資料</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
-                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="student02-1.php">學生管理</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">二技校園網</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="Schoolnetwork1.php">首頁</a></li>
-                    <li class="nav-item"><a href="AddSchool1.php">新增校園</a></li>
-                    <li class="nav-item"><a href="SchoolEdit1.php">編輯詳細資料</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">比賽資訊</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="Contestblog1.php">查看</a></li>
-                    <li class="nav-item"><a href="AddContest1.php">新增</a></li>
-                    <li class="nav-item"><a href="ContestEdin1.php">編輯</a></li>
-                  </ul>
-                </li>
+                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                            <ul id="nav" class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                    </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">個人資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">二技校園網</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
+                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
+                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">比賽資訊</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
+                                    </ul>
+                                </li>
 
 
-                <li class="nav-item">
-                  <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
-                </li>
-            </div> <!-- navbar collapse -->
+                                <li class="nav-item">
+                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="javascript:void(0)" onclick="submitLogout()">登出</a>
+                                </li>
+                        </div> <!-- navbar collapse -->
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
-  </header>
-  <!-- ========================= header end ========================= -->
+    </header>
+    <!-- ========================= header end ========================= -->
 
   <!-- ========================= page-banner-section start ========================= -->
   <section class="page-banner-section pt-75 pb-75 img-bg"
@@ -164,124 +175,121 @@ foreach ($grades as $grade) {
             <span class="wow fadeInDown" data-wow-delay=".2s">帶班班級名單</span>
             <style>
               /* 按鈕樣式 */
-              .download-button {
-                background-color: #4CAF50;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
+/* 按鈕樣式 */
+.download-button {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
 
-              .download-button:hover {
-                background-color: #45a049;
-                transform: scale(1.05);
-              }
+.download-button:hover {
+  transform: scale(1.05);
+}
 
-              .download-button:active {
-                animation: click-animation 0.5s forwards;
-              }
+.download-button:active {
+  animation: click-animation 0.5s forwards;
+}
 
-              /*備審*/
-              .downloadreview {
-                background-color: #4CAF50;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
+/*備審*/
+.downloadreview {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
 
-              .downloadreview:hover {
-                background-color: #45a049;
-                transform: scale(1.05);
-              }
+.downloadreview:hover {
+  transform: scale(1.05);
+}
 
-              .downloadreview:active {
-                animation: click-animation 0.5s forwards;
-              }
+.downloadreview:active {
+  animation: click-animation 0.5s forwards;
+}
 
-              /*留言板*/
-              .messageboard {
-                background-color: #17a2b8;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
+/*留言板*/
+.messageboard {
+  background-color: #17a2b8;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
 
-              .messageboard:hover {
-                background-color: #45a049;
-                transform: scale(1.05);
-              }
+.messageboard:hover {
+  transform: scale(1.05);
+}
 
-              .messageboard:active {
-                animation: click-animation 0.5s forwards;
-              }
+.messageboard:active {
+  animation: click-animation 0.5s forwards;
+}
 
-              /*競賽*/
-              .viewcompetition {
-                background-color: #ffc107;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
+/*競賽*/
+.viewcompetition {
+  background-color: #ffc107;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
 
-              .viewcompetition:hover {
-                background-color: #45a049;
-                transform: scale(1.05);
-              }
+.viewcompetition:hover {
+  transform: scale(1.05);
+}
 
-              .viewcompetition:active {
-                animation: click-animation 0.5s forwards;
-              }
+.viewcompetition:active {
+  animation: click-animation 0.5s forwards;
+}
 
-              /*志願*/
-              .viewapplicationorder {
-                background-color: #007bff;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
+/*志願*/
+.viewapplicationorder {
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
 
-              .viewapplicationorder:hover {
-                background-color: #45a049;
-                transform: scale(1.05);
-              }
+.viewapplicationorder:hover {
+  transform: scale(1.05);
+}
 
-              .viewapplicationorder:active {
-                animation: click-animation 0.5s forwards;
-              }
+.viewapplicationorder:active {
+  animation: click-animation 0.5s forwards;
+}
+
 
               /* 表格容器 */
               .data-table {
@@ -393,7 +401,10 @@ foreach ($grades as $grade) {
               foreach ($gradeClassPairs as $pair) {
                 $grade = substr($pair, 0, -1);
                 $class = substr($pair, -1);
-                echo '<button type="button" class="download-button" data-grade="' . htmlspecialchars($grade) . '" data-class="' . htmlspecialchars($class) . '">' . htmlspecialchars($pair) . '</button>';
+                echo '<button type="button" class="download-button" data-grade="' . htmlspecialchars($grade) . '" data-class="' . htmlspecialchars($class) . '">';
+                echo  htmlspecialchars($grade) . htmlspecialchars($class);
+                echo '</button>';
+
               }
               ?>
             </div>
