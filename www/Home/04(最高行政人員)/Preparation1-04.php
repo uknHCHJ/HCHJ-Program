@@ -307,7 +307,7 @@ function updateStudentTable(data) {
   // 遍歷後端回傳的資料，將資料填入表格
   data.forEach(function(item) {
     var row = tbody.insertRow();
-    row.insertCell(0).textContent = item.class +"班";
+    row.insertCell(0).textContent = "資五"+item.class;
     row.insertCell(1).textContent = item.user;
     row.insertCell(2).textContent = item.name;
 
