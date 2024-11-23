@@ -158,10 +158,10 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                 </div>  
                 <select id="class-select" class="form-select mb-4" onchange="fetchStudentData()">
                     <option value="">請選擇班級...</option>
-                    <option value="A">忠班</option>
-                    <option value="B">孝班</option>
-                    <option value="C">仁班</option>
-                    <option value="D">愛班</option>
+                    <option value="A">五忠</option>
+                    <option value="B">五孝</option>
+                    <option value="C">五仁</option>
+                    <option value="D">五愛</option>
                 </select>  
             </div>                                   
         </div>
@@ -307,7 +307,7 @@ function updateStudentTable(data) {
   // 遍歷後端回傳的資料，將資料填入表格
   data.forEach(function(item) {
     var row = tbody.insertRow();
-    row.insertCell(0).textContent = "資五"+item.class;
+    row.insertCell(0).textContent = item.class + "班";
     row.insertCell(1).textContent = item.user;
     row.insertCell(2).textContent = item.name;
 
