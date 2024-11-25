@@ -24,7 +24,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
     <!-- Place favicon.ico in the root directory -->
 
     <!-- ========================= CSS here ========================= -->
@@ -60,8 +60,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
     </div>
     <!-- preloader end -->
 
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+   <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -79,45 +79,48 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
+                               
+                            
+                            <li class="nav-item">
+                            <a class="page-scroll" href="index-01.php" >首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    </li>
+                                    <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                    </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                        </li>
-                                        <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">備審資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a
-                                                href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
-
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">志願序</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                        </li>
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-
-                                </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    </li>
+                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                            </li>
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
