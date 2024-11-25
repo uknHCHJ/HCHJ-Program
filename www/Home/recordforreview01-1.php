@@ -57,8 +57,8 @@ $username = $userData['name']
     </div>
     <!-- preloader end -->
   
-  <!-- ========================= header start ========================= -->
-  <header class="header navbar-area">
+   <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -84,15 +84,15 @@ $username = $userData['name']
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">個人資料</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
                                     </li>
-                                    <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">備審資料</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
                                     </li>
 
                                 </ul>
@@ -106,9 +106,9 @@ $username = $userData['name']
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
                                     </li>
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
                                     </li>
                                 </ul>
                             </li>
@@ -127,6 +127,7 @@ $username = $userData['name']
 
     </header>
     <!-- ========================= header end ========================= -->
+
 
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"

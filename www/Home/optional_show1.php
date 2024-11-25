@@ -20,7 +20,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>我的二技志願序</title>
+    <title>查看志願序</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -87,15 +87,15 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">個人資料</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
                                     </li>
-                                    <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">備審資料</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
                                     </li>
 
                                 </ul>
@@ -109,9 +109,9 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
                                     </li>
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
                                     </li>
                                 </ul>
                             </li>
@@ -137,7 +137,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">我的二技志願序</h2>
+                        <h2 class="text-white">查看志願序</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
 
@@ -168,7 +168,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <div class="row">
                 <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                     <div class="section-title text-center mb-55">
-                        <span class="wow fadeInDown" data-wow-delay=".2s">查看學生志願序</span>
+                        <span class="wow fadeInDown" data-wow-delay=".2s">查看志願序</span>
                     </div>
                 </div>
             </div>

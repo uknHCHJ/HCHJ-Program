@@ -38,28 +38,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
 <body>
 
-    <!-- ========================= preloader start ========================= -->
-    <div class="preloader">
-        <div class="loader">
-            <div class="ytp-spinner">
-                <div class="ytp-spinner-container">
-                    <div class="ytp-spinner-rotator">
-                        <div class="ytp-spinner-left">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                        <div class="ytp-spinner-right">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- preloader end -->
-
-   
-     <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+   <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -85,15 +65,15 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">個人資料</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
                                     </li>
-                                    <li class="nav-item active"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">備審資料</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
                                     </li>
 
                                 </ul>
@@ -107,9 +87,9 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
                                     </li>
-                                    <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
                                     </li>
                                 </ul>
                             </li>
