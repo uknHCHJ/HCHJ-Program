@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['user'])) {
-    echo("<script>
+    echo ("<script>
                     alert('請先登入！！');
                     window.location.href = '/~HCHJ/index.html'; 
                   </script>");
@@ -27,7 +27,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
     <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
     <!-- Place favicon.ico in the root directory -->
-
     <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
     <link rel="stylesheet" href="assets/css/LineIcons.2.0.css">
@@ -61,8 +60,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
     </div>
     <!-- preloader end -->
 
-   <!-- ========================= header start ========================= -->
-   <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -80,48 +79,48 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                               
-                            
-                            <li class="nav-item">
-                            <a class="page-scroll" href="index-01.php" >首頁</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">個人資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">備審資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
-                                    </li>
 
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">志願序</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-                            </li>
+
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="index-01.php">首頁</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">個人資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">備審資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">志願序</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                                </li>
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -131,6 +130,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
     </header>
     <!-- ========================= header end ========================= -->
+
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
@@ -141,7 +141,10 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         <h2 class="text-white">查看志願序</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
-
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">查看志願序</li>
+                                </ol>
                             </nav>
                         </div>
                     </div>
@@ -495,13 +498,15 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             </section>
             <!-- ========================= client-logo-section end ========================= -->
 
+
+
             <!-- ========================= footer start ========================= -->
             <footer class="footer pt-100">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                                <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png"
+                                <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png"
                                         alt="logo"></a>
                                 <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                             </div>
@@ -550,7 +555,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             </footer>
             <!-- ========================= footer end ========================= -->
 
-
             <!-- ========================= scroll-top ========================= -->
             <a href="#" class="scroll-top">
                 <i class="lni lni-arrow-up"></i>
@@ -566,6 +570,53 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <script src="assets/js/wow.min.js"></script>
             <script src="assets/js/imagesloaded.min.js"></script>
             <script src="assets/js/main.js"></script>
+
+            <script>
+                //========= glightbox
+                GLightbox({
+                    'href': '#',
+                    'type': 'video',
+                    'source': 'youtube', //vimeo, youtube or local
+                    'width': 900,
+                    'autoplayVideos': true,
+                });
+
+                //========= testimonial 
+                tns({
+                    container: '.testimonial-active',
+                    items: 1,
+                    slideBy: 'page',
+                    autoplay: false,
+                    mouseDrag: true,
+                    gutter: 0,
+                    nav: false,
+                    controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
+                });
+
+                //============== isotope masonry js with imagesloaded
+                imagesLoaded('#container', function () {
+                    var elem = document.querySelector('.grid');
+                    var iso = new Isotope(elem, {
+                        // options
+                        itemSelector: '.grid-item',
+                        masonry: {
+                            // use outer width of grid-sizer for columnWidth
+                            columnWidth: '.grid-item'
+                        }
+                    });
+
+                    let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
+                    filterButtons.forEach(e =>
+                        e.addEventListener('click', () => {
+
+                            let filterValue = event.target.getAttribute('data-filter');
+                            iso.arrange({
+                                filter: filterValue
+                            });
+                        })
+                    );
+                });
+            </script>
 </body>
 
 </html>

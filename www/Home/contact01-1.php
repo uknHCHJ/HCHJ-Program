@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 if (!isset($_SESSION['user'])) {
-  echo("<script>
+  echo ("<script>
                   alert('請先登入！！');
                   window.location.href = '/~HCHJ/index.html'; 
                 </script>");
@@ -67,77 +67,76 @@ $result = mysqli_query($link, $query);
   </div>
   <!-- preloader end -->
 
- 
-      <!-- ========================= header start ========================= -->
-      <header class="header navbar-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-01.php">
-                            <img src="schoolimages/uknlogo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
 
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                            <ul id="nav" class="navbar-nav ml-auto">
-                               
-                            
-                            <li class="nav-item">
-                            <a class="page-scroll" href="index-01.php" >首頁</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">個人資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">備審資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
-                                    </li>
+  <!-- ========================= header start ========================= -->
+  <header class="header navbar-area">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="index-01.php">
+              <img src="schoolimages/uknlogo.png" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="toggler-icon"></span>
+              <span class="toggler-icon"></span>
+              <span class="toggler-icon"></span>
+            </button>
 
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">志願序</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-                            </li>
-                            </ul>
-                        </div> <!-- navbar collapse -->
-                    </nav> <!-- navbar -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
+            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+              <ul id="nav" class="navbar-nav ml-auto">
 
-    </header>
-    <!-- ========================= header end ========================= -->
+
+                <li class="nav-item">
+                  <a class="page-scroll" href="index-01.php">首頁</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">個人資料</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                    </li>
+                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">備審資料</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                    </li>
+
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                </li>
+                <li class="nav-item">
+                  <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">志願序</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                    </li>
+                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                </li>
+                <li class="nav-item">
+                  <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                </li>
+              </ul>
+            </div> <!-- navbar collapse -->
+          </nav> <!-- navbar -->
+        </div>
+      </div> <!-- row -->
+    </div> <!-- container -->
+
+  </header>
+  <!-- ========================= header end ========================= -->
 
 
   <!-- ========================= 橫幅(大標題) start ========================= -->
@@ -213,19 +212,25 @@ $result = mysqli_query($link, $query);
                         die("未登入，無法顯示圖片。");
                       }
 
-                      // 從資料庫中提取用戶圖片
+                      // 從資料庫中提取用戶圖片 設置初始值為null
                       $imageData = null;
+                      //從user的image欄位查詢到對應登入者的帳號
                       $sql = "SELECT `image` FROM `user` WHERE `user` = ?";
+                      //把執行的sql語句放入stmt
                       $stmt = $conn->prepare($sql);
+                      //?的對應
                       $stmt->bind_param("s", $userId);
+                      //執行sql
                       $stmt->execute();
+                      //查詢結果的第一個欄位（image）的值綁定到變數 $imageData
                       $stmt->bind_result($imageData);
+                      //資料庫中對應的 image 欄位內容取出並賦值給 $imageData
                       $stmt->fetch();
                       $stmt->close();
-
                       $conn->close();
                       ?>
-
+                      <!--------------------------------------頭貼框開始---------------------------------------------->
+                      <!--把頭貼的框變成一個不顯示的按鈕可以更換圖片 點擊後執行contact01-2.php-->
                       <!-- HTML 和 JavaScript -->
                       <form enctype="multipart/form-data" action="/~HCHJ/Home/contact01-2.php" method="POST"
                         style="height: 200px; max-width: 1000px; margin: auto">
@@ -244,7 +249,8 @@ $result = mysqli_query($link, $query);
                         <!-- 隱藏的提交按鈕 -->
                         <input type="submit" value="上傳圖片" style="display:none;" id="submit-button">
                       </form>
-
+                      <!--------------------------------------頭貼框結束---------------------------------------------->
+                      <!--------------------------------------頭貼框雙重確認視窗---------------------------------------------->
                       <script>
                         function previewAndConfirm(event) {
                           var file = event.target.files[0];
@@ -272,7 +278,7 @@ $result = mysqli_query($link, $query);
                           }
                         }
                       </script>
-
+                      <!--------------------------------------頭貼框雙重確認視窗---------------------------------------------->
 
                     </div>
                   </div>
@@ -331,11 +337,6 @@ $result = mysqli_query($link, $query);
                     $teachers[] = $row['name'];
                   }
                 }
-
-
-
-
-
               } else {
                 echo "查詢失敗：" . mysqli_error($link);
               }
@@ -416,7 +417,7 @@ $result = mysqli_query($link, $query);
       <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-6">
           <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+            <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
           </div>
         </div>

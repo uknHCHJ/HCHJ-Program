@@ -120,8 +120,11 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     <div class="banner-content">
                         <h2 class="text-white">二技志願選填</h2>
                         <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-
+                        <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">二技志願選填</li>
+                                </ol>
                             </nav>
                         </div>
                     </div>
@@ -491,7 +494,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
         <div class="row">
             <div class="col-xl-3 col-lg-4 col-md-6">
                 <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                    <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                    <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                     <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                 </div>
             </div>
