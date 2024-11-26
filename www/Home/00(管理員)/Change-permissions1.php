@@ -141,16 +141,7 @@ $username=$userData['name'];
                                 <option value="0">管理員</option>                               
                             </select>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="new-permission3">選擇第三權限(無需使用可不選)：</label>
-                            <select id="new-permission3" name="new_permission3" class="form-select">
-                                <option value="9">請選擇...</option>
-                                <option value="2">班導</option>
-                                <option value="3">一般老師</option>
-                                <option value="4">最高行政人員</option>
-                                <option value="0">管理員</option>
-                            </select>
-                        </div>
+
                         <button type="submit" class="btn btn-primary">更新權限</button>
                         <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
                     </form>

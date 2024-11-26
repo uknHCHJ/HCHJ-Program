@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['user'];
     $new_permission = $_POST['new_permission'];
     $new_permission2 = $_POST['new_permission2'];
-    $new_permission3 = $_POST['new_permission3'];
-    $totalPermissions = $new_permission . ',' . $new_permission2. ',' . $new_permission3; 
+    //$new_permission3 = $_POST['new_permission3'];
+    $totalPermissions = $new_permission . ',' . $new_permission2; 
     // 更新資料庫中的權限
     $sql = "UPDATE user SET Permissions = ? WHERE user = ?";
     $stmt = mysqli_prepare($link, $sql);
