@@ -44,7 +44,7 @@ if (isset($_GET['ID'])) {
           // 執行更新操作
           if ($stmt->execute()) {
             echo "比賽資訊更新成功!";
-            header("location:SchoolEdit1-04.php");
+            header("location:Contestupdate1-04.php?ID=".$ID);
           } else {
               echo "比賽資訊更新失敗：" . $stmt->error;
               header("location:Contestupdate1-04.php?ID=".$ID);
