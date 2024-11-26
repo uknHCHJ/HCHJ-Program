@@ -11,7 +11,6 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("連線失敗: " . $conn->connect_error);
 }
-
 // 檢查是否有提交表單
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 取得表單資料

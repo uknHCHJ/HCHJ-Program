@@ -1,17 +1,26 @@
 <?php
 session_start();
-include 'db.php';
+/** 資料庫連線 */
+$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
+if ($link) {
+  mysqli_query($link, 'SET NAMES UTF8');
+
+} else {
+  echo "資料庫連接失敗: " . mysqli_connect_error();
+}
 
 if (!isset($_SESSION['user'])) {
-    echo "未登入";
-    header("Location:/~HCHJ/index.html");
+    echo("<script>
+          alert('請先登入！！');
+          window.location.href = '/~HCHJ/index.html'; 
+          </script>");
     exit();
 }
 
 $userData = $_SESSION['user'];
-
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
+$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userId= $userData['user'];
 ?>
 <!Doctype html>
 <html class="no-js" lang="">

@@ -2,17 +2,19 @@
 session_start();
 include 'db.php';
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+if (!isset($_SESSION['user'])) {
+  echo("<script>
+        alert('請先登入！！');
+        window.location.href = '/~HCHJ/index.html'; 
+        </script>");
+  exit();
+}
 $userData = $_SESSION['user'];
 // 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
 $image = $userData['image'];
 $query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
-//if (mysqli_num_rows($result) > 0) {
-// $userDetails = mysqli_fetch_assoc($result);  
-//} else {
-// echo "找不到使用者的詳細資料";
-//}
 ?>
 <!Doctype html>
 <html class="no-js" lang="">
