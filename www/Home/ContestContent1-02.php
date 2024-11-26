@@ -121,8 +121,14 @@ if (!isset($_SESSION['user'])) {
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                </li>
                         </div> <!-- navbar collapse -->
-                   
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
     </header>
         <!-- ========================= header end ========================= -->

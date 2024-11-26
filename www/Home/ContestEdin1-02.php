@@ -87,9 +87,9 @@ if (!isset($_SESSION['user'])) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                </li>
+                            <li class="nav-item">
+                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                    </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -124,8 +124,14 @@ if (!isset($_SESSION['user'])) {
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                </li>
                         </div> <!-- navbar collapse -->
-
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
     </header>
     <!-- ========================= header end ========================= -->

@@ -68,22 +68,22 @@ if (!isset($_SESSION['user'])) {
 
         <!-- ========================= header start ========================= -->
         <header class="header navbar-area">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-12">
-                        <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="index-02.php">
-                                <img src="schoolimages/uknlogo.png" alt="Logo">
-                            </a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="toggler-icon"></span>
-                                <span class="toggler-icon"></span>
-                                <span class="toggler-icon"></span>
-                            </button>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand" href="index-02.php">
+                            <img src="schoolimages/uknlogo.png" alt="Logo">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                        </button>
 
-                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
                             <li class="nav-item">
                                     <li class="nav-item"><a href="index-02.php">首頁</a></li>
@@ -110,7 +110,7 @@ if (!isset($_SESSION['user'])) {
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddCompetition1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
                                 </li>
@@ -122,9 +122,16 @@ if (!isset($_SESSION['user'])) {
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                </li>
                         </div> <!-- navbar collapse -->
-        
-        </header>
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+
+    </header>
         <!-- ========================= header end ========================= -->
 
         <!-- ========================= page-banner-section start ========================= -->

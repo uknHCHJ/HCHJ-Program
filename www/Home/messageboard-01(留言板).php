@@ -72,7 +72,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Alerts | Space</title>
+    <title>留言板</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
