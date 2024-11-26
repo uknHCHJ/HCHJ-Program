@@ -12,7 +12,6 @@ if ($conn->connect_error) {
     die("連線失敗: " . $conn->connect_error);
 }
 
-
 // 取得提交的選擇數量
 $numChoices = isset($_POST['numChoices']) ? intval($_POST['numChoices']) : 0;
 $ID = $_POST["school_id"];
