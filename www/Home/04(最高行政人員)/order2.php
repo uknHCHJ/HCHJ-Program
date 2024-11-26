@@ -15,8 +15,6 @@ if (!$link) {
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit;
 }
-
-
 // 設置字符集
 mysqli_query($link, 'SET NAMES UTF8');
 
