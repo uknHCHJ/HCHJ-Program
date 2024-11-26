@@ -1,20 +1,29 @@
 <?php
 session_start();
-
-// 資料庫連接
+session_start();
+/** 資料庫連線 */
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if (!$link) {
-  die("資料庫連接失敗: " . mysqli_connect_error());
+if ($link) {
+  mysqli_query($link, 'SET NAMES UTF8');
+
+} else {
+  echo "資料庫連接失敗: " . mysqli_connect_error();
 }
 
-// 確認使用者是否已登入
-if (!isset($_SESSION['user']) || empty($_SESSION['user']['user'])) {
-  die("無法取得用戶資訊。請重新登入。");
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
 }
 
-// 從 SESSION 中取得登入使用者資料
 $userData = $_SESSION['user'];
-$userId = $userData['user'];
+// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userId= $userData['user'];
+
+
 $permissions = explode(",", $userData['Permissions']); // 權限以逗號分隔
 $grades = explode(",", $userData['grade']);  // 年級以逗號分隔
 $classes = explode(",", $userData['class']);  // 班級以逗號分隔
