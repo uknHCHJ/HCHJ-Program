@@ -3,11 +3,12 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['user'])) {
-    echo "未登入";
-    header("Location:/~HCHJ/index.html");
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
     exit();
 }
-
 $userData = $_SESSION['user'];
 
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）

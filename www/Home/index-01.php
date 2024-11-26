@@ -8,6 +8,13 @@ if ($link) {
 } else {
     echo "資料庫連接失敗: " . mysqli_connect_error();
 }
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $username = $userData['name']; // 例如從 SESSION 中獲取 user_id
@@ -16,11 +23,6 @@ $query1 = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escap
 $query2 = sprintf("SELECT name FROM `user` WHERE name = '%s'", mysqli_real_escape_string($link, $username));
 $result = mysqli_query($link, $query1);
 $result = mysqli_query($link, $query2);
-//if (mysqli_num_rows($result) > 0) {
-// $userDetails = mysqli_fetch_assoc($result);  
-//} else {
-// echo "找不到使用者的詳細資料";
-//}
 
 ?>
 

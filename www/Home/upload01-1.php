@@ -1,5 +1,12 @@
 <?php
 session_start();
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
 if ($link) {
     mysqli_query($link, 'SET NAMES UTF8');

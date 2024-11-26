@@ -3,8 +3,10 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['user'])) {
-    echo "未登入";
-    header("Location:/~HCHJ/index.html");
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
     exit();
 }
 
@@ -16,13 +18,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 $query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
 
-if (!isset($_SESSION['user'])) {
-    echo ("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
-    exit();
-}
+
 ?>
 
 <!doctype html>
@@ -353,7 +349,7 @@ $conn->close();
                     <div class="sidebar-wrapper">
                         <!-- 搜索表單 -->
                         <div class="sidebar-box search-form-box mb-30">
-                            <form action="Contestsearch.php" method="GET" class="search-form">
+                            <form action="Contestsearch01-1.php" method="GET" class="search-form">
                                 <input type="text" placeholder="Search..." name="keyword" required>
                                 <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
                             </form>

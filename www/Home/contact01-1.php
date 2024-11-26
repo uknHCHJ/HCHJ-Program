@@ -1,6 +1,13 @@
 <?php
 session_start();
 include 'db.php';
+if (!isset($_SESSION['user'])) {
+  echo("<script>
+                  alert('請先登入！！');
+                  window.location.href = '/~HCHJ/index.html'; 
+                </script>");
+  exit();
+}
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userData = $_SESSION['user'];
 // 例如從 SESSION 中獲取 user_id
