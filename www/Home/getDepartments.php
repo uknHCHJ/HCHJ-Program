@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 $school_id = $_GET['school_id'];
-$sql = "SELECT ID, department_name FROM Department WHERE school_id = ?";
+$sql = "SELECT department_id, department_name FROM Department WHERE school_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $school_id);
 $stmt->execute();
