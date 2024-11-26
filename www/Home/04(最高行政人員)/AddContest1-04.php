@@ -1,26 +1,28 @@
 <?php
 session_start();
-/** 資料庫連線 */
-$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if ($link) {
-  mysqli_query($link, 'SET NAMES UTF8');
-
-} else {
-  echo "資料庫連接失敗: " . mysqli_connect_error();
-}
+include 'db.php';
 
 if (!isset($_SESSION['user'])) {
-    echo("<script>
-          alert('請先登入！！');
-          window.location.href = '/~HCHJ/index.html'; 
-          </script>");
+    echo "未登入";
+    header("Location:/~HCHJ/index.html");
     exit();
 }
 
 $userData = $_SESSION['user'];
+
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
-$userId= $userData['user'];
+$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
+
+$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
+
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -116,8 +118,8 @@ if ($conn->connect_error) {
                 </div>
             </div>
         <!-- preloader end -->
-         <!-- ========================= header start ========================= -->
-         <header class="header navbar-area">
+        <!-- ========================= header start ========================= -->
+        <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
