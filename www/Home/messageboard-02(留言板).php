@@ -207,7 +207,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
