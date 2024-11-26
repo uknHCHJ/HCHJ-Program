@@ -3,19 +3,24 @@ session_start();
 /** 資料庫連線 */
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
 if ($link) {
-    mysqli_query($link, 'SET NAMES UTF8');
+  mysqli_query($link, 'SET NAMES UTF8');
 
 } else {
-    echo "資料庫連接失敗: " . mysqli_connect_error();
+  echo "資料庫連接失敗: " . mysqli_connect_error();
 }
+
+if (!isset($_SESSION['user'])) {
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
+
 $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
-$userId = $userData['user'];
-$query1 = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$query2 = sprintf("SELECT name FROM `user` WHERE name = '%s'", mysqli_real_escape_string($link, $username));
-$result = mysqli_query($link, $query1);
-$result = mysqli_query($link, $query2);
+$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userId= $userData['user'];
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +126,7 @@ $result = mysqli_query($link, $query2);
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="javascript:void(0)" onclick="submitLogout()">登出</a>
+                                <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
