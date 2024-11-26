@@ -16,6 +16,7 @@ if (!$link) {
     exit;
 }
 
+
 // 設置字符集
 mysqli_query($link, 'SET NAMES UTF8');
 
