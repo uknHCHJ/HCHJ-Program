@@ -137,10 +137,10 @@ $username=$userData['name'];
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                 <div style="display: flex; justify-content: right;"><!--目前無法使用(搜尋功能)-->
-                    <form action="#" class="search-form">
-                        <input type="text" placeholder="Search">
+                    <form action="Access-Control-search.php" method="GET" class="search-form">
+                        <input type="text" name="query" id="query" placeholder="輸入帳號搜尋..." >
                         <button type="submit">
-                            <i class="lni lni-search-alt"></i>
+                        <i class="lni lni-search-alt"></i>
                         </button>
                     </form>
                 </div>
@@ -149,7 +149,6 @@ $username=$userData['name'];
                 </div>
             </div>                                    
         </div>
-
         <style>
             /* 表格樣式設定 */
             #table-select {

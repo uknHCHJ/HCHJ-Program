@@ -225,8 +225,10 @@ $username=$userData['name'];
                 var currentPermission = urlParams.get('permission');
 
                 // 將參數填入表單
-                if (username && currentPermission) {
+                if (username) {
                     document.getElementById('user').value = username;
+                }
+                if (currentPermission) {
                     document.getElementById('current-permission').value = currentPermission;
                 }
             });
