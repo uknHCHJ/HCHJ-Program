@@ -24,12 +24,11 @@ mysqli_query($link, 'SET NAMES UTF8');
 
 // 獲取 Session 資料
 $username = $_SESSION['user']['name']; // 用戶名稱
-
+$user = $_SESSION['user']['user']; // 用戶名稱
 // 獲取當前用戶的權限
 $query = "SELECT Permissions FROM user WHERE user = '$userId'";
 $result = mysqli_query($link, $query);
-$userRole = mysqli_fetch_assoc($result)['Permissions'];
-$permissions=explode(',', $userRole['Permissions']);
+$userRole = mysqli_fetch_assoc($result)['permissions'];
 
 // 當前頁面處理留言
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
@@ -37,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
 
     if (!empty($message)) {
         // 如果用戶的權限是 2，將留言插入到所有留言板（包括權限為 1 的留言板）
-        if ($permissions == 2) {
-            $query = "INSERT INTO message (user, message, permissions) VALUES ('$username', '$message', 1)"; // 顯示在權限 1 的留言板
+        if ($userRole == 2) {
+            $query = "INSERT INTO message (user, message, permissions) VALUES ('$user', '$message', 1)"; // 顯示在權限 1 的留言板
         } else {
             // 權限為 1 的用戶，只能將留言插入自己的留言板
-            $query = "INSERT INTO message (user, message, permissions) VALUES ('$username', '$message', 1)"; // 或者將 1 替換成用戶權限值
+            $query = "INSERT INTO message (user, message, permissions) VALUES ('$user', '$message', 1)"; // 或者將 1 替換成用戶權限值
         }
 
         if (mysqli_query($link, $query)) {
@@ -73,7 +72,14 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+
     <title>留言板</title>
+
+
+    <title>Alerts | Space</title>
+
+    <title>留言板</title>
+
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -152,11 +158,20 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
  <!-- ========================= header start ========================= -->
  <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
+ <!-- ========================= header start ========================= -->
+ <header class="header navbar-area">
+
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg">
+
                         <a class="navbar-brand" href="index-02.php">
+                        <a class="navbar-brand" href="index-01.php">
+                        <a class="navbar-brand" href="index-02.php">
+
                             <img src="schoolimages/uknlogo.png" alt="Logo">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -169,6 +184,45 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
+
+                            <li class="nav-item">
+                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
+
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">個人資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">二技校園網</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
+                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
+                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">比賽資訊</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="nav-item">
+                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                                </li>
+
+
+                            </ul>
+
                             <li class="nav-item">
                                     <li class="nav-item"><a href="index-02.php">首頁</a></li>
                                     </li>
@@ -203,12 +257,14 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
+
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
                                 <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
+
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
                 </div>
@@ -263,7 +319,14 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
             foreach ($comments as $comment) {
                 echo '<div class="alert alert-success">';
                 // 顯示留言者的名字
+
                 echo '<strong>' . htmlspecialchars($username) . '：</strong>';
+
+
+                echo '<strong>' . htmlspecialchars($comment['user']) . '：</strong>';
+
+                echo '<strong>' . htmlspecialchars($username) . '：</strong>';
+
                 // 顯示留言內容
                 echo htmlspecialchars($comment['message']);
                 echo '</div>';
@@ -323,6 +386,115 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <!-- ========================= alerts-section end ========================= -->
 
     <!-- ========================= client-logo-section start ========================= -->
+
+    <section class="client-logo-section pt-100">
+            <div class="container">
+                <div class="client-logo-wrapper">
+                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                        <div class="client-logo">
+                            <img src="schoolimages/uknim.jpg" alt="">
+                        </div>
+                        <div class="client-logo">
+                            <img src="schoolimages/uknbm.jpg" alt="">
+                        </div> 
+                        <div class="client-logo">
+                            <img src="schoolimages/uknanime.jpg" alt="">
+                        </div>
+                        <div class="client-logo">
+                            <img src="schoolimages/uknbaby.jpg" alt="">
+                        </div>
+                        <div class="client-logo">
+                            <img src="schoolimages/uknenglish.jpg" alt="">
+                        </div>
+                        <div class="client-logo">
+                            <img src="schoolimages/ukneyes.jpg" alt="">
+                        </div>
+                        <div class="client-logo">
+                            <img src="schoolimages/uknnurse.jpg" alt="">
+                        </div>
+
+                        
+
+    <section class="client-logo-section pt-100 pb-130">
+        <div class="container">
+            <div class="client-logo-wrapper">
+                <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                    <div class="client-logo">
+                        <img src="assets/img/client-logo/uideck-logo.svg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="assets/img/client-logo/pagebulb-logo.svg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="assets/img/client-logo/lineicons-logo.svg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="assets/img/client-logo/graygrids-logo.svg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="assets/img/client-logo/lineicons-logo.svg" alt="">
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ========================= client-logo-section end ========================= -->
+
+
+
+        <!-- ========================= footer start ========================= -->
+        <footer class="footer pt-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
+                            <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
+                            
+                            <ul class="footer-contact"> 
+                                <h3>關於我們</h3>                                                        
+                                <p>(02)2632-1181/0986-212-566</p>                                
+                                    <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>                             
+                            </ul>
+                            <style>
+                                .footer .row {
+                                display: flex;
+                                align-items: center; /* 垂直居中 */
+                                justify-content: space-between; /* 讓兩個區塊分居左右 */
+                                }
+                                .footer-widget {                                   
+                                text-align: right; /* 讓「關於學校」內容靠右對齊 */
+                                }
+                            </style>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright-area">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="footer-social-links">
+                                <ul class="d-flex">
+                                    <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
+                                    <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+        <!-- ========================= footer end ========================= -->
+
+        </div>
+    </footer>
+    <!-- ========================= footer end ========================= -->
+
     <section class="client-logo-section pt-100">
             <div class="container">
                 <div class="client-logo-wrapper">
@@ -406,6 +578,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
         </footer>
         <!-- ========================= footer end ========================= -->
 
+
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
         <i class="lni lni-arrow-up"></i>
@@ -421,6 +594,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
+
 
     <script>
         //========= glightbox
