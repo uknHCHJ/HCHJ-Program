@@ -302,7 +302,7 @@ $result = mysqli_query($link, $query2);
             if ($result_students && mysqli_num_rows($result_students) > 0) {
               echo '<thead>';
               echo '<tr>';
-              echo '<th>學生姓名</th>';
+              
               echo '<th>競賽名稱</th>';
               echo '<th>上傳日期</th>';
               echo '<th>查看證明</th>';
@@ -335,7 +335,7 @@ $result = mysqli_query($link, $query2);
 
                     // 顯示學生競賽資料
                     echo '<tr>';
-                    echo '<td>' . htmlspecialchars($history['username']) . '</td>';
+                    
                     echo '<td>' . htmlspecialchars($history['name']) . '</td>';
                     echo '<td>' . htmlspecialchars($history['upload_date']) . '</td>';
                     echo '<td><button class="button" onclick="showSmallWindow(\'' . $img_src . '\')">查看證明</button></td>';
