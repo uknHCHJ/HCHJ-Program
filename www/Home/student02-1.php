@@ -150,7 +150,7 @@ foreach ($grades as $grade) {
         </div> <!-- container -->
 
     </header>
-    <!-- ========================= header end ========================= -->
+  <!-- ========================= header end ========================= -->
 
   <!-- ========================= page-banner-section start ========================= -->
   <section class="page-banner-section pt-75 pb-75 img-bg"

@@ -115,12 +115,14 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
 
-
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                    
