@@ -87,7 +87,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">備審資料</a>
                                     <ul class="sub-menu">
-                                        
+
                                         <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板</a>
                                         </li>
                                     </ul>
@@ -154,6 +154,13 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
             </div>
 
             <style>
+                .button-container {
+                    display: flex;
+                    /* 使用彈性盒子模型 */
+                    gap: 10px;
+                    /* 設定按鈕間的間距 */
+                }
+
                 /* 刪除按鈕樣式 */
                 .delete-button {
                     background-color: #f44336;
@@ -388,7 +395,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                             return false; // 如果取消，則阻止表單提交
                         }
                     </script>
-                    
+
                     <tbody>
 
                     </tbody>
@@ -427,10 +434,10 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                 </nav>
 
                 <div class="button-container">
-                    <button type="submit" class="download-button" onclick="window.location.href='/~HCHJ/Home/upload01-1php';">新增備審</button>
-                </div>
-                <div class="button-container">
-                    <button type="submit" class="download-button" onclick="window.location.href='/~HCHJ/Home/upload01-1php';">匯出備審</button>
+                    <button type="submit" class="download-button"
+                        onclick="window.location.href='/~HCHJ/Home/upload01-1php';">新增備審</button>
+                    <button type="submit" class="download-button"
+                        onclick="window.location.href='/~HCHJ/Home/upload01-1php';">匯出備審</button>
                 </div>
             </div>
 </body>
