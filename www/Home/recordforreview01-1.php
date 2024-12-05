@@ -215,6 +215,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                     /* 調整空間大小 */
                 }
 
+               
                 /* 表格樣式設定 */
                 #table-select {
                     width: 7000px;
@@ -436,7 +437,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                 <div class="button-container">
                     <button type="submit" class="download-button"
                         onclick="window.location.href='/~HCHJ/Home/upload01-1php';">新增備審</button>
-                    <button type="submit" class="download-button"
+                    <button type="submit" class="btn btn-primary"
                         onclick="window.location.href='/~HCHJ/Home/upload01-1php';">匯出備審</button>
                 </div>
             </div>
