@@ -429,6 +429,9 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                 <div class="button-container">
                     <button type="submit" class="download-button" onclick="window.location.href='/~HCHJ/Home/upload01-1php';">新增備審</button>
                 </div>
+                <div class="button-container">
+                    <button type="submit" class="download-button" onclick="window.location.href='/~HCHJ/Home/upload01-1php';">匯出備審</button>
+                </div>
             </div>
 </body>
 </div>
