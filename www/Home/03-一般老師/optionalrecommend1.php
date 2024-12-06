@@ -10,7 +10,7 @@
     <div class="container">
         <h1>填寫統測成績</h1>
         <form action="submit_scores.php" method="POST">
-            <label for="user">學生 ID:</label>
+            <label for="user">學生帳號：</label>
             <input type="number" id="user" name="user" required><br><br>
 
             <label for="subject_name">科目:</label>
