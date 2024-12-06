@@ -10,6 +10,7 @@ if (!isset($_SESSION['user'])) {
 
 $userData = $_SESSION['user'];
 
+
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
