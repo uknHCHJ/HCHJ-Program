@@ -1,16 +1,16 @@
 <?php
 // 資料庫連接設定
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "your_database";
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
-// 建立資料庫連接
+// 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// 檢查連接
+// 檢查連線
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("連線失敗: " . $conn->connect_error);
 }
 
 // 獲取表單資料
