@@ -8,10 +8,8 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-$userData = $_SESSION['user'];
-
-// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
+$userData = $_SESSION['user']; // 從 SESSION 獲取用戶資料
+$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8'); // 確保數據安全
 
 $query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
@@ -208,16 +206,13 @@ if ($conn->connect_error) {
         <div class="container">
         <h1>填寫統測成績</h1>
         <form action="optionalrecommend2.php" method="POST">
-            <label for="user">學生帳號：</label>
-            <input type="text" id="user" name="user" required><br><br>
-
+        <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
             <label for="subject_name">科目:</label>
             <select id="subject_name" name="subject_name" required>
+                <option value="國文">國文</option>    
                 <option value="數學">數學</option>
                 <option value="英文">英文</option>
-                <option value="國文">國文</option>
-                <option value="自然">自然</option>
-                <option value="社會">社會</option>
+                <option value="專業科目">專業科目</option>
             </select><br><br>
 
             <label for="score">成績:</label>
