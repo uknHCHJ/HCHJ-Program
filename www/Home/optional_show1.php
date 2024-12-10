@@ -354,6 +354,17 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                     tbody.innerHTML = ''; // 清空表格內容
 
+                    if (data.length === 0) {
+                        // 當數據為空時顯示提示行
+                        var row = tbody.insertRow();
+                        var cell = row.insertCell(0);
+                        cell.colSpan = 5; // 跨越整個表格的列數
+                        cell.textContent = '您還未選擇志願';
+                        cell.style.textAlign = 'center'; // 置中顯示文字
+                        cell.style.color = 'gray'; // 文字顏色
+                        return; // 停止渲染其他內容
+                    }
+
                     data.forEach(function (item, index) {
                         var row = tbody.insertRow();
 
