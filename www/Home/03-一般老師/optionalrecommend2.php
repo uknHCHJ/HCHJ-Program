@@ -51,6 +51,7 @@ $stmt->bind_param("isi", $userId, $subjectName, $score);
 if ($stmt->execute()) {
     echo("<script>
             alert('成績提交成功！');
+               window.location.href = 'optionalrecommend1.php'; // 重新導向到成績填寫頁面
           </script>");
 } else {
     echo "提交失敗：" . $stmt->error;
