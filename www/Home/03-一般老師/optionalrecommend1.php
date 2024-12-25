@@ -200,26 +200,46 @@ if ($conn->connect_error) {
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
-        <section  class="service-section pt-20 pb-10">
+
+<section class="service-section pt-20 pb-10">
     <div class="form-container">
-    <section  class="service-section pt-20 pb-10">
-        <div class="container">
-        <h1>填寫統測成績</h1>
-        <form action="optionalrecommend2.php" method="POST">
-        <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
-            <label for="subject_name">科目:</label>
-            <select id="subject_name" name="subject_name" required>
-                <option value="國文">國文</option>    
-                <option value="數學">數學</option>
-                <option value="英文">英文</option>
-                <option value="專業科目">專業科目</option>
-            </select><br><br>
+        <section class="service-section pt-20 pb-10">
+            <div class="container">
+            <h1>填寫統測成績</h1>
+    <form action="optionalrecommend2.php" method="POST">
+        <label for="subject_name">科目:</label>
+        <select id="subject_name" name="subject_name" required>
+            <option value="國文">國文</option>
+            <option value="數學">數學</option>
+            <option value="英文">英文</option>
+            <option value="專業科目">專業科目</option>
+        </select><br><br>
 
-            <label for="score">成績:</label>
-            <input type="text" id="score" name="score" min="0" max="100" required><br><br>
+        <label for="score">成績:</label>
+        <input type="text" id="score" name="score" min="0" max="100" required><br><br>
 
-            <button type="submit" class="btn btn-primary">提交成績</button>
-        </form>
+        <button type="submit" class="btn btn-primary">提交成績</button>
+    </form>
+
+    <!-- 傳遞 PHP 資料到前端 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 從 PHP 獲得已存在的科目資料
+            const existingSubjects = <?php echo json_encode($existingSubjects); ?>;
+            const subjectOptions = document.querySelectorAll('#subject_name option');
+
+            // 禁用已存在的科目選項
+            subjectOptions.forEach(option => {
+                if (existingSubjects.includes(option.value)) {
+                    option.disabled = true;
+                }
+            });
+        });
+    </script>
+            </div>
+        </section>
+    </div>
+</section>
     </div>
     </div>
     </div>
