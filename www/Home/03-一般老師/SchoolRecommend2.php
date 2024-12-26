@@ -1,41 +1,82 @@
 <?php
-// 資料庫連接設置
-$host = '127.0.0.1'; // 資料庫主機
-$db = 'school_db';   // 資料庫名稱
-$user = 'root';      // 資料庫用戶
-$pass = '';          // 資料庫密碼
+session_start();
+include 'db.php';
 
-header('Content-Type: application/json');
+// 檢查是否已登入
+if (!isset($_SESSION['user'])) {
+    echo "未登入";
+    header("Location:/~HCHJ/index.html");
+    exit();
+}
 
-try {
-    // 使用 PDO 連接資料庫
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$userData = $_SESSION['user']; // 從 SESSION 獲取用戶資料
+$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8'); // 確保數據安全
 
-    // 查詢每所學校被選擇為各志願序的次數
-    $sql = "
-        SELECT school_name, priority, COUNT(*) AS count
-        FROM choices
-        GROUP BY school_name, priority
-    ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+// 確認是否有 student_id
+if (isset($_GET['student_id'])) {
+    $student_id = $_GET['student_id']; // 或從 URL 傳遞的 GET 參數
+} else {
+    echo "學生ID未提供";
+    exit();
+}
 
-    // 整理數據
-    $data = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $school = $row['school_name'];
-        $priority = $row['priority'];
-        $count = $row['count'];
+// 資料庫連接
+$host = '127.0.0.1';
+$db = 'HCHJ';
+$user = 'HCHJ';
+$pass = 'xx435kKHq';
+$link = mysqli_connect($host, $user, $pass, $db);
 
-        if (!isset($data[$school])) {
-            $data[$school] = [0, 0]; // 初始化第一志願和第二志願計數
+if (!$link) {
+    die("連接資料庫失敗: " . mysqli_connect_error());
+}
+
+// 查詢該學生的統測成績
+$query = "SELECT * FROM user_scores WHERE user = ?";
+$stmt = $link->prepare($query);
+$stmt->bind_param("i", $student_id); // 綁定學生ID
+$stmt->execute();
+$result = $stmt->get_result();
+
+$userScores = [];
+while ($row = $result->fetch_assoc()) {
+    $userScores[$row['subject_name']] = $row['score'];
+}
+$stmt->close();
+
+// 根據學校要求的成績計算推薦機率
+$query = "SELECT * FROM weighted";
+$result = mysqli_query($link, $query);
+
+$recommendations = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $schoolName = $row['school_name'];
+    $requiredScores = json_decode($row['required_scores'], true); // 解碼 JSON 格式的要求成績
+
+    $matchedCriteria = 0;
+    $totalCriteria = count($requiredScores);
+
+    // 計算符合條件的科目數
+    foreach ($requiredScores as $subject => $requiredScore) {
+        if (isset($userScores[$subject]) && $userScores[$subject] >= $requiredScore) {
+            $matchedCriteria++;
         }
-        $data[$school][$priority - 1] = $count;
     }
 
-    echo json_encode($data);
-} catch (PDOException $e) {
-    echo json_encode(["error" => $e->getMessage()]);
+    // 計算推薦機率
+    $probability = ($matchedCriteria / $totalCriteria) * 100;
+
+    $recommendations[] = [
+        'school_name' => $schoolName,
+        'probability' => $probability
+    ];
 }
+
+// 排序推薦學校，根據機率降序排列
+usort($recommendations, function ($a, $b) {
+    return $b['probability'] - $a['probability'];
+});
+
+// 回傳 JSON 給前端
+echo json_encode($recommendations);
 ?>
