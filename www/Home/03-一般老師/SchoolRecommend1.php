@@ -21,6 +21,63 @@ if (!isset($_SESSION['user'])) {
                   </script>");
     exit();
 }
+
+// 獲取用戶的統測成績
+$userId = $_SESSION['user']['user'];
+$query = "SELECT * FROM user_scores WHERE user = ?";
+$stmt = $link->prepare($query);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// 儲存用戶的成績
+$userScores = [];
+while ($row = $result->fetch_assoc()) {
+    $userScores[$row['subject_name']] = $row['score'];
+}
+$stmt->close();
+
+// 從資料庫提取學校資料
+$query = "SELECT * FROM weighted";
+$result = $link->query($query);
+
+// 儲存學校資料
+$schools = [];
+while ($row = $result->fetch_assoc()) {
+    $schools[] = [
+        'school_name' => $row['school_name'],
+        'location' => $row['location'],
+        'required_scores' => json_decode($row['required_scores'], true), // 解碼 JSON
+        'link' => $row['link']
+    ];
+}
+
+// 計算每個學校的進入機率
+$recommendations = [];
+foreach ($schools as $school) {
+    $totalCriteria = count($school['required_scores']);
+    $matchedCriteria = 0;
+
+    // 計算符合的條件數量
+    foreach ($school['required_scores'] as $subject => $requiredScore) {
+        if (isset($userScores[$subject]) && $userScores[$subject] >= $requiredScore) {
+            $matchedCriteria++;
+        }
+    }
+
+    // 計算進入機率
+    $probability = ($matchedCriteria / $totalCriteria) * 100;
+    $recommendations[] = [
+        'school_name' => $school['school_name'],
+        'probability' => $probability,
+        'link' => $school['link']
+    ];
+}
+
+// 排序推薦學校，按機率排序
+usort($recommendations, function ($a, $b) {
+    return $b['probability'] - $a['probability'];
+});
 ?>
 
 <!doctype html>
@@ -28,7 +85,7 @@ if (!isset($_SESSION['user'])) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>統測成績</title>
+        <title>推薦二技</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -42,46 +99,47 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
 		<link rel="stylesheet" href="assets/css/main.css">
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
-   /* 設定容器和表單樣式 */
-.form-container {
-    text-align: center;
-    width: 100%;
-    max-width: 500px; /* 設定最大寬度 */
-    margin: 0 auto;
-    padding: 20px;
-}
+    /* 設定容器和表單樣式 */
+    .form-container {
+        width: 100%;
+        max-width: 800px; /* 設定最大寬度 */
+        margin: 0 auto; /* 容器居中 */
+        padding: 20px;
+        text-align: center; /* 使所有內容置中 */
+    }
+    .large-title {
+        font-size: 2.5em; /* 調整為所需的大小 */
+    }
+    /* 設定表格樣式 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        text-align: center; /* 表格內容居中 */
+    }
 
-/* 調整標籤樣式 */
-label {
-    display: block;
-    text-align: left;
-    font-weight: bold;
-    font-size: 1.2em; /* 增加字型大小 */
-    margin-top: 10px;
-}
+    table th, table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
 
-/* 設定 select、input 和 textarea 的樣式與大小 */
-select, input[type="text"], input[type="number"], input[type="file"], input[type="date"], textarea {
-    width: 100%;
-        max-width: 500px; /* 設定欄位最大寬度 */
-        margin-top: 10px;
-        padding: 8px;
-        font-size: 1em;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-}
+    /* 設定圖表樣式 */
+    canvas {
+        display: block;
+        margin: 20px auto; /* 讓圖表居中 */
+        max-width: 800px; /* 設定最大寬度 */
+    }
 
-/* 設定按鈕樣式 */
-button {
-    font-size: 1.2em; /* 增加按鈕字型大小 */
-    padding: 10px 20px;
-    margin-top: 20px;
-    cursor: pointer;
-}
-
+    /* 標題樣式 */
+    h1, h2 {
+        font-size: 1.8em;
+        color: #333;
+        text-align: center; /* 標題居中 */
+    }
 </style>
+
     </head>
     <?php
 $servername = "127.0.0.1"; //伺服器ip或本地端localhost
@@ -184,71 +242,108 @@ if ($conn->connect_error) {
 
         <!-- ========================= page-banner-section start ========================= -->
         <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="banner-content">
-                            <h2 class="text-white">統測成績</h2>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="banner-content">
+                    <h1 class="text-white text-left large-title">學校推薦</h1><br> <!-- 讓標題靠左並增加字體大小 -->
+                    <div class="page-breadcrumb text-left"> <!-- 讓麵包屑導航靠左 -->
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                            </ol>
+                        </nav>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- ========================= page-banner-section end ========================= -->
-
-<section class="service-section pt-20 pb-10">
-    <div class="form-container">
-        <section class="service-section pt-20 pb-10">
-            <div class="container">
-                  <h1>填寫統測成績</h1>
-                  <form action="optionalrecommend2.php" method="POST">
-    <label for="subject_name">科目:</label>
-    <select id="subject_name" name="subject_name" required>
-        <option value="國文">國文</option>
-        <option value="數學">數學</option>
-        <option value="英文">英文</option>
-        <option value="專業科目">專業科目</option>
-    </select><br><br>
-
-    <label for="score">成績:</label>
-    <input type="number" id="score" name="score" min="0" max="100" required><br><br>
-
-    <!-- 用隱藏欄位傳遞用戶 ID -->
-    <input type="hidden" name="user_id" value="<?php echo $_SESSION['user']['user']; ?>">
-
-    <button type="submit" class="btn btn-primary">提交成績</button>
-</form>
-
-</script>
-    </form>
-
-    <!-- 傳遞 PHP 資料到前端 -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 從 PHP 獲得已存在的科目資料
-            const existingSubjects = <?php echo json_encode($existingSubjects); ?>;
-            const subjectOptions = document.querySelectorAll('#subject_name option');
-
-            // 禁用已存在的科目選項
-            subjectOptions.forEach(option => {
-                if (existingSubjects.includes(option.value)) {
-                    option.disabled = true;
-                }
-            });
-        });
-    </script>
-            </div>
-        </section>
+        </div>
     </div>
 </section>
+        <!-- ========================= page-banner-section end ========================= -->
+        <div class="form-container">
+    <h1>學校推薦</h1>
+    <canvas id="probabilityChart" width="800" height="400"></canvas>
+
+    <table>
+        <tr>
+            <th>學校名稱</th>
+            <th>推薦機率 (%)</th>
+            <th>詳細資訊</th>
+        </tr>
+        <?php if (count($recommendations) > 0) : ?>
+            <?php foreach ($recommendations as $school) : ?>
+                <tr>
+                    <td><?php echo $school['school_name']; ?></td>
+                    <td><?php echo round($school['probability'], 2); ?>%</td>
+                    <td><a href="<?php echo $school['link']; ?>" target="_blank">查看學校</a></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="3">沒有找到推薦的學校。</td>
+            </tr>
+        <?php endif; ?>
+    </table>
+
+    <h2>推薦機率圖表</h2>
+    <canvas id="probabilityChart" width="400" height="200"></canvas>
+</div>
+
+<script>
+        const ctx = document.getElementById('probabilityChart').getContext('2d');
+
+        // 初始化圖表
+        const probabilityChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // 學校名稱
+                datasets: [{
+                    label: '推薦機率 (%)',
+                    data: [], // 學校推薦機率
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 10, // 每 10% 顯示一個刻度
+                            max: 100 // 最大值為 100%
+                        }
+                    }
+                }
+            }
+        });
+
+        // 定期更新圖表數據
+        async function fetchDataAndUpdateChart() {
+            try {
+                const response = await fetch('get_data.php'); // 假設從API或資料庫獲取數據
+                const data = await response.json(); // 假設返回的數據格式為 { "學校1": 80, "學校2": 65, ... }
+
+                // 提取學校名稱和機率數據
+                const labels = Object.keys(data);
+                const probabilities = Object.values(data);
+
+                // 更新圖表數據
+                probabilityChart.data.labels = labels;
+                probabilityChart.data.datasets[0].data = probabilities;
+                probabilityChart.update(); // 刷新圖表
+            } catch (error) {
+                console.error('數據加載失敗:', error);
+            }
+        }
+
+        // 每 5 秒更新一次圖表數據
+        setInterval(fetchDataAndUpdateChart, 5000);
+
+        // 初次加載數據
+        fetchDataAndUpdateChart();
+    </script>
     </div>
     </div>
     </div>
