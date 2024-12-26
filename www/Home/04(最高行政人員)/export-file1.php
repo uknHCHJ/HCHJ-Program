@@ -166,6 +166,30 @@ $username=$userData['name'];
                         color: #007bff;
                         cursor: pointer;
                     }
+
+                    /* 讓整個表單區塊置中 */
+                    #service {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        text-align: center; /* 使文字置中 */
+                    }
+
+                    /* 讓表單內容置中 */
+                    .table-container {
+                        text-align: center;
+                    }
+                    .checkbox-container {
+                        display: flex;
+                        justify-content: center; /*checkbox項目置中*/
+                        gap: 15px; /*選項之間的間距*/
+                        flex-wrap: wrap; /*空間不足換行顯示*/
+                    }
+                    #user {
+                        width: 200px;
+                        margin: 0 auto; /* 置中對齊 */
+                        text-align: center; /* 輸入框置中對齊*/
+                    }
                 </style>
 
                     <button type="submit" class="btn btn-primary">匯出檔案</button>
