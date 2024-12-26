@@ -28,7 +28,7 @@ if (!isset($_SESSION['user'])) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>新增二技校園</title>
+        <title>統測成績</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -188,7 +188,7 @@ if ($conn->connect_error) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">新增</h2>
+                            <h2 class="text-white">統測成績</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
