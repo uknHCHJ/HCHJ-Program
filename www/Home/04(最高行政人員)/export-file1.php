@@ -113,23 +113,63 @@ $username=$userData['name'];
                 <div class="table-container">
                     <form id="permission-form" action="Change-permissions2.php" method="POST">
                         <div class="form-group mb-3">
-                            <label for="user">帳號：</label>
+                            <label for="user">匯出帳號：</label>
                             <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
                         </div>
-                <!-- 方形選項 -->
+        <!-- 方形選項 -->
                 <div class="form-group mb-3">
-                    <label for="export-option">選擇匯出檔案類型：</label><br>
-                    <input type="checkbox" id="export-option" name="export-option" value="file1">
-                    <label for="export-option" class="checkbox-label">全部</label><br>
-                    <input type="checkbox" id="export-option2" name="export-option2" value="file2">
-                    <label for="export-option2" class="checkbox-label">證照資料</label><br>
-                    <input type="checkbox" id="export-option2" name="export-option3" value="file3">
-                    <label for="export-option3" class="checkbox-label">競賽資料</label><br>
-                    <input type="checkbox" id="export-option2" name="export-option4" value="file4">
-                    <label for="export-option4" class="checkbox-label">測試資料123</label><br>
+                    <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="export-option" name="export-option" value="file1" class="custom-checkbox">
+                        <label for="export-option" class="checkbox-label">全部</label>
+
+                        <input type="checkbox" id="export-option2" name="export-option2" value="file2" class="custom-checkbox">
+                        <label for="export-option2" class="checkbox-label">證照資料</label>
+
+                        <input type="checkbox" id="export-option3" name="export-option3" value="file3" class="custom-checkbox">
+                        <label for="export-option3" class="checkbox-label">競賽資料</label>
+
+                        <input type="checkbox" id="export-option4" name="export-option4" value="file4" class="custom-checkbox">
+                        <label for="export-option4" class="checkbox-label">測試資料123</label>
+                    </div>
                 </div>
-                        <button type="submit" class="btn btn-primary">匯出檔案</button>
-                        <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
+
+                <style>
+                    /* 方形選項顯示在一排 */
+                    .checkbox-container {
+                        display: flex;
+                        gap: 15px; /* 設定選項之間的間距 */
+                        flex-wrap: wrap; /* 如果空間不足，換行顯示 */
+                    }
+
+                    .custom-checkbox {
+                        width: 20px;
+                        height: 20px;
+                        vertical-align: middle;
+                    }
+
+                    .checkbox-label {
+                        font-size: 16px;
+                        color: #333;
+                        margin-left: 5px;
+                        vertical-align: middle;
+                    }
+
+                    /* 強調選項 */
+                    .custom-checkbox:checked + .checkbox-label {
+                        font-weight: bold;
+                        color: #007bff;
+                    }
+
+                    /* 美化方形選項的標籤 */
+                    .checkbox-label:hover {
+                        color: #007bff;
+                        cursor: pointer;
+                    }
+                </style>
+
+                    <button type="submit" class="btn btn-primary">匯出檔案</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
                     </form>
                 </div>
             </div>
