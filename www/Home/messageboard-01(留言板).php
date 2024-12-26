@@ -149,6 +149,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     </div>
     <!-- preloader end -->
 
+   
     <!-- ========================= header start ========================= -->
     <header class="header navbar-area">
         <div class="container">
@@ -168,35 +169,51 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                    <a class="page-scroll active dd-menu" href="javascript:void(0)">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="../changepassword-01(修改密碼).html">修改密碼</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/contact-01(個人資料).php">查看個人資料</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll active dd-menu" href="javascript:void(0)">備審資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/upload-01(上傳備審).php">上傳備審</a>
-                                        </li>
-                                        <li class="nav-item active"><a
-                                                href="/~HCHJ/Home/recordforreview-01(備審紀錄).php">備審紀錄</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="\Personal page\html\index.html">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/optional(填選志願1)-01.php">志願序填寫</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
+                               
+                            
+                            <li class="nav-item">
+                            <a class="page-scroll" href="index-01.php" >首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/messageboard-01(留言板).php">留言板</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                            </li>
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -214,13 +231,13 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">導師留言板</h2>
+                        <h2 class="text-white">留言板</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item" aria-current="page"><a href="javascript:void(0)">首頁</a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">導師留言板</li>
+                                    <li class="breadcrumb-item active" aria-current="page">留言板</li>
                                 </ol>
                             </nav>
                         </div>
@@ -311,52 +328,41 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 </style>
     <!-- ========================= alerts-section end ========================= -->
 
-    <!-- ========================= client-logo-section start ========================= -->
-    <section class="client-logo-section pt-100 pb-130">
+  <!-- ========================= client-logo-section start ========================= -->
+  <section class="client-logo-section pt-100">
         <div class="container">
             <div class="client-logo-wrapper">
                 <div class="client-logo-carousel d-flex align-items-center justify-content-between">
                     <div class="client-logo">
-                        <img src="assets/img/client-logo/uideck-logo.svg" alt="">
+                        <img src="schoolimages/uknim.jpg" alt="">
                     </div>
                     <div class="client-logo">
-                        <img src="assets/img/client-logo/pagebulb-logo.svg" alt="">
+                        <img src="schoolimages/uknbm.jpg" alt="">
                     </div>
                     <div class="client-logo">
-                        <img src="assets/img/client-logo/lineicons-logo.svg" alt="">
+                        <img src="schoolimages/uknanime.jpg" alt="">
                     </div>
                     <div class="client-logo">
-                        <img src="assets/img/client-logo/graygrids-logo.svg" alt="">
+                        <img src="schoolimages/uknbaby.jpg" alt="">
                     </div>
                     <div class="client-logo">
-                        <img src="assets/img/client-logo/lineicons-logo.svg" alt="">
+                        <img src="schoolimages/uknenglish.jpg" alt="">
                     </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/ukneyes.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/uknnurse.jpg" alt="">
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </section>
     <!-- ========================= client-logo-section end ========================= -->
 
-    <!-- ========================= subscribe-section start ========================= -->
-    <section class="subscribe-section pt-70 pb-70 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-6 col-lg-6">
-                    <div class="section-title mb-30">
-                        <span class="text-white wow fadeInDown" data-wow-delay=".2s">Subscribe</span>
-                        <h2 class="text-white mb-40 wow fadeInUp" data-wow-delay=".4s">Subscribe Our Newsletter</h2>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6">
-                    <form action="#" class="subscribe-form wow fadeInRight" data-wow-delay=".4s">
-                        <input type="text" name="subs-email" id="subs-email" placeholder="Your Email">
-                        <button type="submit"><i class="lni lni-telegram-original"></i></button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ========================= subscribe-section end ========================= -->
+
 
     <!-- ========================= footer start ========================= -->
     <footer class="footer pt-100">
@@ -364,64 +370,32 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index.html" class="logo mb-30"><img src="assets/img/logo/logo.svg" alt="logo"></a>
-                        <p class="mb-30 footer-desc">We Crafted an awesome desig library that is robust and intuitive to
-                            use. No matter you're building a business presentation websit.</p>
+                        <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                     </div>
                 </div>
-                <div class="col-xl-2 offset-xl-1 col-lg-2 col-md-6">
-                    <div class="footer-widget mb-60 wow fadeInUp" data-wow-delay=".4s">
-                        <h4>Quick Link</h4>
-                        <ul class="footer-links">
-                            <li>
-                                <a href="javascript:void(0)">Home</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">About Us</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Service</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Contact</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6">
-                    <div class="footer-widget mb-60 wow fadeInUp" data-wow-delay=".6s">
-                        <h4>Service</h4>
-                        <ul class="footer-links">
-                            <li>
-                                <a href="javascript:void(0)">Marketing</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Branding</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Web Design</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Graphics Design</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6">
-                    <div class="footer-widget mb-60 wow fadeInRight" data-wow-delay=".8s">
-                        <h4>Contact</h4>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
+
                         <ul class="footer-contact">
-                            <li>
-                                <p>+00983467367234</p>
-                            </li>
-                            <li>
-                                <p>yourmail@gmail.com</p>
-                            </li>
-                            <li>
-                                <p>United State Of America
-                                    *12 Street House</p>
-                            </li>
+                            <h3>關於我們</h3>
+                            <p>(02)2632-1181/0986-212-566</p>
+                            <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>
                         </ul>
+                        <style>
+                            .footer .row {
+                                display: flex;
+                                align-items: center;
+                                /* 垂直居中 */
+                                justify-content: space-between;
+                                /* 讓兩個區塊分居左右 */
+                            }
+
+                            .footer-widget {
+                                text-align: right;
+                                /* 讓「關於學校」內容靠右對齊 */
+                            }
+                        </style>
                     </div>
                 </div>
             </div>
@@ -431,23 +405,18 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     <div class="col-md-6">
                         <div class="footer-social-links">
                             <ul class="d-flex">
-                                <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="lni lni-twitter-filled"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="lni lni-linkedin-original"></i></a></li>
-                                <li><a href="javascript:void(0)"><i class="lni lni-instagram-filled"></i></a></li>
+                                <li><a href="https://www.facebook.com/UKNunversity"><i
+                                            class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="https://www.instagram.com/ukn_taipei/"><i
+                                            class="lni lni-instagram-filled"></i></a></li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="wow fadeInUp" data-wow-delay=".3s"><a target="_blank" href="http://www.mobanwang.com/"
-                                title="网页模板">网页模板</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
     <!-- ========================= footer end ========================= -->
-
 
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
@@ -464,6 +433,53 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
+
+    <script>
+        //========= glightbox
+        GLightbox({
+            'href': '#',
+            'type': 'video',
+            'source': 'youtube', //vimeo, youtube or local
+            'width': 900,
+            'autoplayVideos': true,
+        });
+
+        //========= testimonial 
+        tns({
+            container: '.testimonial-active',
+            items: 1,
+            slideBy: 'page',
+            autoplay: false,
+            mouseDrag: true,
+            gutter: 0,
+            nav: false,
+            controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
+        });
+
+        //============== isotope masonry js with imagesloaded
+        imagesLoaded('#container', function () {
+            var elem = document.querySelector('.grid');
+            var iso = new Isotope(elem, {
+                // options
+                itemSelector: '.grid-item',
+                masonry: {
+                    // use outer width of grid-sizer for columnWidth
+                    columnWidth: '.grid-item'
+                }
+            });
+
+            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
+            filterButtons.forEach(e =>
+                e.addEventListener('click', () => {
+
+                    let filterValue = event.target.getAttribute('data-filter');
+                    iso.arrange({
+                        filter: filterValue
+                    });
+                })
+            );
+        });
+    </script>
 </body>
 
 </html>

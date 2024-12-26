@@ -114,6 +114,9 @@ $result = mysqli_query($link, $query2);
                                 <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/messageboard-01(留言板).php">留言板</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
                             </li>
                             <li class="nav-item">
