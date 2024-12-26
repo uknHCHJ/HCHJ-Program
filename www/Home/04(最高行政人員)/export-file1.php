@@ -111,7 +111,7 @@ $username=$userData['name'];
                 </div>
 
                 <div class="table-container">
-                    <form id="permission-form" action="Change-permissions2.php" method="POST">
+                    <form id="permission-form" action="export-file2.php" method="POST">
                         <div class="form-group mb-3">
                             <label for="user">匯出帳號：</label>
                             <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
@@ -166,33 +166,9 @@ $username=$userData['name'];
                         color: #007bff;
                         cursor: pointer;
                     }
-
-                    /* 讓整個表單區塊置中 */
-                    #service {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-align: center; /* 使文字置中 */
-                    }
-
-                    /* 讓表單內容置中 */
-                    .table-container {
-                        text-align: center;
-                    }
-                    .checkbox-container {
-                        display: flex;
-                        justify-content: center; /*checkbox項目置中*/
-                        gap: 15px; /*選項之間的間距*/
-                        flex-wrap: wrap; /*空間不足換行顯示*/
-                    }
-                    #user {
-                        width: 200px;
-                        margin: 0 auto; /* 置中對齊 */
-                        text-align: center; /* 輸入框置中對齊*/
-                    }
                 </style>
 
-                    <button type="submit" class="btn btn-primary">匯出檔案</button>
+                    <button type="submit" class="btn btn-primary">匯出檔案(.docx)</button>
                     <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
                     </form>
                 </div>
