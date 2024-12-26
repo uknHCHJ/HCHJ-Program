@@ -44,40 +44,43 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/main.css">
 
         <style>
-    /* 設定容器和表單樣式 */
-    .form-container {
-        text-align: center;
-        width: 100%;
-        max-width: 500px; /* 設定最大寬度 */
-        margin: 0 auto;
-        padding: 20px;
-    }
+   /* 設定容器和表單樣式 */
+.form-container {
+    text-align: center;
+    width: 100%;
+    max-width: 500px; /* 設定最大寬度 */
+    margin: 0 auto;
+    padding: 20px;
+}
 
-    /* 調整標籤樣式 */
-    label {
-        display: block;
-        text-align: left;
-        font-weight: bold;
-        font-size: 1.2em; /* 增加字型大小 */
-        margin-top: 10px;
-    }
+/* 調整標籤樣式 */
+label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.2em; /* 增加字型大小 */
+    margin-top: 10px;
+}
 
-    /* 設定 select、input 和 textarea 的樣式與大小 */
-    select, input[type="text"], textarea, input[type="file"], input[type="date"] {
-        width: 100%;
-        max-width: 500px; /* 設定欄位最大寬度 */
-        margin-top: 10px;
-        padding: 8px;
-        font-size: 1em;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-    }
+/* 設定 select、input 和 textarea 的樣式與大小 */
+select, input[type="text"], input[type="number"], input[type="file"], input[type="date"], textarea {
+    width: 100%;
+    max-width: 500px; /* 設定欄位最大寬度 */
+    margin-top: 10px;
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid black; /* 邊框顏色設為黑色 */
+    border-radius: 5px;
+}
 
-    /* 設定按鈕樣式 */
-    button {
-        font-size: 1.2em; /* 增加按鈕字型大小 */
-        padding: 10px 20px;
-    }
+/* 設定按鈕樣式 */
+button {
+    font-size: 1.2em; /* 增加按鈕字型大小 */
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
 </style>
     </head>
     <?php
@@ -205,7 +208,7 @@ if ($conn->connect_error) {
     <div class="form-container">
         <section class="service-section pt-20 pb-10">
             <div class="container">
-            <h1>填寫統測成績</h1>
+                  <h1>填寫統測成績</h1>
     <form action="optionalrecommend2.php" method="POST">
         <label for="subject_name">科目:</label>
         <select id="subject_name" name="subject_name" required>
@@ -214,9 +217,9 @@ if ($conn->connect_error) {
             <option value="英文">英文</option>
             <option value="專業科目">專業科目</option>
         </select><br><br>
-
+        
         <label for="score">成績:</label>
-        <input type="text" id="score" name="score" min="0" max="100" required><br><br>
+        <input type="number" id="score" name="score" min="0" max="100" required><br><br>
 
         <button type="submit" class="btn btn-primary">提交成績</button>
     </form>
