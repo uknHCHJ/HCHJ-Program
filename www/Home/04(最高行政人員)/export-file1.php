@@ -111,7 +111,7 @@ $username=$userData['name'];
                 </div>
 
                 <div class="table-container">
-                    <form id="permission-form" action="Change-permissions2.php" method="POST">
+                    <form id="permission-form" action="export-file2.php" method="POST">
                         <div class="form-group mb-3">
                             <label for="user">匯出帳號：</label>
                             <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
@@ -168,7 +168,7 @@ $username=$userData['name'];
                     }
                 </style>
 
-                    <button type="submit" class="btn btn-primary">匯出檔案</button>
+                    <button type="submit" class="btn btn-primary">匯出檔案(.docx)</button>
                     <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
                     </form>
                 </div>
