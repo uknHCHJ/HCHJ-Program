@@ -111,28 +111,24 @@ $username=$userData['name'];
                 </div>
 
                 <div class="table-container">
-                    <form id="permission-form" action="export-file2.php" method="POST">
-                        <div class="form-group mb-3">
-                            <label for="user">匯出帳號：</label>
-                            <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
-                        </div>
-        <!-- 方形選項 -->
-                <div class="form-group mb-3">
-                    <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="export-option" name="export-option" value="file1" class="custom-checkbox">
-                        <label for="export-option" class="checkbox-label">全部</label>
-
-                        <input type="checkbox" id="export-option2" name="export-option2" value="file2" class="custom-checkbox">
-                        <label for="export-option2" class="checkbox-label">證照資料</label>
-
-                        <input type="checkbox" id="export-option3" name="export-option3" value="file3" class="custom-checkbox">
-                        <label for="export-option3" class="checkbox-label">競賽資料</label>
-
-                        <input type="checkbox" id="export-option4" name="export-option4" value="file4" class="custom-checkbox">
-                        <label for="export-option4" class="checkbox-label">測試資料123</label>
+                <form id="export-form" action="export-file2.php" method="POST">
+                    <div class="form-group mb-3">
+                        <label for="user">匯出帳號：</label>
+                        <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
                     </div>
-                </div>
+                    <div class="form-group mb-3">
+                        <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
+                            <label for="option-all" class="checkbox-label">全部</label>
+
+                            <input type="checkbox" id="option-license" name="options[]" value="license" class="custom-checkbox">
+                            <label for="option-license" class="checkbox-label">證照資料</label>
+
+                            <input type="checkbox" id="option-competition" name="options[]" value="competition" class="custom-checkbox">
+                            <label for="option-competition" class="checkbox-label">競賽資料</label>
+                        </div>
+                    </div>
 
                 <style>
                     /* 方形選項顯示在一排 */

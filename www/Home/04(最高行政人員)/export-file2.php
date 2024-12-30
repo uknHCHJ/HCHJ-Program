@@ -2,6 +2,7 @@
 require_once 'PHPWord-master/src/PhpWord/PhpWord.php';
 require_once 'PHPWord-master/src/PhpWord/IOFactory.php';
 require_once 'PHPWord-master/src/PhpWord/Writer/Word2007.php';
+
 $host = '127.0.0.1';
 $dbname = 'HCHJ';
 $username = 'HCHJ';
@@ -21,17 +22,17 @@ $section = $phpWord->addSection();
 
 foreach ($options as $option) {
     if ($option == 'all' || $option == 'license') {
-        $stmt = $pdo->query("SELECT license_name, license_details FROM licenses");
+        $stmt = $pdo->query("SELECT img, name FROM history");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $section->addText("證照名稱: " . $row['license_name']);
-            $section->addText("詳細資料: " . $row['license_details']);
+            $section->addText("競賽名稱: " . $row['name']);
+            $section->addText("詳細資料: " . $row['img']);
         }
     }
     if ($option == 'all' || $option == 'competition') {
-        $stmt = $pdo->query("SELECT comp_name, comp_result FROM competitions");
+        $stmt = $pdo->query("SELECT name, image FROM Certificate");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $section->addText("競賽名稱: " . $row['comp_name']);
-            $section->addText("成績: " . $row['comp_result']);
+            $section->addText("證照名稱: " . $row['name']);
+            $section->addText("證照圖片: " . $row['image']);
         }
     }
 }
