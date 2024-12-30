@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include 'db.php';
 
@@ -86,42 +86,50 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <link rel="stylesheet" href="assets/css/tiny-slider.css">
     <link rel="stylesheet" href="assets/css/glightbox.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
-        <style>
-    /* 設定容器和表單樣式 */
-    .form-container {
-        text-align: center;
-        width: 100%;
-        max-width: 800px; /* 設定最大寬度 */
-        margin: 0 auto;
-        padding: 20px;
-    }
+    <style>
+        /* 設定容器和表單樣式 */
+        .form-container {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            /* 設定最大寬度 */
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    /* 調整標籤樣式 */
-    label {
-        display: block;
-        text-align: left;
-        font-weight: bold;
-        font-size: 1.2em; /* 增加字型大小 */
-        margin-top: 10px;
-    }
+        /* 調整標籤樣式 */
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.2em;
+            /* 增加字型大小 */
+            margin-top: 10px;
+        }
 
-    /* 設定 select、input 和 textarea 的樣式與大小 */
-    select, input[type="text"], textarea, input[type="file"], input[type="date"] {
-        width: 100%;
-        max-width: 800px; /* 設定欄位最大寬度 */
-        margin-top: 10px;
-        padding: 8px;
-        font-size: 1em;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-    }
+        /* 設定 select、input 和 textarea 的樣式與大小 */
+        select,
+        input[type="text"],
+        textarea,
+        input[type="file"],
+        input[type="date"] {
+            width: 100%;
+            max-width: 800px;
+            /* 設定欄位最大寬度 */
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
 
-    /* 設定按鈕樣式 */
-    button {
-        font-size: 1.2em; /* 增加按鈕字型大小 */
-        padding: 10px 20px;
-    }
-</style>
+        /* 設定按鈕樣式 */
+        button {
+            font-size: 1.2em;
+            /* 增加按鈕字型大小 */
+            padding: 10px 20px;
+        }
+    </style>
 
 </head>
 
@@ -149,7 +157,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     </div>
     <!-- preloader end -->
 
-   
+
     <!-- ========================= header start ========================= -->
     <header class="header navbar-area">
         <div class="container">
@@ -169,51 +177,51 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                               
-                            
-                            <li class="nav-item">
-                            <a class="page-scroll" href="index-01.php" >首頁</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">個人資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">備審資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
-                                    </li>
 
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/messageboard-01(留言板).php">留言板</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">志願序</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-                            </li>
+
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="index-01.php">首頁</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">個人資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">備審資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Home/messageboard-01(留言板).php">留言板</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">志願序</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                                </li>
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -249,87 +257,98 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <!-- ========================= page-banner-section end ========================= -->
 
     <!-- ========================= alerts-section start ========================= -->
-        <!-- 新增留言區域 -->
-        <section class="service-section">  
-    <div class="form-container container mt-4">
-        <h3>歡迎，<?php echo htmlspecialchars($username); ?>！</h3>
-        <form action="messageboard-01(留言板後端).php" method="post">
-            <label for="message">新增留言：</label>
-            <textarea id="message" name="message" class="form-control" rows="3" required></textarea><br>
-            <button type="submit" class="btn btn-info">送出</button>
-        </form>
-    </div>
-</section>
+    <!-- 新增留言區域 -->
+    <section class="service-section">
+        <div class="form-container container mt-4">
+            <h3>歡迎，<?php echo htmlspecialchars($username); ?>！</h3>
+            <form action="messageboard-01(留言板後端).php" method="post">
+                <label for="message">新增留言：</label>
+                <textarea id="message" name="message" class="form-control" rows="3" required></textarea><br>
+                <button type="submit" class="btn btn-info">送出</button>
+            </form>
+        </div>
+    </section>
 
-<section class="mt-4">
-    <div class="message-list container">
-        <h4>留言列表</h4>
-        <?php
-        if (!empty($comments)) {
-            foreach ($comments as $comment) {
-                echo '<div class="alert alert-success">';
-                // 顯示留言者的名字
-                echo '<strong>' . htmlspecialchars($comment['user']) . '：</strong>';
-                // 顯示留言內容
-                echo htmlspecialchars($comment['message']);
+    <section class="mt-4">
+        <div class="message-list container">
+            <h4>留言列表</h4>
+            <?php
+            // 顯示留言
+            if (!empty($comments)) {
+                echo '<div class="message-list">';
+                foreach ($comments as $comment) {
+                    echo '<div class="message">';
+                    echo '<p><strong>' . htmlspecialchars($comment['user']) . '</strong>: ' . htmlspecialchars($comment['message']) . '</p>';
+                    echo '</div>';
+                }
                 echo '</div>';
+            } else {
+                echo '<p>目前尚無留言。</p>';
             }
-        } else {
-            echo '<p class="text-muted">目前沒有留言。</p>';
+            ?>
+
+        </div>
+    </section>
+    <style>
+        /* 置中新增留言區域 */
+        .alerts-section .row.justify-content-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        ?>
-    </div>
-</section>
-<style>
-    /* 置中新增留言區域 */
-    .alerts-section .row.justify-content-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 
-    /* 置中留言區域 */
-    .alerts-section .col-md-6 {
-        max-width: 800px; /* 設定最大寬度 */
-        width: 100%;      /* 寬度自適應 */
-        text-align: center;
-    }
+        /* 置中留言區域 */
+        .alerts-section .col-md-6 {
+            max-width: 800px;
+            /* 設定最大寬度 */
+            width: 100%;
+            /* 寬度自適應 */
+            text-align: center;
+        }
 
-    /* 設定表單內的按鈕置中 */
-    .alerts-section .btn-primary {
-        display: block;
-        margin: 0 auto;
-    }
+        /* 設定表單內的按鈕置中 */
+        .alerts-section .btn-primary {
+            display: block;
+            margin: 0 auto;
+        }
 
-    /* 修改alert樣式 */
-    .message-list .alert {
-        margin-bottom: 20px; /* 每條留言卡片之間的間隔 */
-        text-align: left;
-        border-radius: 8px;  /* 增加圓角 */
-        padding: 15px;
-        background-color: #e0f7fa; /* 背景顏色更柔和 */
-        border: 1px solid #b2ebf2; /* 背景邊框 */
-        width: 100%; /* 留言寬度自適應 */
-        max-width: 800px; /* 最大寬度為800px */
-        margin: 10px auto; /* 置中顯示 */
-    }
+        /* 修改alert樣式 */
+        .message-list .alert {
+            margin-bottom: 20px;
+            /* 每條留言卡片之間的間隔 */
+            text-align: left;
+            border-radius: 8px;
+            /* 增加圓角 */
+            padding: 15px;
+            background-color: #e0f7fa;
+            /* 背景顏色更柔和 */
+            border: 1px solid #b2ebf2;
+            /* 背景邊框 */
+            width: 100%;
+            /* 留言寬度自適應 */
+            max-width: 800px;
+            /* 最大寬度為800px */
+            margin: 10px auto;
+            /* 置中顯示 */
+        }
 
-    /* 設定alert文字樣式 */
-    .message-list .alert a {
-        font-size: 16px;
-        text-decoration: none;
-        color: #333;
-    }
+        /* 設定alert文字樣式 */
+        .message-list .alert a {
+            font-size: 16px;
+            text-decoration: none;
+            color: #333;
+        }
 
-    /* 留言懸停效果 */
-    .message-list .alert:hover {
-        background-color: #b2ebf2;  /* 滑鼠懸停時改變顏色 */
-    }
-</style>
+        /* 留言懸停效果 */
+        .message-list .alert:hover {
+            background-color: #b2ebf2;
+            /* 滑鼠懸停時改變顏色 */
+        }
+    </style>
     <!-- ========================= alerts-section end ========================= -->
 
-  <!-- ========================= client-logo-section start ========================= -->
-  <section class="client-logo-section pt-100">
+    <!-- ========================= client-logo-section start ========================= -->
+    <section class="client-logo-section pt-100">
         <div class="container">
             <div class="client-logo-wrapper">
                 <div class="client-logo-carousel d-flex align-items-center justify-content-between">
