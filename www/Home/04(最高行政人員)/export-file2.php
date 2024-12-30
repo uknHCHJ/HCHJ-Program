@@ -1,28 +1,14 @@
 <?php
-$servername = "127.0.0.1";  
-$username = "HCHJ";  
-$password = "xx435kKHq";  
-$dbname = "HCHJ";  
+// 手動加載 PHPWord 的必要文件
+require_once 'PHPWord-master/src/PhpWord/PhpWord.php';
+require_once 'PHPWord-master/src/PhpWord/IOFactory.php';
 
-// 連接 MySQL 資料庫
-$link = mysqli_connect($servername, $username, $password, $dbname);
-
-// 檢查連接是否成功
-if (!$link) {
-    // 輸出錯誤訊息並以 JSON 格式回應
-    $response[0] = "無法連接資料庫：" . mysqli_connect_error();
-    echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-// 載入PHPWord庫
-require_once '/~HCHJ/Home/PHPWord-master/path_to_phpword/autoload.php';
 
 // MySQL連線設定
-$host = 'localhost';
-$dbname = 'your_database_name';
-$username = 'your_username';
-$password = 'your_password';
+$host = '127.0.0.1';
+$dbname = 'HCHJ';
+$username = 'HCHJ';
+$password = 'xx435kKHq';
 
 // 建立MySQL連線
 $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -52,7 +38,8 @@ foreach ($images as $image) {
 
 // 保存Word文檔
 $outputFile = 'exported_images.docx';
-$phpWord->save($outputFile, 'Word2007');
+$writer = new \PhpOffice\PhpWord\Writer\Word2007($phpWord);
+$writer->save($outputFile);
 
 echo "Word document created successfully: <a href='$outputFile'>$outputFile</a>";
 ?>
