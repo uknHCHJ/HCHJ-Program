@@ -1,56 +1,20 @@
 <?php
-$servername = "127.0.0.1";  
-$username = "HCHJ";  
-$password = "xx435kKHq";  
-$dbname = "HCHJ";  
+// 接收表單數據並進行基本驗證
+$chinese = isset($_POST['chinese']) ? (int)$_POST['chinese'] : 0;
+$english = isset($_POST['english']) ? (int)$_POST['english'] : 0;
+$math = isset($_POST['math']) ? (int)$_POST['math'] : 0;
+$professional = isset($_POST['professional']) ? (int)$_POST['professional'] : 0;
 
-// 建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
+// 計算總分（根據各科目權重）
+$total_score = $chinese * 2 + $english * 1.5 + $math * 1.5 + $professional * 3;
 
-// 檢查連線
-if ($conn->connect_error) {
-    die("連線失敗: " . $conn->connect_error);
-}
+// 假設歷年錄取分數線
+$previous_cutoff = 600; // 這是一個假設值，實際應根據真實數據
 
-// 接收學生分數
-$chinese_score = $_POST['chinese_score'];
-$english_score = $_POST['english_score'];
-$math_score = $_POST['math_score'];
-$professional_score = $_POST['professional_score'];
+// 計算錄取機率（這裡僅作簡單比較，實際應使用更複雜的統計方法）
+$admission_chance = ($total_score >= $previous_cutoff) ? '高' : '低';
 
-// 計算每所學校的加權總分，並比對門檻
-$query = "SELECT school_name, department, total_threshold, 
-                 (chinese_weight * :chinese + english_weight * :english + 
-                  math_weight * :math + professional_weight * :professional) AS total_score
-          FROM schools";
-
-$stmt = $pdo->prepare($query);
-$stmt->execute([
-    ':chinese' => $chinese_score,
-    ':english' => $english_score,
-    ':math' => $math_score,
-    ':professional' => $professional_score
-]);
-
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// 篩選符合的學校
-$qualified = [];
-$unqualified = [];
-
-foreach ($results as $row) {
-    if ($row['total_score'] >= $row['total_threshold']) {
-        $qualified[] = $row;
-    } else {
-        $unqualified[] = $row;
-    }
-}
-
-// 將結果傳遞到下一頁
-session_start();
-$_SESSION['qualified'] = $qualified;
-$_SESSION['unqualified'] = $unqualified;
-
-header("Location: result.php");
+// 將結果傳遞給前端顯示
+header("Location: SchoolRecommend3.php?chinese=$chinese&english=$english&math=$math&professional=$professional&chance=$admission_chance&score=$total_score");
 exit();
 ?>
