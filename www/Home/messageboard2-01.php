@@ -7,7 +7,11 @@ if ($link) {
 } else {
     die("資料庫連接失敗: " . mysqli_connect_error());
 }
-
+$userData = $_SESSION['user'];
+$userId = $userData['user']; // 用戶識別符（假設使用 username 作為唯一識別符）
+$username = $userData['name'];
+$userpermissions = $userData['Permissions'];
+$upload_date = date('Y-m-d H:i:s');
 // 檢查是否有提供檔案 ID
 if (isset($_POST['file_id'])) {
     $file_id = intval($_POST['file_id']); // 取得並檢查檔案 ID
@@ -33,6 +37,28 @@ if (isset($_POST['file_id'])) {
     }
 }
 
+// 處理表單提交
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
+    // 確保表單內容不為空
+    $message = trim($_POST['message']);
+
+    if (!empty($message)) {
+        // 避免 XSS 攻擊，轉義特殊字符
+        $message = mysqli_real_escape_string($link, $message);
+
+        // 插入留言到資料庫
+        $query = "INSERT INTO message (message,user,permissions,time) VALUES ('$message','$userId','$userpermissions','$upload_date')";
+
+        // 執行插入查詢
+        if (mysqli_query($link, $query)) {
+            echo "留言成功！";
+        } else {
+            echo "錯誤: " . mysqli_error($link);
+        }
+    } else {
+        echo "留言內容不能為空！";
+    }
+}
 // 獲取當前用戶的名稱和權限
 $user = $_SESSION['user']['user'];
 
