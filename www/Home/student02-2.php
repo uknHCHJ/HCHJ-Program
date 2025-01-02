@@ -44,7 +44,7 @@
                     </form>
                   </td>';
                   echo '<td>
-                     <form action="messageboard-02(留言板).php" method="POST">
+                     <form action="messageboard02-1.php" method="POST">
                         <input type="hidden" name="user" value="' . $row['user'] . '">
                         <button type="submit" class="messageboard">留言板</button>
                     </form>

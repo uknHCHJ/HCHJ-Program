@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
 
         // 執行插入查詢
         if (mysqli_query($link, $query)) {
-            echo '<script language="JavaScript">;alert("留言成功");location.href="messageboard1-01.php";</script>;';
+            echo '<script language="JavaScript">;alert("留言成功");location.href="messageboard02-1.php";</script>;';
         } else {
             echo "錯誤: " . mysqli_error($link);
         }

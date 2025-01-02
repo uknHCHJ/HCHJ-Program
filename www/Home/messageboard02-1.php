@@ -116,8 +116,8 @@ mysqli_query($link, 'SET NAMES UTF8');
     <!-- preloader end -->
 
 
-     <!-- ========================= header start ========================= -->
-     <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -135,9 +135,9 @@ mysqli_query($link, 'SET NAMES UTF8');
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -176,7 +176,7 @@ mysqli_query($link, 'SET NAMES UTF8');
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
-                                <a class="page-scroll" href="../logout.php">登出</a>
+                                    <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -215,7 +215,7 @@ mysqli_query($link, 'SET NAMES UTF8');
     <section class="service-section">
         <div class="form-container container mt-4">
             <h3>歡迎，<?php echo htmlspecialchars($username); ?>！</h3>
-            <form action="messageboard2-01.php" method="post">
+            <form action="messageboard02-2.php" method="post">
                 <label for="message">新增留言：</label>
                 <textarea id="message" name="message" class="form-control" rows="3" required></textarea><br>
                 <button type="submit" class="btn btn-info">送出</button>
@@ -228,30 +228,29 @@ mysqli_query($link, 'SET NAMES UTF8');
             <h4>留言列表：</h4>
             <?php
             $userData = $_SESSION['user'];
-            $grade = $userData['grade'];
-            $class = $userData['class'];
             $currentUserId = $userData['id'];
-            $permissions1 = explode(',', $userData['Permissions']);
             //登入使用者的權限
             $permissions1 = explode(',', $userData['Permissions']);
-            // 使用 LIKE 查詢包含指定年級和班級的記錄 把對應的老師找出來
-            $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
+            $grade = mysqli_real_escape_string($link, $_POST['grade']);
+            $class = mysqli_real_escape_string($link, $_POST['class']);
+            // 查詢符合 grade 和 class 條件的學生
+            $sql = "SELECT * FROM user WHERE grade = '$grade' AND class = '$class'";
             $result = mysqli_query($link, $sql);
+           
             if ($result) {
-                $teachers = [];  // 用於儲存符合條件的班導名字
+                $student = [];  // 用於儲存符合條件的班導名字
                 while ($row = mysqli_fetch_assoc($result)) {
                     $permissions2 = explode(',', $row['Permissions']);//放同班及其他使用者對應的權限
-                    if (in_array('2', $permissions2)) {//權限是2就把名字印出來存入
-                        $teachers[] = $row['name'];
+                    if (in_array('1', $permissions2)) {//權限是1就把名字印出來存入
+                        $student[] = $row['name'];
                     }
                 }
             } else {
                 echo "查詢失敗：" . mysqli_error($link);
             }
             // 查詢所有留言
-            $query = "SELECT * FROM message  WHERE `user` LIKE '%$teachers[0]%' ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
+            $query = "SELECT * FROM message  WHERE `user` LIKE '%$student[0]%' ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
             $result = mysqli_query($link, $query);
-
             // 檢查是否有留言
             if (mysqli_num_rows($result) > 0) {
                 // 顯示留言
@@ -277,9 +276,7 @@ mysqli_query($link, 'SET NAMES UTF8');
         /* 置中留言區域 */
         .alerts-section .col-md-6 {
             max-width: 800px;
-            /* 設定最大寬度 */
             width: 100%;
-            /* 寬度自適應 */
             text-align: center;
         }
 
@@ -290,36 +287,68 @@ mysqli_query($link, 'SET NAMES UTF8');
         }
 
         /* 修改alert樣式 */
-        .message-list .alert {
+        /* 留言列表容器 */
+        .message-list {
+            padding: 20px;
+        }
+
+        /* 標題樣式 */
+        .message-list h4 {
+            font-size: 26px;
             margin-bottom: 20px;
-            /* 每條留言卡片之間的間隔 */
-            text-align: left;
-            border-radius: 8px;
-            /* 增加圓角 */
-            padding: 15px;
-            background-color: #e0f7fa;
-            /* 背景顏色更柔和 */
-            border: 1px solid #b2ebf2;
-            /* 背景邊框 */
-            width: 100%;
-            /* 留言寬度自適應 */
-            max-width: 800px;
-            /* 最大寬度為800px */
-            margin: 10px auto;
-            /* 置中顯示 */
-        }
-
-        /* 設定alert文字樣式 */
-        .message-list .alert a {
-            font-size: 16px;
-            text-decoration: none;
             color: #333;
+            font-weight: bold;
         }
 
-        /* 留言懸停效果 */
+        /* 每條留言樣式 */
+        .message-list .alert {
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            /* 預設背景 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            max-width: 800px;
+            /* 限制最大寬度 */
+            text-align: left;
+            /* 內容靠左對齊 */
+        }
+
+        /* 懸停效果 */
         .message-list .alert:hover {
-            background-color: #b2ebf2;
-            /* 滑鼠懸停時改變顏色 */
+            transform: translateY(-5px);
+            /* 懸停時卡片微微上升 */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 不同類型留言的顏色區分 */
+        .message-list .alert-primary {
+            background-color: #e3f2fd;
+            /* 柔和藍色背景 */
+            color: #0d47a1;
+            border-left: 6px solid #0d47a1;
+        }
+
+        .message-list .alert-warning {
+            background-color: #fff3e0;
+            /* 柔和橙色背景 */
+            color: #e65100;
+            border-left: 6px solid #e65100;
+        }
+
+        /* 留言文字樣式 */
+        .message-list .alert p {
+            margin: 0;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        /* 發布者名稱樣式 */
+        .message-list .alert strong {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
         }
     </style>
     <!-- ========================= alerts-section end ========================= -->
