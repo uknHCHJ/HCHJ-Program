@@ -91,6 +91,9 @@ $userId= $userData['user'];
                             <li class="nav-item">
                                     <li class="nav-item"><a href="index-02.php">首頁</a></li>
                                     </li>
+                                    <li class="nav-item">
+                                    <li class="nav-item"><a href="messageboard02-1.php">留言板</a></li>
+                                    </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">

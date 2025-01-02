@@ -219,7 +219,7 @@ mysqli_query($link, 'SET NAMES UTF8');
     <section class="service-section">
         <div class="form-container container mt-4">
             <h3>歡迎，<?php echo htmlspecialchars($username); ?>！</h3>
-            <form action="messageboard2-01.php" method="post">
+            <form action="messageboard01-2.php" method="post">
                 <label for="message">新增留言：</label>
                 <textarea id="message" name="message" class="form-control" rows="3" required></textarea><br>
                 <button type="submit" class="btn btn-info">送出</button>
