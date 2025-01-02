@@ -1,9 +1,6 @@
 <?php
-
 // 引入 PHPWord 所需檔案
-require_once 'PHPWord-master/src/PhpWord/PhpWord.php';
-require_once 'PHPWord-master/src/PhpWord/IOFactory.php';
-require_once 'PHPWord-master/src/PhpWord/Writer/Word2007.php';
+require_once '/Home/PHPWord-master/src/PhpWord/PhpWord.php';
 
 // 資料庫連線設定
 $host = '127.0.0.1';
@@ -32,28 +29,29 @@ $section = $phpWord->addSection();
 // 查詢並生成內容
 foreach ($options as $option) {
     if ($option == 'all' || $option == 'license') {
-        $stmt = $pdo->query("SELECT img, name FROM history");
+        $stmt = $pdo->query("SELECT name, img FROM history");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $section->addText("競賽名稱: " . htmlspecialchars($row['name']));
-            $section->addText("詳細資料: " . htmlspecialchars($row['img']));
+            $section->addImageFromString($row['img'], ['width' => 200, 'height' => 150]);
         }
     }
     if ($option == 'all' || $option == 'competition') {
         $stmt = $pdo->query("SELECT name, image FROM Certificate");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $section->addText("證照名稱: " . htmlspecialchars($row['name']));
-            $section->addText("證照圖片: " . htmlspecialchars($row['image']));
+            $section->addImageFromString($row['image'], ['width' => 200, 'height' => 150]);
         }
     }
 }
 
-// 保存文件
-$outputFile = 'exported_file.docx';
-try {
-    $writer = new \PhpOffice\PhpWord\Writer\Word2007($phpWord);
-    $writer->save($outputFile);
-    echo "Word 文件已成功生成: <a href='$outputFile'>$outputFile</a>";
-} catch (Exception $e) {
-    die("生成文件時發生錯誤：" . $e->getMessage());
-}
+// 保存文件並提供下載
+header("Content-Description: File Transfer");
+header('Content-Disposition: attachment; filename="exported_file.docx"');
+header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+header('Cache-Control: must-revalidate');
+header('Content-Length: ' . filesize($outputFile));
+
+$writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+$writer->save('php://output');
+exit();
 ?>

@@ -1,35 +1,35 @@
 <?php
 session_start();
-/** 資料庫連線 */
-$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if ($link) {
-  mysqli_query($link, 'SET NAMES UTF8');
-
-} else {
-  echo "資料庫連接失敗: " . mysqli_connect_error();
-}
+include 'db.php';
 
 if (!isset($_SESSION['user'])) {
-    echo("<script>
+    echo "未登入";
+    header("Location:/~HCHJ/index.html");
+    exit();
+}
+
+$userData = $_SESSION['user']; // 從 SESSION 獲取用戶資料
+$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8'); // 確保數據安全
+
+$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
+
+if (!isset($_SESSION['user'])) {
+    echo ("<script>
                     alert('請先登入！！');
                     window.location.href = '/~HCHJ/index.html'; 
                   </script>");
     exit();
 }
-
-$userData = $_SESSION['user'];
-// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
-$userId= $userData['user'];
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>升學競賽全方位資源網-首頁</title>
+    <title>志願序統計</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,12 +43,72 @@ $userId= $userData['user'];
     <link rel="stylesheet" href="assets/css/tiny-slider.css">
     <link rel="stylesheet" href="assets/css/glightbox.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
+
+    <style>
+        /* 設定容器和表單樣式 */
+        .form-container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            /* 設定最大寬度 */
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 調整標籤樣式 */
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.2em;
+            /* 增加字型大小 */
+            margin-top: 10px;
+        }
+
+        /* 設定 select、input 和 textarea 的樣式與大小 */
+        select,
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            max-width: 500px;
+            /* 設定欄位最大寬度 */
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        /* 設定按鈕樣式 */
+        button {
+            font-size: 1.2em;
+            /* 增加按鈕字型大小 */
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+<?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
+
+
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+?>
 
 <body>
-    <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
 
     <!-- ========================= preloader start ========================= -->
     <div class="preloader">
@@ -68,7 +128,6 @@ $userId= $userData['user'];
         </div>
     </div>
     <!-- preloader end -->
-
     <!-- ========================= header start ========================= -->
     <header class="header navbar-area">
         <div class="container">
@@ -88,9 +147,9 @@ $userId= $userData['user'];
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -121,7 +180,6 @@ $userId= $userData['user'];
                                     </ul>
                                 </li>
 
-
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
@@ -129,7 +187,7 @@ $userId= $userData['user'];
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
-                                <a class="page-scroll" href="../logout.php">登出</a>
+                                    <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -140,40 +198,113 @@ $userId= $userData['user'];
     </header>
     <!-- ========================= header end ========================= -->
 
-    <!-- ========================= hero-section start ========================= -->
-    <section id="home" class="hero-section">
+    <!-- ========================= page-banner-section start ========================= -->
+    <section class="page-banner-section pt-75 pb-75 img-bg"
+        style="background-image: url('assets/img/bg/common-bg.svg')">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-5 col-lg-6">
-                    <div class="hero-content-wrapper">
-
-                        <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $username ?>老師
-                        </h2>
-                        <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
-
-                        <script>
-                            // JavaScript 函数触发表单提交
-                            function submitLogout() {
-                                document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                            }
-                        </script>
-                        <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                        <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white">二技志願序統計</h2>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a
+                                        href="portfolio-03(二技校園網介紹).php"></a></li>
+                                </ol>
+                            </nav>
+                        </div>
                     </div>
-                </div>
-                <div class="col-xl-7 col-lg-6">
-                    <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                    <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center"
-                        data-wow-delay=".5s">
-                    <!-- </div>
-                        </div>-->
                 </div>
             </div>
         </div>
     </section>
-    <!-- ========================= hero-section end ========================= -->
+    <!-- ========================= page-banner-section end ========================= -->
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>學校選擇人數統計</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="barChart" width="800" height="400"></canvas>
 
+    <script>
+        const ctx = document.getElementById('barChart').getContext('2d');
+
+        // 初始化 Chart.js 圖表
+        const barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // 學校名稱
+                datasets: [
+                    {
+                        label: '選擇人數',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '人數'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '學校'
+                        }
+                    }
+                }
+            }
+        });
+
+        // 從 API 獲取數據並更新圖表
+        async function fetchDataAndUpdateChart() {
+            try {
+                const response = await fetch('get_school_counts.php'); // 後端 API 路徑
+                const data = await response.json();
+
+                // 提取學校名稱和人數數據
+                const labels = data.map(item => item.school); // 學校名稱
+                const counts = data.map(item => item.count);  // 選擇人數
+
+                // 更新圖表
+                barChart.data.labels = labels;
+                barChart.data.datasets[0].data = counts;
+                barChart.update(); // 刷新圖表
+            } catch (error) {
+                console.error('無法加載數據:', error);
+            }
+        }
+
+        // 每隔 5 秒更新圖表數據
+        setInterval(fetchDataAndUpdateChart, 5000);
+
+        // 初次加載數據
+        fetchDataAndUpdateChart();
+    </script>
+</body>
+</html>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- ========================= service-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">
         <div class="container">
@@ -200,15 +331,11 @@ $userId= $userData['user'];
                     <div class="client-logo">
                         <img src="schoolimages/uknnurse.jpg" alt="">
                     </div>
-
-
                 </div>
             </div>
         </div>
     </section>
     <!-- ========================= client-logo-section end ========================= -->
-
-
 
     <!-- ========================= footer start ========================= -->
     <footer class="footer pt-100">
@@ -216,7 +343,7 @@ $userId= $userData['user'];
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                         <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                     </div>
                 </div>
@@ -264,6 +391,7 @@ $userId= $userData['user'];
     </footer>
     <!-- ========================= footer end ========================= -->
 
+
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
         <i class="lni lni-arrow-up"></i>
@@ -279,53 +407,6 @@ $userId= $userData['user'];
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
-
-    <script>
-        //========= glightbox
-        GLightbox({
-            'href': '#',
-            'type': 'video',
-            'source': 'youtube', //vimeo, youtube or local
-            'width': 900,
-            'autoplayVideos': true,
-        });
-
-        //========= testimonial 
-        tns({
-            container: '.testimonial-active',
-            items: 1,
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            nav: false,
-            controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-        });
-
-        //============== isotope masonry js with imagesloaded
-        imagesLoaded('#container', function () {
-            var elem = document.querySelector('.grid');
-            var iso = new Isotope(elem, {
-                // options
-                itemSelector: '.grid-item',
-                masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                }
-            });
-
-            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-            filterButtons.forEach(e =>
-                e.addEventListener('click', () => {
-
-                    let filterValue = event.target.getAttribute('data-filter');
-                    iso.arrange({
-                        filter: filterValue
-                    });
-                })
-            );
-        });
-    </script>
 </body>
 
 </html>

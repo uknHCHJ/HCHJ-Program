@@ -3,77 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>統測入取機率計算</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 引入 Chart.js 圖表庫 -->
+    <title>二技錄取機率推薦</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-    <h1>輸入您的統測成績</h1>
-    <!-- 成績輸入表單 -->
-    <form id="scoreForm" method="POST" action="SchoolRecommend2.php">
-        <label for="chinese">國文：</label><input type="number" id="chinese" name="chinese" required><br><br>
-        <label for="english">英文：</label><input type="number" id="english" name="english" required><br><br>
-        <label for="math">數學：</label><input type="number" id="math" name="math" required><br><br>
-        <label for="professional">專業科目：</label><input type="number" id="professional" name="professional" required><br><br>
-        <button type="submit">計算入取機率</button>
+    <h1>二技錄取機率推薦系統</h1>
+    <form id="scoreForm">
+        <label for="chinese">國文成績：</label>
+        <input type="number" id="chinese" name="chinese" required><br><br>
+        <label for="english">英文成績：</label>
+        <input type="number" id="english" name="english" required><br><br>
+        <label for="math">數學成績：</label>
+        <input type="number" id="math" name="math" required><br><br>
+        <label for="professional">專業科目成績：</label>
+        <input type="number" id="professional" name="professional" required><br><br>
+        <button type="submit">計算錄取機率</button>
     </form>
 
-    <!-- 圓餅圖顯示區域 -->
-    <h2>入取機率圓餅圖</h2>
-    <canvas id="probabilityChart" width="400" height="400"></canvas>
-
-    <?php
-    // 這是後端 PHP 代碼
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // 接收表單數據
-        $chinese = $_POST['chinese'];
-        $english = $_POST['english'];
-        $math = $_POST['math'];
-        $professional = $_POST['professional'];
-
-        // 假設計算入取機率（這裡是假的邏輯，您可以根據您的需要調整）
-        $probabilities = [
-            ['name' => '國立台北商業大學', 'probability' => ($chinese + $english + $math + $professional) / 400 * 100],
-            ['name' => '中國科技大學', 'probability' => ($chinese + $english + $math) / 300 * 100],
-            ['name' => '勤益科技大學', 'probability' => ($english + $math + $professional) / 300 * 100]
-        ];
-
-        // 將結果傳遞給 JavaScript 顯示圓餅圖
-        echo "<script>";
-        echo "var probabilities = " . json_encode($probabilities) . ";"; // PHP 轉換為 JS 數據
-        echo "showChart(probabilities);"; // 執行 JavaScript 顯示圖表
-        echo "</script>";
-    }
-    ?>
+    <h2>推薦結果</h2>
+    <canvas id="topSchoolsChart" width="400" height="400"></canvas>
 
     <script>
-        // 用來顯示圓餅圖的函數
-        function showChart(probabilities) {
-            const ctx = document.getElementById('probabilityChart').getContext('2d');
+        document.getElementById("scoreForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-            // 取得學校名稱與入取機率
-            const labels = probabilities.map(p => p.name);
-            const data = probabilities.map(p => p.probability);
+            const formData = new FormData(e.target);
 
-            // 圓餅圖設定
+            // 發送數據到後端
+            const response = await fetch("Test2.php", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            // 只保留前6個學校
+            const topSchools = data.topSchools.slice(0, 6);
+
+            // 計算總分，並將每個學校的分數轉換為百分比
+            const totalScore = topSchools.reduce((sum, school) => sum + school.weightedScore, 0);
+            topSchools.forEach(school => {
+                school.percentage = (school.weightedScore / totalScore) * 100;
+            });
+
+            // 顏色稍微淡一點：降低透明度至 0.7
+            const colors = [];
+            const colorPalette = [
+                { r: 54, g: 162, b: 235 },   // 藍色
+                { r: 255, g: 99, b: 132 },   // 紅色
+                { r: 75, g: 192, b: 192 },   // 綠色
+                { r: 153, g: 102, b: 255 },  // 紫色
+                { r: 255, g: 159, b: 64 },   // 橙色
+                { r: 255, g: 205, b: 86 },   // 黃色
+            ];
+
+            // 生成顏色，降低透明度至 0.7
+            for (let i = 0; i < topSchools.length; i++) {
+                const color = colorPalette[i % colorPalette.length];
+                colors.push(`rgba(${color.r}, ${color.g}, ${color.b}, 0.7)`); // 較淡的顏色
+            }
+
+            // 繪製圓餅圖
+            const ctx = document.getElementById("topSchoolsChart").getContext("2d");
             new Chart(ctx, {
-                type: 'pie',
+                type: "pie",
                 data: {
-                    labels: labels,
+                    labels: topSchools.map((school) => school.name),
                     datasets: [{
-                        label: '入取機率',
-                        data: data,
-                        backgroundColor: ['#FF5733', '#33FF57', '#3357FF'],
-                        borderColor: '#fff',
+                        label: "錄取機率",
+                        data: topSchools.map((school) => school.percentage),
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace("rgba", "rgb").replace(", 0.7)", ")")), // 邊框顏色稍微深一點
                         borderWidth: 1
-                    }]
+                    }],
                 },
                 options: {
-                    responsive: true
-                }
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.label}: ${context.raw.toFixed(2)}%`;
+                                },
+                            },
+                        },
+                    },
+                },
             });
-        }
+        });
     </script>
-
 </body>
 </html>
