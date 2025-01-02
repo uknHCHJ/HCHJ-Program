@@ -47,11 +47,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
         $message = mysqli_real_escape_string($link, $message);
 
         // 插入留言到資料庫
-        $query = "INSERT INTO message (message,user,permissions,time) VALUES ('$message','$userId','$userpermissions','$upload_date')";
+        $query = "INSERT INTO message (message,user,permissions,time) VALUES ('$message','$username','$userpermissions','$upload_date')";
 
         // 執行插入查詢
         if (mysqli_query($link, $query)) {
-            echo "留言成功！";
+            echo '<script language="JavaScript">;alert("留言成功");location.href="messageboard1-01.php";</script>;';
         } else {
             echo "錯誤: " . mysqli_error($link);
         }

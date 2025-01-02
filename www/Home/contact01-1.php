@@ -305,11 +305,6 @@ $result = mysqli_query($link, $query);
                     $teachers[] = $row['name'];
                   }
                 }
-
-
-
-
-
               } else {
                 echo "查詢失敗：" . mysqli_error($link);
               }

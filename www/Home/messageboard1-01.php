@@ -239,7 +239,8 @@ $result = mysqli_query($link, $query);
 if (mysqli_num_rows($result) > 0) {
     // 顯示留言
     while ($row = mysqli_fetch_assoc($result)) {
-        echo "<p><strong>" . htmlspecialchars($row['message']) . "</strong></p>";
+       
+        echo "<p><strong>"  . htmlspecialchars($row['user']) .":". htmlspecialchars($row['message']) . "</strong></p>";
     }
 } else {
     echo "目前沒有留言。";
