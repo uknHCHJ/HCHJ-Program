@@ -222,79 +222,82 @@ if ($conn->connect_error) {
     </section>
     <!-- ========================= page-banner-section end ========================= -->
     <!DOCTYPE html>
-<html>
-<head>
-    <title>學校選擇人數統計</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <canvas id="barChart" width="800" height="400"></canvas>
+    <html>
 
-    <script>
-        const ctx = document.getElementById('barChart').getContext('2d');
+    <head>
+        <title>學校選擇人數統計</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
 
-        // 初始化 Chart.js 圖表
-        const barChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [], // 學校名稱
-                datasets: [
-                    {
-                        label: '選擇人數',
-                        data: [],
-                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: '人數'
+    <body>
+        <canvas id="barChart" width="400" height="200"></canvas>
+
+        <script>
+            const ctx = document.getElementById('barChart').getContext('2d');
+
+            // 初始化 Chart.js 圖表
+            const barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [], // 學校名稱
+                    datasets: [
+                        {
+                            label: '選擇人數',
+                            data: [],
+                            backgroundColor: 'rgba(85, 123, 181, 0.7)',
+                            borderColor: 'rgb(217, 235, 235)',
+                            borderWidth: 1
                         }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: '學校'
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '人數'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '學校'
+                            }
                         }
                     }
                 }
+            });
+
+            // 從 API 獲取數據並更新圖表
+            async function fetchDataAndUpdateChart() {
+                try {
+                    const response = await fetch('VolunteerStatistics2-02.php'); // 後端 API 路徑
+                    const data = await response.json();
+
+                    // 提取學校名稱和人數數據
+                    const labels = data.map(item => item.school); // 學校名稱
+                    const counts = data.map(item => item.count);  // 選擇人數
+
+                    // 更新圖表
+                    barChart.data.labels = labels;
+                    barChart.data.datasets[0].data = counts;
+                    barChart.update(); // 刷新圖表
+                } catch (error) {
+                    console.error('無法加載數據:', error);
+                }
             }
-        });
 
-        // 從 API 獲取數據並更新圖表
-        async function fetchDataAndUpdateChart() {
-            try {
-                const response = await fetch('get_school_counts.php'); // 後端 API 路徑
-                const data = await response.json();
+            // 每隔 5 秒更新圖表數據
+            setInterval(fetchDataAndUpdateChart, 5000);
 
-                // 提取學校名稱和人數數據
-                const labels = data.map(item => item.school); // 學校名稱
-                const counts = data.map(item => item.count);  // 選擇人數
+            // 初次加載數據
+            fetchDataAndUpdateChart();
+        </script>
+    </body>
 
-                // 更新圖表
-                barChart.data.labels = labels;
-                barChart.data.datasets[0].data = counts;
-                barChart.update(); // 刷新圖表
-            } catch (error) {
-                console.error('無法加載數據:', error);
-            }
-        }
-
-        // 每隔 5 秒更新圖表數據
-        setInterval(fetchDataAndUpdateChart, 5000);
-
-        // 初次加載數據
-        fetchDataAndUpdateChart();
-    </script>
-</body>
-</html>
+    </html>
 
     </div>
     </div>
@@ -390,8 +393,6 @@ if ($conn->connect_error) {
         </div>
     </footer>
     <!-- ========================= footer end ========================= -->
-
-
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
         <i class="lni lni-arrow-up"></i>

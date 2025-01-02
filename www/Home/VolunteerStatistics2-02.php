@@ -22,8 +22,6 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-header('Content-Type: application/json');
-
 header('Content-Type: application/json'); // API 回傳 JSON 格式
 
 try {
@@ -32,12 +30,8 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // SQL 查詢：統計每所學校的選擇人數
-    $sql = "
-        SELECT school_name, COUNT(*) AS count
-        FROM choices
-        GROUP BY school_name
-        ORDER BY count DESC
-    ";
+    $sql = 'SELECT school_name, COUNT(*) AS count FROM choices GROUP BY school_name ORDER BY count DESC';
+   
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
