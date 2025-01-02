@@ -231,21 +231,42 @@ mysqli_query($link, 'SET NAMES UTF8');
         <div class="message-list container">
             <h4>留言列表：</h4>
             <?php
-// 查詢所有留言
-$query = "SELECT * FROM message ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
-$result = mysqli_query($link, $query);
+            $userData = $_SESSION['user'];
+            $grade = $userData['grade'];
+            $class = $userData['class'];
+            $currentUserId = $userData['id'];
+            $permissions1 = explode(',', $userData['Permissions']);
+            //登入使用者的權限
+            $permissions1 = explode(',', $userData['Permissions']);
+            // 使用 LIKE 查詢包含指定年級和班級的記錄 把對應的老師找出來
+            $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
+            $result = mysqli_query($link, $sql);
+            if ($result) {
+                $teachers = [];  // 用於儲存符合條件的班導名字
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $permissions2 = explode(',', $row['Permissions']);//放同班及其他使用者對應的權限
+                    if (in_array('2', $permissions2)) {//權限是2就把名字印出來存入
+                        $teachers[] = $row['name'];
+                    }
+                }
+            } else {
+                echo "查詢失敗：" . mysqli_error($link);
+            }
+            // 查詢所有留言
+            $query = "SELECT * FROM message  WHERE `user` LIKE '%$teachers[0]%' ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
+            $result = mysqli_query($link, $query);
 
-// 檢查是否有留言
-if (mysqli_num_rows($result) > 0) {
-    // 顯示留言
-    while ($row = mysqli_fetch_assoc($result)) {
-       
-        echo "<p><strong>"  . htmlspecialchars($row['user']) .":". htmlspecialchars($row['message']) . "</strong></p>";
-    }
-} else {
-    echo "目前沒有留言。";
-}
-?>
+            // 檢查是否有留言
+            if (mysqli_num_rows($result) > 0) {
+                // 顯示留言
+                while ($row = mysqli_fetch_assoc($result)) {
+
+                    echo "<p><strong>" . htmlspecialchars($row['user']) . ":" . htmlspecialchars($row['message']) . "</strong></p>";
+                }
+            } else {
+                echo "目前沒有留言。";
+            }
+            ?>
 
         </div>
     </section>
