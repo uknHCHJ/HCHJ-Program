@@ -13,7 +13,7 @@ if (!isset($_SESSION['user'])) {
 
 $userData = $_SESSION['user'];
 $userId = $userData['user']; // 用戶識別符（假設使用 username 作為唯一識別符）
-
+$username = $userData['name'];
 // 資料庫連接
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
 if (!$link) {
@@ -22,48 +22,6 @@ if (!$link) {
 
 mysqli_query($link, 'SET NAMES UTF8');
 
-// 獲取 Session 資料
-$username = $_SESSION['user']['name']; // 用戶名稱
-$user = $_SESSION['user']['user']; // 用戶名稱
-// 獲取當前用戶的權限
-$query = "SELECT Permissions FROM user WHERE user = '$userId'";
-$result = mysqli_query($link, $query);
-$userRole = mysqli_fetch_assoc($result)['permissions'];
-
-// 當前頁面處理留言
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
-    $message = htmlspecialchars($_POST['message']); // 留言內容
-
-    if (!empty($message)) {
-        // 如果用戶的權限是 2，將留言插入到所有留言板（包括權限為 1 的留言板）
-        if ($userRole == 2) {
-            $query = "INSERT INTO message (user, message, permissions) VALUES ('$user', '$message', 1)"; // 顯示在權限 1 的留言板
-        } else {
-            // 權限為 1 的用戶，只能將留言插入自己的留言板
-            $query = "INSERT INTO message (user, message, permissions) VALUES ('$user', '$message', 1)"; // 或者將 1 替換成用戶權限值
-        }
-
-        if (mysqli_query($link, $query)) {
-            echo "<script>window.location.reload();</script>";  // 留言後刷新頁面顯示新留言
-        } else {
-            echo "<script>alert('留言失敗！請再試一次。');</script>";
-        }
-    } else {
-        echo "<script>alert('留言內容不能為空！');</script>";
-    }
-}
-
-// 查詢留言列表
-if ($userRole == 1) {
-    // 權限為 1 的用戶只能查看自己的留言
-    $query = "SELECT * FROM message WHERE permissions = 1 ORDER BY id DESC";
-} elseif ($userRole == 2) {
-    // 權限為 2 的用戶可以查看所有留言，包括權限為 1 的留言板上的留言
-    $query = "SELECT * FROM message ORDER BY id DESC";
-}
-
-$result = mysqli_query($link, $query);
-$comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 
 <!doctype html>
@@ -76,7 +34,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
     <!-- Place favicon.ico in the root directory -->
 
     <!-- ========================= CSS here ========================= -->
@@ -202,7 +160,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
                                     <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/messageboard-01(留言板).php">留言板</a>
+                                    <a class="page-scroll" href="/~HCHJ/Home/messageboard1-01.php">留言板</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
@@ -261,7 +219,7 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <section class="service-section">
         <div class="form-container container mt-4">
             <h3>歡迎，<?php echo htmlspecialchars($username); ?>！</h3>
-            <form action="messageboard-01(留言板後端).php" method="post">
+            <form action="messageboard2-01.php" method="post">
                 <label for="message">新增留言：</label>
                 <textarea id="message" name="message" class="form-control" rows="3" required></textarea><br>
                 <button type="submit" class="btn btn-info">送出</button>
@@ -271,21 +229,22 @@ $comments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     <section class="mt-4">
         <div class="message-list container">
-            <h4>留言列表</h4>
+            <h4>留言列表：</h4>
             <?php
-            // 顯示留言
-            if (!empty($comments)) {
-                echo '<div class="message-list">';
-                foreach ($comments as $comment) {
-                    echo '<div class="message">';
-                    echo '<p><strong>' . htmlspecialchars($comment['user']) . '</strong>: ' . htmlspecialchars($comment['message']) . '</p>';
-                    echo '</div>';
-                }
-                echo '</div>';
-            } else {
-                echo '<p>目前尚無留言。</p>';
-            }
-            ?>
+// 查詢所有留言
+$query = "SELECT * FROM message ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
+$result = mysqli_query($link, $query);
+
+// 檢查是否有留言
+if (mysqli_num_rows($result) > 0) {
+    // 顯示留言
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<p><strong>" . htmlspecialchars($row['message']) . "</strong></p>";
+    }
+} else {
+    echo "目前沒有留言。";
+}
+?>
 
         </div>
     </section>
