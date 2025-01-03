@@ -61,15 +61,33 @@
                         data: scores,
                         backgroundColor: 'rgba(54, 162, 235, 0.6)', // 藍色，透明度較低
                         borderColor: 'rgba(54, 162, 235, 1)', // 邊框顏色
-                        borderWidth: 1
+                        borderWidth: 1,
+                        barThickness: 20, // 設定橫條的固定厚度
                     }],
                 },
                 options: {
-                    indexAxis: 'y',  // 橫條圖顯示
+                    indexAxis: 'y', // 橫條圖顯示
                     scales: {
                         x: {
-                            beginAtZero: true, // 讓 X 軸從 0 開始
+                            beginAtZero: true,
+                            min: 0, // X 軸起始值
+                            max: 100, // X 軸最大值
+                            ticks: {
+                                stepSize: 20, // 每 20 一個單位
+                            },
                         },
+                    },
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
                     },
                 },
             });
