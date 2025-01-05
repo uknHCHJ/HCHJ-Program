@@ -63,12 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>錄取結果分析</title>
+    <title>錄取結果</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1>錄取結果分析</h1>
-    <p>以下圖表顯示您的加權分數與各校錄取門檻的比較：</p>
+    <p>下列圖表為您的加權分數與校園錄取門檻比較：</p>
 
     <canvas id="scoreChart" width="800" height="400"></canvas>
 
@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         borderWidth: 1
                     },
                     {
-                        label: '錄取門檻',
+                        label: '該校錄取門檻',
                         data: thresholds,
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                         borderColor: 'rgba(255, 99, 132, 1)',
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     },
                     title: {
                         display: true,
-                        text: '加權分數與錄取門檻比較'
+                        text: '統測加權分數與錄取門檻比較'
                     }
                 },
                 scales: {
