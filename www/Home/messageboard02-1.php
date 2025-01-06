@@ -224,47 +224,117 @@ mysqli_query($link, 'SET NAMES UTF8');
     </section>
 
     <section class="mt-4">
-        <div class="message-list container">
-            <h4>留言列表：</h4>
-            <?php
-            $userData = $_SESSION['user'];
-            $currentUserId = $userData['id'];
-            //登入使用者的權限
-            $permissions1 = explode(',', $userData['Permissions']);
-            $grade = mysqli_real_escape_string($link, $_POST['grade']);
-            $class = mysqli_real_escape_string($link, $_POST['class']);
-            // 查詢符合 grade 和 class 條件的學生
-            $sql = "SELECT * FROM user WHERE grade = '$grade' AND class = '$class'";
-            $result = mysqli_query($link, $sql);
-           
-            if ($result) {
-                $student = [];  // 用於儲存符合條件的班導名字
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $permissions2 = explode(',', $row['Permissions']);//放同班及其他使用者對應的權限
-                    if (in_array('1', $permissions2)) {//權限是1就把名字印出來存入
-                        $student[] = $row['name'];
-                    }
-                }
-            } else {
-                echo "查詢失敗：" . mysqli_error($link);
-            }
-            // 查詢所有留言
-            $query = "SELECT * FROM message  WHERE `user` LIKE '%$student[0]%' ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
-            $result = mysqli_query($link, $query);
-            // 檢查是否有留言
-            if (mysqli_num_rows($result) > 0) {
-                // 顯示留言
-                while ($row = mysqli_fetch_assoc($result)) {
+    <div class="message-list container">
+        <h4>留言列表：</h4>
+        <?php
+        // 確保資料是通過 POST 方法提交
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 取得學生 ID
+            $student_id = isset($_POST['user']) ? intval($_POST['user']) : 0;
 
-                    echo "<p><strong>" . htmlspecialchars($row['user']) . ":" . htmlspecialchars($row['message']) . "</strong></p>";
+            // 如果學生 ID 無效，回傳錯誤訊息
+            if ($student_id <= 0) {
+                echo "請提供有效的學生 ID";
+                exit;
+            }
+
+            $student_query = "SELECT * FROM message WHERE user_id ='$student_id'";
+            $result_students = mysqli_query($link, $student_query);
+            if (mysqli_num_rows($result_students) > 0) {
+                // 顯示留言
+                while ($row = mysqli_fetch_assoc($result_students)) {
+                    echo "<p><strong>" . htmlspecialchars($row['user']) . ": " . htmlspecialchars($row['message']) . "</strong></p>";
+                    
+                    // 顯示該留言的回覆
+                    $message_id = $row['id'];
+                    $reply_query = "SELECT * FROM replies WHERE message_id = '$message_id'";
+                    $result_replies = mysqli_query($link, $reply_query);
+                    if (mysqli_num_rows($result_replies) > 0) {
+                        while ($reply = mysqli_fetch_assoc($result_replies)) {
+                            echo "<p>回覆: " . htmlspecialchars($reply['reply']) . "</p>";
+                        }
+                    }
+
+                    // 顯示回覆表單
+                    echo "
+                        <form class='reply-form' id='reply-form-" . $row['id'] . "' method='POST' action='' onsubmit='submitReply(event, " . $row['id'] . ")'>
+                            <input type='text' name='reply' placeholder='請輸入回覆' required>
+                            <input type='hidden' name='message_id' value='" . $row['id'] . "'>
+                            <input type='hidden' name='user_id' value='" . $student_id . "'>
+                            <button type='submit'>提交回覆</button>
+                        </form>
+                    ";
                 }
             } else {
                 echo "目前沒有留言。";
             }
-            ?>
+        }
 
-        </div>
-    </section>
+        // 處理回覆提交
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply'])) {
+            $message_id = isset($_POST['message_id']) ? intval($_POST['message_id']) : 0;
+            $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+            $reply = isset($_POST['reply']) ? mysqli_real_escape_string($link, $_POST['reply']) : '';
+
+            // 驗證回覆內容
+            if ($message_id > 0 && $user_id > 0 && !empty($reply)) {
+                // 插入回覆資料
+                $reply_query = "INSERT INTO replies (message_id, user_id, reply) VALUES ('$message_id', '$user_id', '$reply')";
+                if (mysqli_query($link, $reply_query)) {
+                    echo "回覆已提交！";
+                } else {
+                    echo "回覆提交失敗！";
+                }
+            }
+        }
+        ?>
+    </div>
+</section>
+<script>
+    function submitReply(event, messageId) {
+        event.preventDefault();
+
+        const form = document.getElementById('reply-form-' + messageId);
+        const formData = new FormData(form);
+
+        fetch('your-php-script.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);  // 顯示後端回應（例如：回覆已提交）
+            // 清空表單並即時顯示新回覆
+            form.querySelector('input[name="reply"]').value = '';
+            fetchReplies(messageId);  // 刷新該留言的回覆
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // 每 5 秒刷新留言區域
+    setInterval(() => {
+        const messageIds = document.querySelectorAll('.message-list .message').map(message => message.dataset.id);
+        messageIds.forEach(id => fetchReplies(id));
+    }, 5000);
+
+    // 用來獲取並更新留言的回覆
+    function fetchReplies(messageId) {
+        fetch('fetch-replies.php?message_id=' + messageId)
+            .then(response => response.json())
+            .then(data => {
+                const repliesContainer = document.querySelector('#message-' + messageId + ' .replies');
+                repliesContainer.innerHTML = '';
+                data.replies.forEach(reply => {
+                    const replyElement = document.createElement('p');
+                    replyElement.textContent = '回覆: ' + reply.reply;
+                    repliesContainer.appendChild(replyElement);
+                });
+            });
+    }
+</script>
+
     <style>
         /* 置中新增留言區域 */
         .alerts-section .row.justify-content-center {
