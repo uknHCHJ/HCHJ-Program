@@ -129,7 +129,13 @@ $username=$userData['name'];
                             <label for="option-competition" class="checkbox-label">競賽資料</label>
                         </div>
                     </div>
+                    <button onclick="downloadWord()">下載 Word 文件</button>
 
+<script>
+    function downloadWord() {
+        window.location.href = 'generate_word.php';
+    }
+</script>
                 <style>
                     /* 方形選項顯示在一排 */
                     .checkbox-container {
