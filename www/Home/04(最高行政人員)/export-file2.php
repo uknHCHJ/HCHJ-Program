@@ -1,7 +1,9 @@
 <?php
-require_once 'libs/PhpWord/Autoloader.php';
 
-\PhpOffice\PhpWord\Autoloader::register();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once 'lib/PhpWord/PhpWord.php';
 use PhpOffice\PhpWord\PhpWord;
 
 // 初始化 PhpWord
