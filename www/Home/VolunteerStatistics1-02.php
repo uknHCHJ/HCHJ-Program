@@ -223,15 +223,12 @@ if ($conn->connect_error) {
     <!-- ========================= page-banner-section end ========================= -->
     <!DOCTYPE html>
     <html>
-
     <head>
         <title>學校選擇人數統計</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
-
     <body>
         <canvas id="barChart" width="400" height="200"></canvas>
-
         <script>
             const ctx = document.getElementById('barChart').getContext('2d');
 
@@ -273,8 +270,17 @@ if ($conn->connect_error) {
             // 從 API 獲取數據並更新圖表
             async function fetchDataAndUpdateChart() {
                 try {
-                    const response = await fetch('VolunteerStatistics2-02.php'); // 後端 API 路徑
+                    const response = await fetch('VolunteerStatistics2-02.php');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     const data = await response.json();
+
+                    // 確保 data 是陣列
+                    if (!Array.isArray(data)) {
+                        throw new Error('後端回傳的資料格式錯誤');
+                    }
 
                     // 提取學校名稱和人數數據
                     const labels = data.map(item => item.school); // 學校名稱
@@ -289,24 +295,15 @@ if ($conn->connect_error) {
                 }
             }
 
+            // 初次加載數據
+            fetchDataAndUpdateChart();
+
             // 每隔 5 秒更新圖表數據
             setInterval(fetchDataAndUpdateChart, 5000);
 
-            // 初次加載數據
-            fetchDataAndUpdateChart();
         </script>
     </body>
 
-    </html>
-
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
     <!-- ========================= service-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">
