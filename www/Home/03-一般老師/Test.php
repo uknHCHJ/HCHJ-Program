@@ -48,7 +48,7 @@
 <h1>五專資管科二技錄取率評估</h1>
 
 <!-- 表單，讓學生輸入各科成績 -->
-<form action="Test.php" method="POST">
+<form action="" method="POST">
     <label for="chinese">國文：</label>
     <input type="number" name="chinese" id="chinese" required><br><br>
 
@@ -58,8 +58,11 @@
     <label for="math">數學：</label>
     <input type="number" name="math" id="math" required><br><br>
 
-    <label for="special">專業科目：</label>
-    <input type="number" name="special" id="special" required><br><br>
+    <label for="special1">專業科目一：</label>
+    <input type="number" name="special1" id="special1" required><br><br>
+
+    <label for="special2">專業科目二：</label>
+    <input type="number" name="special2" id="special2" required><br><br>
 
     <button type="submit">計算錄取率</button>
 </form>
@@ -70,118 +73,121 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $chinese = $_POST['chinese'];
     $english = $_POST['english'];
     $math = $_POST['math'];
-    $special = $_POST['special'];
+    $special1 = $_POST['special1']; // 第一專業科目
+    $special2 = $_POST['special2']; // 第二專業科目
 
     // 定義各科目的加權比例
     $weights = [
-        'chinese' => 0.2, // 國文佔20%
-        'english' => 0.2, // 英文佔20%
-        'math' => 0.3,    // 數學佔30%
-        'special' => 0.3  // 專業科目佔30%
+        'chinese' => 1.4, // 國文的加權比例
+        'english' => 1.4, // 英文的加權比例
+        'math' => 2.0,    // 數學的加權比例
+        'special1' => 2.4,  // 第一專業科目的加權比例
+        'special2' => 2.4   // 第二專業科目的加權比例
     ];
 
     // 計算加權後的總分
     $totalScore = ($chinese * $weights['chinese']) +
                   ($english * $weights['english']) +
                   ($math * $weights['math']) +
-                  ($special * $weights['special']);
+                  ($special1 * $weights['special1']) +
+                  ($special2 * $weights['special2']);
 
-    // 建立學校資料（可根據資料庫查詢）
+    // 根據資料庫資料修改學校門檻
     $schools = [
-        '國立臺北商業大學' => 80,
-        '中國科技大學' => 75,
-        '國立臺中科技大學' => 70,
-        '健行科技大學' => 68,
-        '崑山科技大學' => 72,
-        '國立高雄科技大學' => 78,
-        '中華科技大學' => 65,
-        '南臺科技大學' => 74,
-        '國立雲林科技大學' => 76,
-        '台北海洋科技大學' => 67,
-        '國北護大學' => 70,
-        '東吳大學' => 80,
-        '東海大學' => 77,
-        '國立中山大學' => 76,
-        '勤益科技大學' => 74,
-        '致理科技大學' => 71,
-        '虎尾科技大學' => 73
+        '國立高雄科技大學' => 280,
+        '國立雲林科技大學' => 270,
+        '國立臺中科技大學' => 260,
+        '國立臺北商業大學' => 250,
+        '勤益科技大學' => 240,
+        '南臺科技大學' => 240,
+        '健行科技大學' => 230,
+        '崑山科技大學' => 230,
+        '虎尾科技大學' => 230,
+        '致理科技大學' => 220,
+        '中國科技大學' => 220,
+        '中華科技大學' => 210,
+        '國北護大學' => 200,
+        '台北海洋科技大學' => 200
     ];
 
-    // 計算接近度（差距倒數）
-    $results = [];
-    foreach ($schools as $school => $threshold) {
-        $difference = abs($totalScore - $threshold);
-        $closeness = 1 / (1 + $difference); // 計算接近度（倒數，差距越小接近度越高）
-        $results[$school] = $closeness;
-    }
+    // 計算接近度（分數越高，接近度越高）
+$results = [];
+foreach ($schools as $school => $threshold) {
+    // 計算分數和門檻的差距，差距越小，接近度越高
+    $difference = abs($totalScore - $threshold); // 計算差距
+    $maxDifference = 100; // 最大可能差距，可以根據需要調整
 
-    // 排序學校（根據接近度高到低）
-    arsort($results);
+    // 動態計算接近度，避免固定除數過小，讓接近度合理
+    $closeness = max(0, 1 - $difference / $maxDifference); // 調整接近度計算公式
 
-    // 取前五名學校（並按錄取門檻排序）
-    $topSchools = array_slice($results, 0, 5, true);
+    $results[$school] = $closeness;
+}
 
-    // 計算接近度總和
-    $totalCloseness = array_sum($topSchools);
+// 檢查接近度結果
+echo "<pre>";
+echo "Total Score: " . $totalScore . "<br>";
+echo "Results: ";
+print_r($results);
+echo "</pre>";
 
-    // 計算占比
-    $percentages = [];
-    foreach ($topSchools as $school => $closeness) {
-        $percentages[$school] = ($closeness / $totalCloseness) * 100;
-    }
-
-    // 顯示結果並準備傳送至前端
-    echo "<script>
-        var results = " . json_encode($percentages) . ";
-        var labels = Object.keys(results);
-        var data = Object.values(results);
-
-        // 顯示學生最有可能錄取的學校
-        var highestSchool = labels[0];
-        var highestRate = data[0];
-        document.write('<div id=\"highestSchool\">您最有可能錄取的學校是：' + highestSchool + ' (' + highestRate.toFixed(2) + '%機率)</div>');
-
-        // 自訂顏色配置，讓最高錄取機率的學校顯得突出
-        var colors = [];
-        for (var i = 0; i < data.length; i++) {
-            if (i === 0) {
-                colors.push('#FF5733'); // 高接近度顯示顯眼的顏色
-            } else {
-                colors.push('#36A2EB'); // 其他學校使用較冷的顏色
-            }
+    if ($totalCloseness > 0) {
+        // 計算占比
+        $percentages = [];
+        foreach ($topSchools as $school => $closeness) {
+            $percentages[$school] = ($closeness / $totalCloseness) * 100;
         }
 
+        // 顯示結果並準備傳送至前端
+        echo "<div id=\"highestSchool\">您最有可能錄取的學校是：{$topSchools[0]} ({$percentages[array_keys($topSchools)[0]]}%)</div>";
+
         // 圓餅圖顯示
-        var ctx = document.createElement('canvas');
-        document.body.appendChild(ctx);
-        var chart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '學校接近度占比 (%)',
-                    data: data,
-                    backgroundColor: colors,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
+        echo "<canvas id='myChart'></canvas>";
+        echo "<script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var results = " . json_encode($percentages) . ";
+            var labels = Object.keys(results);
+            var data = Object.values(results);
+
+            var colors = [];
+            for (var i = 0; i < data.length; i++) {
+                if (i === 0) {
+                    colors.push('#FF5733'); // 高接近度顯示顯眼的顏色
+                } else {
+                    colors.push('#36A2EB'); // 其他學校使用較冷的顏色
+                }
+            }
+
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '學校接近度占比 (%)',
+                        data: data,
+                        backgroundColor: colors,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    </script>";
+            });
+        </script>";
+    } else {
+        echo "<div id=\"highestSchool\">無法計算錄取率，請檢查輸入的成績。</div>";
+    }
 }
 ?>
 
