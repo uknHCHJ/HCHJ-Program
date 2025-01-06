@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
         $message = mysqli_real_escape_string($link, $message);
 
         // 插入留言到資料庫
-        $query = "INSERT INTO message (message,user,permissions,time) VALUES ('$message','$username','$userpermissions','$upload_date')";
+        $query = "INSERT INTO message (message,user,permissions,time,user_id) VALUES ('$message','$username','$userpermissions','$upload_date','$userId')";
 
         // 執行插入查詢
         if (mysqli_query($link, $query)) {
