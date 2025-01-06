@@ -1,57 +1,62 @@
 <?php
-// 引入 PHPWord 所需檔案
-require_once '/Home/PHPWord-master/src/PhpWord/PhpWord.php';
+require_once 'libs/PhpWord/Autoloader.php';
 
-// 資料庫連線設定
-$host = '127.0.0.1';
-$dbname = 'HCHJ';
-$username = 'HCHJ';
-$password = 'xx435kKHq';
-$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
+\PhpOffice\PhpWord\Autoloader::register();
+use PhpOffice\PhpWord\PhpWord;
 
-try {
-    $pdo = new PDO($dsn, $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("資料庫連線失敗：" . $e->getMessage());
+// 初始化 PhpWord
+$phpWord = new PhpWord();
+
+// 連接資料庫
+$servername = "localhost";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {
+    die("資料庫連線失敗: " . mysqli_connect_error());
 }
 
-// 取得 POST 資料
-$options = isset($_POST['options']) ? $_POST['options'] : [];
-if (empty($options)) {
-    die("請選擇至少一個匯出選項！");
-}
+// 查詢圖片數據
+$sql = "SELECT name, img FROM history";
+$result = mysqli_query($conn, $sql);
 
-// 創建 Word 文件
-$phpWord = new \PhpOffice\PhpWord\PhpWord();
-$section = $phpWord->addSection();
+if (mysqli_num_rows($result) > 0) {
+    $section = $phpWord->addSection();
 
-// 查詢並生成內容
-foreach ($options as $option) {
-    if ($option == 'all' || $option == 'license') {
-        $stmt = $pdo->query("SELECT name, img FROM history");
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $section->addText("競賽名稱: " . htmlspecialchars($row['name']));
-            $section->addImageFromString($row['img'], ['width' => 200, 'height' => 150]);
-        }
+    while ($row = mysqli_fetch_assoc($result)) {
+        $imageName = $row['name'];
+        $imageData = $row['img'];
+
+        // 將圖片寫入臨時文件
+        $tempImage = tempnam(sys_get_temp_dir(), 'img_');
+        file_put_contents($tempImage, $imageData);
+
+        // 添加圖片和標題到 Word 文件
+        $section->addText($imageName);
+        $section->addImage($tempImage, array(
+            'width' => 300,
+            'height' => 200,
+        ));
+
+        // 刪除臨時文件
+        unlink($tempImage);
     }
-    if ($option == 'all' || $option == 'competition') {
-        $stmt = $pdo->query("SELECT name, image FROM Certificate");
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $section->addText("證照名稱: " . htmlspecialchars($row['name']));
-            $section->addImageFromString($row['image'], ['width' => 200, 'height' => 150]);
-        }
-    }
+
+    // 將 Word 文件導出
+    $fileName = "images_" . date('YmdHis') . ".docx";
+    header("Content-Description: File Transfer");
+    header('Content-Disposition: attachment; filename="' . $fileName . '"');
+    header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+
+    $tempFile = tempnam(sys_get_temp_dir(), 'word_');
+    $phpWord->save($tempFile, 'Word2007');
+    readfile($tempFile);
+    unlink($tempFile);
+} else {
+    echo "沒有圖片數據。";
 }
 
-// 保存文件並提供下載
-header("Content-Description: File Transfer");
-header('Content-Disposition: attachment; filename="exported_file.docx"');
-header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-header('Cache-Control: must-revalidate');
-header('Content-Length: ' . filesize($outputFile));
-
-$writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$writer->save('php://output');
-exit();
+mysqli_close($conn);
 ?>
