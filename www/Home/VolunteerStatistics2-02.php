@@ -2,25 +2,24 @@
 session_start();
 include 'db.php';
 
-if (!isset($_SESSION['user'])) {
-    echo "未登入";
-    header("Location:/~HCHJ/index.html");
-    exit();
-}
-
-$userData = $_SESSION['user']; // 從 SESSION 獲取用戶資料
-$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8'); // 確保數據安全
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
+// 驗證是否已登入
 if (!isset($_SESSION['user'])) {
     echo ("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
+                alert('請先登入！！');
+                window.location.href = '/~HCHJ/index.html'; 
+          </script>");
     exit();
 }
+
+// 從 SESSION 獲取用戶資料
+$userData = $_SESSION['user'];
+$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8');
+
+// 資料庫連線設置
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
 
 header('Content-Type: application/json'); // API 回傳 JSON 格式
 
@@ -30,8 +29,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // SQL 查詢：統計每所學校的選擇人數
-    $sql = 'SELECT school_name, COUNT(*) AS count FROM choices GROUP BY school_name ORDER BY count DESC';
-   
+    $sql = 'SELECT school_id, COUNT(*) AS count FROM Prefences GROUP BY school_id ORDER BY count DESC';
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
@@ -39,7 +37,7 @@ try {
     $result = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $result[] = [
-            'school' => $row['school_name'],
+            'school' => $row['school_id'],
             'count' => (int)$row['count']
         ];
     }
@@ -47,6 +45,7 @@ try {
     // 回傳 JSON 數據
     echo json_encode($result);
 } catch (PDOException $e) {
-    echo json_encode(["error" => $e->getMessage()]);
+    error_log("Database Error: " . $e->getMessage()); // 記錄錯誤
+    echo json_encode(["error" => "資料庫連接失敗，請聯繫管理員。"]);
 }
 ?>
