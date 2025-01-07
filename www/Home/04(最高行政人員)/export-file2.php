@@ -2,13 +2,27 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// 引入 PHPWord 的核心類和所有相關檔案
 require_once '/data/HCHJ/www/Home/lib/PhpWord/PhpWord.php';
-require_once '/data/HCHJ/www/Home/lib/PhpWord/Media.php'; // 手動引入 Media 類
-require_once '/data/HCHJ/www/Home/lib/PhpWord/Style.php'; // 手動引入 Style 類
-require_once '/data/HCHJ/www/Home/lib/PhpWord/Settings.php'; // 手動引入 Settings 類
-require_once '/data/HCHJ/www/Home/lib/PhpWord/IOFactory.php';
-require_once '/data/HCHJ/www/Home/lib/PhpWord/TemplateProcessor.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Settings.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Style.php';
 
+// 引入集合類
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Collection/AbstractCollection.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Collection/Bookmarks.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/Cell.php';
+// 引入元素類
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/AbstractElement.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/Text.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/Table.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/Row.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/Cell.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Element/Image.php';
+
+// 引入寫入器相關檔案
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Writer/WriterInterface.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Writer/AbstractWriter.php';
+require_once '/data/HCHJ/www/Home/lib/PhpWord/Writer/Word2007.php';
 set_include_path(get_include_path() . PATH_SEPARATOR . '/data/HCHJ/www/Home/lib/PhpWord');
 
 require_once 'PhpWord.php';
