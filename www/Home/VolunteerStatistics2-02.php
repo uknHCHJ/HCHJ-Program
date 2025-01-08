@@ -1,51 +1,85 @@
 <?php
 session_start();
-include 'db.php';
+$userData = $_SESSION['user']; 
+$userId = $userData['user']; 
+$username = $userData['name']; 
 
-// 驗證是否已登入
+// 資料庫連接設定
+$servername = "127.0.0.1";  
+$dbUser = "HCHJ";  
+$dbPassword = "xx435kKHq";  
+$dbname = "HCHJ";  
+
+// 連接 MySQL 資料庫
+$link = mysqli_connect($servername, $dbUser, $dbPassword, $dbname);
+
+// 檢查連接是否成功
+if (!$link) {
+    $response[0] = "無法連接資料庫：" . mysqli_connect_error();
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// 設置字符集
+mysqli_query($link, 'SET NAMES UTF8');
+
+// 設定回應內容類型為 JSON
+header('Content-Type: application/json');
+
 if (!isset($_SESSION['user'])) {
-    echo ("<script>
-                alert('請先登入！！');
-                window.location.href = '/~HCHJ/index.html'; 
-          </script>");
+    $response[0] = "未登入";
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit();
 }
 
-// 從 SESSION 獲取用戶資料
-$userData = $_SESSION['user'];
-$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8');
+// 查詢使用者競賽偏好
+$query = "SELECT user, serial_number,school_id, department_id, time 
+          FROM Preferences 
+          WHERE user = '$userId' 
+          AND time = (SELECT MAX(time) FROM Preferences WHERE user = '$userId')
+          ORDER BY serial_number ASC";
+$result = mysqli_query($link, $query);
 
-// 資料庫連線設置
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-header('Content-Type: application/json'); // API 回傳 JSON 格式
-
-try {
-    // 使用 PDO 連接資料庫
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // SQL 查詢：統計每所學校的選擇人數
-    $sql = 'SELECT school_id, COUNT(*) AS count FROM Prefences GROUP BY school_id ORDER BY count DESC';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    // 整理查詢結果
-    $result = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $result[] = [
-            'school' => $row['school_id'],
-            'count' => (int)$row['count']
-        ];
-    }
-
-    // 回傳 JSON 數據
-    echo json_encode($result);
-} catch (PDOException $e) {
-    error_log("Database Error: " . $e->getMessage()); // 記錄錯誤
-    echo json_encode(["error" => "資料庫連接失敗，請聯繫管理員。"]);
+if (!$result) {
+    $response[0] = "查詢失敗：" . mysqli_error($link);
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit;
 }
+
+$competitions = array();
+while ($row = mysqli_fetch_assoc($result)) {
+    $schoolId = $row['school_id'];
+    $departmentId = $row['department_id'];
+
+    // 使用 school_id 查詢學校名稱
+    $schoolQuery = "SELECT school_name FROM School WHERE school_id = '$schoolId'";
+    $schoolResult = mysqli_query($link, $schoolQuery);
+    $schoolName = mysqli_fetch_assoc($schoolResult)['school_name'];
+
+    // 合併資料
+    $row['school_name'] = $schoolName;
+    $row['department_name'] = $departmentName;
+    
+    $competitions[] = $row;
+
+    // 釋放子查詢結果集
+    mysqli_free_result($schoolResult);
+    mysqli_free_result($departmentResult);
+}
+
+if (empty($competitions)) {
+    $response[0] = "查無資料";
+} else {
+    $response = $competitions;
+}
+
+echo json_encode($response, JSON_UNESCAPED_UNICODE);
+
+// 釋放主要查詢結果集並關閉連接
+mysqli_free_result($result);
+mysqli_close($link);
+
+// 開啟錯誤報告
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 ?>
