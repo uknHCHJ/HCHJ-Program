@@ -169,7 +169,7 @@ $username=$userData['name'];
                         cursor: pointer;
                     }
                 </style>
-                    <button type="submit" class="btn btn-primary">匯出檔案(.docx)</button>
+                    <button type="submit" class="btn btn-primary">匯出檔案(.doc )</button>
                     <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
                 </form>
                 </div>
