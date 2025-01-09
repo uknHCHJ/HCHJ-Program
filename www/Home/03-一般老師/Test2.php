@@ -62,8 +62,8 @@
             font-weight: bold;
         }
         canvas {
-            width: 80px;
-            height: 80px;
+            width: 150px;
+            height: 150px;
         }
     </style>
 </head>
@@ -107,7 +107,7 @@
                     // 顯示學校名稱和圓餅圖
                     echo "<div class='school-container'>";
                     echo "<div class='school-name'>{$row['school_name']}</div>";
-                    echo "<canvas id='chart-{$row['school_name']}'></canvas>";
+                    echo "<canvas id='chart-{$row['school_name']}' width='150' height='150'></canvas>";
                     echo "</div>";
 
                     // 用 Chart.js 顯示圓餅圖
@@ -123,7 +123,8 @@
                                 }]
                             },
                             options: {
-                                responsive: true,
+                                responsive: false,
+                                maintainAspectRatio: false,
                                 plugins: {
                                     legend: {
                                         display: false
