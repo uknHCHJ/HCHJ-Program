@@ -6,7 +6,65 @@
     <title>落點分析</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* 省略的樣式內容與原版本相同 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label, input {
+            margin: 5px 0;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            margin: 0 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .school-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .school-name {
+            width: 50%;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        canvas {
+            width: 80px;
+            height: 80px;
+        }
     </style>
 </head>
 <body>
@@ -19,19 +77,18 @@
             <input type="number" name="english" id="english" min="0" max="100" required>
             <button type="submit">分析</button>
         </form>
-        <hr>
+
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // 取得學生成績
             $chinese = intval($_POST['chinese']);
             $english = intval($_POST['english']);
             $totalScore = $chinese + $english;
 
             // 資料庫連線
             $host = '127.0.0.1';
-            $db = 'HCHJ';
-            $user = 'HCHJ';
-            $pass = 'xx435kKHq';
+            $db = 'HCHJ'; 
+            $user = 'HCHJ'; 
+            $pass = 'xx435kKHq'; 
 
             $conn = new mysqli($host, $user, $pass, $db);
 
@@ -39,69 +96,50 @@
                 die("資料庫連線失敗：" . $conn->connect_error);
             }
 
-            // 抓取學校資料
+            // 從資料庫抓取學校資料
             $sql = "SELECT school_name, min_score FROM University";
             $result = $conn->query($sql);
 
-            $schools = [];
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     $probability = max(0, min(100, ($totalScore / $row['min_score']) * 100));
-                    $schools[] = [
-                        'school_name' => $row['school_name'],
-                        'min_score' => $row['min_score'],
-                        'probability' => $probability
-                    ];
+
+                    // 顯示學校名稱和圓餅圖
+                    echo "<div class='school-container'>";
+                    echo "<div class='school-name'>{$row['school_name']}</div>";
+                    echo "<canvas id='chart-{$row['school_name']}'></canvas>";
+                    echo "</div>";
+
+                    // 用 Chart.js 顯示圓餅圖
+                    echo "<script>
+                        var ctx = document.getElementById('chart-{$row['school_name']}').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['錄取機率', '未錄取機率'],
+                                datasets: [{
+                                    data: [{$probability}, 100 - {$probability}],
+                                    backgroundColor: ['#4CAF50', '#F44336']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        });
+                    </script>";
                 }
-            }
-
-            // 依錄取機率排序
-            usort($schools, function ($a, $b) {
-                return $b['probability'] <=> $a['probability'];
-            });
-
-            // 顯示學校錄取結果
-            foreach ($schools as $index => $school) {
-                echo "<div class='school-container'>";
-                echo "<div class='school-name'>{$school['school_name']}</div>";
-                echo "<div class='progress'>";
-                echo "<progress value='{$school['probability']}' max='100'></progress>";
-                echo "<span>" . round($school['probability'], 2) . "%</span>";
-                echo "</div>";
-                echo "<canvas id='chart-{$index}' class='chart'></canvas>";
-                echo "</div>";
+            } else {
+                echo "沒有找到學校資料。";
             }
 
             $conn->close();
         }
         ?>
     </div>
-
-    <script>
-        const chartData = <?php echo json_encode($schools ?? []); ?>;
-
-        chartData.forEach((school, index) => {
-            const ctx = document.getElementById(`chart-${index}`).getContext('2d');
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['錄取機率', '未錄取機率'],
-                    datasets: [{
-                        data: [school.probability, 100 - school.probability],
-                        backgroundColor: ['#4CAF50', '#F44336']
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    responsive: false,
-                    maintainAspectRatio: false
-                }
-            });
-        });
-    </script>
 </body>
 </html>
