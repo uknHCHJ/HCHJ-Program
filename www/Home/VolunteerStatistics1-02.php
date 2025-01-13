@@ -234,11 +234,10 @@ if ($conn->connect_error) {
     <body>
         <canvas id="schoolChart" width="400" height="200"></canvas>
         <canvas id="departmentChart" width="400" height="200" style="display: none;"></canvas>
-
         <script src="script.js"></script>
     </body>
 
-    </html>
+
     <script>
         const schoolChartCtx = document.getElementById('schoolChart').getContext('2d');
         const departmentChartCtx = document.getElementById('departmentChart').getContext('2d');
@@ -277,7 +276,7 @@ if ($conn->connect_error) {
             });
 
         function showDepartmentChart(schoolId) {
-            fetch(`dataHandler.php?action=getDepartments&school_id=${schoolId}`)
+            fetch(`VolunteerStatistics2-02.php?action=getDepartments&school_id=${schoolId}`)
                 .then(response => response.json())
                 .then(data => {
                     const labels = data.map(item => item.department_name);
@@ -306,6 +305,8 @@ if ($conn->connect_error) {
         }
 
     </script>
+
+    </html>
     <!-- ========================= service-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">
