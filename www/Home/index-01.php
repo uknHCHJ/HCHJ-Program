@@ -114,7 +114,7 @@ $result = mysqli_query($link, $query2);
                                 <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/messageboard01-1.php">留言板</a>
+                            <a href="/~HCHJ/Home/Secondtechnicalcampus00-1.php">管理員</a>
                             </li>
                             <li class="nav-item">
                                 <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
@@ -129,8 +129,7 @@ $result = mysqli_query($link, $query2);
                                     </a>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a href="/~HCHJ/Home/Secondtechnicalcampus00-1.php">管理員
-                                    </li>
+                            
                             <li class="nav-item">
                                 <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                             </li>

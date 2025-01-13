@@ -137,7 +137,7 @@ $result = mysqli_query($link, $query);
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">請上傳備審</h2>
+                        <h2 class="text-white">請上傳二技校園</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
                             </nav>
@@ -157,7 +157,7 @@ $result = mysqli_query($link, $query);
             <div class="row">
                 <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                     <div class="section-title text-center mb-55">
-                        <span class="wow fadeInDown" data-wow-delay=".2s">新增備審</span>
+                        <span class="wow fadeInDown" data-wow-delay=".2s">新增二技校園</span>
                     </div>
                 </div>
             </div>
@@ -165,16 +165,16 @@ $result = mysqli_query($link, $query);
             <div class="table-container">
                 <form id="permission-form" action="upload-01(上傳備審後端).php" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
-                        <label for="imageUpload">上傳檔案(.pdf)：</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".pdf">
+                        <label for="imageUpload">上傳檔案(.xlsx、.csv)：</label>
+                        <input type="file" id="file" name="file" class="form-control" accept=".xlsx、.csv">
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="user">學號：</label>
+                        <label for="user">帳號：</label>
                         <input type="text" id="user" name="user" class="form-control" value=<?php echo $userId; ?> readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="username">姓名：</label>
+                        <label for="username">管理員姓名：</label>
                         <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
                     </div>
                     <button type="submit" class="btn btn-primary">確認上傳</button>
