@@ -1,36 +1,31 @@
 <?php
 session_start();
-include 'db.php';
-
-// 確認使用者是否已登入
-if (!isset($_SESSION['user'])) {
-    echo "<script>
-            alert('請先登入！');
-            window.location.href = '/~HCHJ/index.html';
-          </script>";
-    exit();
-}
-
-$userData = $_SESSION['user'];
-$userId = $userData['user']; // 用戶識別符（假設使用 username 作為唯一識別符）
-$username = $userData['name'];
-// 資料庫連接
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if (!$link) {
+if ($link) {
+    mysqli_query($link, 'SET NAMES UTF8');
+} else {
     die("資料庫連接失敗: " . mysqli_connect_error());
 }
-
-mysqli_query($link, 'SET NAMES UTF8');
-
+// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+$userData = $_SESSION['user'];
+// 例如從 SESSION 中獲取 user_id
+$userId = $userData['user'];
+$username = $userData['name'];
+$query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
+//if (mysqli_num_rows($result) > 0) {
+// $userDetails = mysqli_fetch_assoc($result);  
+//} else {
+// echo "找不到使用者的詳細資料";
+//}
 ?>
-
-<!doctype html>
+<!Doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>留言板</title>
+    <title>上傳備審</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,51 +39,6 @@ mysqli_query($link, 'SET NAMES UTF8');
     <link rel="stylesheet" href="assets/css/tiny-slider.css">
     <link rel="stylesheet" href="assets/css/glightbox.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <style>
-        /* 設定容器和表單樣式 */
-        .form-container {
-            text-align: center;
-            width: 100%;
-            max-width: 800px;
-            /* 設定最大寬度 */
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 調整標籤樣式 */
-        label {
-            display: block;
-            text-align: left;
-            font-weight: bold;
-            font-size: 1.2em;
-            /* 增加字型大小 */
-            margin-top: 10px;
-        }
-
-        /* 設定 select、input 和 textarea 的樣式與大小 */
-        select,
-        input[type="text"],
-        textarea,
-        input[type="file"],
-        input[type="date"] {
-            width: 100%;
-            max-width: 800px;
-            /* 設定欄位最大寬度 */
-            margin-top: 10px;
-            padding: 8px;
-            font-size: 1em;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-        }
-
-        /* 設定按鈕樣式 */
-        button {
-            font-size: 1.2em;
-            /* 增加按鈕字型大小 */
-            padding: 10px 20px;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -114,8 +64,6 @@ mysqli_query($link, 'SET NAMES UTF8');
         </div>
     </div>
     <!-- preloader end -->
-
-
     <!-- ========================= header start ========================= -->
     <header class="header navbar-area">
         <div class="container">
@@ -135,32 +83,25 @@ mysqli_query($link, 'SET NAMES UTF8');
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-
-
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="index-01.php">首頁</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">個人資料</a>
+                                    <a class="nav-item dd-menu">查看個人資料</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                        <li class="nav-item active"><a href="/~HCHJ/changepassword-01.html">修改密碼</a>
                                         </li>
-                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                        <li class="nav-item active"><a href="/~HCHJ/Home/contact01-1.php">個人資料</a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">備審資料</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                        <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板</a>
                                         </li>
-
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/messageboard1-01.php">留言板</a>
+                                    <a class="page-scroll" href="/~HCHJ/Home/blog-01(比賽資訊).php">比賽資訊</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
@@ -168,18 +109,15 @@ mysqli_query($link, 'SET NAMES UTF8');
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">志願序</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                        </li>
+                                        <li class="nav-item active"><a
+                                                href="/~HCHJ/Home/optional(填選志願1)-01.php">選填志願</a></li>
+                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional(志願顯示).php">編輯</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-                                </li>
+
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -190,6 +128,8 @@ mysqli_query($link, 'SET NAMES UTF8');
     </header>
     <!-- ========================= header end ========================= -->
 
+
+
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
@@ -197,14 +137,9 @@ mysqli_query($link, 'SET NAMES UTF8');
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">留言板</h2>
+                        <h2 class="text-white">請上傳備審</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="javascript:void(0)">首頁</a>
-                                    </li>
-                                    <li class="breadcrumb-item active" aria-current="page">留言板</li>
-                                </ol>
                             </nav>
                         </div>
                     </div>
@@ -212,122 +147,43 @@ mysqli_query($link, 'SET NAMES UTF8');
             </div>
         </div>
     </section>
+
     <!-- ========================= page-banner-section end ========================= -->
 
-    <!-- ========================= alerts-section start ========================= -->
-    <!-- 新增留言區域 -->
-    <section class="service-section">
-        <div class="form-container container mt-4">
-            <h3>歡迎，<?php echo htmlspecialchars($username); ?>！</h3>
-            <form action="messageboard01-2.php" method="post">
-                <label for="message">新增留言：</label>
-                <textarea id="message" name="message" class="form-control" rows="3" required></textarea><br>
-                <button type="submit" class="btn btn-info">送出</button>
-            </form>
-        </div>
+    <!-- ========================= feature-section start ========================= -->
+    <!-- 表單區塊 -->
+    <section id="service" class="service-section pt-130 pb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
+                    <div class="section-title text-center mb-55">
+                        <span class="wow fadeInDown" data-wow-delay=".2s">新增備審</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <form id="permission-form" action="upload-01(上傳備審後端).php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group mb-3">
+                        <label for="imageUpload">上傳檔案(.pdf)：</label>
+                        <input type="file" id="file" name="file" class="form-control" accept=".pdf">
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="user">學號：</label>
+                        <input type="text" id="user" name="user" class="form-control" value=<?php echo $userId; ?> readonly>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="username">姓名：</label>
+                        <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
+                    </div>
+                    <button type="submit" class="btn btn-primary">確認上傳</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
+                </form>
+
+            </div>
     </section>
-
-    <section class="mt-4">
-        <div class="message-list container">
-            <h4>留言列表：</h4>
-            <?php
-            $userData = $_SESSION['user'];
-            $grade = $userData['grade'];
-            $class = $userData['class'];
-            $currentUserId = $userData['id'];
-            $permissions1 = explode(',', $userData['Permissions']);
-            //登入使用者的權限
-            $permissions1 = explode(',', $userData['Permissions']);
-            // 使用 LIKE 查詢包含指定年級和班級的記錄 把對應的老師找出來
-            $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
-            $result = mysqli_query($link, $sql);
-            if ($result) {
-                $teachers = [];  // 用於儲存符合條件的班導名字
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $permissions2 = explode(',', $row['Permissions']);//放同班及其他使用者對應的權限
-                    if (in_array('2', $permissions2)) {//權限是2就把名字印出來存入
-                        $teachers[] = $row['name'];
-                    }
-                }
-            } else {
-                echo "查詢失敗：" . mysqli_error($link);
-            }
-            // 查詢所有留言
-            $query = "SELECT * FROM message  WHERE `user` LIKE '%$teachers[0]%' ORDER BY id DESC";  // DESC 代表顯示最新的留言在最上面
-            $result = mysqli_query($link, $query);
-
-            // 檢查是否有留言
-            if (mysqli_num_rows($result) > 0) {
-                // 顯示留言
-                while ($row = mysqli_fetch_assoc($result)) {
-
-                    echo "<p><strong>" . htmlspecialchars($row['user']) . ":" . htmlspecialchars($row['message']) . "</strong></p>";
-                }
-            } else {
-                echo "目前沒有留言。";
-            }
-            ?>
-
-        </div>
-    </section>
-    <style>
-        /* 置中新增留言區域 */
-        .alerts-section .row.justify-content-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 置中留言區域 */
-        .alerts-section .col-md-6 {
-            max-width: 800px;
-            /* 設定最大寬度 */
-            width: 100%;
-            /* 寬度自適應 */
-            text-align: center;
-        }
-
-        /* 設定表單內的按鈕置中 */
-        .alerts-section .btn-primary {
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* 修改alert樣式 */
-        .message-list .alert {
-            margin-bottom: 20px;
-            /* 每條留言卡片之間的間隔 */
-            text-align: left;
-            border-radius: 8px;
-            /* 增加圓角 */
-            padding: 15px;
-            background-color: #e0f7fa;
-            /* 背景顏色更柔和 */
-            border: 1px solid #b2ebf2;
-            /* 背景邊框 */
-            width: 100%;
-            /* 留言寬度自適應 */
-            max-width: 800px;
-            /* 最大寬度為800px */
-            margin: 10px auto;
-            /* 置中顯示 */
-        }
-
-        /* 設定alert文字樣式 */
-        .message-list .alert a {
-            font-size: 16px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        /* 留言懸停效果 */
-        .message-list .alert:hover {
-            background-color: #b2ebf2;
-            /* 滑鼠懸停時改變顏色 */
-        }
-    </style>
-    <!-- ========================= alerts-section end ========================= -->
-
+    <!-- ========================= feature-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">
         <div class="container">
@@ -433,53 +289,6 @@ mysqli_query($link, 'SET NAMES UTF8');
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
-
-    <script>
-        //========= glightbox
-        GLightbox({
-            'href': '#',
-            'type': 'video',
-            'source': 'youtube', //vimeo, youtube or local
-            'width': 900,
-            'autoplayVideos': true,
-        });
-
-        //========= testimonial 
-        tns({
-            container: '.testimonial-active',
-            items: 1,
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            nav: false,
-            controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-        });
-
-        //============== isotope masonry js with imagesloaded
-        imagesLoaded('#container', function () {
-            var elem = document.querySelector('.grid');
-            var iso = new Isotope(elem, {
-                // options
-                itemSelector: '.grid-item',
-                masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                }
-            });
-
-            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-            filterButtons.forEach(e =>
-                e.addEventListener('click', () => {
-
-                    let filterValue = event.target.getAttribute('data-filter');
-                    iso.arrange({
-                        filter: filterValue
-                    });
-                })
-            );
-        });
-    </script>
 </body>
 
 </html>
