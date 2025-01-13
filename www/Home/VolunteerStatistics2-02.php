@@ -50,16 +50,16 @@ if ($action === 'getSchools') {
     }
 
     $school_id = intval($_GET['school_id']); // 確保安全
-    $sql = 'SELECT 
+    $sql = "SELECT 
             d.department_id,
             d.department_name,
             COUNT(p.user_id) AS student_count,
-            GROUP_CONCAT(u.user_name SEPARATOR ', ') AS students
+            GROUP_CONCAT(u.user_name SEPARATOR ',') AS students
         FROM Preferences p
-        JOIN Departments d ON p.department_id = d.department_id
-        JOIN Users u ON p.user_id = u.user_id
+        JOIN Department d ON p.department_id = d.department_id
+        JOIN user u ON p.user_id = u.user_id
         WHERE p.school_id = ?
-        GROUP BY d.department_id, d.department_name';
+        GROUP BY d.department_id, d.department_name";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $school_id);
