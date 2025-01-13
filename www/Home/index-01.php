@@ -126,11 +126,11 @@ $result = mysqli_query($link, $query2);
                                     </li>
                                     <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
                                     </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/Secondtechnicalcampus00-1.php">管理員
                                     </a>
-                                    </li>
                                 </ul>
                             </li>
+                            <li class="nav-item"><a href="/~HCHJ/Home/Secondtechnicalcampus00-1.php">管理員
+                                    </li>
                             <li class="nav-item">
                                 <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                             </li>
