@@ -164,8 +164,8 @@ if ($conn->connect_error) {
                                         </ul>
                                     </li>              
                                     <li class="nav-item">
-                                        <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
-                                    </li>              
+                                            <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                                    </li>             
                                     <li class="nav-item">
                                         <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
                                     </li>                                                    
@@ -203,10 +203,9 @@ if ($conn->connect_error) {
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
-    <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
-    <form action="PortfolioUpdata.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;">
-        <!-- 隱藏欄位，傳送學生帳號到後端 -->
-        <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
+    <!-- 使用隱藏欄位將 student_id 傳入 -->
+    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;">
+        <input type="hidden" name="student_id" value="<?php echo $userId; ?>">
 
         <div style="margin-bottom: 15px;">
             <label for="category">選擇資料類型：</label>
@@ -228,7 +227,7 @@ if ($conn->connect_error) {
             上傳
         </button>
     </form>
-
+</div>
     <div style="text-align: center; margin: auto;">
         <hr style="margin: 20px auto; width: 80%;">
         <h2 style="text-align: center;">現有資料</h2>
