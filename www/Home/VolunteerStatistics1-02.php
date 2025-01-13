@@ -222,88 +222,90 @@ if ($conn->connect_error) {
     </section>
     <!-- ========================= page-banner-section end ========================= -->
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
+
     <head>
-        <title>學校選擇人數統計</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>圖表展示</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
+
     <body>
-        <canvas id="barChart" width="400" height="200"></canvas>
-        <script>
-            const ctx = document.getElementById('barChart').getContext('2d');
+        <canvas id="schoolChart" width="400" height="200"></canvas>
+        <canvas id="departmentChart" width="400" height="200" style="display: none;"></canvas>
 
-            // 初始化 Chart.js 圖表
-            const barChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [], // 學校名稱
-                    datasets: [
-                        {
-                            label: '選擇人數',
-                            data: [],
-                            backgroundColor: 'rgba(85, 123, 181, 0.7)',
-                            borderColor: 'rgb(217, 235, 235)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: '人數'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: '學校'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // 從 API 獲取數據並更新圖表
-            async function fetchDataAndUpdateChart() {
-                try {
-                    const response = await fetch('VolunteerStatistics2-02.php');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-
-                    // 確保 data 是陣列
-                    if (!Array.isArray(data)) {
-                        throw new Error('後端回傳的資料格式錯誤');
-                    }
-
-                    // 提取學校名稱和人數數據
-                    const labels = data.map(item => item.school); // 學校名稱
-                    const counts = data.map(item => item.count);  // 選擇人數
-
-                    // 更新圖表
-                    barChart.data.labels = labels;
-                    barChart.data.datasets[0].data = counts;
-                    barChart.update(); // 刷新圖表
-                } catch (error) {
-                    console.error('無法加載數據:', error);
-                }
-            }
-
-            // 初次加載數據
-            fetchDataAndUpdateChart();
-
-            // 每隔 5 秒更新圖表數據
-            setInterval(fetchDataAndUpdateChart, 5000);
-
-        </script>
+        <script src="script.js"></script>
     </body>
 
+    </html>
+    <script>
+        const schoolChartCtx = document.getElementById('schoolChart').getContext('2d');
+        const departmentChartCtx = document.getElementById('departmentChart').getContext('2d');
+
+        let schoolChart;
+        let departmentChart;
+
+        fetch('VolunteerStatistics2-02.php?action=getSchools')
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => `School ${item.school_id}`);
+                const values = data.map(item => item.student_count);
+
+                schoolChart = new Chart(schoolChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Students',
+                            data: values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        onClick: (e, elements) => {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const schoolId = data[index].school_id;
+                                showDepartmentChart(schoolId);
+                            }
+                        }
+                    }
+                });
+            });
+
+        function showDepartmentChart(schoolId) {
+            fetch(`dataHandler.php?action=getDepartments&school_id=${schoolId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.department_name);
+                    const values = data.map(item => item.student_count);
+
+                    if (departmentChart) {
+                        departmentChart.destroy();
+                    }
+
+                    departmentChart = new Chart(departmentChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Number of Students',
+                                data: values,
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1
+                            }]
+                        }
+                    });
+
+                    document.getElementById('departmentChart').style.display = 'block';
+                });
+        }
+
+    </script>
     <!-- ========================= service-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">

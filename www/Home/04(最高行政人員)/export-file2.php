@@ -1,98 +1,89 @@
 <?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once 'vendor/autoload.php';
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\SimpleType\Jc;
 
-// 檢查使用者是否登入
-if (!isset($_SESSION['user'])) {
-    echo("<script>
-          alert('請先登入！！');
-          window.location.href = '/~HCHJ/index.html'; 
-          </script>");
-    exit();
-}
-
-$userData = $_SESSION['user'];
-$userName = $userData['name'];
-$userId = $userData['user'];
-
-// 資料庫連線設定
-$host = '127.0.0.1';
-$dbUser = 'HCHJ';
-$dbPass = 'xx435kKHq';
-$dbName = 'HCHJ';
-
-$conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
-if (!$conn) {
-    die("資料庫連線失敗：" . mysqli_connect_error());
-}
-
-// 查詢相片資料
-$sql = "SELECT img, name FROM history";
-$result = mysqli_query($conn, $sql);
-
-if (!$result || mysqli_num_rows($result) == 0) {
-    die("沒有資料可供匯出！");
-}
-
-// 建立 PHPWord 文件
-$phpWord = new \PhpOffice\PhpWord\PhpWord();
+$phpWord = new PhpWord();
 $section = $phpWord->addSection();
 
-// 插入標題
-$section->addText("相片匯出", ['bold' => true, 'size' => 20]);
+// 資料庫連線設定
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
-// 循環插入相片與描述
-while ($row = mysqli_fetch_assoc($result)) {
-    $imageData = $row['img'];
-    $description = $row['name'];
+// 建立資料庫連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    // 檢查影像資料有效性
-    if (empty($imageData) || strlen($imageData) < 100) {
-        $section->addText("圖片資料無效：$description", ['italic' => true, 'color' => 'FF0000']);
-        continue;
+// 檢查資料表資料
+$sql = "SELECT name, img FROM history";
+$result = $conn->query($sql);
+
+// 檢查資料是否正確返回
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // 顯示文字資料
+        $description = $row['name'];
+        if (!empty($description)) {
+            $section->addText($description);
+        } else {
+            $section->addText("無文字資料");
+        }
+
+        // 處理圖片資料
+        $imageData = $row['img'];
+        if (empty($imageData) || strlen($imageData) < 100) {
+            $section->addText("無效的影像資料：$description");
+            continue;
+        }
+
+        $tempImagePath = tempnam(sys_get_temp_dir(), 'img') . '.png';
+        if (!file_put_contents($tempImagePath, $imageData)) {
+            $section->addText("無法生成臨時圖片檔案：$description");
+            continue;
+        }
+
+        // 插入圖片
+        try {
+            if (file_exists($tempImagePath) && getimagesize($tempImagePath)) {
+                $section->addImage($tempImagePath, [
+                    'width' => 300,
+                    'height' => 200,
+                    'alignment' => Jc::CENTER,
+                ]);
+            } else {
+                $section->addText("生成的圖片無效：$description");
+            }
+        } catch (Exception $e) {
+            $section->addText("插入影像失敗：$description", ['italic' => true, 'color' => 'FF0000']);
+            error_log("插入圖片失敗：" . $e->getMessage());
+        } finally {
+            if (file_exists($tempImagePath)) {
+                unlink($tempImagePath);
+            }
+        }
     }
-
-    // 嘗試寫入圖片資料為臨時檔案
-    $tempImagePath = tempnam(sys_get_temp_dir(), 'img') . '.png';
-    file_put_contents($tempImagePath, $imageData);  // 將二進位資料寫入臨時檔案
-
-    // 確認圖片檔案是否成功創建
-    if (!file_exists($tempImagePath)) {
-        $section->addText("無法創建圖片檔案：$description", ['italic' => true, 'color' => 'FF0000']);
-        continue;
-    }
-
-    // 插入圖片（這裡指定圖片檔案路徑而非 URL）
-    try {
-        $section->addImage($tempImagePath, [
-            'width' => 300,
-            'height' => 200,
-            'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
-            'inline' => true, // 確保圖片內嵌
-        ]);
-    } catch (Exception $e) {
-        $section->addText("插入影像失敗：$description", ['italic' => true, 'color' => 'FF0000']);
-    }
-
-    // 刪除臨時圖片檔案
-    unlink($tempImagePath);
-
-    // 插入描述
-    if (!empty($description)) {
-        $section->addText($description);
-    }
+} else {
+    $section->addText("無圖片資料可用");
 }
 
-// 設定檔名與下載
-header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-header('Content-Disposition: attachment;filename="photos.docx"');
-header('Cache-Control: max-age=0');
+$conn->close();
 
-$writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$writer->save('php://output');
+// 設定標頭以觸發下載
+header("Content-Description: File Transfer");
+header("Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+header("Content-Disposition: attachment; filename=\"exported_file.docx\"");
+header("Expires: 0");
+header("Cache-Control: must-revalidate");
+header("Pragma: public");
 
-mysqli_close($conn);
+// 儲存 Word 檔案並輸出到使用者
+try {
+    $phpWord->save("php://output", 'Word2007');
+} catch (Exception $e) {
+    die("生成 Word 文件失敗：" . $e->getMessage());
+}
 ?>
