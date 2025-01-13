@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($stmt->execute()) {
                 echo "資料已成功上傳！";
+                header("Location:Portfolio1.php");
             } else {
                 echo "資料上傳失敗：" . $stmt->error;
             }
