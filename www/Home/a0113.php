@@ -1,98 +1,130 @@
+<?php
+$servername = "127.0.0.1";
+$dbUser = "HCHJ";
+$dbPassword = "xx435kKHq";
+$dbname = "HCHJ";
+$conn = new mysqli($servername, $dbUser, $dbPassword, $dbname);
+
+if ($conn->connect_error) {
+    die("連線失敗: " . $conn->connect_error);
+}
+
+// Step 1: 查詢每間學校有多少人選
+$schools = [];
+$sql = "SELECT p.school_id, s.school_name, COUNT(p.user) AS student_count
+        FROM Preferences p
+        JOIN school s ON p.school_id = s.school_id
+        GROUP BY p.school_id, s.school_name";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $schools[] = $row;
+    }
+}
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二技志願序統計</title>
+    <title>學生選擇統計</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        #departmentChart {
-            display: none; /* 初始隱藏科系的圖表 */
-        }
-    </style>
 </head>
 <body>
-    <!-- 頁面標題 -->
-    <section style="background-color: #f5f5f5; padding: 20px; text-align: center;">
-        <h2>二技志願序統計</h2>
-        <a href="index.php">首頁</a> > <a href="portfolio.php">二技校園網介紹</a>
-    </section>
+    <h1>學生志願選擇統計</h1>
+    
+    <!-- Step 1: 學校選擇圖表 -->
+    <canvas id="schoolChart"></canvas>
 
-    <!-- 圖表區域 -->
-    <div style="width: 80%; margin: 20px auto;">
-        <canvas id="schoolChart" width="400" height="200"></canvas>
-        <canvas id="departmentChart" width="400" height="200"></canvas>
+    <!-- Step 2: 顯示科系人數 -->
+    <div id="departmentsContainer" style="display:none;">
+        <h2>科系選擇</h2>
+        <canvas id="departmentChart"></canvas>
     </div>
 
-    <!-- JavaScript -->
+    <!-- Step 3: 顯示學生名單 -->
+    <div id="studentsContainer" style="display:none;">
+        <h2>學生名單</h2>
+        <ul id="studentList"></ul>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const schoolChartCtx = document.getElementById('schoolChart').getContext('2d');
-            const departmentChartCtx = document.getElementById('departmentChart').getContext('2d');
+        $(document).ready(function () {
+            // Step 1: 顯示學校統計圖表
+            const schoolData = <?php echo json_encode($schools); ?>;
+            const schoolLabels = schoolData.map(data => data.school_name);
+            const schoolCounts = schoolData.map(data => data.student_count);
 
-            let schoolChart;
-            let departmentChart;
+            const schoolChart = new Chart(document.getElementById('schoolChart'), {
+                type: 'bar',
+                data: {
+                    labels: schoolLabels,
+                    datasets: [{
+                        label: '選擇人數',
+                        data: schoolCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    onClick: function (event, elements) {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const schoolId = schoolData[index].school_id;
+                            loadDepartments(schoolId);
+                        }
+                    }
+                }
+            });
 
-            // 請求學校數據
-            fetch('VolunteerStatistics2-02.php?action=getSchools')
-                .then(response => response.json())
-                .then(data => {
-                    const labels = data.map(item => item.school_name);
-                    const values = data.map(item => item.student_count);
+            // Step 2: 加載科系資料
+            function loadDepartments(schoolId) {
+                $.get('departments.php', { school_id: schoolId }, function (data) {
+                    const departmentData = JSON.parse(data);
+                    const departmentLabels = departmentData.map(d => d.department_name);
+                    const departmentCounts = departmentData.map(d => d.student_count);
 
-                    // 初始化學校圖表
-                    schoolChart = new Chart(schoolChartCtx, {
+                    $('#departmentsContainer').show();
+                    const departmentChart = new Chart(document.getElementById('departmentChart'), {
                         type: 'bar',
                         data: {
-                            labels: labels,
+                            labels: departmentLabels,
                             datasets: [{
-                                label: '學生人數',
-                                data: values,
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
+                                label: '選擇人數',
+                                data: departmentCounts,
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
                                 borderWidth: 1
                             }]
                         },
                         options: {
-                            onClick: (e, elements) => {
+                            onClick: function (event, elements) {
                                 if (elements.length > 0) {
                                     const index = elements[0].index;
-                                    const schoolId = data[index].school_id;
-                                    showDepartmentChart(schoolId);
+                                    const departmentId = departmentData[index].department_id;
+                                    loadStudents(departmentId);
                                 }
                             }
                         }
                     });
                 });
+            }
 
-            // 顯示科系圖表
-            function showDepartmentChart(schoolId) {
-                fetch(`dataHandler.php?action=getDepartments&school_id=${schoolId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const labels = data.map(item => item.department_name);
-                        const values = data.map(item => item.student_count);
-
-                        if (departmentChart) {
-                            departmentChart.destroy();
-                        }
-
-                        departmentChart = new Chart(departmentChartCtx, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: '學生人數',
-                                    data: values,
-                                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                                    borderColor: 'rgba(153, 102, 255, 1)',
-                                    borderWidth: 1
-                                }]
-                            }
-                        });
-
-                        document.getElementById('departmentChart').style.display = 'block';
+            // Step 3: 加載學生名單
+            function loadStudents(departmentId) {
+                $.get('students.php', { department_id: departmentId }, function (data) {
+                    const students = JSON.parse(data);
+                    $('#studentsContainer').show();
+                    $('#studentList').empty();
+                    students.forEach(student => {
+                        $('#studentList').append(`<li>${student.student_name}</li>`);
                     });
+                });
             }
         });
     </script>
