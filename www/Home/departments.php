@@ -10,11 +10,11 @@ if ($conn->connect_error) {
 
 $school_id = $_GET['school_id'];
 
-$sql = "SELECT p.department_id, d.department_name, COUNT(p.user) AS student_count
+$sql = "SELECT p.ID, d.department_name, COUNT(p.user) AS student_count
         FROM Preferences p
-        JOIN department d ON p.department_id = d.department_id
+        JOIN department d ON p.ID = d.ID
         WHERE p.school_id = ?
-        GROUP BY p.department_id, d.department_name";
+        GROUP BY p.ID, d.department_name";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $school_id);
 $stmt->execute();
