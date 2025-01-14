@@ -163,10 +163,10 @@ $result = mysqli_query($link, $query);
             </div>
 
             <div class="table-container">
-                <form id="permission-form" action="upload-01(上傳備審後端).php" method="POST" enctype="multipart/form-data">
+                <form id="permission-form" action="Secondtechnicalcampus00-2.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
                         <label for="imageUpload">上傳檔案(.xlsx、.csv)：</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".xlsx、.csv">
+                        <input type="file" id="file" name="file" class="form-control" accept=".csv">
                     </div>
                     
                     <div class="form-group mb-3">
