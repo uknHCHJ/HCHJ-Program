@@ -223,20 +223,17 @@ if ($conn->connect_error) {
     <!-- ========================= page-banner-section end ========================= -->
     <!DOCTYPE html>
     <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>圖表展示</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
-
     <body>
         <canvas id="schoolChart" width="400" height="200"></canvas>
         <canvas id="departmentChart" width="400" height="200" style="display: none;"></canvas>
         <script src="script.js"></script>
     </body>
-
 
     <script>
         const schoolChartCtx = document.getElementById('schoolChart').getContext('2d');

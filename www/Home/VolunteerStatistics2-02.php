@@ -1,8 +1,5 @@
 <?php
 session_start();
-$userData = $_SESSION['user'];
-$userId = $userData['user'];
-$username = $userData['name'];
 
 // 資料庫連接設定
 $servername = "127.0.0.1";
@@ -12,8 +9,7 @@ $dbname = "HCHJ";
 
 header('Content-Type: application/json');
 
-
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $dbUser, $dbPassword, $dbname);
 
 if ($conn->connect_error) {
     die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
@@ -29,8 +25,12 @@ if (!isset($_GET['action'])) {
 $action = $_GET['action'];
 
 if ($action === 'getSchools') {
-    // 獲取學校數據
-    $sql = "SELECT school_id, COUNT(*) AS student_count FROM Preferences GROUP BY school_id";
+    // 獲取每間學校的學生數量
+    $sql = "SELECT 
+                p.school_id, 
+                COUNT(p.user) AS student_count
+            FROM Preferences p
+            GROUP BY p.school_id";
     $result = $conn->query($sql);
 
     $data = [];
@@ -41,8 +41,8 @@ if ($action === 'getSchools') {
     }
     echo json_encode($data);
 
-} elseif ($action === 'getDepartments') {
-    // 獲取科系和學生數據
+} elseif ($action === 'getSchoolDetails') {
+    // 獲取指定學校的學生姓名
     if (!isset($_GET['school_id'])) {
         echo json_encode(['error' => 'No school_id provided']);
         $conn->close();
@@ -50,17 +50,12 @@ if ($action === 'getSchools') {
     }
 
     $school_id = intval($_GET['school_id']); // 確保安全
-    $sql = "SELECT 
-            d.department_id,
-            d.department_name,
-            COUNT(p.user_id) AS student_count,
-            GROUP_CONCAT(u.user_name SEPARATOR ',') AS students
-        FROM Preferences p
-        JOIN Department d ON p.department_id = d.department_id
-        JOIN user u ON p.user_id = u.user_id
-        WHERE p.school_id = ?
-        GROUP BY d.department_id, d.department_name";
-
+    $sql = 'SELECT 
+                u.name AS student_name,
+                p.department_id
+            FROM Preferences p
+            JOIN user u ON p.user = u.user
+            WHERE p.school_id = ?';
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $school_id);
     $stmt->execute();
