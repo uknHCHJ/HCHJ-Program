@@ -117,7 +117,7 @@ $username=$userData['name'];
                         <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
+                        <label for="export-option" class="checkbox-label">選擇匯出資料：</label><br>
                         <div class="checkbox-container">
                             <!--<input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
                             <label for="option-all" class="checkbox-label">全部</label>-->
@@ -126,7 +126,7 @@ $username=$userData['name'];
                             <label for="option-license" class="checkbox-label">證照資料</label>
 
                             <input type="checkbox" id="option-competition" name="options[]" value="competition" class="custom-checkbox">
-                            <label for="option-competition" class="checkbox-label">競賽資料</label>
+                            <label for="option-competition" class="checkbox-label">競賽證明</label>
 
                             <input type="checkbox" id="option-transcript" name="options[]" value="transcript" class="custom-checkbox">
                             <label for="option-transcript" class="checkbox-label">成績單</label>
