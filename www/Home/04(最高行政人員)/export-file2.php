@@ -61,7 +61,7 @@ $optionNames = [
 ];
 
 // 添加選取選項的標題
-$section->addText("資料如下：", ['bold' => true, 'size' => 16, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+$section->addText("匯出選項：", ['bold' => true, 'size' => 16, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
 // 生成選項列表，並顯示對應的中文名稱
 //foreach ($options as $option) {
@@ -98,9 +98,8 @@ foreach ($options as $option) {
             $section->addText(!empty($description) ? $description : "無文字資料", ['size' => 12], ['alignment' => Jc::BOTH]);
 
             // 處理圖片資料
-            if (!empty($imageData)) {
-                $imageData = base64_decode($imageData); // 確保圖片數據被正確解碼
-                $tempImagePath = tempnam(sys_get_temp_dir(), 'file_content') . 'png';
+            if (!empty($imageData) && strlen($imageData) > 100) {
+                $tempImagePath = tempnam(sys_get_temp_dir(), 'img') . '.png';
 
                 if (file_put_contents($tempImagePath, $imageData)) {
                     try {
@@ -123,9 +122,9 @@ foreach ($options as $option) {
 
             $section->addTextBreak(1); // 添加段落間距
         }
-    } else {
-        $section->addText("無 $option 資料可用");
-    }
+    } //else {
+        //$section->addText("無 $option 資料可用");
+    //}
 }
 
 $conn->close();
@@ -141,13 +140,6 @@ header("Pragma: public");
 // 儲存 Word 文件
 try {
     $phpWord->save("php://output", 'Word2007');
-    if (file_put_contents($tempImagePath, $imageData)) {
-        echo "圖片成功保存到：$tempImagePath";
-        // 插入 Word 或其他操作
-        unlink($tempImagePath); // 操作完成後刪除臨時文件
-    } else {
-        echo "圖片保存失敗！";
-    }
 } catch (Exception $e) {
     die("生成 Word 文件失敗：" . $e->getMessage());
 }

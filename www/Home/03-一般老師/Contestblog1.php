@@ -54,138 +54,70 @@ if (!isset($_SESSION['user'])) {
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
-        calendar.render();
-      });
-
-    </script>
+    
         <link rel="stylesheet" href="assets/css/main.css">
         <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Inline CSS for simplicity */
-        .portfolio-section {
-            padding-top: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        <style>
+    table {
+        width: 80%;            /* 設定表格寬度，保持 80% 寬度 */
+        max-width: 900px;      /* 最大寬度為 900px */
+        margin: 20px auto;     /* 自動水平居中，並設定上下邊距 */
+        border-collapse: collapse; /* 合併表格邊框 */
+    }
 
-        .portfolio-item-wrapper {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-            max-width: 600px;  /* 控制卡片寬度 */
-            margin: 10px auto; /* 讓卡片居中，每個卡片之間有間距 */
-        }
+    th, td {
+        padding: 12px;         /* 單元格內邊距 */
+        text-align: left;      /* 文字對齊左側 */
+        border: 1px solid #ddd; /* 單元格邊框顏色 */
+    }
 
-        .portfolio-item-wrapper:hover {
-            transform: translateY(-3px);
-        }
+    th {
+        background-color: #f2f2f2; /* 表頭背景顏色 */
+        font-weight: bold;         /* 設置表頭文字加粗 */
+    }
 
-        .portfolio-img img {
-            width: 100%;  /* 縮小圖片寬度 */
-            height: auto;
-            border-radius: 4px;
-        }
+    tr:hover {
+        background-color: #f1f1f1; /* 滑鼠懸停時，行的背景顏色 */
+    }
 
-        .portfolio-content {
-            text-align: left;
-            margin-top: 10px;
-        }
+    td a {
+        color: #007bff;          /* 設定連結顏色 */
+        text-decoration: none;   /* 去除連結底線 */
+    }
 
-        .portfolio-content h5 {
-            font-size: 1.2rem;  /* 調小標題字體大小 */
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+    td a:hover {
+        text-decoration: underline; /* 滑鼠懸停時顯示底線 */
+    }
 
-        .portfolio-content .small-text {
-            font-size: 0.9rem;  /* 調小描述文字大小 */
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
+    /* 使標題與表格更接近，減少與上方框框的距離 */
+    .col-12.text-center.mb-4 h2 {
+        margin-top: 0;   /* 取消標題與上方的空間 */
+        margin-bottom: 10px;  /* 減少標題下方的空間 */
+    }
 
-        .theme-btn {
-            font-size: 0.85rem;  /* 按鈕字體變小 */
-            padding: 6px 12px;   /* 調整按鈕的內邊距 */
-            color: #fff;
-            background-color: #007bff;
-            border-radius: 4px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
+</style>
 
-        .theme-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+
 </head>
 <?php
-// 資料庫連接設置
+// 連接到 MySQL 資料庫
 $servername = "127.0.0.1";
 $username = "HCHJ";
 $password = "xx435kKHq";
-$dbname = "HCHJ";
+$dbname = "HCHJ"; // 請換成您的資料庫名稱
 
-// 建立資料庫連線
+// 創建連接
 $conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查連接是否成功
 if ($conn->connect_error) {
-    die("連線失敗: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// 設定時區
-date_default_timezone_set('Asia/Taipei');
-$currentDate = date('Y-m-d');  // 獲取當前日期
-// 查詢未過期的比賽資訊
-$sql = "SELECT name, inform, link, image FROM information WHERE display_end_time >= ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $currentDate);
-$stmt->execute();
-$result = $stmt->get_result();
+// 查詢資料庫中的比賽資料（不檢查結束時間）
+$sql = "SELECT name, link FROM information";
+$result = $conn->query($sql);
 
-// 檢查是否有資料
-$competitions = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $competitions[] = $row;
-    }
-} else {
-    echo "目前沒有未過期的比賽資訊。";
-}
-
-// 取得當前年份和月份
-$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-$month = isset($_GET['month']) ? $_GET['month'] : date('m');
-
-// 計算這個月的第一天是星期幾
-$firstDayOfMonth = strtotime("$year-$month-01");
-$firstDayOfWeek = date('w', $firstDayOfMonth); // 0 (星期天) 到 6 (星期六)
-
-// 計算當月的總天數
-$totalDaysInMonth = date('t', $firstDayOfMonth);
-
-// 計算上一個月和下一個月
-$prevMonth = date('m', strtotime("-1 month", strtotime("$year-$month-01")));
-$prevYear = date('Y', strtotime("-1 month", strtotime("$year-$month-01")));
-$nextMonth = date('m', strtotime("+1 month", strtotime("$year-$month-01")));
-$nextYear = date('Y', strtotime("+1 month", strtotime("$year-$month-01")));
-
-// 取得今天的日期
-$today = date('Y-m-d');
-// 關閉資料庫連線
-$conn->close();
 ?>
     <body>
         <!--[if lte IE 9]>
@@ -300,41 +232,54 @@ $conn->close();
             <div class="col-xl-8 col-lg-7">
                 <div class="left-side-wrapper">
                     <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".2s">
-                            <section class="portfolio-section pt-130">
-                                <div class="container">
-                                    <div class="row">
-                                        <?php foreach ($competitions as $competition): ?>
-                                            <div class="col-12 mb-4">
-                                                <div class="portfolio-item-wrapper">
-                                                    <div class="portfolio-img">
-                                                        <img src="data:image/jpeg;base64,<?= base64_encode($competition['image']) ?>" alt="<?= htmlspecialchars($competition['name']) ?>" class="img-fluid">
-                                                    </div>
-                                                    <div class="portfolio-content mt-2">
-                                                        <h5><?= htmlspecialchars($competition['name']) ?></h5>
-                                                        <p class="small-text"><?= htmlspecialchars($competition['inform']) ?></p>
-                                                        <a href="<?= htmlspecialchars($competition['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
+                        <section class="portfolio-section pt-130">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 text-center mb-4">
+                                        <h2>資管科比賽資訊</h2>
                                     </div>
+
+                                    <?php
+                                    // 如果有比賽資料
+                                    if ($result->num_rows > 0) {
+                                        echo '<div style="display: flex; justify-content: center; overflow-x: auto;">';
+                                        echo '<table style="width: 90%; max-width: 800px; border-collapse: collapse; text-align: left; margin: 0 auto;">';
+                                        echo '<thead><tr><th style="padding: 12px; text-align: left; border: 1px solid #ddd; background-color: #f2f2f2;">比賽名稱</th><th style="padding: 12px; text-align: left; border: 1px solid #ddd; background-color: #f2f2f2;">連結</th></tr></thead>';
+                                        echo '<tbody>';
+
+                                        // 顯示每個比賽的名稱和連結
+                                        while($row = $result->fetch_assoc()) {
+                                            echo '<tr>';
+                                            echo '<td style="padding: 12px; border: 1px solid #ddd;">' . htmlspecialchars($row['name']) . '</td>';
+                                            echo '<td style="padding: 12px; border: 1px solid #ddd;"><a href="' . htmlspecialchars($row['link']) . '" target="_blank">點擊參賽</a></td>';
+                                            echo '</tr>';
+                                        }
+
+                                        echo '</tbody>';
+                                        echo '</table>';
+                                        echo '</div>';
+                                    } else {
+                                        echo "<p>目前沒有任何比賽資訊。</p>";
+                                    }
+
+                                    // 關閉資料庫連接
+                                    $conn->close();
+                                    ?>
                                 </div>
-                            </section>
-                        </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
-            
+            </div>
+        </div>
+    </div>
+</section>
+
 
             <!-- Sidebar -->
             <div class="col-xl-4 col-lg-5">
     <div class="sidebar-wrapper">
-        <!-- 搜索表單 -->
-        <div class="sidebar-box search-form-box mb-30">
-            <form action="Contestsearch1.php" method="GET" class="search-form">
-            <input type="text" placeholder="Search..." name="keyword" required>
-                <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
-            </form>
-        </div>
+        
         <style>
             #calendar {
                 max-width: 100%;   /* 設定為最大寬度，這樣它會根據容器大小自動調整 */
@@ -344,24 +289,7 @@ $conn->close();
             }
         </style>
             <!-- 當月日曆 -->
-            <div class="sidebar-box recent-blog-box mb-100">
-            <div id="calendar"></div>
-            <!-- 小月曆樣式 -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var calendarEl = document.getElementById('calendar');  // 選擇 id 為 calendar 的 div 元素
-
-                    var calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',  // 設定預設視圖為月份視圖
-                        locale: 'zh-tw',  // 設定語言為中文
-                    });
-
-                    calendar.render();  // 渲染日曆
-                });
-            </script>
-                    </div>
-                </div>
-            </div>
+           
     </div>
 </div>
         </div>
