@@ -117,25 +117,43 @@ $username=$userData['name'];
                         <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
+                        <label for="export-option" class="checkbox-label">選擇匯出資料：</label><br>
                         <div class="checkbox-container">
-                            <input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
-                            <label for="option-all" class="checkbox-label">全部</label>
+                            <!--<input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
+                            <label for="option-all" class="checkbox-label">全部</label>-->
 
                             <input type="checkbox" id="option-license" name="options[]" value="license" class="custom-checkbox">
                             <label for="option-license" class="checkbox-label">證照資料</label>
 
                             <input type="checkbox" id="option-competition" name="options[]" value="competition" class="custom-checkbox">
-                            <label for="option-competition" class="checkbox-label">競賽資料</label>
+                            <label for="option-competition" class="checkbox-label">競賽證明</label>
+
+                            <input type="checkbox" id="option-transcript" name="options[]" value="transcript" class="custom-checkbox">
+                            <label for="option-transcript" class="checkbox-label">成績單</label>
+
+                            <input type="checkbox" id="option-autobiography" name="options[]" value="autobiography" class="custom-checkbox">
+                            <label for="option-autobiography" class="checkbox-label">自傳</label>
+
+                            <input type="checkbox" id="option-diploma" name="options[]" value="diploma" class="custom-checkbox">
+                            <label for="option-diploma" class="checkbox-label">學歷證明</label>
+
+                            <input type="checkbox" id="option-internship" name="options[]" value="internship" class="custom-checkbox">
+                            <label for="option-internship" class="checkbox-label">實習證明</label>
+
+                            <input type="checkbox" id="option-certifications" name="options[]" value="certifications" class="custom-checkbox">
+                            <label for="option-certifications" class="checkbox-label">相關證照</label>
+
+                            <input type="checkbox" id="option-language" name="options[]" value="language" class="custom-checkbox">
+                            <label for="option-language" class="checkbox-label">語言能力證明</label>
                         </div>
                     </div>
-                    <button onclick="downloadWord()">下載 Word 文件</button>
+                    <!--<button onclick="downloadWord()">下載 Word 文件</button>
 
 <script>
     function downloadWord() {
-        window.location.href = 'generate_word.php';
+        window.location.href = 'export-file2.php';
     }
-</script>
+</script>-->
                 <style>
                     /* 方形選項顯示在一排 */
                     .checkbox-container {
@@ -238,27 +256,5 @@ $username=$userData['name'];
         <script src="assets/js/isotope.min.js"></script>
         <script src="assets/js/glightbox.min.js"></script>
         <script src="assets/js/wow.min.js"></script>
-		<script src="assets/js/imagesloaded.min.js"></script>
+        <script src="assets/js/imagesloaded.min.js"></script>
 		<script src="assets/js/main.js"></script>
-        
-        <!-- 引入JS -->
-        <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // 解析 URL 中的參數
-                var urlParams = new URLSearchParams(window.location.search);
-                var username = urlParams.get('username');
-                var currentPermission = urlParams.get('permission');
-
-                // 將參數填入表單
-                if (username) {
-                    document.getElementById('user').value = username;
-                }
-                if (currentPermission) {
-                    document.getElementById('current-permission').value = currentPermission;
-                }
-            });
-        </script>
-    </body>
-</html>

@@ -1,309 +1,171 @@
 <?php
-session_start();
-include 'db.php';
+// 資料庫連線設定
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
-if (!isset($_SESSION['user'])) {
-    echo "未登入";
-    header("Location:/~HCHJ/index.html");
-    exit();
-}
-
-$userData = $_SESSION['user']; // 從 SESSION 獲取用戶資料
-$userId = htmlspecialchars($userData['user'], ENT_QUOTES, 'UTF-8'); // 確保數據安全
-
-$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
-$result = mysqli_query($link, $query);
-
-if (!isset($_SESSION['user'])) {
-    echo ("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
-    exit();
-}
-?>
-
-<!doctype html>
-<html class="no-js" lang="">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>志願序統計</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
-    <!-- Place favicon.ico in the root directory -->
-
-    <!-- ========================= CSS here ========================= -->
-    <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
-    <link rel="stylesheet" href="assets/css/LineIcons.2.0.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet" href="assets/css/tiny-slider.css">
-    <link rel="stylesheet" href="assets/css/glightbox.min.css">
-    <link rel="stylesheet" href="assets/css/main.css">
-
-    <style>
-        /* 設定容器和表單樣式 */
-        .form-container {
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-            /* 設定最大寬度 */
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 調整標籤樣式 */
-        label {
-            display: block;
-            text-align: left;
-            font-weight: bold;
-            font-size: 1.2em;
-            /* 增加字型大小 */
-            margin-top: 10px;
-        }
-
-        /* 設定 select、input 和 textarea 的樣式與大小 */
-        select,
-        input[type="text"],
-        input[type="number"],
-        input[type="file"],
-        input[type="date"],
-        textarea {
-            width: 100%;
-            max-width: 500px;
-            /* 設定欄位最大寬度 */
-            margin-top: 10px;
-            padding: 8px;
-            font-size: 1em;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-        }
-
-        /* 設定按鈕樣式 */
-        button {
-            font-size: 1.2em;
-            /* 增加按鈕字型大小 */
-            padding: 10px 20px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-
-//建立連線
+// 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-//確認連線成功或失敗
 if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
+    die("連線失敗: " . $conn->connect_error);
 }
+
+// 1. 從 Preferences 表中取得資料
+$sql_preferences = "SELECT school_id, department_id, user FROM Preferences";
+$result_preferences = $conn->query($sql_preferences);
+
+// 儲存 Preferences 資料
+$preferences = [];
+if ($result_preferences->num_rows > 0) {
+    while ($row = $result_preferences->fetch_assoc()) {
+        $preferences[] = $row; // 儲存每一筆資料
+    }
+}
+
+// 2. 從 user 表中取得資料，篩選 grade = 5 並且 class = 'B'
+$sql_users = "SELECT user, name FROM user WHERE grade = 5 AND class = 'B'";
+$result_users = $conn->query($sql_users);
+
+// 儲存符合條件的使用者
+$valid_users = [];
+if ($result_users->num_rows > 0) {
+    while ($row = $result_users->fetch_assoc()) {
+        $valid_users[$row['user']] = $row['name']; // user 作為鍵，name 作為值
+    }
+}
+
+// 3. 將 Preferences 表與篩選條件進行匹配，統計學校和科系的選擇次數與人員
+$school_department_counts = [];
+foreach ($preferences as $preference) {
+    if (array_key_exists($preference['user'], $valid_users)) {
+        $school_id = $preference['school_id'];
+        $department_id = $preference['department_id'];
+        $user_name = $valid_users[$preference['user']]; // 取得使用者名稱
+
+        if (!isset($school_department_counts[$school_id])) {
+            $school_department_counts[$school_id] = [];
+        }
+        if (!isset($school_department_counts[$school_id][$department_id])) {
+            $school_department_counts[$school_id][$department_id] = [
+                'count' => 0,
+                'users' => []
+            ];
+        }
+        $school_department_counts[$school_id][$department_id]['count']++;
+        $school_department_counts[$school_id][$department_id]['users'][] = $user_name;
+    }
+}
+
+// 4. 取得學校名稱和科系名稱
+$sql_schools = "SELECT school_id, school_name FROM School";
+$result_schools = $conn->query($sql_schools);
+
+$school_names = [];
+if ($result_schools->num_rows > 0) {
+    while ($row = $result_schools->fetch_assoc()) {
+        $school_names[$row['school_id']] = $row['school_name'];
+    }
+}
+
+$sql_departments = "SELECT id, department_name FROM department";
+$result_departments = $conn->query($sql_departments);
+
+$department_names = [];
+if ($result_departments->num_rows > 0) {
+    while ($row = $result_departments->fetch_assoc()) {
+        $department_names[$row['id']] = $row['department_name'];
+    }
+}
+
+// 5. 整理資料供前端顯示
+$chart_data = [];
+foreach ($school_department_counts as $school_id => $departments) {
+    $school_name = isset($school_names[$school_id]) ? $school_names[$school_id] : "未知學校";
+    foreach ($departments as $department_id => $data) {
+        $department_name = isset($department_names[$department_id]) ? $department_names[$department_id] : "未知科系";
+        $chart_data[] = [
+            'school_name' => $school_name,
+            'department_name' => $department_name,
+            'count' => $data['count'],
+            'users' => implode(", ", $data['users']) // 將用戶名稱串接
+        ];
+    }
+}
+
+// 關閉資料庫連線
+$conn->close();
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學校與科系選擇統計</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 <body>
+    <h1>學校與科系選擇統計</h1>
 
-    <!-- ========================= preloader start ========================= -->
-    <div class="preloader">
-        <div class="loader">
-            <div class="ytp-spinner">
-                <div class="ytp-spinner-container">
-                    <div class="ytp-spinner-rotator">
-                        <div class="ytp-spinner-left">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                        <div class="ytp-spinner-right">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- preloader end -->
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-02.php">
-                            <img src="schoolimages/uknlogo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
+    <!-- 顯示數據表 -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>學校名稱</th>
+                <th>科系名稱</th>
+                <th>選擇人數</th>
+                <th>選擇人員</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($chart_data as $data): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($data['school_name']); ?></td>
+                    <td><?php echo htmlspecialchars($data['department_name']); ?></td>
+                    <td><?php echo htmlspecialchars($data['count']); ?></td>
+                    <td><?php echo htmlspecialchars($data['users']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                            <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
-                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">比賽資訊</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
-                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
-                                    </ul>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="../logout.php">登出</a>
-                                </li>
-                        </div> <!-- navbar collapse -->
-                    </nav> <!-- navbar -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-
-    </header>
-    <!-- ========================= header end ========================= -->
-
-    <!-- ========================= page-banner-section start ========================= -->
-    <section class="page-banner-section pt-75 pb-75 img-bg"
-        style="background-image: url('assets/img/bg/common-bg.svg')">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="banner-content">
-                        <h2 class="text-white">二技志願序統計</h2>
-                        <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a
-                                        href="portfolio-03(二技校園網介紹).php"></a></li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ========================= page-banner-section end ========================= -->
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>圖表展示</title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
-    <body>
-        <canvas id="schoolChart" width="400" height="200"></canvas>
-        <canvas id="departmentChart" width="400" height="200" style="display: none;"></canvas>
-        <script src="script.js"></script>
-    </body>
-
+    <!-- 顯示長條圖 -->
+    <canvas id="barChart" width="800" height="400"></canvas>
     <script>
-        const schoolChartCtx = document.getElementById('schoolChart').getContext('2d');
-        const departmentChartCtx = document.getElementById('departmentChart').getContext('2d');
+        // 從 PHP 傳遞資料到 JavaScript
+        const chartData = <?php echo json_encode($chart_data); ?>;
 
-        let schoolChart;
-        let departmentChart;
+        // 提取數據
+        const labels = chartData.map(data => `${data.school_name} - ${data.department_name}`);
+        const dataCounts = chartData.map(data => data.count);
 
-        fetch('VolunteerStatistics2-02.php?action=getSchools')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map(item => `School ${item.school_id}`);
-                const values = data.map(item => item.student_count);
-
-                schoolChart = new Chart(schoolChartCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Number of Students',
-                            data: values,
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        onClick: (e, elements) => {
-                            if (elements.length > 0) {
-                                const index = elements[0].index;
-                                const schoolId = data[index].school_id;
-                                showDepartmentChart(schoolId);
-                            }
-                        }
+        // 建立長條圖
+        const ctx = document.getElementById('barChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '選擇人數',
+                    data: dataCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
-                });
-            });
-
-        function showDepartmentChart(schoolId) {
-            fetch(`VolunteerStatistics2-02.php?action=getDepartments&school_id=${schoolId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const labels = data.map(item => item.department_name);
-                    const values = data.map(item => item.student_count);
-
-                    if (departmentChart) {
-                        departmentChart.destroy();
-                    }
-
-                    departmentChart = new Chart(departmentChartCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Number of Students',
-                                data: values,
-                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                                borderColor: 'rgba(153, 102, 255, 1)',
-                                borderWidth: 1
-                            }]
-                        }
-                    });
-
-                    document.getElementById('departmentChart').style.display = 'block';
-                });
-        }
-
+                }
+            }
+        });
     </script>
-
-    </html>
+</body>
+</html>
     <!-- ========================= service-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">

@@ -201,53 +201,56 @@ if ($conn->connect_error) {
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
-<div style="text-align: center; margin: auto;">
+        <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
     <!-- 使用隱藏欄位將 student_id 傳入 -->
-    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;">
-        <input type="hidden" name="student_id" value="<?php echo $userId; ?>">
+    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;" id="uploadForm" onsubmit="return confirmUpload()">
+        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
 
         <div style="margin-bottom: 15px;">
             <label for="category">選擇資料類型：</label>
-            <select name="category" id="category" required style="text-align: center;">
+            <select name="category" id="category" required>
                 <option value="成績單">成績單</option>
                 <option value="自傳">自傳</option>
                 <option value="學歷證明">學歷證明</option>
                 <option value="競賽證明">競賽證明</option>
                 <option value="實習證明">實習證明</option>
-                <option value="相關證照">相關證照</option>
+                <option value="相關證照">相關技術證照</option>
+                <option value="語言能力證明">語言能力證明</option>
             </select>
         </div>
 
         <div style="margin-bottom: 15px;">
             <label for="file">上傳檔案：</label>
-            <input type="file" name="file" id="file" required style="text-align: center;">
+            <input type="file" name="file" id="file" required>
         </div>
-        <button type="submit" style="display: block; margin: 0 auto; background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+        <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
     </form>
 </div>
+
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
         <div class="row">
             <div class="col-12">
                 <div class="portfolio-btn-wrapper">
-                    <button class="portfolio-btn active" data-filter="*">全部</button>
-                    <button class="portfolio-btn" data-filter=".transcripts">成績單</button>
-                    <button class="portfolio-btn" data-filter=".autobiographies">自傳</button>
-                    <button class="portfolio-btn" data-filter=".certificates">學歷證明</button>
-                    <button class="portfolio-btn" data-filter=".competitions">競賽證明</button>
-                    <button class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button class="portfolio-btn" data-filter=".licenses">相關證照</button>
+                    <button type="button" class="portfolio-btn active" data-filter="*">全部</button>
+                    <button type="button" class="portfolio-btn" data-filter=".transcripts">成績單</button>
+                    <button type="button" class="portfolio-btn" data-filter=".autobiographies">自傳</button>
+                    <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
+                    <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
+                    <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
+                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
+                    <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
                 </div>
                 <div class="row grid">
                     <?php
                     // 資料庫連線設定
-                    $servername = "127.0.0.1"; //伺服器IP或本地端localhost
-                    $username = "HCHJ"; //登入帳號
-                    $password = "xx435kKHq"; //密碼
-                    $dbname = "HCHJ"; //資料庫名稱
+                    $servername = "127.0.0.1";
+                    $username = "HCHJ";
+                    $password = "xx435kKHq";
+                    $dbname = "HCHJ";
 
                     // 建立連線
                     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -257,7 +260,7 @@ if ($conn->connect_error) {
                         die("連線失敗：" . $conn->connect_error);
                     }
 
-                    // 確認是否有提供 student_id，優先從 POST 獲取，否則使用 Session 中的值
+                    // 確認是否有提供 student_id
                     $student_id = isset($_POST['student_id']) ? intval($_POST['student_id']) : $userId;
 
                     // 查詢該學生的資料
@@ -271,49 +274,28 @@ if ($conn->connect_error) {
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             // 根據資料類型決定分類類別
-                            switch ($row["category"]) {
-                                case "成績單":
-                                    $category_class = "transcripts";
-                                    break;
-                                case "自傳":
-                                    $category_class = "autobiographies";
-                                    break;
-                                case "學歷證明":
-                                    $category_class = "certificates";
-                                    break;
-                                case "競賽證明":
-                                    $category_class = "competitions";
-                                    break;
-                                case "實習證明":
-                                    $category_class = "internships";
-                                    break;
-                                case "相關證照":
-                                    $category_class = "licenses";
-                                    break;
-                                default:
-                                    $category_class = "unknown";
-                                    break;
-                            }
+                            $category_map = [
+                                "成績單" => "transcripts",
+                                "自傳" => "autobiographies",
+                                "學歷證明" => "certificates",
+                                "競賽證明" => "competitions",
+                                "實習證明" => "internships",
+                                "相關證照" => "licenses",
+                                "語言能力證明" => "language-skills"
+                            ];
+                            $category_class = $category_map[$row["category"]] ?? "unknown";
 
                             // 輸出每筆資料
                             echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
                                 <div class='portfolio-content'>
                                     <h3>{$row['category']}</h3>
-                                    <p><a href='PortfolioDownload.php?id={$row['id']}'>{$row['file_name']}</a></p>
+                                    <p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
                                     <p>上傳時間：{$row['upload_time']}</p>
                                     <form action='PortfolioDelete.php' method='post'>
                                         <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
                                         <button type='submit' 
                                                 onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
-                                                style='background-color: red; 
-                                                       color: white; 
-                                                       border: none; 
-                                                       padding: 12px 24px; 
-                                                       font-size: 16px; 
-                                                       border-radius: 8px; 
-                                                       cursor: pointer; 
-                                                       margin-top: 5px;
-                                                       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
+                                                style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
                                             刪除
                                         </button>
                                     </form>
@@ -332,9 +314,58 @@ if ($conn->connect_error) {
         </div>
     </div>
 </div>
-    </div>
-    </div>
-    </div>
+
+<script>
+    // 確認是否上傳檔案的函數
+    function confirmUpload() {
+        const fileInput = document.getElementById('file');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('請選擇一個檔案來上傳');
+            return false;
+        }
+
+        // 取得檔案的副檔名
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        // 檢查檔案類型
+        const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
+        if (!allowedExtensions.includes(fileExtension)) {
+            alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
+            return false;
+        }
+
+        // 顯示確認提示框
+        const confirmMessage = `您確定要上傳檔案：${file.name}?`;
+        return confirm(confirmMessage); // 若使用者點選確認，返回 true，繼續提交表單；若取消，返回 false
+    }
+
+    // 作品分類篩選功能
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.portfolio-btn');
+        const items = document.querySelectorAll('.portfolio-item');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const filter = button.getAttribute('data-filter');
+
+                items.forEach(item => {
+                    if (filter === '*' || item.classList.contains(filter.substring(1))) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
         <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
