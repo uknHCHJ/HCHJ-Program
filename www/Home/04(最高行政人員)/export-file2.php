@@ -54,7 +54,7 @@ foreach ($options as $option) {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $section->addText("資料類型：" . ucfirst(str_replace('-', ' ', $option)), ['bold' => true, 'size' => 14]);
+        // $section->addText("資料類型：" . ucfirst(str_replace('-', ' ', $option)), ['bold' => true, 'size' => 14]);
 
         while ($row = $result->fetch_assoc()) {
             $description = $row['file_name'];

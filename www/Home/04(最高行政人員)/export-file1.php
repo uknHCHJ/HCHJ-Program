@@ -119,8 +119,8 @@ $username=$userData['name'];
                     <div class="form-group mb-3">
                         <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
                         <div class="checkbox-container">
-                            <input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
-                            <label for="option-all" class="checkbox-label">全部</label>
+                            <!--<input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
+                            <label for="option-all" class="checkbox-label">全部</label>-->
 
                             <input type="checkbox" id="option-license" name="options[]" value="license" class="custom-checkbox">
                             <label for="option-license" class="checkbox-label">證照資料</label>
@@ -147,13 +147,13 @@ $username=$userData['name'];
                             <label for="option-language" class="checkbox-label">語言能力證明</label>
                         </div>
                     </div>
-                    <button onclick="downloadWord()">下載 Word 文件</button>
+                    <!--<button onclick="downloadWord()">下載 Word 文件</button>
 
 <script>
     function downloadWord() {
         window.location.href = 'export-file2.php';
     }
-</script>
+</script>-->
                 <style>
                     /* 方形選項顯示在一排 */
                     .checkbox-container {
