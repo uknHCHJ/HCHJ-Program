@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 // 資料庫連線設定
@@ -10,7 +13,7 @@ $dbname = "HCHJ";
 // 連接資料庫
 $link = mysqli_connect($servername, $username, $password, $dbname);
 if (!$link) {
-    die("資料庫連接失敗: " . mysqli_connect_error());
+    die("資料庫連線失敗: " . mysqli_connect_error());
 }
 
 // 設置 UTF-8 編碼
@@ -21,56 +24,53 @@ if (!isset($_SESSION['user'])) {
     die("未登入，請先登入後再操作。");
 }
 
-// 從 SESSION 中取得使用者資訊
-$userData = $_SESSION['user'];
-$userId = $userData['user'];
-$username = $userData['name'];
-
-// 取得資料表欄位名稱
+// 取得資料表的欄位名稱
 $tableColumns = [];
 $result = mysqli_query($link, "DESCRIBE test");
 while ($row = mysqli_fetch_assoc($result)) {
-    $tableColumns[] = $row['Field'];
+    $tableColumns[] = strtolower($row['Field']); // 將欄位名稱轉為小寫
 }
 
-// 開啟 MySQL 錯誤報告（除錯用）
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // 檢查是否有檔案上傳且無錯誤
     if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
-        // 讀取檔案內容
-        $fileName = $_FILES['file']['name'];
-        $fileContent = file_get_contents($_FILES['file']['tmp_name']);
+        // 確認檔案格式為 CSV
+        $filePath = $_FILES['file']['tmp_name'];
+        $fileExtension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
-        // 去除 BOM 標記（如果存在）
-        $fileContent = preg_replace('/^\xEF\xBB\xBF/', '', $fileContent);
+        if ($fileExtension !== 'csv') {
+            echo "請上傳 CSV 檔案！";
+            exit;
+        }
 
-        // 將檔案內容解析為 CSV 陣列
-        $lines = explode("\n", $fileContent);
-        if (count($lines) > 1) {
-            $headers = str_getcsv(trim($lines[0]));
+        // 開啟 CSV 檔案
+        if (($handle = fopen($filePath, "r")) !== FALSE) {
+            $headers = fgetcsv($handle);  // 讀取標題行
+            if ($headers) {
+                $headers = array_map('trim', $headers);  // 去除標題行的多餘空白
+                $headers = array_map('strtolower', $headers); // 將標題轉為小寫
+                $errorCount = 0;
+                $lineNumber = 1;  // 記錄行號
 
-            // 去除欄位名稱的特殊字元
-            $headers = array_map(function ($header) {
-                return trim(preg_replace('/[^\x20-\x7E]/', '', $header));
-            }, $headers);
+                // 檢查標題行是否有對應到資料表欄位
+                $validColumns = array_intersect($headers, $tableColumns);
 
-            $errorCount = 0;
-
-            for ($i = 1; $i < count($lines); $i++) {
-                $line = trim($lines[$i]);
-                if ($line === "") {
-                    continue;
+                if (empty($validColumns)) {
+                    echo "CSV 檔案的標題行與資料表欄位名稱無匹配，無法插入資料！";
+                    fclose($handle);
+                    exit;
                 }
-                $fields = str_getcsv($line);
 
-                // 檢查欄位數是否匹配
-                if (count($fields) === count($headers)) {
+                // 讀取每一行資料
+                while (($row = fgetcsv($handle)) !== FALSE) {
+                    $lineNumber++;
+
+                    // 準備資料
                     $data = [];
                     foreach ($headers as $index => $header) {
-                        if (in_array($header, $tableColumns)) {
-                            $column = $header;
-                            $value = mysqli_real_escape_string($link, trim($fields[$index]));
+                        if (isset($row[$index]) && in_array($header, $validColumns)) {
+                            $column = mysqli_real_escape_string($link, $header);
+                            $value = mysqli_real_escape_string($link, trim($row[$index]));
                             $data["`$column`"] = "'$value'";
                         }
                     }
@@ -80,33 +80,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $values = implode(", ", array_values($data));
 
                         $query = "INSERT INTO test ($columns) VALUES ($values)";
-                        
-                        // 顯示 SQL 語句以進行調試
-                        echo "<pre>執行的 SQL 查詢: $query</pre>";
-
                         if (!mysqli_query($link, $query)) {
-                            echo "資料庫錯誤: " . mysqli_error($link) . "<br>";
+                            echo "第 " . $lineNumber . " 行資料庫錯誤: " . mysqli_error($link) . "<br>";
+                        } else {
+                            echo "第 " . $lineNumber . " 行資料成功寫入資料庫。<br>";
                         }
                     } else {
-                        echo "第 " . ($i + 1) . " 行資料無法映射到資料表的欄位，已跳過。<br>";
+                        echo "第 " . $lineNumber . " 行資料無法映射到資料表的欄位，已跳過。<br>";
                         $errorCount++;
                     }
-                } else {
-                    echo "第 " . ($i + 1) . " 行欄位數量不匹配，已跳過。<br>";
-                    $errorCount++;
                 }
-            }
 
-            if ($errorCount > 0) {
-                echo "共有 $errorCount 行資料無法處理，已跳過。<br>";
+                fclose($handle);
+
+                if ($errorCount > 0) {
+                    echo "共有 $errorCount 行資料無法處理，已跳過。<br>";
+                } else {
+                    echo "CSV 檔案資料已成功寫入資料庫。";
+                }
             } else {
-                echo "檔案資料已成功寫入資料庫。";
+                echo "CSV 檔案格式錯誤，沒有標題行。";
             }
         } else {
-            echo "CSV 檔案內容格式錯誤。";
+            echo "無法打開 CSV 檔案。";
         }
     } else {
-        echo "檔案上傳失敗，請重試。";
+        echo "檔案上傳失敗，錯誤碼：" . $_FILES['file']['error'];
     }
 }
 
