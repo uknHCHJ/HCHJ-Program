@@ -23,25 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 驗證連結格式 验证字符串是否是合法的 URL
     if (!filter_var($link, FILTER_VALIDATE_URL)) { 
         echo "<script>alert('請輸入有效的網址。');</script>";
-        header("Location: create-03.php");
-        exit;
-    }
-
-    // 取得圖片
-    $imageData = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) { //檢查是否有文件上傳,值為0表示文件上傳成功且沒有錯誤。
-        $imageTmpName = $_FILES['image']['tmp_name']; //文件的臨時文件路徑
-        $imageData = file_get_contents($imageTmpName); //讀取文件
-    } else {
-        echo "<script>alert('請選擇一個有效的圖片檔案。');</script>";
-        header("Location: create-03.php");
+        header("Location: AddContest1.php");
         exit;
     }
 
     // 插入比賽資訊到資料庫
-    $sql = "INSERT INTO information (name, inform, link, image, display_end_time) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO information (name, link, display_end_time) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssss", $name, $inform, $link, $imageData, $displayEndDate);
+    $stmt->bind_param("sss", $name, $link, $displayEndDate);
 
     if ($stmt->execute()) {
         echo "<script>alert('比賽資訊新增成功！');</script>";

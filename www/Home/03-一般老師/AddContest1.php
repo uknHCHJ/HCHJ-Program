@@ -210,17 +210,8 @@ if ($conn->connect_error) {
             <label for="name">比賽名稱：</label>
             <input type="text" id="name" name="name" required><br>
             
-            <label for="inform">比賽資訊：</label>
-            <textarea id="inform" name="inform" rows="3" required></textarea><br>
-            
             <label for="link">報名連結：</label>
             <input type="text" id="link" name="link" required><br><br>
-            
-            <label for="display_end_time">顯示截止日期：</label>
-            <input type="date" id="display_end_time" name="display_end_time" required><br><br>
-            
-            <label for="image">選擇圖片：</label>
-            <input type="file" id="image" name="image" required><br><br>
             
             <button class="btn btn-success" onclick="return confirm('確定要新增該比賽嗎？')">送出</button>
         </form>
