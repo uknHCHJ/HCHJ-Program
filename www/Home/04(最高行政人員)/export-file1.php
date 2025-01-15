@@ -117,7 +117,7 @@ $username=$userData['name'];
                         <input type="text" id="user" name="user" class="form-control" value="<?php echo isset($_SESSION['user']['user']) ? $_SESSION['user']['user'] : ''; ?>" readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="export-option" class="checkbox-label">選擇匯出檔案類型：</label><br>
+                        <label for="export-option" class="checkbox-label">選擇匯出資料：</label><br>
                         <div class="checkbox-container">
                             <!--<input type="checkbox" id="option-all" name="options[]" value="all" class="custom-checkbox">
                             <label for="option-all" class="checkbox-label">全部</label>-->
