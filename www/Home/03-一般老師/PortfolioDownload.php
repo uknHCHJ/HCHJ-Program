@@ -31,6 +31,7 @@ if (isset($_GET['id'])) {
         echo $fileContent;
     } else {
         echo "找不到檔案！";
+        header("Location:Portfolio1.php");
     }
 
     // 關閉連線
@@ -38,5 +39,6 @@ if (isset($_GET['id'])) {
     $conn->close();
 } else {
     echo "無效的請求！";
+    header("Location:Portfolio1.php");
 }
 ?>

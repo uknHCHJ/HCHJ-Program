@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location:Portfolio1.php");
             } else {
                 echo "資料上傳失敗：" . $stmt->error;
+                header("Location:Portfolio1.php");
             }
 
             // 關閉連線
@@ -47,11 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->close();
         } else {
             echo "檔案上傳失敗，錯誤碼：" . $file['error'];
+            header("Location:Portfolio1.php");
         }
     } else {
         echo "未收到必要的表單資料，請確認輸入！";
+        header("Location:Portfolio1.php");
     }
 } else {
     echo "無效的請求方式！";
+    header("Location:Portfolio1.php");
 }
 ?>

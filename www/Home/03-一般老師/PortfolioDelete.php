@@ -24,8 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             echo "資料已成功刪除！";
+            header("Location:Portfolio1.php");
+
         } else {
             echo "資料刪除失敗：" . $stmt->error;
+            header("Location:Portfolio1.php");
         }
 
         // 關閉連線
@@ -33,8 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->close();
     } else {
         echo "未收到資料 ID！";
+        header("Location:Portfolio1.php");
     }
 } else {
     echo "無效的請求方式！";
+    header("Location:Portfolio1.php");
 }
 ?>
