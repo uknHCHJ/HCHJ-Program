@@ -126,7 +126,7 @@ $username=$userData['name'];
                             <label for="option-license" class="checkbox-label">證照資料</label>
 
                             <input type="checkbox" id="option-competition" name="options[]" value="competition" class="custom-checkbox">
-                            <label for="option-competition" class="checkbox-label">競賽資料</label>
+                            <label for="option-competition" class="checkbox-label">競賽證明</label>
 
                             <input type="checkbox" id="option-transcript" name="options[]" value="transcript" class="custom-checkbox">
                             <label for="option-transcript" class="checkbox-label">成績單</label>
