@@ -78,12 +78,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     // 準備要插入資料表的欄位和值
                     $data = [];
+
                     foreach ($headers as $index => $header) {
                         if (isset($row[$index]) && in_array($header, $validColumns)) {
                             $column = mysqli_real_escape_string($link, $header); // 避免 SQL 注入
                             $value = mysqli_real_escape_string($link, trim($row[$index])); // 去除值的多餘空白並防注入
                             $data["`$column`"] = "'$value'"; // 將欄位和值加入資料陣列
                         }
+                    }
+
+                    // 額外檢查並處理 `name` 欄位
+                    if (isset($row[array_search('name', $headers)])) {
+                        $nameValue = mysqli_real_escape_string($link, trim($row[array_search('name', $headers)])); // 找到對應的 `name` 值
+                        $data["`name`"] = "'$nameValue'"; // 將 `name` 加入資料陣列
                     }
 
                     // 如果有有效的資料，執行 INSERT 操作
