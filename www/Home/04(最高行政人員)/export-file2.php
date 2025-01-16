@@ -115,9 +115,7 @@ foreach ($options as $option) {
 
             $section->addTextBreak(1); // 添加段落間距
         }
-    } //else {
-        //$section->addText("無 $option 資料可用");
-    //}
+    }
 }
 
 $conn->close();
