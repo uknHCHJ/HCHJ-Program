@@ -99,22 +99,15 @@ foreach ($options as $option) {
 
             // 處理圖片資料
             if (!empty($imageData) && strlen($imageData) > 100) {
-                $tempImagePath = tempnam(sys_get_temp_dir(), 'img') . '.png';
-
-                if (file_put_contents($tempImagePath, $imageData)) {
-                    try {
-                        $section->addImage($tempImagePath, [
-                            'width' => 300,
-                            'height' => 200,
-                            'alignment' => Jc::CENTER,
-                        ]);
-                    } catch (Exception $e) {
-                        $section->addText("插入圖片失敗：$description", ['italic' => true, 'color' => 'FF0000']);
-                    } finally {
-                        unlink($tempImagePath);
-                    }
-                } else {
-                    $section->addText("無法生成圖片檔案：$description");
+                try {
+                    // 直接插入二進制數據
+                    $section->addImage($imageData, [
+                        'width' => 300,
+                        'height' => 200,
+                        'alignment' => Jc::CENTER,
+                    ]);
+                } catch (Exception $e) {
+                    $section->addText("插入圖片失敗：$description", ['italic' => true, 'color' => 'FF0000']);
                 }
             } else {
                 $section->addText("無效的影像資料：$description");
