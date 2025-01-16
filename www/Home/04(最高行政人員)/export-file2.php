@@ -24,10 +24,9 @@ error_reporting(E_ALL);
 if ($conn->connect_error) {
     die("資料庫連線失敗：" . $conn->connect_error);
 }
-$userData = $_SESSION['user']; //
 
-// 在SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$userId = $userData['user']; // 從 SESSION 中獲取 user_id
+$userData = $_SESSION['user']; // 從 SESSION 中獲取使用者資料
+$userId = $userData['user'];
 $username = $userData['name'];
 
 // 檢查使用者選項
@@ -60,18 +59,8 @@ $optionNames = [
     'language' => '語言能力證明'
 ];
 
-// 添加選取選項的標題
-$section->addText("匯出選項：", ['bold' => true, 'size' => 16, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-
-// 生成選項列表，並顯示對應的中文名稱
-//foreach ($options as $option) {
-//    if (!isset($optionNames[$option])) {
-//        $section->addText("未知的選項：$option", ['italic' => true, 'color' => 'FF0000']);
-//        continue;
- //   }
-//    $section->addText("- " . $optionNames[$option], ['size' => 12], ['alignment' => Jc::LEFT]);
-//}
-//$section->addTextBreak(2); // 添加段落間距
+// 添加標題
+$section->addText("匯出資料如下：", ['bold' => true, 'size' => 16, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
 // 根據選項生成文件內容
 foreach ($options as $option) {
@@ -99,7 +88,12 @@ foreach ($options as $option) {
 
             // 處理圖片資料
             if (!empty($imageData) && strlen($imageData) > 100) {
-                $tempImagePath = tempnam(sys_get_temp_dir(), 'img') . '.png';
+                $tempImagePath = __DIR__ . '/temp_images/' . uniqid('img_') . '.png';
+
+                // 確保 temp_images 資料夾存在
+                if (!is_dir(__DIR__ . '/temp_images')) {
+                    mkdir(__DIR__ . '/temp_images', 0777, true);
+                }
 
                 if (file_put_contents($tempImagePath, $imageData)) {
                     try {
@@ -111,7 +105,7 @@ foreach ($options as $option) {
                     } catch (Exception $e) {
                         $section->addText("插入圖片失敗：$description", ['italic' => true, 'color' => 'FF0000']);
                     } finally {
-                        unlink($tempImagePath);
+                        unlink($tempImagePath); // 移除臨時圖片
                     }
                 } else {
                     $section->addText("無法生成圖片檔案：$description");
@@ -122,9 +116,9 @@ foreach ($options as $option) {
 
             $section->addTextBreak(1); // 添加段落間距
         }
-    } //else {
-        //$section->addText("無 $option 資料可用");
-    //}
+    } else {
+        $section->addText("無 $option 資料可用");
+    }
 }
 
 $conn->close();
