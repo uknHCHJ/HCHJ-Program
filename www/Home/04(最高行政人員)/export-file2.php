@@ -116,6 +116,49 @@ foreach ($options as $option) {
             $section->addTextBreak(1); // 添加段落間距
         }
     }
+    if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $description = $row['file_name'];
+                $fileContent = $row['file_content'];
+
+                // 直接從二進制資料讀取並加載 .docx 文件
+                if (!empty($fileContent)) {
+                    try {
+                        // 使用 ZipArchive 來解析 .docx 文件
+                        $zip = new ZipArchive();
+                        // 建立一個從二進制資料讀取的 data stream URL
+                        $tempName = 'data://application/zip;base64,' . base64_encode($fileContent);
+
+                        // 嘗試開啟二進制資料
+                        if ($zip->open($tempName) === true) {
+                            // 解壓後讀取文檔中的文本內容
+                            $xmlContent = $zip->getFromName('word/document.xml');
+                            $zip->close();
+
+                            if ($xmlContent === false) {
+                                throw new Exception('未能讀取 document.xml 檔案');
+                            }
+
+                            // 使用 simplexml 解析 XML 內容
+                            $xml = simplexml_load_string($xmlContent);
+                            $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+                            $textNodes = $xml->xpath('//w:t');
+
+                            // 將自傳的文本內容插入到 Word 文件
+                            $content = '';
+                            foreach ($textNodes as $node) {
+                                $content .= (string)$node . "\n";
+                            }
+                            $section->addText($content, ['size' => 12], ['alignment' => Jc::BOTH]);
+                        } else {
+                            throw new Exception('無法開啟 .docx 文件');
+                        }
+                    } catch (Exception $e) {
+                        die("讀取自傳檔案失敗：" . $e->getMessage());
+                    }
+                }
+            }
+        }
 }
 
 $conn->close();
