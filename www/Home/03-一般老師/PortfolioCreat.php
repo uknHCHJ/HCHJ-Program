@@ -1,61 +1,45 @@
 <?php
-// 開啟 session
-session_start();
-
-// 資料庫連線設定
-$servername = "127.0.0.1";
-$username = "HCHJ";
-$password = "xx435kKHq";
-$dbname = "HCHJ";
-
-// 接收檔案上傳請求
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['student_id']) && isset($_POST['category']) && isset($_FILES['file'])) {
-        $student_id = $_POST['student_id'];
-        $category = $_POST['category'];
-        $file = $_FILES['file'];
+    // 資料庫設定
+    $servername = "127.0.0.1";
+    $username = "HCHJ";
+    $password = "xx435kKHq";
+    $dbname = "HCHJ";
 
-        // 檢查檔案是否上傳成功
-        if ($file['error'] === UPLOAD_ERR_OK) {
-            $fileName = $file['name'];
-            $tmpName = $file['tmp_name'];
+    // 建立連線
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        die("連線失敗：" . $conn->connect_error);
+    }
 
-            // 讀取檔案內容
-            $fileContent = file_get_contents($tmpName);
+    // 接收表單資料
+    $student_id = intval($_POST['student_id']);
+    $category = $conn->real_escape_string($_POST['category']);
+    $upload_dir = 'uploads/';
 
-            // 建立連線
-            $conn = new mysqli($servername, $username, $password, $dbname);
+    // 檢查並處理檔案
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        $file_name = basename($_FILES['file']['name']);
+        $file_path = $upload_dir . uniqid() . '_' . $file_name;
 
-            // 確認連線是否成功
-            if ($conn->connect_error) {
-                die("連線失敗：" . $conn->connect_error);
-            }
-
-            // 插入資料到資料庫
-            $stmt = $conn->prepare("INSERT INTO portfolio (student_id, category, file_name, file_content, upload_time) VALUES (?, ?, ?, ?, NOW())");
-            $stmt->bind_param("isss", $student_id, $category, $fileName, $fileContent);
-
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $file_path)) {
+            // 插入資料庫
+            $sql = "INSERT INTO portfolio (student_id, category, file_name, file_path, upload_time) VALUES (?, ?, ?, ?, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("isss", $student_id, $category, $file_name, $file_path);
             if ($stmt->execute()) {
-                echo "資料已成功上傳！";
-                header("Location:Portfolio1.php");
+                echo "檔案上傳成功！";
             } else {
-                echo "資料上傳失敗：" . $stmt->error;
-                header("Location:Portfolio1.php");
+                echo "資料儲存失敗：" . $stmt->error;
             }
-
-            // 關閉連線
             $stmt->close();
-            $conn->close();
         } else {
-            echo "檔案上傳失敗，錯誤碼：" . $file['error'];
-            header("Location:Portfolio1.php");
+            echo "檔案移動失敗！";
         }
     } else {
-        echo "未收到必要的表單資料，請確認輸入！";
-        header("Location:Portfolio1.php");
+        echo "檔案上傳錯誤！";
     }
-} else {
-    echo "無效的請求方式！";
-    header("Location:Portfolio1.php");
+
+    $conn->close();
 }
 ?>

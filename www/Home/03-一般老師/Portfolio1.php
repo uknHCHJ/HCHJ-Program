@@ -203,7 +203,6 @@ if ($conn->connect_error) {
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
-    <!-- 使用隱藏欄位將 student_id 傳入 -->
     <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;" id="uploadForm" onsubmit="return confirmUpload()">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
 
@@ -260,20 +259,16 @@ if ($conn->connect_error) {
                         die("連線失敗：" . $conn->connect_error);
                     }
 
-                    // 確認是否有提供 student_id
-                    $student_id = isset($_POST['student_id']) ? intval($_POST['student_id']) : $userId;
-
                     // 查詢該學生的資料
                     $sql = "SELECT * FROM portfolio WHERE student_id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $student_id);
+                    $stmt->bind_param("i", $userId);
                     $stmt->execute();
                     $result = $stmt->get_result();
 
                     // 檢查是否有資料
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            // 根據資料類型決定分類類別
                             $category_map = [
                                 "成績單" => "transcripts",
                                 "自傳" => "autobiographies",
@@ -285,7 +280,6 @@ if ($conn->connect_error) {
                             ];
                             $category_class = $category_map[$row["category"]] ?? "unknown";
 
-                            // 輸出每筆資料
                             echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
                                 <div class='portfolio-content'>
                                     <h3>{$row['category']}</h3>
@@ -293,9 +287,8 @@ if ($conn->connect_error) {
                                     <p>上傳時間：{$row['upload_time']}</p>
                                     <form action='PortfolioDelete.php' method='post'>
                                         <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
-                                        <button type='submit' 
-                                                onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
-                                                style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
+                                        <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
+                                            style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
                                             刪除
                                         </button>
                                     </form>
@@ -316,7 +309,6 @@ if ($conn->connect_error) {
 </div>
 
 <script>
-    // 確認是否上傳檔案的函數
     function confirmUpload() {
         const fileInput = document.getElementById('file');
         const file = fileInput.files[0];
@@ -326,22 +318,16 @@ if ($conn->connect_error) {
             return false;
         }
 
-        // 取得檔案的副檔名
         const fileExtension = file.name.split('.').pop().toLowerCase();
-
-        // 檢查檔案類型
         const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
         if (!allowedExtensions.includes(fileExtension)) {
             alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
             return false;
         }
 
-        // 顯示確認提示框
-        const confirmMessage = `您確定要上傳檔案：${file.name}?`;
-        return confirm(confirmMessage); // 若使用者點選確認，返回 true，繼續提交表單；若取消，返回 false
+        return confirm(`您確定要上傳檔案：${file.name}？`);
     }
 
-    // 作品分類篩選功能
     document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.portfolio-btn');
         const items = document.querySelectorAll('.portfolio-item');
@@ -352,13 +338,10 @@ if ($conn->connect_error) {
                 button.classList.add('active');
 
                 const filter = button.getAttribute('data-filter');
-
                 items.forEach(item => {
-                    if (filter === '*' || item.classList.contains(filter.substring(1))) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
+                    item.style.display = filter === '*' || item.classList.contains(filter.substring(1))
+                        ? 'block'
+                        : 'none';
                 });
             });
         });
