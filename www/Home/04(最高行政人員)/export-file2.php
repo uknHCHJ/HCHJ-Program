@@ -123,14 +123,14 @@ $conn->close();
 // 設定下載標頭
 header("Content-Description: File Transfer");
 header("Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-header("Content-Disposition: attachment; filename=\"exported_file.docx\"");
+header("Content-Disposition: attachment; filename=\"$userId.docx\"");
 header("Expires: 0");
 header("Cache-Control: must-revalidate");
 header("Pragma: public");
 
 // 儲存 Word 文件
 try {
-    $phpWord->save("php://output", 'Word2007');
+    $phpWord->save("php://output", 'Word2007'); 
 } catch (Exception $e) {
     die("生成 Word 文件失敗：" . $e->getMessage());
 }
