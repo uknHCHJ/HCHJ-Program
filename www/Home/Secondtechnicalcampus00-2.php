@@ -26,17 +26,8 @@ if (!isset($_SESSION['user'])) {
     die("未登入，請先登入後再操作。");
 }
 
-// 取得資料表 "test" 的欄位名稱，並存入陣列
-$tableColumns = [];
-$result = mysqli_query($link, "DESCRIBE test"); // 查詢資料表結構
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $tableColumns[] = strtolower($row['Field']); // 將欄位名稱轉為小寫後存入陣列
-    }
-    mysqli_free_result($result); // 釋放資源
-} else {
-    die("無法取得資料表欄位資訊: " . mysqli_error($link));
-}
+// 資料表的欄位名稱
+$tableColumns = ['id', 'name', 'public/private', 'address', 'phone', 'website'];
 
 // 處理檔案上傳請求
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -85,12 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $value = mysqli_real_escape_string($link, trim($row[$index])); // 去除值的多餘空白並防注入
                             $data["`$column`"] = "'$value'"; // 將欄位和值加入資料陣列
                         }
-                    }
-
-                    // 額外檢查並處理 `name` 欄位
-                    if (isset($row[array_search('地址', $headers)])) {
-                        $nameValue = mysqli_real_escape_string($link, trim($row[array_search('地址', $headers)])); // 找到對應的 `name` 值
-                        $data["`地址`"] = "'$nameValue'"; // 將 `name` 加入資料陣列
                     }
 
                     // 如果有有效的資料，執行 INSERT 操作
