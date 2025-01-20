@@ -3,7 +3,6 @@ session_start();
 require_once 'vendor/autoload.php';
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\SimpleType\Jc;
-use ZipArchive;
 
 // 初始化 PhpWord
 $phpWord = new PhpWord();
@@ -25,7 +24,9 @@ error_reporting(E_ALL);
 if ($conn->connect_error) {
     die("資料庫連線失敗：" . $conn->connect_error);
 }
-$userData = $_SESSION['user']; 
+$userData = $_SESSION['user']; //
+
+// 在SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 $username = $userData['name'];
 
@@ -62,6 +63,16 @@ $optionNames = [
 // 添加選取選項的標題
 $section->addText("匯出選項：", ['bold' => true, 'size' => 16, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
+// 生成選項列表，並顯示對應的中文名稱
+//foreach ($options as $option) {
+//    if (!isset($optionNames[$option])) {
+//        $section->addText("未知的選項：$option", ['italic' => true, 'color' => 'FF0000']);
+//        continue;
+ //   }
+//    $section->addText("- " . $optionNames[$option], ['size' => 12], ['alignment' => Jc::LEFT]);
+//}
+//$section->addTextBreak(2); // 添加段落間距
+
 // 根據選項生成文件內容
 foreach ($options as $option) {
     if (!isset($queryMap[$option])) {
@@ -81,16 +92,16 @@ foreach ($options as $option) {
 
         while ($row = $result->fetch_assoc()) {
             $description = $row['file_name'];
-            $fileContent = $row['file_content'];
+            $imageData = $row['file_content'];
 
             // 處理文字資料
             $section->addText(!empty($description) ? $description : "無文字資料", ['size' => 12], ['alignment' => Jc::BOTH]);
 
             // 處理圖片資料
-            if (!empty($fileContent) && strlen($fileContent) > 100) {
+            if (!empty($imageData) && strlen($imageData) > 100) {
                 try {
-                    // 直接插入二進制數據作為圖片
-                    $section->addImage('data:image/jpeg;base64,' . base64_encode($fileContent), [
+                    // 直接插入二進制數據
+                    $section->addImage($imageData, [
                         'width' => 300,
                         'height' => 200,
                         'alignment' => Jc::CENTER,
@@ -102,40 +113,52 @@ foreach ($options as $option) {
                 $section->addText("無效的影像資料：$description");
             }
 
-            // 處理自傳檔案的二進制資料
-            if ($option == 'autobiography' && !empty($fileContent)) {
-                try {
-                    // 使用 ZipArchive 來解析 .docx 文件
-                    $zip = new ZipArchive();
-                    $tempName = 'data://application/zip;base64,' . base64_encode($fileContent);
-
-                    if ($zip->open($tempName) === true) {
-                        // 解壓後讀取文檔中的文本內容
-                        $xmlContent = $zip->getFromName('word/document.xml');
-                        $zip->close();
-
-                        // 使用 simplexml 解析 XML 內容
-                        $xml = simplexml_load_string($xmlContent);
-                        $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
-                        $textNodes = $xml->xpath('//w:t');
-
-                        // 將自傳的文本內容插入到 Word 文件
-                        $content = '';
-                        foreach ($textNodes as $node) {
-                            $content .= (string)$node . "\n";
-                        }
-                        $section->addText($content, ['size' => 12], ['alignment' => Jc::BOTH]);
-                    } else {
-                        throw new Exception('無法開啟 .docx 文件');
-                    }
-                } catch (Exception $e) {
-                    die("讀取自傳檔案失敗：" . $e->getMessage());
-                }
-            }
-
             $section->addTextBreak(1); // 添加段落間距
         }
     }
+    if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $description = $row['file_name'];
+                $fileContent = $row['file_content'];
+
+                // 直接從二進制資料讀取並加載 .docx 文件
+                if (!empty($fileContent)) {
+                    try {
+                        // 使用 ZipArchive 來解析 .docx 文件
+                        $zip = new ZipArchive();
+                        // 建立一個從二進制資料讀取的 data stream URL
+                        $tempName = 'data://application/zip;base64,' . base64_encode($fileContent);
+
+                        // 嘗試開啟二進制資料
+                        if ($zip->open($tempName) === true) {
+                            // 解壓後讀取文檔中的文本內容
+                            $xmlContent = $zip->getFromName('word/document.xml');
+                            $zip->close();
+
+                            if ($xmlContent === false) {
+                                throw new Exception('未能讀取 document.xml 檔案');
+                            }
+
+                            // 使用 simplexml 解析 XML 內容
+                            $xml = simplexml_load_string($xmlContent);
+                            $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+                            $textNodes = $xml->xpath('//w:t');
+
+                            // 將自傳的文本內容插入到 Word 文件
+                            $content = '';
+                            foreach ($textNodes as $node) {
+                                $content .= (string)$node . "\n";
+                            }
+                            $section->addText($content, ['size' => 12], ['alignment' => Jc::BOTH]);
+                        } else {
+                            throw new Exception('無法開啟 .docx 文件');
+                        }
+                    } catch (Exception $e) {
+                        die("讀取自傳檔案失敗：" . $e->getMessage());
+                    }
+                }
+            }
+        }
 }
 
 $conn->close();
