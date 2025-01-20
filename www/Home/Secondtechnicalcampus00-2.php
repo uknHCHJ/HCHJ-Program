@@ -88,9 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
 
                     // 額外檢查並處理 `name` 欄位
-                    if (isset($row[array_search('name', $headers)])) {
-                        $nameValue = mysqli_real_escape_string($link, trim($row[array_search('name', $headers)])); // 找到對應的 `name` 值
-                        $data["`name`"] = "'$nameValue'"; // 將 `name` 加入資料陣列
+                    if (isset($row[array_search('地址', $headers)])) {
+                        $nameValue = mysqli_real_escape_string($link, trim($row[array_search('地址', $headers)])); // 找到對應的 `name` 值
+                        $data["`地址`"] = "'$nameValue'"; // 將 `name` 加入資料陣列
                     }
 
                     // 如果有有效的資料，執行 INSERT 操作
