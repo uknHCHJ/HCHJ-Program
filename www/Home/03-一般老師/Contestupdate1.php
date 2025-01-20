@@ -214,10 +214,7 @@ $datas_len = count($datas); //目前資料筆數
             <h2 class="margin_top50">比賽資訊</h2><br>
             <form method="post" action="Contestupdate2.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
                 比賽名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['name'] ?>" name="name"><br>
-                比賽資訊： <textarea class="form-control" name="inform" rows="5"><?php echo $datas[0]['inform'] ?></textarea><br>
                 比賽連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
-                <label for="image">圖片：</label>
-                <input type="file" id="image" name="image" required><br><br>
                 <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該比賽資訊嗎？')" value="修改">
                 <br><br>
                 <a href="ContestEdin1.php" class="btn btn-secondary">返回上一頁</a>

@@ -59,42 +59,54 @@ if (!isset($_SESSION['user'])) {
         <link rel="stylesheet" href="styles.css">
         <style>
     table {
-        width: 80%;            /* 設定表格寬度，保持 80% 寬度 */
-        max-width: 900px;      /* 最大寬度為 900px */
-        margin: 20px auto;     /* 自動水平居中，並設定上下邊距 */
-        border-collapse: collapse; /* 合併表格邊框 */
+        width: 80%; /* 表格占容器的80%宽度 */
+        max-width: 900px;
+        margin: 20px auto; /* 自动水平居中 */
+        border-collapse: collapse;
     }
 
     th, td {
-        padding: 12px;         /* 單元格內邊距 */
-        text-align: left;      /* 文字對齊左側 */
-        border: 1px solid #ddd; /* 單元格邊框顏色 */
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
     }
 
     th {
-        background-color: #f2f2f2; /* 表頭背景顏色 */
-        font-weight: bold;         /* 設置表頭文字加粗 */
+        background-color: #f2f2f2;
+        font-weight: bold;
     }
 
     tr:hover {
-        background-color: #f1f1f1; /* 滑鼠懸停時，行的背景顏色 */
+        background-color: #f1f1f1;
     }
 
     td a {
-        color: #007bff;          /* 設定連結顏色 */
-        text-decoration: none;   /* 去除連結底線 */
+        color: #007bff;
+        text-decoration: none;
     }
 
     td a:hover {
-        text-decoration: underline; /* 滑鼠懸停時顯示底線 */
+        text-decoration: underline;
     }
 
-    /* 使標題與表格更接近，減少與上方框框的距離 */
-    .col-12.text-center.mb-4 h2 {
-        margin-top: 0;   /* 取消標題與上方的空間 */
-        margin-bottom: 10px;  /* 減少標題下方的空間 */
+    .text-center {
+        text-align: center;
     }
 
+    .mb-4 {
+        margin-bottom: 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 水平居中 */
+    }
+
+    .row {
+        width: 100%;
+        justify-content: center;
+    }
 </style>
 
 
@@ -228,70 +240,32 @@ $result = $conn->query($sql);
         <section class="blog-section pt-130">
     <div class="container">
         <div class="row">
-            <!-- Blog Content -->
-            <div class="col-xl-8 col-lg-7">
-                <div class="left-side-wrapper">
-                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".2s">
-                        <section class="portfolio-section pt-130">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-12 text-center mb-4">
-                                        <h2>資管科比賽資訊</h2>
-                                    </div>
-
-                                    <?php
-                                    // 如果有比賽資料
-                                    if ($result->num_rows > 0) {
-                                        echo '<div style="display: flex; justify-content: center; overflow-x: auto;">';
-                                        echo '<table style="width: 90%; max-width: 800px; border-collapse: collapse; text-align: left; margin: 0 auto;">';
-                                        echo '<thead><tr><th style="padding: 12px; text-align: left; border: 1px solid #ddd; background-color: #f2f2f2;">比賽名稱</th><th style="padding: 12px; text-align: left; border: 1px solid #ddd; background-color: #f2f2f2;">連結</th></tr></thead>';
-                                        echo '<tbody>';
-
-                                        // 顯示每個比賽的名稱和連結
-                                        while($row = $result->fetch_assoc()) {
-                                            echo '<tr>';
-                                            echo '<td style="padding: 12px; border: 1px solid #ddd;">' . htmlspecialchars($row['name']) . '</td>';
-                                            echo '<td style="padding: 12px; border: 1px solid #ddd;"><a href="' . htmlspecialchars($row['link']) . '" target="_blank">點擊參賽</a></td>';
-                                            echo '</tr>';
-                                        }
-
-                                        echo '</tbody>';
-                                        echo '</table>';
-                                        echo '</div>';
-                                    } else {
-                                        echo "<p>目前沒有任何比賽資訊。</p>";
-                                    }
-
-                                    // 關閉資料庫連接
-                                    $conn->close();
-                                    ?>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
+            <div class="col-12 text-center mb-4">
+                <h2>資管科比賽資訊</h2>
             </div>
-        </div>
-    </div>
-</section>
 
-
-            <!-- Sidebar -->
-            <div class="col-xl-4 col-lg-5">
-    <div class="sidebar-wrapper">
-        
-        <style>
-            #calendar {
-                max-width: 100%;   /* 設定為最大寬度，這樣它會根據容器大小自動調整 */
-                width: 100%;       /* 設定為 100%，使其自動適應容器寬度 */
-                height: 500px;     /* 設定固定高度，也可以根據需求進行調整 */
-                margin: 0 auto;    /* 使日曆水平居中 */
-            }
-        </style>
-            <!-- 當月日曆 -->
-           
-    </div>
-</div>
+            <?php if ($result->num_rows > 0): ?>
+                <div style="display: flex; justify-content: center; width: 100%; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>比賽名稱</th>
+                                <th>連結</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['name']); ?></td>
+                                    <td><a href="<?= htmlspecialchars($row['link']); ?>" target="_blank">點擊參賽</a></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="text-center">目前沒有任何比賽資訊。</p>
+            <?php endif; ?>
         </div>
     </div>
 </section>
