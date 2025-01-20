@@ -17,7 +17,7 @@ if ($action === 'getSchools') {
         FROM 
             Schools s
         LEFT JOIN 
-            Preferences p ON s.school_id = p.school_id
+            Preferences  N s.school_id = p.school_id
         GROUP BY 
             s.school_id, s.school_name
         ORDER BY 
