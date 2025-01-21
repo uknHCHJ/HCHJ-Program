@@ -25,7 +25,7 @@ $result = mysqli_query($link, $query);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>上傳備審</title>
+    <title>上傳二技校園</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
