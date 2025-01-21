@@ -11,15 +11,15 @@ if ($conn->connect_error) {
     die("連線失敗: " . $conn->connect_error);
 }
 
-// 1. 從 Preferences 表中取得資料
-$sql_preferences = "SELECT school_id, user FROM Preferences";
+// 1. 從 Preferences 表中取得資料並聯接 user 表獲取姓名
+$sql_preferences = "SELECT p.school_id, p.user, u.name FROM Preferences p JOIN user u ON p.user = u.user";
 $result_preferences = $conn->query($sql_preferences);
 
 // 儲存 Preferences 資料
 $preferences = [];
 if ($result_preferences->num_rows > 0) {
     while ($row = $result_preferences->fetch_assoc()) {
-        $preferences[] = $row; // 儲存每一筆資料
+        $preferences[] = $row; // 儲存每一筆資料，包含學號與姓名
     }
 }
 
@@ -41,10 +41,15 @@ foreach ($preferences as $preference) {
     if (in_array($preference['user'], $valid_users)) {
         // 如果此使用者在符合條件的使用者中
         $school_id = $preference['school_id'];
+        $user_name = $preference['name']; // 儲存使用者的姓名
         if (!isset($school_counts[$school_id])) {
-            $school_counts[$school_id] = 0; // 初始化學校計數
+            $school_counts[$school_id] = [
+                'count' => 0, // 初始化學校計數
+                'users' => [] // 儲存使用者姓名
+            ];
         }
-        $school_counts[$school_id]++;
+        $school_counts[$school_id]['count']++;
+        $school_counts[$school_id]['users'][] = $user_name; // 將使用者姓名加入
     }
 }
 
@@ -62,9 +67,14 @@ if ($result_schools->num_rows > 0) {
 
 // 5. 組合資料並準備長條圖
 $chart_data = [];
-foreach ($school_counts as $school_id => $count) {
+foreach ($school_counts as $school_id => $count_data) {
     $school_name = isset($school_names[$school_id]) ? $school_names[$school_id] : "未知學校";
-    $chart_data[] = ["school_name" => $school_name, "count" => $count];
+    $chart_data[] = [
+        "school_id" => $school_id, // 傳遞 school_id
+        "school_name" => $school_name,
+        "count" => $count_data['count'],
+        "users" => $count_data['users'] // 傳遞使用者姓名
+    ];
 }
 
 // 關閉資料庫連線
@@ -87,17 +97,22 @@ $conn->close();
 
     <h2>科系志願統計</h2>
     <canvas id="departmentChart" width="800" height="400"></canvas>
+
     <script>
         // 從 PHP 傳遞資料到 JavaScript
         const chartData = <?php echo json_encode($chart_data); ?>;
+        console.log("chartData:", chartData); // 除錯用
 
         // 提取學校名稱和人數
         const labels = chartData.map(data => data.school_name);
         const data = chartData.map(data => data.count);
 
-        // 建立長條圖
+        console.log("Labels:", labels); // 除錯用
+        console.log("Data:", data);     // 除錯用
+
+        // 初始化學校長條圖
         const ctx = document.getElementById('barChart').getContext('2d');
-        new Chart(ctx, {
+        const barChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -118,23 +133,33 @@ $conn->close();
                 }
             }
         });
-        // 初始化科系長條圖
+
+        // 初始化科系圖表的上下文
         const departmentCtx = document.getElementById('departmentChart').getContext('2d');
         let departmentChart;
 
-        // 點擊學校時載入科系資料
+        // 點擊學校長條圖時載入科系資料
         document.getElementById('barChart').onclick = function (evt) {
             const points = barChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+            console.log("Clicked points:", points); // 除錯用
 
             if (points.length) {
                 const index = points[0].index;
                 const selectedSchool = chartData[index];
-                const schoolId = selectedSchool.school_id;
+                const schoolId = selectedSchool.school_id; // 確保這裡是存在的
 
-                // 使用 AJAX 請求該校科系資料
+                console.log("Selected School ID:", schoolId); // 除錯用
+
+                // 顯示選擇該學校的所有同學姓名
+                const users = selectedSchool.users;
+                const userNames = users.join(', '); // 將使用者姓名用逗號分隔
+                alert(`選擇此學校的同學：${userNames}`); // 彈窗顯示所有同學的姓名
+
+                // 發送 AJAX 請求獲取科系數據
                 fetch(`get_departments2-02.php?school_id=${schoolId}`)
                     .then(response => response.json())
                     .then(departmentData => {
+                        console.log("Department Data:", departmentData); // 除錯用
                         const labels = departmentData.map(data => data.department_name);
                         const data = departmentData.map(data => data.count);
 
@@ -166,7 +191,6 @@ $conn->close();
                     });
             }
         };
-
 
     </script>
 </body>

@@ -1,4 +1,3 @@
-// get_departments.php
 <?php
 $servername = "127.0.0.1";
 $username = "HCHJ";
