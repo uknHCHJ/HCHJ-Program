@@ -15,7 +15,8 @@ $dbname = "HCHJ";           // 資料庫名稱
 // 建立資料庫連線
 $link = mysqli_connect($servername, $username, $password, $dbname);
 if (!$link) {
-    die("資料庫連線失敗: " . mysqli_connect_error()); // 若連線失敗則終止程式並顯示錯誤
+    error_log("資料庫連線失敗: " . mysqli_connect_error());
+    die("無法連接到資料庫，請稍後再試。");
 }
 
 // 設置資料庫的編碼為 UTF-8
@@ -26,91 +27,102 @@ if (!isset($_SESSION['user'])) {
     die("未登入，請先登入後再操作。");
 }
 
-// 資料表的欄位名稱
-$tableColumns = ['id', 'name', 'public/private', 'address', 'phone', 'website'];
-
 // 處理檔案上傳請求
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // 確認是否有檔案上傳且上傳成功
-    if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
+    try {
+        // 確認是否有檔案上傳且上傳成功
+        if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("檔案上傳失敗，請檢查檔案並重試。");
+        }
+
         $filePath = $_FILES['file']['tmp_name']; // 暫存檔案的路徑
         $fileExtension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION)); // 檢查檔案副檔名
 
         // 確保上傳的檔案是 CSV 格式
         if ($fileExtension !== 'csv') {
-            echo "請上傳 CSV 檔案！";
-            exit;
+            throw new Exception("請上傳 CSV 檔案！");
         }
 
         // 開啟 CSV 檔案
-        if (($handle = fopen($filePath, "r")) !== FALSE) {
-            $headers = fgetcsv($handle); // 讀取 CSV 的標題行
+        if (($handle = fopen($filePath, "r")) === FALSE) {
+            throw new Exception("無法打開 CSV 檔案。");
+        }
 
-            // 確保標題行存在並進行處理
-            if ($headers) {
-                $headers = array_map('trim', $headers);  // 去除每個欄位名稱的多餘空白
-                $headers = array_map('strtolower', $headers); // 將標題轉為小寫，方便比對
+        $headers = fgetcsv($handle); // 讀取 CSV 的標題行
 
-                $errorCount = 0; // 記錄無法處理的行數
-                $lineNumber = 0; // 記錄目前處理的行號
+        if (!$headers) {
+            throw new Exception("CSV 檔案格式錯誤，沒有標題行。");
+        }
 
-                // 找出 CSV 檔案中的欄位與資料表欄位的交集
-                $validColumns = array_intersect($headers, $tableColumns);
+        // 處理標題行
+        $headers = array_map('trim', $headers);  // 去除每個欄位名稱的多餘空白
+        $headers = array_map('strtolower', $headers); // 將標題轉為小寫，方便比對
 
-                if (empty($validColumns)) {
-                    echo "CSV 檔案的標題行與資料表欄位名稱無匹配，無法插入資料！";
-                    fclose($handle);
-                    exit;
+        $validMapping = [
+            '代碼' => 'id',
+            '學校名稱' => 'name',
+            '公/私立' => 'Public/Private',
+            '電話' => 'phone',
+            '地址' => 'address',
+            '網址' => 'website'
+        ];
+
+        // 找出 CSV 標題對應的資料表欄位名稱
+        $columnMapping = [];
+        foreach ($headers as $index => $header) {
+            if (isset($validMapping[$header])) {
+                $columnMapping[$index] = $validMapping[$header];
+            }
+        }
+
+        if (empty($columnMapping)) {
+            throw new Exception("CSV 檔案的標題行與資料表欄位名稱無匹配，無法插入資料！");
+        }
+
+        $lineNumber = 0; // 記錄目前處理的行號
+        $errorCount = 0; // 記錄無法處理的行數
+
+        // 逐行讀取 CSV 檔案中的數據
+        while (($row = fgetcsv($handle)) !== FALSE) {
+            $lineNumber++;
+
+            // 準備要插入資料表的欄位和值
+            $data = [];
+            foreach ($columnMapping as $index => $dbColumn) {
+                if (isset($row[$index])) {
+                    $value = mysqli_real_escape_string($link, trim($row[$index]));
+                    $data["`$dbColumn`"] = "'$value'";
                 }
+            }
 
-                // 逐行讀取 CSV 檔案中的數據
-                while (($row = fgetcsv($handle)) !== FALSE) {
-                    $lineNumber++;
+            // 如果有有效的資料，執行 INSERT 操作
+            if (!empty($data)) {
+                $columns = implode(", ", array_keys($data));
+                $values = implode(", ", array_values($data));
+                $query = "INSERT INTO test ($columns) VALUES ($values)";
 
-                    // 準備要插入資料表的欄位和值
-                    $data = [];
-
-                    foreach ($headers as $index => $header) {
-                        if (isset($row[$index]) && in_array($header, $validColumns)) {
-                            $column = mysqli_real_escape_string($link, $header); // 避免 SQL 注入
-                            $value = mysqli_real_escape_string($link, trim($row[$index])); // 去除值的多餘空白並防注入
-                            $data["`$column`"] = "'$value'"; // 將欄位和值加入資料陣列
-                        }
-                    }
-
-                    // 如果有有效的資料，執行 INSERT 操作
-                    if (!empty($data)) {
-                        $columns = implode(", ", array_keys($data)); // 拼接欄位名稱
-                        $values = implode(", ", array_values($data)); // 拼接欄位值
-
-                        $query = "INSERT INTO test ($columns) VALUES ($values)"; // 組合 SQL 查詢語句
-                        if (!mysqli_query($link, $query)) {
-                            echo "第 " . $lineNumber . " 行資料庫錯誤: " . mysqli_error($link) . "<br>";
-                        } else {
-                            echo "第 " . $lineNumber . " 行資料成功寫入資料庫。<br>";
-                        }
-                    } else {
-                        echo "第 " . $lineNumber . " 行資料無法映射到資料表的欄位，已跳過。<br>";
-                        $errorCount++;
-                    }
-                }
-
-                fclose($handle); // 關閉檔案
-
-                // 輸出處理結果
-                if ($errorCount > 0) {
-                    echo "共有 $errorCount 行資料無法處理，已跳過。<br>";
-                } else {
-                    echo "CSV 檔案資料已成功寫入資料庫。";
+                if (!mysqli_query($link, $query)) {
+                    error_log("第 $lineNumber 行資料庫錯誤: " . mysqli_error($link));
+                    $errorCount++;
                 }
             } else {
-                echo "CSV 檔案格式錯誤，沒有標題行。";
+                error_log("第 $lineNumber 行資料無法映射到資料表的欄位，已跳過。");
+                $errorCount++;
             }
-        } else {
-            echo "無法打開 CSV 檔案。";
         }
-    } else {
-        echo "檔案上傳失敗，錯誤碼：" . $_FILES['file']['error'];
+
+        fclose($handle); // 關閉檔案
+
+        // 輸出處理結果
+        if ($errorCount > 0) {
+            echo "部分資料處理失敗，共跳過 $errorCount 行。請檢查日誌。";
+        } else {
+            echo "CSV 檔案資料已成功寫入資料庫。";
+        }
+
+    } catch (Exception $e) {
+        echo $e->getMessage(); // 顯示簡單錯誤訊息
+        error_log($e->getMessage()); // 記錄詳細錯誤
     }
 }
 
