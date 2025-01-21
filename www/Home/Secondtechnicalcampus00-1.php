@@ -177,7 +177,9 @@ $result = mysqli_query($link, $query);
                         <label for="username">管理員姓名：</label>
                         <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary">確認上傳</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='https://depart.moe.edu.tw/ed4500/News_Content.aspx?n=63F5AB3D02A8BBAC&s=E23C5A6CA17DB8E2&sms=1FF9979D10DBF9F3';">下載更新資料</button>                    
                     <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
                 </form>
 
