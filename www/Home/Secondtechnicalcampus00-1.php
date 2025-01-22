@@ -159,14 +159,84 @@ $result = mysqli_query($link, $query);
                     <div class="section-title text-center mb-55">
                         <span class="wow fadeInDown" data-wow-delay=".2s">新增二技校園</span>
                     </div>
+                    <style>
+              /* 按鈕樣式 */
+              .download-button {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: background-color 0.3s ease, transform 0.2s ease;
+              }
+
+              .download-button:hover {
+                background-color: #45a049;
+                transform: scale(1.05);
+              }
+
+              .download-button:active {
+                animation: click-animation 0.5s forwards;
+              }
+              /*確認*/
+              .primary-button {
+                background-color:rgb(76, 120, 175);
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: background-color 0.3s ease, transform 0.2s ease;
+              }
+
+              .primary-button:hover {
+                background-color:rgb(76, 120, 175);
+                transform: scale(1.05);
+              }
+
+              .primary-button:active {
+                animation: click-animation 0.5s forwards;
+              }
+              /*上一頁*/
+              .secondary-button {
+                background-color:rgba(67, 67, 65, 0.21);
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: background-color 0.3s ease, transform 0.2s ease;
+              }
+
+              .secondary-button:hover {
+                background-color:rgba(67, 67, 65, 0.21);
+                transform: scale(1.05);
+              }
+
+              .secondary-button:active {
+                animation: click-animation 0.5s forwards;
+              }
+              </style>
                 </div>
             </div>
-
             <div class="table-container">
                 <form id="permission-form" action="Secondtechnicalcampus00-2.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
                         <label for="imageUpload">上傳檔案(.csv)：</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".csv">
+                        <input type="file" id="file" name="file" class="form-control" accept=".pdf">
                     </div>
                     
                     <div class="form-group mb-3">
@@ -174,17 +244,18 @@ $result = mysqli_query($link, $query);
                         <input type="text" id="user" name="user" class="form-control" value=<?php echo $userId; ?> readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="username">管理員姓名：</label>
+                        <label for="username">姓名：</label>
                         <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary">確認上傳</button>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='https://depart.moe.edu.tw/ed4500/News_Content.aspx?n=63F5AB3D02A8BBAC&s=E23C5A6CA17DB8E2&sms=1FF9979D10DBF9F3';">下載更新資料</button>                    
-                    <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
+                    <button type="submit" class="primary-button">確認上傳</button>
+                    <button type="button" class="download-button" onclick="window.location.href='https://depart.moe.edu.tw/ed4500/News_Content.aspx?n=63F5AB3D02A8BBAC&s=E23C5A6CA17DB8E2&sms=1FF9979D10DBF9F3';">下載更新資料</button>                    
+                    <button type="button" class="secondary-button" onclick="window.history.back();">返回上一頁</button>
                 </form>
 
             </div>
     </section>
+    
+
     <!-- ========================= feature-section end ========================= -->
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">

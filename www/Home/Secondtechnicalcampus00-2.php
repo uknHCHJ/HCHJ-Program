@@ -32,7 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // 確保上傳的檔案是 CSV 格式
         if ($fileExtension !== 'csv') {
-            echo "請上傳 CSV 檔案！";
+            echo" <script>
+                alert('請上傳 CSV 檔案！');
+                window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
+              </script>";
             exit;
         }
 
@@ -144,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } else {
         echo" <script>
-            alert('檔案上傳失敗');
+            alert('檔案不可為空白');
             window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
           </script>";
     }
