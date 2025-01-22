@@ -208,7 +208,7 @@ $result = mysqli_query($link, $query);
               }
               /*上一頁*/
               .secondary-button {
-                background-color:rgba(67, 67, 65, 0.21);
+                background-color:rgba(25, 19, 19, 0.21);
                 color: white;
                 font-size: 16px;
                 font-weight: bold;
@@ -222,7 +222,7 @@ $result = mysqli_query($link, $query);
               }
 
               .secondary-button:hover {
-                background-color:rgba(67, 67, 65, 0.21);
+                background-color:rgba(25, 19, 19, 0.21);
                 transform: scale(1.05);
               }
 
@@ -236,7 +236,7 @@ $result = mysqli_query($link, $query);
                 <form id="permission-form" action="Secondtechnicalcampus00-2.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
                         <label for="imageUpload">上傳檔案(.csv)：</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".pdf">
+                        <input type="file" id="file" name="file" class="form-control" accept=".csv">
                     </div>
                     
                     <div class="form-group mb-3">
