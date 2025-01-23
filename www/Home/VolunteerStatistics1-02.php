@@ -130,9 +130,22 @@ $conn->close();
                     y: {
                         beginAtZero: true
                     }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function (context) {
+                                const index = context.dataIndex;
+                                const studentNames = departmentData[index].student_names; // 從返回的 JSON 資料中獲取
+                                return '學生姓名: ' + (studentNames ? studentNames : '無資料');
+                            }
+                        }
+                    }
+
                 }
             }
         });
+
 
         // 初始化科系圖表的上下文
         const departmentCtx = document.getElementById('departmentChart').getContext('2d');
@@ -141,27 +154,19 @@ $conn->close();
         // 點擊學校長條圖時載入科系資料
         document.getElementById('barChart').onclick = function (evt) {
             const points = barChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
-            console.log("Clicked points:", points); // 除錯用
 
             if (points.length) {
                 const index = points[0].index;
                 const selectedSchool = chartData[index];
-                const schoolId = selectedSchool.school_id; // 確保這裡是存在的
-
-                console.log("Selected School ID:", schoolId); // 除錯用
-
-                // 顯示選擇該學校的所有同學姓名
-                const users = selectedSchool.users;
-                const userNames = users.join(', '); // 將使用者姓名用逗號分隔
-                alert(`選擇此學校的同學：${userNames}`); // 彈窗顯示所有同學的姓名
+                const schoolId = selectedSchool.school_id;
 
                 // 發送 AJAX 請求獲取科系數據
                 fetch(`get_departments2-02.php?school_id=${schoolId}`)
                     .then(response => response.json())
                     .then(departmentData => {
-                        console.log("Department Data:", departmentData); // 除錯用
                         const labels = departmentData.map(data => data.department_name);
                         const data = departmentData.map(data => data.count);
+                        const studentNamesList = departmentData.map(data => data.student_names);
 
                         // 更新或創建科系長條圖
                         if (departmentChart) {
@@ -185,12 +190,25 @@ $conn->close();
                                     y: {
                                         beginAtZero: true
                                     }
+                                },
+                                plugins: {
+                                    tooltip: {
+                                        callbacks: {
+                                            afterLabel: function (context) {
+                                                const index = context.dataIndex;
+                                                const studentNames = studentNamesList[index]; // 使用本地變數
+                                                return '學生姓名: ' + studentNames;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         });
                     });
             }
         };
+
+
 
     </script>
 </body>
