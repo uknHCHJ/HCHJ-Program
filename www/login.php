@@ -31,15 +31,19 @@ if ($result && mysqli_num_rows($result) > 0) {
     // 儲存使用者資料到 Session
     $_SESSION['user'] = $userData;
 
-    if (in_array('9', $permissions)) {
-        $permission_page = "/~HCHJ/Home/index-0" . $permissions[0] . ".php";
-        header("Location: " . $permission_page);
 
-    } elseif(count($permissions) > 1){
-
+    if (count($permissions) > 1) {
         $_SESSION['permissions'] = $permissions;
         header("Location: Permission.php");
     }
+
+
+
+    elseif (in_array('9', $permissions)) {
+        $permission_page = "/~HCHJ/Home/index-0" . $permissions[0] . ".php";
+        header("Location: " . $permission_page);
+
+    } 
     exit();
 } else {
     echo '<script>
