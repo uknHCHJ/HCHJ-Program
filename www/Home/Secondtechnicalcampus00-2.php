@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $values = implode(", ", array_values($data));
 
                         // 使用 INSERT INTO ... ON DUPLICATE KEY UPDATE
-                        $query = "INSERT INTO test ($columns) VALUES ($values)
+                        $query = "INSERT INTO Secondskill ($columns) VALUES ($values)
                                   ON DUPLICATE KEY UPDATE " . implode(", ", array_map(function ($col) {
                                       return "$col = VALUES($col)";
                                   }, array_keys($data)));
