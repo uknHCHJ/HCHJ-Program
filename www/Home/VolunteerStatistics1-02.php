@@ -145,8 +145,6 @@ $conn->close();
                 }
             }
         });
-
-
         // 初始化科系圖表的上下文
         const departmentCtx = document.getElementById('departmentChart').getContext('2d');
         let departmentChart;
