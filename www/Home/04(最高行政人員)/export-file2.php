@@ -190,9 +190,7 @@ foreach ($options as $option) {
                             foreach ($textNodes as $node) {
                                 $content .= (string)$node . "\n";
                             }
-                            // 若文件內容包含英文，可使用 Times New Roman 呈現英文內容
-                            // 這裡假設所有文字均可能包含中英文，因此示範混合使用兩種字型
-                            // 你可以根據實際需求將中英文分段處理
+                            
                             $section->addText(
                                 $content,
                                 ['name' => 'Times New Roman', 'size' => 12], // 英文內容使用 Times New Roman
