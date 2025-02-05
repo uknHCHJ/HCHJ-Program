@@ -23,28 +23,36 @@ $section = $phpWord->addSection([
     'borderTopSize'    => 12,
     'borderColor'      => '000000', // 黑色框線
 ]);
+$coverPositionStyle = [
+    'positioning'       => 'absolute',        // 絕對定位
+    'posHorizontalRel'  => 'page',            // 以頁面為水平參照
+    'posHorizontal'     => 'center',          // 水平置中
+    'posVerticalRel'    => 'page',            // 以頁面為垂直參照
+    'posVertical'       => 'center',          // 垂直置中
+];
+
 
 // 設定封面標題 (中文預設字型：標楷體)
 $section->addText(
     '備審資料',
     ['bold' => true, 'size' => 36, 'color' => '333399'],
-    ['alignment' => Jc::CENTER]
+    ['alignment' => Jc::CENTER, 'spaceBefore' => 300, 'spaceAfter' => 300]
 );
+$section->addTextBreak(5);
 
 // 顯示使用者姓名及學號 (中文預設字型：標楷體)
 $section->addText(
     '姓名：' . htmlspecialchars($_SESSION['user']['name']),
     ['size' => 18],
-    ['alignment' => Jc::CENTER]
+    ['alignment' => Jc::CENTER, 'spaceBefore' => 200, 'spaceAfter' => 200]
 );
 
-// 生成日期並置於右下角的頁尾
+// 生成日期並置於右下角的頁尾(只有封面)
 $date = date('Y-m-d');
-$footer = $section->addFooter();
-$footer->addText(
+$section->addText(
     "生成日期：$date",
     ['size' => 12, 'italic' => true],
-    ['alignment' => Jc::RIGHT]
+    ['alignment' => Jc::RIGHT, 'spaceBefore' => 5000]
 );
 
 // 添加分節符 (封面與內容分隔)
