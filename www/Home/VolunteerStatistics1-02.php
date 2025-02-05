@@ -136,8 +136,12 @@ $conn->close();
                         callbacks: {
                             afterLabel: function (context) {
                                 const index = context.dataIndex;
-                                const studentNames = departmentData[index].student_names; // 從返回的 JSON 資料中獲取
-                                return '學生姓名: ' + (studentNames ? studentNames : '無資料');
+                                const studentNames = studentNamesList[index]; // 使用本地變數
+                                if (studentNames && Array.isArray(studentNames)) {
+                                    return '學生姓名:\n' + studentNames.join('\n'); // 使用換行顯示名字
+                                } else {
+                                    return '學生姓名: 無資料';
+                                }
                             }
                         }
                     }
@@ -205,8 +209,6 @@ $conn->close();
                     });
             }
         };
-
-
 
     </script>
 </body>
