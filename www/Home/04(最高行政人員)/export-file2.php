@@ -114,7 +114,7 @@ foreach ($options as $option) {
             }
             // 處理 DOCX 檔案
             else if ($ext === 'docx') {
-                $section->addText("DOCX 檔案：$description", ['size' => 12], ['alignment' => Jc::BOTH]);
+                //$section->addText("DOCX 檔案：$description", ['size' => 12], ['alignment' => Jc::BOTH]);
                 if (!empty($fileContent)) {
                     try {
                         // 建立一個臨時檔案，並將二進位資料寫入該檔案
