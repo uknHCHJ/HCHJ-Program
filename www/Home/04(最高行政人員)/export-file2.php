@@ -31,6 +31,9 @@ $coverPositionStyle = [
     'posVertical'       => 'center',          // 垂直置中
 ];
 
+$paragraphStyle = [
+    'alignment' => Jc::CENTER,
+];
 
 // 設定封面標題 (中文預設字型：標楷體)
 $section->addText(
