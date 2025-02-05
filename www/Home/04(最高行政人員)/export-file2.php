@@ -17,6 +17,11 @@ $section = $phpWord->addSection([
     'marginBottom' => 1000,
     'marginLeft'   => 1200,
     'marginRight'  => 1200,
+    'borderBottomSize' => 12,
+    'borderLeftSize'   => 12,
+    'borderRightSize'  => 12,
+    'borderTopSize'    => 12,
+    'borderColor'      => '000000', // 黑色框線
 ]);
 
 // 設定封面標題 (中文預設字型：標楷體)
