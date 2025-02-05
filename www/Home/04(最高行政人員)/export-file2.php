@@ -32,11 +32,6 @@ $section->addText(
     ['size' => 18],
     ['alignment' => Jc::CENTER]
 );
-$section->addText(
-    '學號：' . htmlspecialchars($_SESSION['user']['user']),
-    ['size' => 18],
-    ['alignment' => Jc::CENTER]
-);
 
 // 生成日期並置於右下角的頁尾
 $date = date('Y-m-d');
