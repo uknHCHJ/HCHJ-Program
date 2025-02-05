@@ -134,9 +134,6 @@ $username=$userData['name'];
                             <label for="excel-file">選擇 Excel 文件：</label>
                             <input type="file" id="excel-file" name="excel_file" class="form-control" accept=".xls,.xlsx">
                         </div>
-                        <div class="text-center mt-4">
-                            <a href="download_excel.php" class="btn btn-success" download>下載範例 Excel 檔案</a>
-                        </div>
                     </div>
 
                     <div id="manual-section" style="display: none;">
@@ -213,7 +210,9 @@ $username=$userData['name'];
                     <button type="submit" class="btn btn-primary">送出</button>
                 </form>
             </div>
-
+            <div class="text-center mt-4">
+                            <a href="download_excel.php" class="btn btn-success" download>下載範例 Excel 檔案</a>
+                        </div>
 
         </div>
     </section>
