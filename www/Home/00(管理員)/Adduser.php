@@ -175,12 +175,10 @@ $username=$userData['name'];
                             </select>
                         </div>
 
-
                         <div class="form-group mb-3">
                             <label for="name">姓名：</label>
                             <input type="name" id="name" name="name" class="form-control" required>
                         </div>
-
 
                         <div class="form-group mb-3">
                             <label for="permission">選擇權限：</label>
@@ -194,7 +192,7 @@ $username=$userData['name'];
                             </select>
                         </div>
 
-                        <div class="form-group mb-3"><!--隱藏此欄位，但回傳功能還在-->
+                        <div class="form-group mb-3">
                             <label for="permission2">選擇第二權限(如果沒有可不選)：</label>
                             <select id="permissions2" name="permissions2" class="form-select">
                                 <option value="9">請選擇...</option>
@@ -211,8 +209,8 @@ $username=$userData['name'];
                 </form>
             </div>
             <div class="text-center mt-4">
-                            <a href="download_excel.php" class="btn btn-success" download>下載範例 Excel 檔案</a>
-                        </div>
+                <a href="download_excel.php" class="btn btn-success" download>下載範例 Excel 檔案</a>
+            </div>
 
         </div>
     </section>
