@@ -15,7 +15,7 @@ $school_id = $_GET['school_id'];
 $sql = "SELECT 
         d.department_name, 
         COUNT(p.user) as count,
-        GROUP_CONCAT(DISTINCT u.name SEPARATOR ', ') as student_names
+        GROUP_CONCAT(DISTINCT u.name SEPARATOR ',') as student_names
     FROM Preferences p
     JOIN department d ON p.department_id = d.ID
     JOIN user u ON p.user = u.user
