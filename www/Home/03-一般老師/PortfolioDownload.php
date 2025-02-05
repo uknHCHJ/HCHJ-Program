@@ -5,40 +5,36 @@ $username = "HCHJ";
 $password = "xx435kKHq";
 $dbname = "HCHJ";
 
-// 接收檔案 ID
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+// 建立資料庫連線
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-    // 建立連線
-    $conn = new mysqli($servername, $username, $password, $dbname);
+// 檢查連線是否成功
+if ($conn->connect_error) {
+    die("資料庫連線失敗：" . $conn->connect_error);
+}
 
-    // 確認連線是否成功
-    if ($conn->connect_error) {
-        die("連線失敗：" . $conn->connect_error);
-    }
+// 設定資料庫連線的編碼
+$conn->set_charset("utf8mb4");
 
-    // 查詢檔案資料
-    $stmt = $conn->prepare("SELECT file_name, file_content FROM portfolio WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($fileName, $fileContent);
+// 根據 ID 取得圖片內容
+$fileId = intval($_GET['id']); // 從 URL 中傳遞的 ID
+$sql = "SELECT file_name, file_content FROM portfolio WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $fileId);
+$stmt->execute();
+$stmt->bind_result($fileName, $fileContent);
 
-    if ($stmt->fetch()) {
-        // 設定檔案下載標頭
-        header("Content-Disposition: attachment; filename=\"$fileName\"");
-        header("Content-Type: application/octet-stream");
-        echo $fileContent;
-    } else {
-        echo "找不到檔案！";
-        header("Location:Portfolio1.php");
-    }
-
-    // 關閉連線
-    $stmt->close();
-    $conn->close();
+if ($stmt->fetch()) {
+    // 設定正確的 Content-Type 顯示圖片
+    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+    $mimeType = ($fileExtension === 'jpg' || $fileExtension === 'jpeg') ? 'image/jpeg' : 'image/png';
+    header("Content-Type: $mimeType");
+    echo $fileContent;
 } else {
-    echo "無效的請求！";
+    echo "找不到圖片！";
     header("Location:Portfolio1.php");
 }
+
+$stmt->close();
+$conn->close();
 ?>
