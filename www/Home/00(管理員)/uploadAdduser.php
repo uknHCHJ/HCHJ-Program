@@ -1,17 +1,9 @@
 <?php
-session_start();  // 確保啟動 session
-$servername = "127.0.0.1";  
-$username = "HCHJ";  
-$password = "xx435kKHq";  
-$dbname = "HCHJ";  
+session_start();
+include 'db.php';
+require 'vendor/autoload.php'; // 引入 PhpSpreadsheet
 
-$link = mysqli_connect($servername, $username, $password, $dbname);
-
-if ($link){
-    mysqli_query($link,'SET NAMES UTF8');
-} else {
-    echo "無法連接資料庫：" . mysqli_connect_error();
-}
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 if (!isset($_SESSION['user'])) {
     echo("<script>
@@ -21,80 +13,62 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == UPLOAD_ERR_OK) {
-        if (!file_exists($file)) {
-            die("檔案上傳失敗");
-        }   
-         // 載入 Excel 檔案
-    try {
-        /*$spreadsheet = IOFactory::load($file);  // 讀取 Excel 檔案
-        $sheet = $spreadsheet->getActiveSheet();  // 取得當前工作表
-        $data = $sheet->toArray();  // 將工作表資料轉換為陣列*/
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["excel_file"])) {
+    $file = $_FILES["excel_file"]["tmp_name"];
 
-        // 逐行處理 Excel 資料
-        foreach ($data as $row) {
-            // 假設 Excel 欄位的順序為 ID、姓名、科系、年級
-            $department = isset($row[0]) ? mysqli_real_escape_string($link, $row[0]) : '';
-            $grade = isset($row[1]) ? mysqli_real_escape_string($link, $row[1]) : '';
-            $class = isset($row[2]) ? mysqli_real_escape_string($link, $row[2]) : '';
-            $name = isset($row[3]) ? mysqli_real_escape_string($link, $row[3]) : '';
-            $user = isset($row[4]) ? mysqli_real_escape_string($link, $row[4]) : '';
-            $Permissions = isset($row[5]) ? mysqli_real_escape_string($link, $row[5]) : '';
-            $Permissions2 = isset($row[6]) ? mysqli_real_escape_string($link, $row[6]) : '';
-            
-
-            // 檢查資料是否完整
-            if (empty($department) || empty($name)) {
-                continue;  // 跳過不完整的資料
-            }
-
-                $totalPermissions = $Permissions . ',' . $Permissions2;
-                $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
-                      VALUES ('$department', '$grade', '$class', '$name','$user','$user','$totalPermissions')";
-            // 建立 SQL 插入語句
-            
-
-            // 執行 SQL 插入
-            $result = mysqli_query($link, $query);
-
-            if (!$result) {
-                echo "資料插入失敗: " . mysqli_error($link);
-            }
-        }
-
-        echo "資料成功上傳並寫入資料庫";
-    } catch (Exception $e) {
-        echo "檔案解析失敗: " . $e->getMessage();
+    if (!$file) {
+        echo "<script>alert('請上傳檔案！'); window.history.back();</script>";
+        exit();
     }
 
+    try {
+        $spreadsheet = IOFactory::load($file);
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = $worksheet->toArray();
 
-    } else if (isset($_POST['user'])) {
-
-        $department = mysqli_real_escape_string($link, $_POST['department']);
-        $grade = mysqli_real_escape_string($link, $_POST['grade']);
-        $class = mysqli_real_escape_string($link, $_POST['class']);
-        $name = mysqli_real_escape_string($link, $_POST['name']);
-        $user = mysqli_real_escape_string($link, $_POST['user']);
-        $password = mysqli_real_escape_string($link, $_POST['user']);
-        $Permissions = mysqli_real_escape_string($link, $_POST['permissions']);
-        $Permissions2 = mysqli_real_escape_string($link, $_POST['permissions2']);   
-                
-        $totalPermissions = $Permissions . ',' . $Permissions2;
-        $query = "INSERT INTO user (department,grade,class,name,user,password,Permissions) VALUES ('$department','$grade','$class','$name','$user','$password','$totalPermissions')";
-
-        if (mysqli_query($link, $query)) {
-            echo "<script>
-                    alert('新增成功: " . $user . "');
-                    window.location.href = 'Access-Control1.php'; // 重定向到新增成員頁面
-                  </script>";
-        } else {
-            echo "新增成員失敗：" . mysqli_error($link);
+        // 確保資料行數大於 1（第一行通常是標題）
+        if (count($rows) <= 1) {
+            echo "<script>alert('Excel 檔案沒有可匯入的資料！'); window.history.back();</script>";
+            exit();
         }
-    } else {
-        echo "無效的請求。";
+
+        $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+        if ($conn->connect_error) {
+            die("資料庫連接失敗：" . $conn->connect_error);
+        }
+
+        $inserted = 0;
+        for ($i = 1; $i < count($rows); $i++) { // 跳過第一行標題
+            list($user, $name, $department, $grade, $class, $permissions, $permissions2) = $rows[$i];
+
+            // 避免空資料
+            if (empty($user) || empty($name)) {
+                continue;
+            }
+
+            // 檢查是否已經存在該帳號
+            $checkQuery = "SELECT user FROM users WHERE user = ?";
+            $stmt = $conn->prepare($checkQuery);
+            $stmt->bind_param("s", $user);
+            $stmt->execute();
+            $stmt->store_result();
+
+            if ($stmt->num_rows == 0) {
+                // 插入資料
+                $insertQuery = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($insertQuery);
+                $stmt->bind_param("sssssss", $department, $grade, $class, $name, $user, $password, $Permissions);
+                $stmt->execute();
+                $inserted++;
+            }
+        }
+
+        echo "<script>alert('成功匯入 {$inserted} 筆資料！'); window.location.href='Adduser.php';</script>";
+    } catch (Exception $e) {
+        echo "<script>alert('Excel 讀取失敗：" . $e->getMessage() . "'); window.history.back();</script>";
     }
 } else {
-    echo "無效的請求。";
+    echo "<script>alert('無效的請求！'); window.history.back();</script>";
 }
 ?>
