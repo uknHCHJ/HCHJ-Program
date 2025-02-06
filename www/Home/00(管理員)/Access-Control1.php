@@ -145,7 +145,7 @@ $username=$userData['name'];
                     </form>
                 </div>
                 <div class="section-title text-center mb-55">
-                    <span class="wow fadeInDown" data-wow-delay=".2s">權限管理</span>
+                    <span class="wow fadeInDown" data-wow-delay=".2s">所有權限管理</span>
                 </div>
             </div>                                    
         </div>
