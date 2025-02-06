@@ -197,30 +197,30 @@ $conn->close();
 
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"
-        style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="banner-content">
-                        <h2 class="text-white">學生管理</h2>
-                        <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">查看學生備審</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
+    style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="banner-content">
+            <h2 class="text-white">學生管理</h2>
+            <div class="page-breadcrumb">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">查看學生備審</li>
+                </ol>
+              </nav>
             </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>長條圖 - 志願統計</title>
+        <title>志願統計</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             body {

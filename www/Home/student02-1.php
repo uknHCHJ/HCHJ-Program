@@ -163,7 +163,7 @@ foreach ($grades as $grade) {
             <div class="page-breadcrumb">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                  <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
                   <li class="breadcrumb-item active" aria-current="page">查看學生備審</li>
                 </ol>
               </nav>
