@@ -7,21 +7,23 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #eef2f7;
             margin: 0;
             padding: 20px;
         }
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 20px;
         }
         .search-container {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            text-align: center;
         }
         table {
             width: 100%;
@@ -32,32 +34,59 @@
             border: 1px solid #ddd;
         }
         th, td {
-            text-align: left;
-            padding: 10px;
+            text-align: center;
+            padding: 12px;
         }
         th {
-            background-color: #f4f4f9;
+            background-color: #007BFF;
+            color: white;
         }
         tr:hover {
-            background-color: #f9f9f9;
+            background-color: #f1f8ff;
         }
         .btn {
-            padding: 5px 10px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             color: white;
             cursor: pointer;
             font-size: 14px;
+            transition: 0.3s;
+            margin: 5px;
         }
         .btn-edit {
-            background-color: #007BFF;
+            background-color: #28a745;
+        }
+        .btn-edit:hover {
+            background-color: #218838;
         }
         .btn-delete {
             background-color: #dc3545;
         }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
         .no-results {
             text-align: center;
             color: #777;
+            font-size: 16px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -65,7 +94,6 @@
     <h1>搜尋結果</h1>
     <div class="search-container">
         <?php
-        // PHP: 從資料庫獲取搜尋結果
         if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['query'])) {
             $query = trim($_GET['query']);
             $servername = "127.0.0.1";  
@@ -99,7 +127,7 @@
                     echo "<td>$student</td>";
                     echo "<td>
                             <button class='btn btn-edit' onclick='editRow(\"$account\", \"$permission\")'>編輯</button>
-                <button class='btn btn-delete' onclick='deleteRow(\"$account\")'>刪除</button>
+                            <button class='btn btn-delete' onclick='deleteRow(\"$account\")'>刪除</button>
                           </td>";
                     echo "</tr>";
                 }
@@ -113,25 +141,20 @@
         } else {
             echo '<p class="no-results">請輸入搜尋條件。</p>';
         }
-        echo "<button onclick='history.back()'>返回上一頁</button>";
         ?>
+        <a href="javascript:history.back()" class="btn-back">返回上一頁</a>
     </div>
 
     <script>
-      // 編輯功能：跳轉到編輯頁面
-function editRow(account,permission) {
-    // 跳轉到編輯頁面，將帳號作為參數傳遞
-    window.location.href = 'Change-permissions1.php?username=' + encodeURIComponent(account)+ '&permission=' + encodeURIComponent(permission);
-}
+        function editRow(account, permission) {
+            window.location.href = 'Change-permissions1.php?username=' + encodeURIComponent(account) + '&permission=' + encodeURIComponent(permission);
+        }
 
-// 刪除功能：跳轉到刪除頁面
-function deleteRow(account) {
-    if (confirm("確定要刪除帳號：" + account + " 的資料嗎？")) {
-        // 跳轉到刪除頁面，將帳號作為參數傳遞
-        window.location.href = "delete-user.php" + encodeURIComponent(user);
-    }
-}
-
+        function deleteRow(account) {
+            if (confirm("確定要刪除帳號：" + account + " 的資料嗎？")) {
+                window.location.href = "delete-user.php?user=" + encodeURIComponent(account);
+            }
+        }
     </script>
 </body>
 </html>

@@ -136,7 +136,7 @@ $username=$userData['name'];
     <div class="container">
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
-                <div style="display: flex; justify-content: right;"><!--目前無法使用(搜尋功能)-->
+                <div style="display: flex; justify-content: right;">
                     <form action="Access-Control-search.php" method="GET" class="search-form">
                         <input type="text" name="query" id="query" placeholder="輸入帳號搜尋..." >
                         <button type="submit">
@@ -869,12 +869,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </footer>
         <!-- ========================= footer end ========================= -->
-
-
-        <!-- ========================= scroll-top ========================= -->
-        <a href="#" class="scroll-top">
-            <i class="lni lni-arrow-up"></i>
-        </a>
         
 		<!-- ========================= JS here ========================= -->
 		<script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
