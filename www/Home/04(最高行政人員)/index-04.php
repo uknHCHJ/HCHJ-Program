@@ -126,7 +126,7 @@ $userId= $userData['user'];
                                         <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="page-scroll" href="export-file1.php">匯出檔案(測試)</a>
+                                        <a class="page-scroll" href="export-file1.php">匯出檔案</a>
                                     </li> 
                                     <li class="nav-item">
                                         <a class="page-scroll" href="../logout.php" >登出</a>

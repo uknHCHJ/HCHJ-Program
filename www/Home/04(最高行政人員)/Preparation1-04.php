@@ -154,7 +154,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                 <div class="section-title text-center mb-55">
-                    <span class="wow fadeInDown" data-wow-delay=".2s">班級名單</span>
+                    <span class="wow fadeInDown" data-wow-delay=".2s">五年級班級名單</span>
                 </div>  
                 <select id="class-select" class="form-select mb-4" onchange="fetchStudentData()">
                     <option value="">請選擇班級...</option>
