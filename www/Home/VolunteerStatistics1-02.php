@@ -87,7 +87,7 @@ $conn->close();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>查看學生志願序</title>
+    <title>學生志願序統計</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -244,11 +244,10 @@ $conn->close();
     </head>
 
     <body>
-        <h1>班級志願統計 - 長條圖</h1>
+        <h1>班級志願統計</h1>
         <div class="chart-container">
             <canvas id="barChart" width="1000" height="500"></canvas> <!-- 設定高度為 500 -->
         </div>
-
 
         <h2>科系志願統計</h2>
         <div class="chart-container">
@@ -260,14 +259,10 @@ $conn->close();
     <script>
         // 從 PHP 傳遞資料到 JavaScript
         const chartData = <?php echo json_encode($chart_data); ?>;
-        console.log("chartData:", chartData); // 除錯用
 
         // 提取學校名稱和人數
         const labels = chartData.map(data => data.school_name);
         const data = chartData.map(data => data.count);
-
-        console.log("Labels:", labels); // 除錯用
-        console.log("Data:", data);     // 除錯用
 
         // 初始化學校長條圖
         const ctx = document.getElementById('barChart').getContext('2d');
