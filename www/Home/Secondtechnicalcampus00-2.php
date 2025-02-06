@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $validMapping = [
                     '代碼' => 'id',
                     '學校名稱' => 'name',
-                    '公/私立' => 'Public/Private',
+                    '公/私立' => 'public_private',
                     '電話' => 'phone',
                     '地址' => 'address',
                     '網址' => 'website',
