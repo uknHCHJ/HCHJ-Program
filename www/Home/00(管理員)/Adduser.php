@@ -224,16 +224,13 @@ function toggleUploadForm() {
     var select = document.getElementById('action-select');
     var uploadSection = document.getElementById('upload-section');
     var manualSection = document.getElementById('manual-section');
-    var manualSubmit = document.getElementById('manual-submit');
 
     if (select.value === 'upload') {
         uploadSection.style.display = 'block';
         manualSection.style.display = 'none';
-        manualSubmit.style.display = 'none';
     } else {
         uploadSection.style.display = 'none';
         manualSection.style.display = 'block';
-        manualSubmit.style.display = 'inline-block';
     }
 }
 
