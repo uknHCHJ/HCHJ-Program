@@ -9,23 +9,22 @@ $password = "xx435kKHq";
 $dbname = "HCHJ";  
 
 $link = mysqli_connect($servername, $username, $password, $dbname);
-
 if (!$link) {
     die("無法連接資料庫：" . mysqli_connect_error());
 }
 mysqli_query($link, 'SET NAMES UTF8');
 
 if (!isset($_SESSION['user'])) {
-    echo("<script>
+    echo "<script>
           alert('請先登入！！');
           window.location.href = '/~HCHJ/index.html'; 
-          </script>");
+          </script>";
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == UPLOAD_ERR_OK) {
-        $file = $_FILES['excel_file']['tmp_name']; // 取得檔案
+        $file = $_FILES['excel_file']['tmp_name'];
         if (!file_exists($file)) {
             die("檔案上傳失敗");
         }
@@ -35,25 +34,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
 
+            // **跳過第一行（標題列）**
+            array_shift($data);
+
             foreach ($data as $row) {
-                $department = isset($row[0]) ? mysqli_real_escape_string($link, $row[0]) : '';
-                $grade = isset($row[1]) ? mysqli_real_escape_string($link, $row[1]) : '';
-                $class = isset($row[2]) ? mysqli_real_escape_string($link, $row[2]) : '';
-                $name = isset($row[3]) ? mysqli_real_escape_string($link, $row[3]) : '';
-                $user = isset($row[4]) ? mysqli_real_escape_string($link, $row[4]) : '';
-                $Permissions = isset($row[5]) ? mysqli_real_escape_string($link, $row[5]) : '';
-                $Permissions2 = isset($row[6]) ? mysqli_real_escape_string($link, $row[6]) : '';
+                $department  = mysqli_real_escape_string($link, trim($row[0] ?? ''));
+                $grade       = mysqli_real_escape_string($link, trim($row[1] ?? ''));
+                $class       = mysqli_real_escape_string($link, trim($row[2] ?? ''));
+                $name        = mysqli_real_escape_string($link, trim($row[3] ?? ''));
+                $user        = mysqli_real_escape_string($link, trim($row[4] ?? ''));
+                $Permissions = trim($row[5] ?? '');
+                $Permissions2 = trim($row[6] ?? '');
 
                 if (empty($department) || empty($name)) {
                     echo "錯誤：缺少必要欄位 - 系所($department), 姓名($name)<br>";
                     continue;
                 }
 
-                // 過濾權限
-                $permissionsArray = array_filter([$Permissions, $Permissions2], function($p) {
-                    return $p !== '9'; // 過濾掉 9
-                });
-                $totalPermissions = implode(',', $permissionsArray);
+                // **如果 `$Permissions2` 為空，則填入 `9`**
+                if ($Permissions2 === '') {
+                    $Permissions2 = '9';
+                }
+
+                // **確保 `$Permissions` 和 `$Permissions2` 之間有 `,`**
+                if (!empty($Permissions) && !empty($Permissions2)) {
+                    $totalPermissions = "$Permissions,$Permissions2";
+                } else {
+                    $totalPermissions = $Permissions . $Permissions2;
+                }
 
                 $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
                           VALUES ('$department', '$grade', '$class', '$name', '$user', '$user', '$totalPermissions')";
@@ -67,23 +75,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     alert('資料成功上傳並寫入資料庫');
                     window.location.href = 'Access-Control1.php';
                   </script>";
+
         } catch (Exception $e) {
             echo "檔案解析失敗: " . $e->getMessage();
         }
-    } else if (isset($_POST['user'])) {
-        $department = mysqli_real_escape_string($link, $_POST['department']);
-        $grade = mysqli_real_escape_string($link, $_POST['grade']);
-        $class = mysqli_real_escape_string($link, $_POST['class']);
-        $name = mysqli_real_escape_string($link, $_POST['name']);
-        $user = mysqli_real_escape_string($link, $_POST['user']);
-        $password = mysqli_real_escape_string($link, $_POST['user']);
-        $Permissions = mysqli_real_escape_string($link, $_POST['permissions']);
-        $Permissions2 = mysqli_real_escape_string($link, $_POST['permissions2']);   
 
-        $permissionsArray = array_filter([$Permissions, $Permissions2], function($p) {
-            return $p !== '9';
-        });
-        $totalPermissions = implode(',', $permissionsArray);
+    } else if (isset($_POST['user'])) {
+        $department  = mysqli_real_escape_string($link, trim($_POST['department'] ?? ''));
+        $grade       = mysqli_real_escape_string($link, trim($_POST['grade'] ?? ''));
+        $class       = mysqli_real_escape_string($link, trim($_POST['class'] ?? ''));
+        $name        = mysqli_real_escape_string($link, trim($_POST['name'] ?? ''));
+        $user        = mysqli_real_escape_string($link, trim($_POST['user'] ?? ''));
+        $password    = $user;
+        $Permissions = trim($_POST['permissions'] ?? '');
+        $Permissions2 = trim($_POST['permissions2'] ?? '');
+
+        // **如果 `$Permissions2` 為空，則填入 `9`**
+        if ($Permissions2 === '') {
+            $Permissions2 = '9';
+        }
+
+        // **確保 `$Permissions` 和 `$Permissions2` 之間有 `,`**
+        if (!empty($Permissions) && !empty($Permissions2)) {
+            $totalPermissions = "$Permissions,$Permissions2";
+        } else {
+            $totalPermissions = $Permissions . $Permissions2;
+        }
 
         $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
                   VALUES ('$department', '$grade', '$class', '$name', '$user', '$password', '$totalPermissions')";

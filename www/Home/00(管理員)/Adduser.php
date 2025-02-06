@@ -131,8 +131,11 @@ $username=$userData['name'];
 
                     <div id="upload-section">
                         <div class="form-group mb-3">
+                        <form id="upload-form" action="uploadAdduser.php" method="POST" enctype="multipart/form-data">
                             <label for="excel-file">選擇 Excel 文件：</label>
                             <input type="file" id="excel-file" name="excel_file" class="form-control" accept=".xls,.xlsx">
+                            <button type="submit" class="btn btn-primary">送出</button>
+                            </form>
                         </div>
                     </div>
 
