@@ -99,7 +99,7 @@ $conn->close();
             display: flex;
             justify-content: center;
             margin: 20px auto;
-            max-width: 600px;
+            max-width: 1000px;
         }
 
         canvas {
@@ -113,12 +113,13 @@ $conn->close();
 <body>
     <h1>班級志願統計 - 長條圖</h1>
     <div class="chart-container">
-        <canvas id="barChart"></canvas>
-    </div>
+    <canvas id="barChart" width="1000" height="500"></canvas> <!-- 設定高度為 500 -->
+</div>
+
 
     <h2>科系志願統計</h2>
     <div class="chart-container">
-        <canvas id="departmentChart"></canvas>
+        <canvas id="departmentChart" width="1000" height="500"></canvas><!-- 設定高度為 500 -->
     </div>
 </body>
 
@@ -152,7 +153,7 @@ $conn->close();
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            aspectRatio: 2,
+            aspectRatio: 1.5,//修改長寬比例
             scales: {
                 y: {
                     beginAtZero: true
