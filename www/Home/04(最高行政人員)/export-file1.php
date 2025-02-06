@@ -88,7 +88,7 @@ $username = $userData['name'];
                 </div>
 
                 <div class="form-group mb-3">
-                    <label class="checkbox-label">選擇匯出資料（可拖曳排序）：</label>
+                    <label class="checkbox-label">選擇匯出資料<label class="checkbox-label"><span style="color: red;">（可拖曳排序）</span></label>：</label>
                     <ul id="sortable-list" class="list-group">
                         <li class="list-group-item" data-value="license"><input type="checkbox" name="options[]" value="license"> 證照資料</li>
                         <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
