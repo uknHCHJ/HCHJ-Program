@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($Permissions) && !empty($Permissions2)) {
             $totalPermissions = "$Permissions,$Permissions2";
         } else {
-            $totalPermissions = $Permissions . $Permissions2;
+            $totalPermissions = trim("$Permissions$Permissions2", ',');
         }
 
         $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
