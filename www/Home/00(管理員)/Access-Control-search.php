@@ -152,7 +152,7 @@
 
         function deleteRow(account) {
             if (confirm("確定要刪除帳號：" + account + " 的資料嗎？")) {
-                window.location.href = "delete-user.php?user=" + encodeURIComponent(account);
+                window.location.href = "delete-user-search.php?user=" + encodeURIComponent(account);
             }
         }
     </script>
