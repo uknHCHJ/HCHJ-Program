@@ -377,110 +377,112 @@ $conn->close();
 
 
     </script>
-     <section class="client-logo-section pt-100">
-    <div class="container">
-      <div class="client-logo-wrapper">
-        <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-          <div class="client-logo">
-            <img src="schoolimages/uknim.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknbm.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknanime.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknbaby.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknenglish.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/ukneyes.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknnurse.jpg" alt="">
-          </div>
+    <section class="client-logo-section pt-100">
+        <div class="container">
+            <div class="client-logo-wrapper">
+                <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                    <div class="client-logo">
+                        <img src="schoolimages/uknim.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/uknbm.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/uknanime.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/uknbaby.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/uknenglish.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/ukneyes.jpg" alt="">
+                    </div>
+                    <div class="client-logo">
+                        <img src="schoolimages/uknnurse.jpg" alt="">
+                    </div>
 
 
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ========================= client-logo-section end ========================= -->
-
-
-  <!-- ========================= footer start ========================= -->
-  <footer class="footer pt-100">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-3 col-lg-4 col-md-6">
-          <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-4 col-md-6">
-          <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
-
-            <ul class="footer-contact">
-              <h3>關於我們</h3>
-              <p>(02)2632-1181/0986-212-566</p>
-              <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>
-            </ul>
-            <style>
-              .footer .row {
-                display: flex;
-                align-items: center;
-                /* 垂直居中 */
-                justify-content: space-between;
-                /* 讓兩個區塊分居左右 */
-              }
-
-              .footer-widget {
-                text-align: right;
-                /* 讓「關於學校」內容靠右對齊 */
-              }
-            </style>
-          </div>
-        </div>
-      </div>
-
-      <div class="copyright-area">
-        <div class="row align-items-center">
-          <div class="col-md-6">
-            <div class="footer-social-links">
-              <ul class="d-flex">
-                <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a>
-                </li>
-                <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a>
-                </li>
-              </ul>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </footer>
-  <!-- ========================= footer end ========================= -->
+    </section>
+    <!-- ========================= client-logo-section end ========================= -->
 
 
-  <!-- ========================= scroll-top ========================= -->
-  <a href="#" class="scroll-top">
-    <i class="lni lni-arrow-up"></i>
-  </a>
+    <!-- ========================= footer start ========================= -->
+    <footer class="footer pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
+                        <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
 
-  <!-- ========================= JS here ========================= -->
-  <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
-  <script src="assets/js/contact-form.js"></script>
-  <script src="assets/js/count-up.min.js"></script>
-  <script src="assets/js/tiny-slider.js"></script>
-  <script src="assets/js/isotope.min.js"></script>
-  <script src="assets/js/glightbox.min.js"></script>
-  <script src="assets/js/wow.min.js"></script>
-  <script src="assets/js/imagesloaded.min.js"></script>
-  <script src="assets/js/main.js"></script>
+                        <ul class="footer-contact">
+                            <h3>關於我們</h3>
+                            <p>(02)2632-1181/0986-212-566</p>
+                            <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>
+                        </ul>
+                        <style>
+                            .footer .row {
+                                display: flex;
+                                align-items: center;
+                                /* 垂直居中 */
+                                justify-content: space-between;
+                                /* 讓兩個區塊分居左右 */
+                            }
+
+                            .footer-widget {
+                                text-align: right;
+                                /* 讓「關於學校」內容靠右對齊 */
+                            }
+                        </style>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright-area">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="footer-social-links">
+                            <ul class="d-flex">
+                                <li><a href="https://www.facebook.com/UKNunversity"><i
+                                            class="lni lni-facebook-filled"></i></a>
+                                </li>
+                                <li><a href="https://www.instagram.com/ukn_taipei/"><i
+                                            class="lni lni-instagram-filled"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ========================= footer end ========================= -->
+
+
+    <!-- ========================= scroll-top ========================= -->
+    <a href="#" class="scroll-top">
+        <i class="lni lni-arrow-up"></i>
+    </a>
+
+    <!-- ========================= JS here ========================= -->
+    <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
+    <script src="assets/js/contact-form.js"></script>
+    <script src="assets/js/count-up.min.js"></script>
+    <script src="assets/js/tiny-slider.js"></script>
+    <script src="assets/js/isotope.min.js"></script>
+    <script src="assets/js/glightbox.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/imagesloaded.min.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 
 </body>
