@@ -202,7 +202,7 @@ $conn->close();
       <div class="row">
         <div class="col-xl-12">
           <div class="banner-content">
-            <h2 class="text-white">學生管理</h2>
+          <h2 class="text-white" style="text-align: left; margin-left: 20px;">學生管理</h2>
             <div class="page-breadcrumb">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
