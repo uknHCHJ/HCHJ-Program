@@ -207,7 +207,7 @@ $conn->close();
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">查看學生備審</li>
+                  <li class="breadcrumb-item active" aria-current="page">學生志願統計</li>
                 </ol>
               </nav>
             </div>
