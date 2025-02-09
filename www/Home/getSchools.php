@@ -21,16 +21,20 @@ if ($conn->connect_error) {
 }
 
 
-$sql = "SELECT school_id, school_name FROM School"; //學校
-
+// 查詢 Secondskill 表格中的學校名稱
+$sql = "SELECT id, name FROM Secondskill";
 $result = $conn->query($sql);
 
 $schools = [];
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $schools[] = $row;
+    while ($row = $result->fetch_assoc()) {
+        $schools[] = [
+            'school_id' => $row['id'],
+            'school_name' => $row['name']
+        ];
     }
 }
+
 echo json_encode($schools);
 $conn->close();
 ?>

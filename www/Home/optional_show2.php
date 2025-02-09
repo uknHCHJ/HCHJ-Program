@@ -1,14 +1,14 @@
 <?php
 session_start();
-$userData = $_SESSION['user']; 
-$userId = $userData['user']; 
-$username = $userData['name']; 
+$userData = $_SESSION['user'];
+$userId = $userData['user'];
+$username = $userData['name'];
 
 // 資料庫連接設定
-$servername = "127.0.0.1";  
-$dbUser = "HCHJ";  
-$dbPassword = "xx435kKHq";  
-$dbname = "HCHJ";  
+$servername = "127.0.0.1";
+$dbUser = "HCHJ";
+$dbPassword = "xx435kKHq";
+$dbname = "HCHJ";
 
 // 連接 MySQL 資料庫
 $link = mysqli_connect($servername, $dbUser, $dbPassword, $dbname);
@@ -26,19 +26,33 @@ mysqli_query($link, 'SET NAMES UTF8');
 // 設定回應內容類型為 JSON
 header('Content-Type: application/json');
 
+// 驗證是否登入
 if (!isset($_SESSION['user'])) {
     $response[0] = "未登入";
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit();
 }
 
+// 查詢學生最新志願資料（含學校與科系名稱）
+$query = "SELECT 
+        p.student_user AS user, 
+        p.preference_rank AS serial_number, 
+        p.Secondskill_id AS school_id, 
+        p.department_id AS department_id, 
+        p.created_at AS time,
+        s.name AS school_name, 
+        sd.department_name AS department_name
+    FROM preferences p
+    LEFT JOIN Secondskill s ON p.Secondskill_id = s.id
+    LEFT JOIN School_Department sd ON p.department_id = sd.department_id
+    WHERE p.student_user = '$userId'
+    AND p.created_at = (
+        SELECT MAX(created_at) 
+        FROM preferences 
+        WHERE student_user = '$userId'
+    )
+    ORDER BY p.preference_rank ASC";
 
-// 查詢使用者競賽偏好
-$query = "SELECT user, serial_number,school_id, department_id, time 
-          FROM Preferences 
-          WHERE user = '$userId' 
-          AND time = (SELECT MAX(time) FROM Preferences WHERE user = '$userId')
-          ORDER BY serial_number ASC";
 $result = mysqli_query($link, $query);
 
 if (!$result) {
@@ -49,28 +63,7 @@ if (!$result) {
 
 $competitions = array();
 while ($row = mysqli_fetch_assoc($result)) {
-    $schoolId = $row['school_id'];
-    $departmentId = $row['department_id'];
-
-    // 使用 school_id 查詢學校名稱
-    $schoolQuery = "SELECT school_name FROM School WHERE school_id = '$schoolId'";
-    $schoolResult = mysqli_query($link, $schoolQuery);
-    $schoolName = mysqli_fetch_assoc($schoolResult)['school_name'];
-
-    // 使用 department_id 查詢系所名稱
-    $departmentQuery = "SELECT department_name FROM Department WHERE department_id = '$departmentId'";
-    $departmentResult = mysqli_query($link, $departmentQuery);
-    $departmentName = mysqli_fetch_assoc($departmentResult)['department_name'];
-
-    // 合併資料
-    $row['school_name'] = $schoolName;
-    $row['department_name'] = $departmentName;
-    
     $competitions[] = $row;
-
-    // 釋放子查詢結果集
-    mysqli_free_result($schoolResult);
-    mysqli_free_result($departmentResult);
 }
 
 if (empty($competitions)) {
@@ -81,7 +74,7 @@ if (empty($competitions)) {
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
 
-// 釋放主要查詢結果集並關閉連接
+// 釋放結果集並關閉連接
 mysqli_free_result($result);
 mysqli_close($link);
 
