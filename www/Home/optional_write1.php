@@ -99,9 +99,10 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                                 <li class="nav-item">
                                     <a class="page-scroll active dd-menu" href="javascript:void(0)">志願序</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item active"><a
-                                                href="/~HCHJ/Home/optional_write1.php">選填志願</a></li>
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a></li>
+                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                        </li>
+                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
@@ -446,18 +447,18 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                                 alert("發生錯誤: " + error.message);
                             });
                     }
-                    </script>
+                </script>
             </section>
-                        <!-- ========================= footer end ========================= -->
-                        <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
-                <link rel="stylesheet" href="assets/css/tiny-slider.css">
-                <script src="assets/js/contact-form.js"></script>
-                <script src="assets/js/count-up.min.js"></script>
-                <script src="assets/js/isotope.min.js"></script>
-                <script src="assets/js/glightbox.min.js"></script>
-                <script src="assets/js/wow.min.js"></script>
-                <script src="assets/js/imagesloaded.min.js"></script>
-                <script src="assets/js/main.js"></script>
+            <!-- ========================= footer end ========================= -->
+            <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
+            <link rel="stylesheet" href="assets/css/tiny-slider.css">
+            <script src="assets/js/contact-form.js"></script>
+            <script src="assets/js/count-up.min.js"></script>
+            <script src="assets/js/isotope.min.js"></script>
+            <script src="assets/js/glightbox.min.js"></script>
+            <script src="assets/js/wow.min.js"></script>
+            <script src="assets/js/imagesloaded.min.js"></script>
+            <script src="assets/js/main.js"></script>
         </body>
 
 </html>

@@ -30,21 +30,21 @@ if ($data === null) {
     exit();
 }
 
-$sqldel="DELETE FROM Preferences WHERE user= $userId";
+$sqldel="DELETE FROM preferences WHERE user= $userId";
 mysqli_query($conn, $sqldel);
 // SQL 插入語句
-$sql = "INSERT INTO Preferences (user, serial_number, school_id, department_id) VALUES (?, ?, ?, ?)";
+$sql = "INSERT INTO preferences (student_user, serial_number, school_id, department_id) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 
 $success = true; // 確保初始成功狀態為 true
 $response = [];  // 確保初始回應為空
 
-foreach ($data['preferences'] as $preference) {
-    $serial_number = $preference['serial_number'];
-    $school_id = $preference['school_id']; // 修正為 school_id
-    $department_id = $preference['department_id']; // 修正為 department_id
+foreach ($data['preferences'] as $preferences) {
+    $preference_rank = $preferences['preference_rank'];
+    $Secondskill_id= $preferences['Secondskill_id']; // 修正為 school_id
+    $department_id = $preferences['department_id']; // 修正為 department_id
 
-    $stmt->bind_param("iiii", $userId, $serial_number, $school_id, $department_id);
+    $stmt->bind_param("iiii", $userId, $Secondskill_id, $school_id, $department_id);
     if (!$stmt->execute()) {
         $success = false;
         $response['message'] = $stmt->error;
