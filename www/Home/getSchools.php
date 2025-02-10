@@ -21,16 +21,16 @@ if ($conn->connect_error) {
 }
 
 
-$sql = "SELECT DISTINCT school_id, school_name FROM School_Department";
+$sql = "SELECT school_id, school_name FROM School"; //學校
+
 $result = $conn->query($sql);
 
 $schools = [];
 if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+    while($row = $result->fetch_assoc()) {
         $schools[] = $row;
     }
 }
-
-header('Content-Type: application/json');
 echo json_encode($schools);
+$conn->close();
 ?>

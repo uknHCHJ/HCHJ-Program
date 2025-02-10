@@ -3,8 +3,10 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['user'])) {
-    echo "未登入";
-    header("Location:/~HCHJ/index.html");
+    echo("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
     exit();
 }
 
@@ -38,27 +40,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
 <body>
 
-    <!-- ========================= preloader start ========================= -->
-    <div class="preloader">
-        <div class="loader">
-            <div class="ytp-spinner">
-                <div class="ytp-spinner-container">
-                    <div class="ytp-spinner-rotator">
-                        <div class="ytp-spinner-left">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                        <div class="ytp-spinner-right">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- preloader end -->
-
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+   <!-- ========================= header start ========================= -->
+   <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -73,46 +56,51 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <span class="toggler-icon"></span>
                             <span class="toggler-icon"></span>
                         </button>
+
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                    <a class="page-scroll active dd-menu" href="javascript:void(0)">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="../changepassword-01(修改密碼).html">修改密碼</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/contact-01(個人資料).html">查看個人資料</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll active dd-menu" href="javascript:void(0)">備審資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="\Personal page\html\index.html">導師留言板</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="\Personal page\html\index.html">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="\Personal page\html\index.html">競賽紀錄</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll active dd-menu" href="javascript:void(0)">志願序</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                        </li>
-                                        <li class="nav-item active"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
-                                <li class="nav-item">
-                                <li class="nav-item active"><a href="../changepassword-01.html">修改密碼</a></li>
-                            </ul>
+                               
+                            
+                            <li class="nav-item">
+                            <a class="page-scroll" href="index-01.php" >首頁</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
+                                    </li>
 
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                            </li>
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -132,8 +120,11 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     <div class="banner-content">
                         <h2 class="text-white">二技志願選填</h2>
                         <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-
+                        <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">二技志願選填</li>
+                                </ol>
                             </nav>
                         </div>
                     </div>
@@ -307,158 +298,148 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
             <!-- ========================= form section start ========================= -->
             <section class="form-section pt-75 pb-75">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6">
-        <div class="container">
-          <h1>選擇你的志願</h1>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <h1>選擇你的志願</h1>
 
-          <label for="schoolSelect">選擇學校:</label>
-          <select id="schoolSelect" onchange="fetchDepartments()">
-            <option value="">--請選擇學校--</option>
-          </select>
+                                <label for="schoolSelect">選擇學校:</label>
+                                <select id="schoolSelect" onchange="fetchDepartments()">
+                                    <option value="">--請選擇學校--</option>
+                                </select>
 
-          <label for="departmentSelect">選擇科系:</label>
-          <select id="departmentSelect">
-            <option value="">--請選擇科系--</option>
-          </select>
+                                <label for="departmentSelect">選擇科系:</label>
+                                <select id="departmentSelect">
+                                    <option value="">--請選擇科系--</option>
+                                </select>
 
-          <button onclick="add()">添加到清單</button>
+                                <!-- 新增兩個按鈕 -->
+                                <button onclick="add()">添加到清單</button>
 
-          <h2>你的志願序(最多5個)</h2>
-          <ul id="preferenceList"></ul>
-          <button onclick="submit()">送出志願</button>
-        </div>
-      </div>
-    </div>
-  </div>
+                                <h2>你的志願序(最多5個)</h2>
+                                <ul id="preferenceList"></ul>
+                                <button onclick="submit()">送出志願</button>
 
-  <script>
-    const maxPreferences = 5;
-    let preferences = [];
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchSchools();
-    });
+                <script>
+                    const maxPreferences = 5;
+                    let preferences = [];
 
-    function fetchSchools() {
-      fetch('getSchools.php')
-        .then(response => response.json())
-        .then(data => {
-          const schoolSelect = document.getElementById('schoolSelect');
-          data.forEach(school => {
-            const option = document.createElement('option');
-            option.value = school.school_id;
-            option.textContent = school.school_name;
-            schoolSelect.appendChild(option);
-          });
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          alert("發生錯誤，無法獲取學校資料");
-        });
-    }
+                    document.addEventListener('DOMContentLoaded', () => {
+                        fetchSchools();
+                    });
 
-    function fetchDepartments() {
-      const schoolId = document.getElementById('schoolSelect').value;
-      if (!schoolId) return;
+                    function fetchSchools() {
+                        fetch('getSchools.php')
+                            .then(response => response.json())
+                            .then(data => {
+                                const schoolSelect = document.getElementById('schoolSelect');
+                                data.forEach(school => {
+                                    const option = document.createElement('option');
+                                    option.value = school.school_id;
+                                    option.textContent = school.school_name;
+                                    schoolSelect.appendChild(option);
+                                });
+                            });
+                    }
 
-      fetch(`getDepartments.php?school_id=${schoolId}`)
-        .then(response => response.json())
-        .then(data => {
-          const departmentSelect = document.getElementById('departmentSelect');
-          departmentSelect.innerHTML = '<option value="">--請選擇科系--</option>';
-          data.forEach(dept => {
-            const option = document.createElement('option');
-            option.value = dept.department_id;
-            option.textContent = dept.department_name;
-            departmentSelect.appendChild(option);
-          });
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          alert("發生錯誤，無法獲取科系資料");
-        });
-    }
+                    function fetchDepartments() {
+                        const schoolId = document.getElementById('schoolSelect').value;
+                        if (!schoolId) return;
 
-    function add() {
-      const schoolSelect = document.getElementById('schoolSelect');
-      const departmentSelect = document.getElementById('departmentSelect');
+                        fetch(`getDepartments.php?school_id=${schoolId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const departmentSelect = document.getElementById('departmentSelect');
+                                departmentSelect.innerHTML = '<option value="">--請選擇科系--</option>';
+                                data.forEach(dept => {
+                                    const option = document.createElement('option');
+                                    option.value = dept.department_id;
+                                    option.textContent = dept.department_name;
+                                    departmentSelect.appendChild(option);
+                                });
+                            });
+                    }
 
-      if (!schoolSelect.value || !departmentSelect.value) {
-        alert('請先選擇學校和科系');
-        return;
-      }
+                    function add() {
+                        const schoolSelect = document.getElementById('schoolSelect');
+                        const departmentSelect = document.getElementById('departmentSelect');
 
-      // 使用 school_id 與 department_id 來檢查是否重複選擇
-      if (preferences.some(pref => pref.school_id === schoolSelect.value && pref.department_id === departmentSelect.value)) {
-        alert('此志願已經選擇過，請選擇其他的志願');
-        return;
-      }
+                        // 確保選擇了學校和科系
+                        if (!schoolSelect.value || !departmentSelect.value) {
+                            alert('請先選擇學校和科系');
+                            return;
+                        }
 
-      if (preferences.length >= maxPreferences) {
-        alert('最多只能選擇5個志願');
-        return;
-      }
+                        const preference = `${schoolSelect.options[schoolSelect.selectedIndex].text} - ${departmentSelect.options[departmentSelect.selectedIndex].text}`;
 
-      // 取得學校與科系的顯示文字
-      const schoolText = schoolSelect.options[schoolSelect.selectedIndex].text;
-      const departmentText = departmentSelect.options[departmentSelect.selectedIndex].text;
-      const preferenceText = `${schoolText} - ${departmentText}`;
+                        // 檢查志願是否已經被選過
+                        if (preferences.some(p => p.preference === preference)) {
+                            alert('此志願已經選擇過，請選擇其他的志願');
+                            return;
+                        }
 
-      const order = preferences.length + 1;
-      preferences.push({
-        order: order,
-        school_id: schoolSelect.value,
-        department_id: departmentSelect.value,
-        text: preferenceText  // 儲存顯示文字（若需要顯示用）
-      });
+                        if (preferences.length >= maxPreferences) {
+                            alert('最多只能選擇5個志願');
+                            return;
+                        }
 
-      // 更新清單顯示
-      const preferenceList = document.getElementById('preferenceList');
-      const li = document.createElement('li');
-      li.textContent = `${order}. ${preferenceText}`;
-      preferenceList.appendChild(li);
-    }
+                        // 添加序號和選擇的志願資訊
+                        const order = preferences.length + 1;
+                        preferences.push({
+                            order: order,
+                            schoolId: schoolSelect.value,
+                            departmentId: departmentSelect.value,
+                            preference: preference
+                        });
 
-    function submit() {
-  if (preferences.length === 0) {
-    alert("請先添加至少一個志願");
-    return;
-  }
+                        // 顯示志願清單並添加序號
+                        const preferenceList = document.getElementById('preferenceList');
+                        const li = document.createElement('li');
+                        li.textContent = `${order}. ${preference}`;
+                        preferenceList.appendChild(li);
+                    }
 
-  fetch("addPreference.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      preferences: preferences.map((pref, index) => ({
-        Secondskill_id: pref.school_id,  // 學校 ID
-        department_id: pref.department_id,  // 科系 ID
-        serial_number: index + 1  // 志願排名
-      })),
-    }),
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert("志願序送出成功");
-      window.location.href = 'optional_show1.php';
-    } else {
-      alert("儲存失敗: " + data.message);
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    alert("發生錯誤: " + error.message);
-  });
-}
+                    function submit() {
+                        if (preferences.length === 0) {
+                            alert("請先添加至少一個志願");
+                            return;
+                        }
 
-  </script>
-</section>
-
-
+                        fetch("addPreference.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                preferences: preferences.map((pref, index) => ({
+                                    serial_number: index + 1,
+                                    school_id: pref.schoolId,
+                                    department_id: pref.departmentId
+                                })),
+                            }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("志願序送出成功");
+                                    window.location.href = 'optional_show1.php';
+                                } else {
+                                    alert("儲存失敗: " + data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                                alert("發生錯誤: " + error.message);
+                            });
+                    }
+                </script>
+            </section>
             <!-- ========================= footer end ========================= -->
             <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
             <link rel="stylesheet" href="assets/css/tiny-slider.css">
@@ -513,7 +494,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
         <div class="row">
             <div class="col-xl-3 col-lg-4 col-md-6">
                 <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                    <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                    <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                     <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                 </div>
             </div>
