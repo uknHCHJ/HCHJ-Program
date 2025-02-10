@@ -34,7 +34,7 @@ $selectedClass = trim($_GET['class']); // 去除多餘的空格
 $selectedClass = mysqli_real_escape_string($link, $selectedClass);
 
 // 準備查詢語句，查詢特定 class 的資料
-$query = "SELECT class, name, user FROM user WHERE class = '$selectedClass' AND grade = '5' AND Permissions= '1,9'";
+$query = "SELECT category FROM portfolio WHERE student_id = '$selectedClass'";
 $result = mysqli_query($link, $query);
 
 // 檢查查詢是否成功

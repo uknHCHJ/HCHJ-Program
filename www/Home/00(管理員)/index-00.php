@@ -102,6 +102,9 @@ $userId= $userData['user'];
                                         <a href="Access-Control1.php">權限管理</a>                                
                                     </li>
                                     <li class="nav-item">
+                                        <a href="pay1.php">繳交紀錄</a>                                
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
                                     </li>
                                     <li class="nav-item">
@@ -185,7 +188,6 @@ $userId= $userData['user'];
         <!-- ========================= client-logo-section end ========================= -->
 
 
-
         <!-- ========================= footer start ========================= -->
         <footer class="footer pt-100">
             <div class="container">
@@ -234,6 +236,7 @@ $userId= $userData['user'];
         </footer>
         <!-- ========================= footer end ========================= -->
 
+        
         <!-- ========================= scroll-top ========================= -->
         <a href="#" class="scroll-top">
             <i class="lni lni-arrow-up"></i>

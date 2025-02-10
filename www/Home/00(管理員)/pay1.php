@@ -154,7 +154,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                 <div class="section-title text-center mb-55">
-                    <span class="wow fadeInDown" data-wow-delay=".2s">班級名單</span>
+                    <span class="wow fadeInDown" data-wow-delay=".2s">繳交名單</span>
                 </div>
                 <select id="table-select" class="form-select mb-4" onchange="fetchStudentData()">
                     <option value="">請選擇...</option>
@@ -262,7 +262,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
                     <th>班級</th>
                     <th>學號</th>
                     <th>姓名</th>
-                    <th>查看志願序</th>
+                    <th>查看繳交狀況</th>
                 </tr>
             </thead>
             <tbody>
@@ -272,17 +272,8 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
     </div>
 
 <script>
-    function fetchStudentData() {
-  // 取得下拉式選單選取的值 (例如：5a 或 5b)
-  var selectedClass = document.getElementById("table-select").value;
- 
-  // 檢查是否有選取班級
-  if (!selectedClass) {
-    return;
-  }
-
   // 建立 AJAX 請求，向後端 `service-1.php` 獲取資料
-  fetch('order2.php?class=' + selectedClass)
+  fetch('pay2.php?student_id=' + selectedClass)
     .then(function(response) {
       if (!response.ok) {
         throw new Error('無法取得資料：' + response.statusText);
@@ -294,7 +285,6 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
       // 更新表格內容 (呼叫另一個函式處理資料更新)
       updateStudentTable(data);
     })
-}
 
 
 function updateStudentTable(data) {
@@ -307,14 +297,13 @@ function updateStudentTable(data) {
   // 遍歷後端回傳的資料，將資料填入表格
   data.forEach(function(item) {
     var row = tbody.insertRow();
-    row.insertCell(0).textContent = item.class +"班";
-    row.insertCell(1).textContent = item.user;
-    row.insertCell(2).textContent = item.name;
+    row.insertCell(0).textContent = item.user;
+    row.insertCell(1).textContent = item.name;
 
     // 新增查看歷程按鈕
     var cell = row.insertCell(3);
     var button = document.createElement('button');
-    button.textContent = '查看志願序';
+    button.textContent = '查看繳交狀況';
     button.classList.add('btn', 'btn-primary');
 
     // 設定按鈕點擊事件，跳轉到查看學生歷程的頁面
