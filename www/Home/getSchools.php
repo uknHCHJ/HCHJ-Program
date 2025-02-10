@@ -21,20 +21,16 @@ if ($conn->connect_error) {
 }
 
 
-// 查詢 Secondskill 表格中的學校名稱
-$sql = "SELECT id, name FROM Secondskill";
+$sql = "SELECT DISTINCT school_id, school_name FROM School_Department";
 $result = $conn->query($sql);
 
 $schools = [];
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $schools[] = [
-            'school_id' => $row['id'],
-            'school_name' => $row['name']
-        ];
+        $schools[] = $row;
     }
 }
 
+header('Content-Type: application/json');
 echo json_encode($schools);
-$conn->close();
 ?>
