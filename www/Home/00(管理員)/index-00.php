@@ -188,7 +188,6 @@ $userId= $userData['user'];
         <!-- ========================= client-logo-section end ========================= -->
 
 
-
         <!-- ========================= footer start ========================= -->
         <footer class="footer pt-100">
             <div class="container">
@@ -237,6 +236,7 @@ $userId= $userData['user'];
         </footer>
         <!-- ========================= footer end ========================= -->
 
+        
         <!-- ========================= scroll-top ========================= -->
         <a href="#" class="scroll-top">
             <i class="lni lni-arrow-up"></i>
