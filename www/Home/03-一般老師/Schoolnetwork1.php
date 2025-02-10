@@ -166,7 +166,7 @@ if ($conn->connect_error) {
 }
 
 // 讀取 Secondskill 表資料
-$sql = "SELECT id, name, public_private, address, phone, website, system_type FROM Secondskill";
+$sql = "SELECT id, name, public_private, address, website FROM Secondskill";
 $result = $conn->query($sql);
 
 // 存放學校資料
@@ -176,152 +176,170 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $schools[] = $row;
     }
-} else {
-    echo "No records found"; // 若資料庫沒有資料，輸出此訊息
 }
 
 // 判斷學校區域的函式
 function getRegion($address) {
-    $regions = [
-        'north' => ['臺北市', '新北市', '基隆市', '桃園市', '新竹市', '新竹縣', '宜蘭縣'],
-        'central' => ['臺中市', '苗栗縣', '彰化縣', '南投縣', '雲林縣'],
-        'south' => ['高雄市', '臺南市', '屏東縣', '嘉義市', '嘉義縣', '澎湖縣'],
-        'east' => ['花蓮縣', '臺東縣', '金門縣', '連江縣'],
-        'islands' => ['澎湖縣', '金門縣', '連江縣'],
-    ];
+    $north = ['臺北市', '新北市', '基隆市', '桃園市', '新竹市', '新竹縣', '宜蘭縣'];
+    $central = ['臺中市', '苗栗縣', '彰化縣', '南投縣', '雲林縣'];
+    $south = ['高雄市', '臺南市', '屏東縣', '嘉義市', '嘉義縣', '澎湖縣'];
+    $east = ['花蓮縣', '臺東縣', '金門縣', '連江縣'];
 
-    foreach ($regions as $region => $cities) {
-        foreach ($cities as $city) {
-            if (strpos($address, $city) !== false) {
-                return $region;
-            }
-        }
+    foreach ($north as $region) {
+        if (strpos($address, $region) !== false) return 'north';
     }
-    return 'unknown'; // 若未匹配，則為 unknown
+    foreach ($central as $region) {
+        if (strpos($address, $region) !== false) return 'central';
+    }
+    foreach ($south as $region) {
+        if (strpos($address, $region) !== false) return 'south';
+    }
+    foreach ($east as $region) {
+        if (strpos($address, $region) !== false) return 'east';
+    }
+    return 'unknown';
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學校分類</title>
-    <link rel="stylesheet" href="styles.css"> <!-- 假設你有一個 styles.css 文件 -->
-</head>
+<!-- ========================= service-section start ========================= -->
 <body>
-<section class="portfolio-section pt-130">
-    <div id="container" class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="portfolio-btn-wrapper">
-                    <!-- 按鈕 -->
-                    <button class="portfolio-btn active" data-filter="*">全部</button>
-                    <button class="portfolio-btn" data-filter=".north">北部</button>
-                    <button class="portfolio-btn" data-filter=".central">中部</button>
-                    <button class="portfolio-btn" data-filter=".south">南部</button>
-                    <button class="portfolio-btn" data-filter=".east">東部</button>
-                    <button class="portfolio-btn" data-filter=".islands">離島</button>
-                    <div class="row grid">
-                        <?php
-                        // 顯示每筆學校資料
-                        foreach ($schools as $school) {
-                            // 判斷區域
-                            $location = getRegion($school["address"]); // 用 address 來判斷區域
+<section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
+    <h2 class="text-center" style="font-size: 3em; line-height: 1.2; color: #333;"><?= $school_name ?></h2><br>
+    
+    <script>
+    function filterSchools(region) {
+        let items = document.querySelectorAll('.grid-item');
+        items.forEach(item => {
+            if (region === '*' || item.classList.contains(region)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
 
-                            // 根據地區設置對應的 CSS 類別
-                            $location_class = strtolower($location); // 將區域轉為小寫，便於匹配
-                            
-                            // 顯示學校資訊（不顯示圖片）
-                            echo "<div class='col-lg-4 col-md-10 grid-item $location_class'>";
-                            echo "    <div class='portfolio-item-wrapper'>";
-                            echo "        <div class='portfolio-overlay'>";
-                            echo "            <div class='overlay-content'>";
-                            echo "                <h4>" . htmlspecialchars($school["name"]) . "</h4>";
-                            echo "                <p><strong>公/私立:</strong> " . htmlspecialchars($school["public_private"]) . "</p>";
-                            echo "                <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
-                            echo "                <p><strong>電話:</strong> " . htmlspecialchars($school["phone"]) . "</p>";
-                            echo "                <a href='" . htmlspecialchars($school["website"]) . "' class='theme-btn border-btn' target='_blank'>查看詳細資料</a>";
-                            echo "                <a href='Schoolnetwork2-02.php?school_id=" . htmlspecialchars($school['id']) . "' class='theme-btn border-btn' target='_blank'>二技科系</a>";
-                            echo "            </div>";
-                            echo "        </div>";
-                            echo "    </div>";
-                            echo "</div>";
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </div>
+        // 移除所有按鈕的 'active' 類別
+        document.querySelectorAll('.portfolio-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 給當前按鈕添加 'active' 類別
+        document.querySelector(`[data-filter='${region}']`).classList.add('active');
+    }
+
+    function toggleActiveButton(button) {
+        // 移除所有按鈕的 'active' 類別
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        // 給當前按鈕添加 'active' 類別
+        button.classList.add('active');
+    }
+    </script>
+
+    <h1 class="text-center" style="font-size: 2.5em; color: #2C3E50; font-weight: bold;">二技校園網</h1>
+    <div class="text-center mb-4">
+        <button type="button" class="portfolio-btn active" onclick="filterSchools('*')" data-filter="*">全部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('north')" data-filter="north">北部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('central')" data-filter="central">中部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('south')" data-filter="south">南部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('east')" data-filter="east">東部</button>
+    </div>
+
+    <!-- 使用 flexbox 來顯示資料項目 -->
+    <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+    <?php
+    // 假設 $schools 是你從資料庫中取得的學校資料
+    foreach ($schools as $school) {
+        // 依照地址判斷區域
+        $location = getRegion($school["address"]);
+        echo "<div class='grid-item $location' style='width: 30%; margin: 15px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: white; color: black;'>";
+        echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["name"]) . "</h3>";
+        echo "    <p><strong>公/私立:</strong> " . htmlspecialchars($school["public_private"]) . "</p>";
+        echo "    <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
+        echo "    <a href='" . htmlspecialchars($school["website"]) . "' class='theme-btn' target='_blank'>查看詳細資料</a>";
+        echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['id']) . "' class='theme-btn' target='_blank'>二技科系</a>";
+        echo "</div>";
+    }
+    ?>
     </div>
 </section>
-
-<!-- 加入 JavaScript -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // 監聽所有的過濾按鈕
-    const filterButtons = document.querySelectorAll('.portfolio-btn');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const filterValue = button.getAttribute('data-filter'); // 取得 data-filter 的值
-
-            // 移除所有按鈕的 'active' 類別
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // 給當前按鈕添加 'active' 類別
-            button.classList.add('active');
-            
-            // 根據選擇的區域進行過濾
-            const gridItems = document.querySelectorAll('.grid-item');
-            gridItems.forEach(item => {
-                if (filterValue === '*' || item.classList.contains(filterValue.slice(1))) {
-                    item.style.display = 'block'; // 顯示符合條件的項目
-                } else {
-                    item.style.display = 'none'; // 隱藏不符合條件的項目
-                }
-            });
-        });
-    });
-});
-</script>
 </body>
-</html>
+
+<style>
+    /* 北中南東部分類按鈕框線淡顏色 */
+    .portfolio-btn {
+        background-color: white;
+        color: black;
+        padding: 10px 20px;
+        border: 1px solid #BDC3C7; /* 淡灰色框線 */
+        border-radius: 5px;
+        font-size: 1em;
+        margin: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* 當按鈕被選中時顯示藍色背景 */
+    .portfolio-btn.active {
+        background-color: #3498DB;
+        color: white;
+    }
+
+    /* 按鈕懸停變色 */
+    .portfolio-btn:hover {
+        background-color: #3498DB;
+        color: white;
+    }
+
+   /* 查看詳細資料和二技科系按鈕樣式 */
+.theme-btn {
+    background-color: white; /* 底色為白色 */
+    color: black; /* 文字顏色為黑色 */
+    padding: 10px 20px;
+    text-decoration: none;
+    border: 1px solid #BDC3C7; /* 淡灰色邊框 */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 按鈕按下時，底色變為藍色 */
+.theme-btn:active {
+    background-color: #3498DB; /* 藍色 */
+    color: white; /* 文字顏色變為白色 */
+}
+
+/* 按鈕懸停時變色 */
+.theme-btn:hover {
+    background-color: #3498DB; /* 藍色 */
+    color: white; /* 文字顏色變為白色 */
+}
+
+/* 學校資料項目 */
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.grid-item {
+    width: 30%;
+    margin: 15px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    color: black;
+}
+
+.grid-item.north { background-color: white; }
+.grid-item.central { background-color: white; }
+.grid-item.south { background-color: white; }
+.grid-item.east { background-color: white; }
+
+
+</style>
 
 <!-- ========================= service-section end ========================= -->
-
-        <!-- ========================= client-logo-section start ========================= -->
-        <section class="client-logo-section pt-100">
-            <div class="container">
-                <div class="client-logo-wrapper">
-                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
-                        </div> 
-                        <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
         <!-- ========================= client-logo-section end ========================= -->
 
         <!-- ========================= footer start ========================= -->
