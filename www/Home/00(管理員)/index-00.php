@@ -102,6 +102,9 @@ $userId= $userData['user'];
                                         <a href="Access-Control1.php">權限管理</a>                                
                                     </li>
                                     <li class="nav-item">
+                                        <a href="pay1.php">繳交紀錄</a>                                
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
                                     </li>
                                     <li class="nav-item">
