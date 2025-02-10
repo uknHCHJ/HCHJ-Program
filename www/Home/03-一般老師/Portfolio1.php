@@ -216,6 +216,9 @@ if ($conn->connect_error) {
                 <option value="實習證明">實習證明</option>
                 <option value="相關證照">相關技術證照</option>
                 <option value="語言能力證明">語言能力證明</option>
+                <option value="專題資料">專題資料</option>
+                <option value="讀書計畫">讀書計畫</option>
+                <option value="其他資料">其他資料</option>
             </select>
         </div>
 
@@ -242,6 +245,9 @@ if ($conn->connect_error) {
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
                     <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
+                    <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
+                    <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
+                    <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
                 </div>
                 <div class="row grid">
                     <?php
@@ -276,7 +282,10 @@ if ($conn->connect_error) {
                                 "競賽證明" => "competitions",
                                 "實習證明" => "internships",
                                 "相關證照" => "licenses",
-                                "語言能力證明" => "language-skills"
+                                "語言能力證明" => "language-skills",
+                                "專題資料" => "Topics",
+                                "讀書計畫" => "reading-plan",
+                                "其他資料" => "Other-information"
                             ];
                             $category_class = $category_map[$row["category"]] ?? "unknown";
 
