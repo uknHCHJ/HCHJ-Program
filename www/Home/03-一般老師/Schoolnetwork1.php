@@ -141,90 +141,39 @@ if ($conn->connect_error) {
     die("連線失敗: " . $conn->connect_error);
 }
 
-
-// SQL 查詢語句，用來獲取學校資訊
-$sql = "SELECT school_id, school_name, location, inform, link FROM School";
+// SQL 查詢語句，用來獲取 Secondskill 資料
+$sql = "SELECT id, name, Public_Private, address, phone, website, system_type FROM Secondskill";
 $result = $conn->query($sql);
 
+// 檢查是否有結果
 if ($result && $result->num_rows > 0) {
-    // 將每筆資料放入資料陣列中
-    $schools = array();
+    // 成功抓到資料，將每筆資料放入陣列中
+    $secondskills = array();
     while ($row = $result->fetch_assoc()) {
-        $schools[] = $row;
+        $secondskills[] = $row;
     }
     $result->free();
 } else {
-    echo "<p>目前無學校資料顯示。</p>";
+    // 如果沒有資料，輸出提示
+    echo "<p>目前無科系資料顯示。</p>";
+    // 顯示資料庫查詢錯誤的資訊（如果有錯誤）
+    echo "<p>錯誤: " . $conn->error . "</p>";
 }
 
 // 關閉資料庫連線
 $conn->close();
 ?>
 
-<!-- ========================= portfolio-section start ========================= -->
-<section class="portfolio-section pt-130">
-    <div id="container" class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="portfolio-btn-wrapper">
-                    <button class="portfolio-btn active" data-filter="*">全部</button>
-                    <button class="portfolio-btn" data-filter=".north">北部</button>
-                    <button class="portfolio-btn" data-filter=".central">中部</button>
-                    <button class="portfolio-btn" data-filter=".south">南部</button>
-                    <button class="portfolio-btn" data-filter=".east">東部</button>
-                    <button class="portfolio-btn" data-filter=".islands">離島</button>
-                    <div class="row grid">
-    <?php
-    // 顯示每筆學校資料
-    foreach ($schools as $school) {
-        // 取得地區並轉成小寫進行判斷
-        $location = strtolower($school["location"]);
-        
-        // 設置地區分類
-        switch ($location) {
-            case "北部":
-                $location_class = "north";
-                break;
-            case "中部":
-                $location_class = "central";
-                break;
-            case "南部":
-                $location_class = "south";
-                break;
-            case "東部":
-                $location_class = "east";
-                break;
-            case "離島":
-                $location_class = "islands";
-                break;
-            default:
-                $location_class = "unknown"; // 可選的預設值
-                break;
-        }
+<!-- 測試輸出是否有抓取到資料 -->
+<?php
+// 顯示抓取到的資料
+if (!empty($secondskills)) {
+    echo "<pre>";
+    print_r($secondskills); // 輸出資料
+    echo "</pre>";
+}
+?>
 
-        // 顯示學校圖片及資訊
-        echo "<div class='col-lg-4 col-md-10 grid-item $location_class'>";
-        echo "    <div class='portfolio-item-wrapper'>";
-        echo "        <div class='portfolio-img'>";
-        // 動態顯示圖片的 URL，指向顯示圖片的 PHP 文件
-        echo "            <img src='dbportfolio_image2.php?id=" . $school['school_id'] . "' alt='" . htmlspecialchars($school["school_name"]) . "'>";
-        echo "        </div>";
-        echo "        <div class='portfolio-overlay'>";
-        echo "            <div class='overlay-content'>";
-        echo "                <h4>" . htmlspecialchars($school["school_name"]) . "</h4>";
-        echo "                <p>" . htmlspecialchars($school["inform"]) . "</p>";
-        echo "<a href='" . htmlspecialchars($school["link"]) . "' class='theme-btn border-btn' target='_blank'>查看詳細資料</a>";
-        echo "<a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='theme-btn border-btn' target='_blank'>二技科系</a>";
-        echo "            </div>";
-        echo "        </div>";
-        echo "    </div>";
-        echo "</div>";
-    }
-    ?>
-</div>
-        </div>
-    </div>
-</section>
     <!-- ========================= portfolio-section end ========================= -->
 
      <!-- ========================= client-logo-section start ========================= -->
