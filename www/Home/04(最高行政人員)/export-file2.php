@@ -23,17 +23,6 @@ $section = $phpWord->addSection([
     'borderTopSize'    => 12,
     'borderColor'      => '000000', // 黑色框線
 ]);
-$coverPositionStyle = [
-    'positioning'       => 'absolute',        // 絕對定位
-    'posHorizontalRel'  => 'page',            // 以頁面為水平參照
-    'posHorizontal'     => 'center',          // 水平置中
-    'posVerticalRel'    => 'page',            // 以頁面為垂直參照
-    'posVertical'       => 'center',          // 垂直置中
-];
-
-$paragraphStyle = [
-    'alignment' => Jc::CENTER,
-];
 
 // 設定封面標題 (中文預設字型：標楷體)
 $section->addText(
@@ -88,7 +77,7 @@ if (empty($options)) {
     die("未選擇任何匯出選項！");
 }
 
-// 定義查詢選項對應
+// 定義查詢選項對應（除了 'other' 之外）
 $queryMap = [
     'license'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '證照資料'",
     'competition'   => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
@@ -97,11 +86,11 @@ $queryMap = [
     'diploma'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照'",
-    'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
-    'other'         => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他證明'"
+    'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'"
+    // 'other' 選項不需進行資料庫查詢
 ];
 
-// 定義中文選項標題對應
+// 定義中文選項標題對應（除了 'other'）
 $optionNames = [
     'license'       => '證照資料',
     'competition'   => '競賽證明',
@@ -110,15 +99,20 @@ $optionNames = [
     'diploma'       => '學歷證明',
     'internship'    => '實習證明',
     'certifications'=> '相關證照',
-    'language'      => '語言能力證明',
-    'other'      => '其他證明',
+    'language'      => '語言能力證明'
 ];
 
-// 添加匯出標題 (中文預設字型：標楷體)
 $section->addText("備審資料匯出", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
-// 根據使用者選擇的選項進行資料查詢與輸出
+// 判斷是否有選取 'other' 選項，若有則稍後另外處理
+$topicsSelected = in_array('topics', $options);
+
+// 根據使用者選擇的選項進行資料查詢與輸出（排除 'other' 選項）
 foreach ($options as $option) {
+    if ($option === 'topics') {
+        // 略過 'other'，因為我們後面會新增專題資料頁面
+        continue;
+    }
     if (!isset($queryMap[$option])) {
         $section->addText("未知的選項：$option");
         continue;
@@ -143,7 +137,6 @@ foreach ($options as $option) {
 
             // 處理圖片檔案
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                // 使用中文說明（預設標楷體）
                 $section->addText("檔案名稱：$description", ['size' => 12], ['alignment' => Jc::BOTH]);
                 if (!empty($fileContent) && strlen($fileContent) > 100) {
                     try {
@@ -163,31 +156,27 @@ foreach ($options as $option) {
             else if ($ext === 'docx') {
                 if (!empty($fileContent)) {
                     try {
-                        // 建立一個臨時檔案，並將二進位資料寫入該檔案
                         $tempFilePath = tempnam(sys_get_temp_dir(), 'docx_');
                         if ($tempFilePath === false) {
                             throw new Exception("無法建立臨時檔案");
                         }
                         file_put_contents($tempFilePath, $fileContent);
-            
-                        // 使用 ZipArchive 開啟臨時檔案
+
                         $zip = new ZipArchive();
                         if ($zip->open($tempFilePath) === true) {
                             $xmlContent = $zip->getFromName('word/document.xml');
                             $zip->close();
-            
-                            // 刪除臨時檔案
+
                             unlink($tempFilePath);
-            
+
                             if ($xmlContent === false) {
                                 throw new Exception('未能讀取 document.xml 檔案');
                             }
-            
-                            // 解析 XML，抓取所有文字節點
+
                             $xml = simplexml_load_string($xmlContent);
                             $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
                             $textNodes = $xml->xpath('//w:t');
-            
+
                             $content = '';
                             foreach ($textNodes as $node) {
                                 $content .= (string)$node . "\n";
@@ -195,11 +184,10 @@ foreach ($options as $option) {
                             
                             $section->addText(
                                 $content,
-                                ['name' => 'Times New Roman', 'size' => 12], // 英文內容使用 Times New Roman
+                                ['name' => 'Times New Roman', 'size' => 12],
                                 ['alignment' => Jc::BOTH]
                             );
                         } else {
-                            // 刪除臨時檔案
                             unlink($tempFilePath);
                             throw new Exception('無法開啟 .docx 文件');
                         }
@@ -222,6 +210,17 @@ foreach ($options as $option) {
 }
 
 $conn->close();
+
+// 若使用者選取了 'other' 選項，則新增最後一頁「專題資料」頁面（不需從資料庫抓取資料）
+if ($topicsSelected) {
+    // 新增一個新的 section，開始新的頁面
+    $section = $phpWord->addSection();
+    // 加入「專題資料」標題
+    $section->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+    $section->addTextBreak(1);
+    // 可依需求加入其他說明文字
+    $section->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
+}
 
 // 設定下載標頭
 header("Content-Description: File Transfer");
