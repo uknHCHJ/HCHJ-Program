@@ -98,9 +98,9 @@ $username = $userData['name'];
                         <li class="list-group-item" data-value="internship"><input type="checkbox" name="options[]" value="internship"> 實習證明</li>
                         <li class="list-group-item" data-value="certifications"><input type="checkbox" name="options[]" value="certifications"> 相關證照</li>
                         <li class="list-group-item" data-value="language"><input type="checkbox" name="options[]" value="language"> 語言能力證明</li>
+                        <li class="list-group-item" data-value="other"><input type="checkbox" name="options[]" value="other"> 其他證明</li>
                     </ul>
                 </div>
-
                 <input type="hidden" id="sorted-options" name="sorted_options">
                 <button type="submit" class="btn btn-primary">匯出檔案(.doc)</button>
                 <button type="button" class="btn btn-secondary" onclick="window.history.back();">返回上一頁</button>
@@ -108,12 +108,6 @@ $username = $userData['name'];
         </div>
     </div>
 </section>
-
-<footer class="footer pt-100">
-    <div class="container">
-        <p class="footer-desc">©康寧大學資訊管理科製作</p>
-    </div>
-</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <script>
@@ -135,5 +129,52 @@ $username = $userData['name'];
     .list-group-item { cursor: move; }
     .sortable-ghost { opacity: 0.5; background: #f0f0f0; }
 </style>
+<!-- ========================= footer start ========================= -->
+<footer class="footer pt-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
+                            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
+                            
+                            <ul class="footer-contact"> 
+                                <h3>關於我們</h3>                                                        
+                                <p>(02)2632-1181/0986-212-566</p>                                
+                                    <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>                             
+                            </ul>
+                            <style>
+                                .footer .row {
+                                display: flex;
+                                align-items: center; /* 垂直居中 */
+                                justify-content: space-between; /* 讓兩個區塊分居左右 */
+                                }
+                                .footer-widget {                                   
+                                text-align: right; /* 讓「關於學校」內容靠右對齊 */
+                                }
+                            </style>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright-area">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="footer-social-links">
+                                <ul class="d-flex">
+                                    <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
+                                    <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- ========================= footer end ========================= -->
 </body>
 </html>

@@ -97,7 +97,8 @@ $queryMap = [
     'diploma'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照'",
-    'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'"
+    'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
+    'other'         => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他證明'"
 ];
 
 // 定義中文選項標題對應
@@ -109,7 +110,8 @@ $optionNames = [
     'diploma'       => '學歷證明',
     'internship'    => '實習證明',
     'certifications'=> '相關證照',
-    'language'      => '語言能力證明'
+    'language'      => '語言能力證明',
+    'other'      => '其他證明',
 ];
 
 // 添加匯出標題 (中文預設字型：標楷體)
