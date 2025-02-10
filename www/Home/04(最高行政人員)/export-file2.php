@@ -86,11 +86,13 @@ $queryMap = [
     'diploma'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照'",
-    'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'"
-    // 'other' 選項不需進行資料庫查詢
+    'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
+    'other'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他證明'",
+    'read'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
+    // 'topic' 選項不需進行資料庫查詢
 ];
 
-// 定義中文選項標題對應（除了 'other'）
+// 定義中文選項標題對應（除了 'topic'）
 $optionNames = [
     'license'       => '證照資料',
     'competition'   => '競賽證明',
@@ -99,18 +101,20 @@ $optionNames = [
     'diploma'       => '學歷證明',
     'internship'    => '實習證明',
     'certifications'=> '相關證照',
-    'language'      => '語言能力證明'
+    'language'      => '語言能力證明',
+    'other'      => '其他證明',
+    'read'      => '讀書計畫'
 ];
 
 $section->addText("備審資料匯出", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
-// 判斷是否有選取 'other' 選項，若有則稍後另外處理
+// 判斷是否有選取 'topic' 選項，若有則稍後另外處理
 $topicsSelected = in_array('topics', $options);
 
-// 根據使用者選擇的選項進行資料查詢與輸出（排除 'other' 選項）
+// 根據使用者選擇的選項進行資料查詢與輸出（排除 'topic' 選項）
 foreach ($options as $option) {
     if ($option === 'topics') {
-        // 略過 'other'，因為我們後面會新增專題資料頁面
+        // 略過 'topic'，因為我們後面會新增專題資料頁面
         continue;
     }
     if (!isset($queryMap[$option])) {
@@ -213,13 +217,15 @@ $conn->close();
 
 // 若使用者選取了 'other' 選項，則新增最後一頁「專題資料」頁面（不需從資料庫抓取資料）
 if ($topicsSelected) {
-    // 新增一個新的 section，開始新的頁面
-    $section = $phpWord->addSection();
-    // 加入「專題資料」標題
-    $section->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-    $section->addTextBreak(1);
-    // 可依需求加入其他說明文字
-    $section->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
+ // 新增一個新的 section，開始新的頁面
+ $section = $phpWord->addSection();
+    
+ // 加入「專題資料」標題（頁面上方顯示）
+ $section->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+ 
+ // 建立 Footer 並將指定文字放置在頁面最下方
+ $footer = $section->addFooter();
+ $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
 }
 
 // 設定下載標頭
