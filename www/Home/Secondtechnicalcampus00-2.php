@@ -3,52 +3,42 @@
 session_start();
 
 // 資料庫連線設置
-$servername = "127.0.0.1"; // 資料庫伺服器位址
-$username = "HCHJ"; // 資料庫使用者名稱
-$password = "xx435kKHq"; // 資料庫密碼
-$dbname = "HCHJ"; // 資料庫名稱
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
 // 建立資料庫連線
 $link = mysqli_connect($servername, $username, $password, $dbname);
 if (!$link) {
-    error_log("資料庫連線失敗: " . mysqli_connect_error()); // 記錄錯誤日誌
-    die("系統目前無法處理您的請求，請稍後再試。"); // 顯示錯誤訊息並終止程式執行
+    error_log("資料庫連線失敗: " . mysqli_connect_error());
+    die("系統目前無法處理您的請求，請稍後再試。");
 }
 
-// 設置資料庫的編碼為 UTF-8
 mysqli_query($link, 'SET NAMES UTF8');
 
 // 確保使用者已登入
 if (!isset($_SESSION['user'])) {
-    die("未登入，請先登入後再操作。"); // 如果未登入，則終止執行
+    die("未登入，請先登入後再操作。");
 }
 
-// 處理檔案上傳請求
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // 確認是否有檔案上傳
     if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
-        $filePath = $_FILES['file']['tmp_name']; // 取得暫存檔案路徑
-        $fileExtension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION)); // 取得檔案副檔名
+        $filePath = $_FILES['file']['tmp_name'];
+        $fileExtension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
-        // 確保上傳的檔案是 CSV 格式
         if ($fileExtension !== 'csv') {
-            echo "<script>
-                alert('請上傳 CSV 檔案！');
-                window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-              </script>";
+            echo "<script>alert('請上傳 CSV 檔案！'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
             exit;
         }
 
-        // 開啟 CSV 檔案
         if (($handle = fopen($filePath, "r")) !== FALSE) {
-            $headers = fgetcsv($handle); // 讀取 CSV 的標題行
+            $headers = fgetcsv($handle);
 
-            // 驗證標題行
             if ($headers) {
-                $headers = array_map('trim', $headers); // 去除空白
-                $headers = array_map('strtolower', $headers); // 轉小寫方便匹配
+                $headers = array_map('trim', $headers);
+                $headers = array_map('strtolower', $headers);
 
-                // 定義標題與資料庫欄位的對應關係
                 $validMapping = [
                     '代碼' => 'id',
                     '學校名稱' => 'name',
@@ -62,40 +52,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $columnMapping = [];
                 foreach ($headers as $index => $header) {
                     if (isset($validMapping[$header])) {
-                        $columnMapping[$index] = $validMapping[$header]; // 建立標題與資料庫欄位的映射關係
+                        $columnMapping[$index] = $validMapping[$header];
                     }
                 }
 
-                // 檢查是否有 system_type 欄位
                 if (empty($columnMapping) || !in_array('system_type', $columnMapping)) {
                     fclose($handle);
                     exit;
                 }
 
-                $lineNumber = 0;
-                $errorCount = 0;
+                $newEntries = [];
                 $successCount = 0;
 
-                // 逐行讀取 CSV 資料
                 while (($row = fgetcsv($handle)) !== FALSE) {
-                    $lineNumber++;
                     $data = [];
-                    $isVocational = false; // 判斷是否為技職學校
+                    $isVocational = false;
+                    $recordId = '';
 
                     foreach ($columnMapping as $index => $dbColumn) {
                         if (isset($row[$index])) {
-                            $value = mysqli_real_escape_string($link, trim($row[$index])); // 轉義特殊字元
-
-                            // 判斷體系別是否包含 "技職"
+                            $value = mysqli_real_escape_string($link, trim($row[$index]));
+                            if ($dbColumn == 'id') {
+                                $recordId = $value;
+                            }
                             if ($dbColumn == 'system_type') {
                                 if (strpos(trim($value), "[2]技職") !== false) {
                                     $isVocational = true;
-                                } else {
-                                    $isVocational = false;
                                 }
                             }
-
-                            // 限制 system_type 長度
                             if ($dbColumn == 'system_type' && strlen($value) > 5) {
                                 $value = substr($value, 0, 5);
                             }
@@ -103,58 +87,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
                     }
 
-                    // 只有當體系別為技職時執行資料庫插入
                     if ($isVocational && !empty($data)) {
                         $columns = implode(", ", array_keys($data));
                         $values = implode(", ", array_values($data));
 
-                        // 使用 INSERT INTO ... ON DUPLICATE KEY UPDATE 避免重複資料
-                        $query = "INSERT INTO Secondskill ($columns) VALUES ($values)
-                                  ON DUPLICATE KEY UPDATE " . implode(", ", array_map(function ($col) {
-                                      return "$col = VALUES($col)";
-                                  }, array_keys($data)));
+                        // 直接判斷資料是否已存在
+                        $checkQuery = "SELECT COUNT(*) as count FROM Secondskill WHERE id = '$recordId'";
+                        $result = mysqli_query($link, $checkQuery);
+                        $row = mysqli_fetch_assoc($result);
 
-                        if (!mysqli_query($link, $query)) {
-                            $errorCount++;
-                        } else {
-                            $successCount++;
+                        if ($row['count'] == 0) {
+                            $query = "INSERT INTO Secondskill ($columns) VALUES ($values)";
+                            if (mysqli_query($link, $query)) {
+                                $successCount++;
+                                $newEntries[] = trim($data['`name`'], "'");
+                            }
                         }
-                    } 
+                    }
                 }
-
                 fclose($handle);
 
-                // 結果提示
-                echo "<script>
-                alert('成功匯入 $successCount 筆技職學校資料。');
-                window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-              </script>";
-                if ($errorCount > 0) {
+                // 確保畫面即時更新
+                session_write_close();
+                flush();
+
+                if ($successCount > 0) {
+                    $schoolsList = implode(', ', $newEntries);
                     echo "<script>
-                alert('共有 $errorCount 行資料無法匯入，請檢查檔案內容格式是否正確。');
-                window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-              </script>";
+                        alert('成功匯入 $successCount 筆新資料，請新增此校園科系：$schoolsList'); 
+                        window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
+                    </script>";
+                } else {
+                    echo "<script>
+                        alert('無新資料，已更新'); 
+                        window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
+                    </script>";
                 }
+                exit;
             } else {
-                echo "<script>
-                alert('CSV 檔案格式錯誤，標題行缺失');
-                window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-              </script>";
+                echo "<script>alert('CSV 檔案格式錯誤，標題行缺失'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
             }
         } else {
-            echo "<script>
-            alert('無法開啟 CSV 檔案。');
-            window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-          </script>";
+            echo "<script>alert('無法開啟 CSV 檔案。'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
         }
     } else {
-        echo "<script>
-            alert('檔案不可為空白');
-            window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-          </script>";
+        echo "<script>alert('檔案不可為空白'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
     }
 }
 
-// 關閉資料庫連線
 mysqli_close($link);
 ?>
