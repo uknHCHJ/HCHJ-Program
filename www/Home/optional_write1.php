@@ -428,7 +428,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             body: JSON.stringify({
                                 preferences: preferences.map((pref, index) => ({
                                     serial_number: index + 1,
-                                    school_id: pref.schoolId,
+                                    school_id: pref.school_id,
                                     department_id: pref.departmentId
                                 })),
                             }),
