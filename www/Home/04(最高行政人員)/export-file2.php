@@ -79,7 +79,6 @@ if (empty($options)) {
 
 // 定義查詢選項對應（除了 'other' 之外）
 $queryMap = [
-    'license'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '證照資料'",
     'competition'   => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
     'transcript'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
     'autobiography' => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '自傳'",
@@ -94,7 +93,6 @@ $queryMap = [
 
 // 定義中文選項標題對應（除了 'topic'）
 $optionNames = [
-    'license'       => '證照資料',
     'competition'   => '競賽證明',
     'transcript'    => '成績單',
     'autobiography' => '自傳',

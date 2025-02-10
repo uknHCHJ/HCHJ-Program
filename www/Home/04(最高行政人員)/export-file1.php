@@ -90,11 +90,10 @@ $username = $userData['name'];
                 <div class="form-group mb-3">
                     <label class="checkbox-label">選擇匯出資料<label class="checkbox-label"><span style="color: red;">（可拖曳排序）</span></label>：</label>
                     <ul id="sortable-list" class="list-group">
-                        <li class="list-group-item" data-value="license"><input type="checkbox" name="options[]" value="license"> 證照資料</li>
-                        <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
                         <li class="list-group-item" data-value="transcript"><input type="checkbox" name="options[]" value="transcript"> 成績單</li>
                         <li class="list-group-item" data-value="autobiography"><input type="checkbox" name="options[]" value="autobiography"> 自傳</li>
                         <li class="list-group-item" data-value="diploma"><input type="checkbox" name="options[]" value="diploma"> 學歷證明</li>
+                        <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
                         <li class="list-group-item" data-value="internship"><input type="checkbox" name="options[]" value="internship"> 實習證明</li>
                         <li class="list-group-item" data-value="certifications"><input type="checkbox" name="options[]" value="certifications"> 相關證照</li>
                         <li class="list-group-item" data-value="language"><input type="checkbox" name="options[]" value="language"> 語言能力證明</li>
