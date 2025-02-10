@@ -273,7 +273,7 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 
 <script>
   // 建立 AJAX 請求，向後端 `service-1.php` 獲取資料
-  fetch('pay2.php?class=' + selectedClass)
+  fetch('pay2.php?student_id=' + selectedClass)
     .then(function(response) {
       if (!response.ok) {
         throw new Error('無法取得資料：' + response.statusText);
