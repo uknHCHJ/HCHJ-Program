@@ -98,7 +98,9 @@ $username = $userData['name'];
                         <li class="list-group-item" data-value="internship"><input type="checkbox" name="options[]" value="internship"> 實習證明</li>
                         <li class="list-group-item" data-value="certifications"><input type="checkbox" name="options[]" value="certifications"> 相關證照</li>
                         <li class="list-group-item" data-value="language"><input type="checkbox" name="options[]" value="language"> 語言能力證明</li>
-                        <li class="list-group-item" data-value="other"><input type="checkbox" name="options[]" value="other"> 其他證明</li>
+                        <li class="list-group-item" data-value="topics"><input type="checkbox" name="options[]" value="topics"> 專題資料</li>
+                        <li class="list-group-item" data-value="other"><input type="checkbox" name="options[]" value="other"> 其他資料</li>
+                        <li class="list-group-item" data-value="read"><input type="checkbox" name="options[]" value="read"> 讀書計畫</li>
                     </ul>
                 </div>
                 <input type="hidden" id="sorted-options" name="sorted_options">
