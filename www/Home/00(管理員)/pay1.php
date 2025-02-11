@@ -169,11 +169,13 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
     ];
     
     // 取得使用者的權限與班級
-    $userPermission = isset($userData['permission']) ? $userData['permission'] : 'student';
+    $userPermission = isset($userData['permission']) ? $userData['permission'] : 'teacher';
+    $Permission = isset($userData['Permissions']) ? $userData['Permissions'] : '2';
     $userClass = isset($userData['class']) ? $userData['class'] : '';
+
     
     // 如果使用者是管理者或老師，則顯示所有班級選項
-    if (in_array($userPermission, ['admin', 'teacher'])) {
+    if (in_array($Permissions, ['2'])) {
         foreach ($classes as $key => $className) {
             echo "<option value='{$key}'>{$className}</option>";
         }
@@ -185,7 +187,6 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
     }
     ?>
 </select>
-
             </div>
                                     
         </div>
