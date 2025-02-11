@@ -162,15 +162,15 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
     // 假設這裡 session 中已經包含了 'permission'、'grade'、'class' 等資訊
     // 定義各班級的對應關係（你可依照實際狀況做調整）
     $classes = [
-        'A' => '忠',
-        'B' => '孝',
-        'C' => '仁',
+        'A' => '五忠',
+        'B' => '五孝',
+        'C' => '五仁',
         'D' => '愛'
     ];
     
     // 取得使用者的權限與班級
-    $userPermission = isset($userData['permission']) ? $userData['permission'] : 'teacher';
-    $Permission = isset($userData['Permissions']) ? $userData['Permissions'] : '2';
+    $userPermission = isset($userData['Permissions']) ? $userData['Permissions'] : 'student';
+    $Permission = isset($userData['Permissions']) ? $userData['Permissions'] : '';
     $userClass = isset($userData['class']) ? $userData['class'] : '';
 
     
