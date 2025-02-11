@@ -176,7 +176,7 @@ if ($result_role) {
                 <tbody>
                     <?php
                     // 從資料庫取得資料
-                    $query = "SELECT student_id, file_content, upload_time FROM portfolio WHERE class='$class' AND category = '成績單'";
+                    $query = "SELECT student_id, file_content, upload_time FROM portfolio WHERE class='$class' AND grade='$grade' AND category = '成績單'";
                     $result = mysqli_query($link, $query);
                     if ($result) {
                         while ($row = mysqli_fetch_assoc($result)) {
