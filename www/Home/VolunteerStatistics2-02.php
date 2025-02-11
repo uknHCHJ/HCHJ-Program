@@ -1,58 +1,45 @@
 <?php
-// 資料庫連線
-$mysqli = new mysqli('127.0.0.1', 'HCHJ', 'xx435kKHq', 'HCHJ');
-if ($mysqli->connect_error) {
-    die("資料庫連線失敗：" . $mysqli->connect_error);
+session_start();
+$userData = $_SESSION['user'];
+$userId = $userData['user'];
+$username = $userData['name'];
+
+// 資料庫連接設定
+$servername = "127.0.0.1";
+$dbUser = "HCHJ";
+$dbPassword = "xx435kKHq";
+$dbname = "HCHJ";
+
+// 連接 MySQL 資料庫
+$link = mysqli_connect($servername, $dbUser, $dbPassword, $dbname);
+
+// 檢查連接是否成功
+if (!$link) {
+    $response[0] = "無法連接資料庫：" . mysqli_connect_error();
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
-$action = $_GET['action'] ?? '';
+// 抓取資料
+$sql = "SELECT 
+        CONCAT(school_name, ' - ', department_name) AS school_department,
+        GROUP_CONCAT(student_user SEPARATOR ', ') AS students
+    FROM preferences
+    GROUP BY school_department
+    ORDER BY school_name, department_name
+";
+$result = $conn->query($sql);
 
-if ($action === 'getSchools') {
-    // 查詢學校及其被選擇人數
-    $sql = "
-        SELECT 
-            s.school_id,
-            s.school_name,
-            COUNT(p.user) AS student_count
-        FROM 
-            Schools s
-        LEFT JOIN 
-            Preferences  N s.school_id = p.school_id
-        GROUP BY 
-            s.school_id, s.school_name
-        ORDER BY 
-            student_count DESC
-    ";
-    $result = $mysqli->query($sql);
-    $data = [];
+$data = [];
+if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $data[] = $row;
     }
-    echo json_encode($data);
-
-} elseif ($action === 'getDepartments') {
-    // 查詢指定學校內的科系及人數
-    $school_id = intval($_GET['school_id']);
-    $sql = "
-        SELECT 
-            p.department_id,
-            COUNT(p.user) AS student_count
-        FROM 
-            Preferences p
-        WHERE 
-            p.school_id = $school_id
-        GROUP BY 
-            p.department_id
-        ORDER BY 
-            student_count DESC
-    ";
-    $result = $mysqli->query($sql);
-    $data = [];
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-    }
-    echo json_encode($data);
 }
 
-$mysqli->close();
+// 回傳 JSON
+header('Content-Type: application/json');
+echo json_encode($data);
+
+$conn->close();
 ?>
