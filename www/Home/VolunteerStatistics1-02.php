@@ -177,16 +177,29 @@
 
         <script>
             // 取得資料並顯示
-            fetch('VolunteerStatistics2-02.php') // 請將此路徑替換為你的 PHP 檔案名稱
-                .then(response => response.json())
+            // 取得資料並顯示
+            fetch('VolunteerStatistics2-02.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    if (!Array.isArray(data)) {
+                        console.error('Unexpected data format:', data);
+                        const tableBody = document.getElementById('data-body');
+                        tableBody.innerHTML = `<tr><td colspan="2">No data available</td></tr>`;
+                        return;
+                    }
                     const tableBody = document.getElementById('data-body');
+                    tableBody.innerHTML = ''; // 清空表格
                     data.forEach(row => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                        <td>${row.school_department}</td>
-                        <td>${row.students}</td>
-                    `;
+                <td>${row.School_Department}</td>
+                <td>${row.students}</td>
+            `;
                         tableBody.appendChild(tr);
                     });
                 })
