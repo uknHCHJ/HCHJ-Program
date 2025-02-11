@@ -1,48 +1,20 @@
 <?php
-// 資料庫連接設定
-$servername = "127.0.0.1";
-$username   = "HCHJ";
-$password   = "xx435kKHq";
-$dbname     = "HCHJ";
+header("Content-Type: application/json; charset=UTF-8");
 
-// 建立資料庫連線
-$link = mysqli_connect($servername, $username, $password, $dbname);
-if (!$link) {
-    echo json_encode(["error" => "無法連接資料庫：" . mysqli_connect_error()], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-mysqli_query($link, "SET NAMES UTF8");
-
-// 確保前端有傳送 `class` 參數
-if (!isset($_GET['class'])) {
-    echo json_encode(["error" => "缺少 class 參數"], JSON_UNESCAPED_UNICODE);
-    exit;
+$conn = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
+if (!$conn) {
+    die(json_encode(["error" => "資料庫連接失敗"]));
 }
 
-$class = $_GET['class'];
+$sql = "SELECT id, name, file_path FROM your_table";
+$result = mysqli_query($conn, $sql);
 
-// 防止 SQL 注入
-$class = mysqli_real_escape_string($link, $class);  // ← 這裡原本錯誤
-
-// 查詢學生名單
-$sql = "SELECT class, user, grade, name FROM user WHERE class = '$class'";
-$result = mysqli_query($link, $sql);
-
-// 確保查詢成功
-if (!$result) {
-    echo json_encode(["error" => "查詢失敗：" . mysqli_error($link)], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-$students = [];
+$data = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $students[] = $row;
+    $row["status"] = !empty($row["file_path"]) ? "✔️" : "❌";
+    $data[] = $row;
 }
 
-// 關閉資料庫連線
-mysqli_close($link);
-
-// 回傳 JSON 格式的學生名單
-header('Content-Type: application/json');
-echo json_encode($students, JSON_UNESCAPED_UNICODE);
+mysqli_close($conn);
+echo json_encode($data);
 ?>

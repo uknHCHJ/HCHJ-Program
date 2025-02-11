@@ -3,14 +3,14 @@ session_start();
 /** 資料庫連線 */
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
 if ($link) {
-  mysqli_query($link, 'SET NAMES UTF8');
+    mysqli_query($link, 'SET NAMES UTF8');
 
 } else {
-  echo "資料庫連接失敗: " . mysqli_connect_error();
+    echo "資料庫連接失敗: " . mysqli_connect_error();
 }
 
 if (!isset($_SESSION['user'])) {
-    echo("<script>
+    echo ("<script>
                     alert('請先登入！！');
                     window.location.href = '/~HCHJ/index.html'; 
                   </script>");
@@ -19,8 +19,8 @@ if (!isset($_SESSION['user'])) {
 
 $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
-$userId= $userData['user'];
+$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userId = $userData['user'];
 ?>
 
 <!DOCTYPE html>
@@ -88,10 +88,10 @@ $userId= $userData['user'];
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
-                                   
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -100,7 +100,7 @@ $userId= $userData['user'];
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu"href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
                                     </ul>
@@ -130,7 +130,7 @@ $userId= $userData['user'];
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
-                                <a class="page-scroll" href="../logout.php">登出</a>
+                                    <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -148,8 +148,8 @@ $userId= $userData['user'];
                 <div class="col-xl-5 col-lg-6">
                     <div class="hero-content-wrapper">
 
-                        <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $username ?>老師
-                        </h2>
+                        <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $username ?>老師 </h2>
+
                         <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
 
                         <script>
