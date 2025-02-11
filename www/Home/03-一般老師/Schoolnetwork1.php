@@ -135,13 +135,12 @@ if (!isset($_SESSION['user'])) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">二技科系</h2>
+                            <h2 class="text-white">二技校園網介紹</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
-                                    </ol>
+                                      </ol>
                                 </nav>
                             </div>
                         </div>
@@ -201,42 +200,10 @@ function getRegion($address) {
 }
 ?>
 
-<!-- ========================= service-section start ========================= -->
 <body>
 <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
-    <h2 class="text-center" style="font-size: 3em; line-height: 1.2; color: #333;"><?= $school_name ?></h2><br>
-    
-    <script>
-    function filterSchools(region) {
-        let items = document.querySelectorAll('.grid-item');
-        items.forEach(item => {
-            if (region === '*' || item.classList.contains(region)) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
+    <input type="text" id="searchBox" onkeyup="searchSchools()" placeholder="搜尋學校..." class="form-control mb-3" style="max-width: 400px;">
 
-        // 移除所有按鈕的 'active' 類別
-        document.querySelectorAll('.portfolio-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        // 給當前按鈕添加 'active' 類別
-        document.querySelector(`[data-filter='${region}']`).classList.add('active');
-    }
-
-    function toggleActiveButton(button) {
-        // 移除所有按鈕的 'active' 類別
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        // 給當前按鈕添加 'active' 類別
-        button.classList.add('active');
-    }
-    </script>
-
-    <h1 class="text-center" style="font-size: 2.5em; color: #2C3E50; font-weight: bold;">二技校園網</h1>
     <div class="text-center mb-4">
         <button type="button" class="portfolio-btn active" onclick="filterSchools('*')" data-filter="*">全部</button>
         <button type="button" class="portfolio-btn" onclick="filterSchools('north')" data-filter="north">北部</button>
@@ -245,26 +212,60 @@ function getRegion($address) {
         <button type="button" class="portfolio-btn" onclick="filterSchools('east')" data-filter="east">東部</button>
     </div>
 
-    <!-- 使用 flexbox 來顯示資料項目 -->
-    <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+    <div class="grid-container">
+    <div class="no-results" style="display: none;">無搜尋結果</div>
     <?php
-    // 假設 $schools 是你從資料庫中取得的學校資料
     foreach ($schools as $school) {
-        // 依照地址判斷區域
         $location = getRegion($school["address"]);
-        echo "<div class='grid-item $location' style='width: 30%; margin: 15px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: white; color: black;'>";
+        echo "<div class='grid-item $location' data-name='" . htmlspecialchars($school["name"]) . "'>";
         echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["name"]) . "</h3>";
         echo "    <p><strong>公/私立:</strong> " . htmlspecialchars($school["public_private"]) . "</p>";
         echo "    <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
-        echo "    <a href='" . htmlspecialchars($school["website"]) . "' class='theme-btn' target='_blank'>查看詳細資料</a>";
-        echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['id']) . "' class='theme-btn' target='_blank'>二技科系</a>";
+        echo "    <a href='" . htmlspecialchars($school["website"]) . "'  class='btn btn-info' >查看詳細資料</a>";
+        echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['id']) . "' class='btn btn-info'>二技科系</a>";
         echo "</div>";
     }
     ?>
-    </div>
+</div>
 </section>
-</body>
 
+<script>
+function filterSchools(region) {
+    let items = document.querySelectorAll('.grid-item');
+    items.forEach(item => {
+        if (region === '*' || item.classList.contains(region)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function searchSchools() {
+    let input = document.getElementById("searchBox").value.toLowerCase();
+    let items = document.querySelectorAll(".grid-item");
+    let noResultsMessage = document.querySelector('.no-results');
+    let hasVisibleItems = false;  // 檢查是否有顯示的項目
+
+    items.forEach(item => {
+        let schoolName = item.getAttribute("data-name").toLowerCase();
+        if (schoolName.includes(input)) {
+            item.style.display = "block";
+            hasVisibleItems = true;  // 只要有項目顯示，就改為 true
+        } else {
+            item.style.display = "none";
+        }
+    });
+
+    // 如果沒有搜尋結果，顯示"無結果"訊息
+    if (!hasVisibleItems && noResultsMessage) {
+        noResultsMessage.style.display = "block";
+    } else if (noResultsMessage) {
+        noResultsMessage.style.display = "none";
+    }
+}
+</script>
+</body>
 <style>
     /* 北中南東部分類按鈕框線淡顏色 */
     .portfolio-btn {
@@ -313,11 +314,11 @@ function getRegion($address) {
     color: white; /* 文字顏色變為白色 */
 }
 
-/* 學校資料項目 */
+/* 調整 grid-item 的顯示，保持一致的大小與布局 */
 .grid-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .grid-item {
@@ -329,16 +330,26 @@ function getRegion($address) {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: white;
     color: black;
+    transition: all 0.3s ease;  /* 添加過渡效果 */
 }
 
-.grid-item.north { background-color: white; }
-.grid-item.central { background-color: white; }
-.grid-item.south { background-color: white; }
-.grid-item.east { background-color: white; }
+/* 如果只剩下一個項目，讓它居中顯示並調整大小 */
+.grid-item:only-child {
+    width: 50% !important;  /* 讓單一項目不會顯得過大 */
+    margin: 20px auto !important;
+    text-align: center;
+}
 
+/* 當搜尋結果為空時，顯示提示訊息 */
+.no-results {
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+    color: #999;
+    margin-top: 20px;
+}
 
 </style>
-
 <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section end ========================= -->
 

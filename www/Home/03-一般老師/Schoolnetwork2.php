@@ -152,27 +152,24 @@ if (!isset($_SESSION['user'])) {
         <!-- ========================= page-banner-section end ========================= -->
 
         <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
+$servername = "127.0.0.1"; // 伺服器 IP 或 localhost
+$username = "HCHJ"; // 資料庫帳號
+$password = "xx435kKHq"; // 資料庫密碼
+$dbname = "HCHJ"; // 資料庫名稱
 
-//建立連線
+// 建立連線
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-//確認連線成功或失敗
+// 確認連線成功
 if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
+    die("連線失敗: " . $conn->connect_error);
 }
-//echo "連線成功";
 
-// 接收school_id參數
-$school_id = $_GET['school_id'];
-$department_id = $_GET['department_id'];
-$ID = isset($_POST["school_id"]) ? $_POST["school_id"] : NULL;
+// 接收 school_id 參數
+$school_id = isset($_GET['school_id']) ? intval($_GET['school_id']) : 0;
 
 // 抓取對應學校的科系
-$sql = "SELECT department_id ,department_name FROM Department WHERE school_id = ?";
+$sql = "SELECT department_name FROM School_Department WHERE school_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $school_id);
 $stmt->execute();
@@ -180,13 +177,12 @@ $result = $stmt->get_result();
 
 // 準備科系資料陣列
 $departments = array();
-
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
         $departments[] = $row;
     }
-    mysqli_free_result($result);
 }
+$stmt->close();
 
 // 抓取學校名稱
 $sql_school = "SELECT school_name FROM School WHERE school_id = ?";
@@ -194,8 +190,9 @@ $stmt_school = $conn->prepare($sql_school);
 $stmt_school->bind_param("i", $school_id);
 $stmt_school->execute();
 $result_school = $stmt_school->get_result();
-$school_name = $result_school->fetch_assoc()['school_name'];
-
+$school_name = ($result_school->num_rows > 0) ? $result_school->fetch_assoc()['school_name'] : "未知學校";
+$stmt_school->close();
+$conn->close();
 ?>
       <!-- ========================= service-section start ========================= -->
       <body>
