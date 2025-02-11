@@ -33,8 +33,7 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-// 查詢學生最新志願資料（含學校與科系名稱）
-$query = "SELECT 
+$query = "SELECT DISTINCT
         p.student_user AS user, 
         p.preference_rank AS serial_number, 
         p.Secondskill_id AS school_id, 
@@ -46,10 +45,11 @@ $query = "SELECT
     LEFT JOIN Secondskill s ON p.Secondskill_id = s.id
     LEFT JOIN School_Department sd ON p.department_id = sd.department_id
     WHERE p.student_user = '$userId'
-    AND p.created_at = (
-        SELECT MAX(created_at) 
+    AND (p.student_user, p.created_at) IN (
+        SELECT student_user, MAX(created_at) 
         FROM preferences 
         WHERE student_user = '$userId'
+        GROUP BY student_user
     )
     ORDER BY p.preference_rank ASC";
 
@@ -63,13 +63,16 @@ if (!$result) {
 
 $competitions = array();
 while ($row = mysqli_fetch_assoc($result)) {
-    $competitions[] = $row;
+    $key = $row['serial_number'] . '-' . $row['school_id'] . '-' . $row['department_id'];
+    if (!isset($competitions[$key])) {
+        $competitions[$key] = $row;
+    }
 }
 
-if (empty($competitions)) {
+$response = array_values($competitions); // 去重後的資料
+
+if (empty($response)) {
     $response[0] = "查無資料";
-} else {
-    $response = $competitions;
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
