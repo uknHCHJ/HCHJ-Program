@@ -86,7 +86,7 @@ $queryMap = [
     'internship'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照'",
     'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
-    'other'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他證明'",
+    'other'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
     'read'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
     // 'topic' 選項不需進行資料庫查詢
 ];
@@ -100,7 +100,7 @@ $optionNames = [
     'internship'    => '實習證明',
     'certifications'=> '相關證照',
     'language'      => '語言能力證明',
-    'other'      => '其他證明',
+    'other'      => '其他資料',
     'read'      => '讀書計畫'
 ];
 

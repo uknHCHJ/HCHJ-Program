@@ -24,6 +24,30 @@ $username = $userData['name'];
 $userId   = $userData['user'];
 $grade    = $userData['grade'];
 $class    = $userData['class'];
+
+// 檢查使用者是否為導師
+$query_role = "SELECT Permissions FROM user WHERE user = '$userId'";
+$result_role = mysqli_query($link, $query_role);
+
+if ($result_role) {
+    $row_role = mysqli_fetch_assoc($result_role);
+    $user_role = $row_role['Permissions'];
+
+    // 轉換字串為陣列
+    $permissionsArray = explode(',', $user_role);
+
+    // 檢查是否包含 '2'
+    if (!in_array('2', $permissionsArray)) {
+        echo "<script>
+                alert('您沒有權限查看此頁面');
+                window.location.href = 'index-00.php';
+              </script>";
+        exit();
+    }
+} else {
+    echo "權限查詢失敗：" . mysqli_error($link);
+    exit();
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -145,35 +169,36 @@ $class    = $userData['class'];
                 <thead>
                     <tr>
                         <th>學號</th>
-                        <th>上傳時間</th>
-                        <th class='text-center'>狀態</th>
+                        <th>最後上傳時間</th>
+                        <th class='text-center'>是否上傳</th>
+                        <th class='text-center'>上傳筆數</th>                  
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    // 從資料庫取得資料
-                    $query = "SELECT student_id, file_content, upload_time FROM portfolio WHERE class='$class' AND category = '成績單'";
-                    $result = mysqli_query($link, $query);
-                    if ($result) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            // 後端判斷：如果 categry 為空，則認定為「未上傳」，否則為「已上傳」
-                            if (empty($row['file_content'])) {
-                                $status = "❌";
-                            } else {
-                                $status = "✔️";
-                            }
-                            echo "<tr>
-                            <td>{$row['student_id']}</td>
-                            <td>{$row['upload_time']}</td>
-                            <td class='text-center'>$status</td>
-                          </tr>";
-                    
-                        }
-                    } else {
-                        echo "<tr><td colspan='3'>查詢失敗：" . mysqli_error($link) . "</td></tr>";
-                    }
-                    ?>
-                </tbody>
+    <?php
+    $query = "SELECT student_id, MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
+              FROM portfolio 
+              WHERE class='$class' AND grade='$grade' AND category = '成績單'
+              GROUP BY student_id";
+
+    $result = mysqli_query($link, $query);
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $status = ($row['upload_count'] > 0) ? "✔️" : "❌";
+            $download_link = ($row['upload_count'] > 0) ? "<a href='transcript-download.php?id={$row['student_id']}'>📂 下載 ZIP</a>" : "❌";;
+
+            echo "<tr>
+                    <td>{$row['student_id']} $download_link</td>
+                    <td>{$row['latest_upload']}</td>
+                    <td class='text-center'>$status</td>
+                    <td class='text-center'>{$row['upload_count']}</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='4'>查詢失敗：" . mysqli_error($link) . "</td></tr>";
+    }
+    ?>
+</tbody>
             </table>
             <div class="text-center mt-3">
                 <button class="btn btn-primary" onclick="history.back()">返回上一頁</button>

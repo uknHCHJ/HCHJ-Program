@@ -1,98 +1,98 @@
 <?php
-// 啟動 Session (只需一次)
 session_start();
+$user_id = $_SESSION['user_id'] ?? null; // 確保有使用者 ID
 
-// ------------------------------
-// 取得班級資訊
-// ------------------------------
-// 優先從 POST 取得班級資料，如果沒有則嘗試從 GET 取得
-$grade = '';
-$class = '';
-if (isset($_POST['grade']) && isset($_POST['class'])) {
-    $grade = $_POST['grade'];
-    $class = $_POST['class'];
-} elseif (isset($_GET['grade']) && isset($_GET['class'])) {
-    $grade = $_GET['grade'];
-    $class = $_GET['class'];
-} else {
-    // 如果都沒有提供班級資料，顯示錯誤訊息並終止程式
-    echo "<p>班級資訊未提供，請重新嘗試。</p>";
-    exit();
+// 連接資料庫
+$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
+if (!$link) {
+    die("資料庫連接失敗: " . mysqli_connect_error());
 }
+
+$class_list = [];
+
+if ($user_id) {
+  $stmt = mysqli_prepare($link, "SELECT grade, class FROM user_classes WHERE user_id = ?");
+  mysqli_stmt_bind_param($stmt, "s", $user_id);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+
+  while ($row = mysqli_fetch_assoc($result)) {
+      $class_list[] = $row['grade'] . $row['class'];
+  }
+  mysqli_stmt_close($stmt);
+}
+
+
+// 關閉資料庫連線
+mysqli_close($link);
 ?>
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-
-  <style>
-    /* 整個按鈕容器的樣式 */
-    .button-container {
-      margin: 20px;
-      text-align: center;
-    }
-    /* 共用的按鈕樣式 */
-    .action-button {
-      padding: 10px 20px;             /* 按鈕內邊距 */
-      font-size: 16px;                /* 文字大小 */
-      margin: 10px;                   /* 外邊距 */
-      cursor: pointer;                /* 滑鼠指標變手形 */
-      border: none;                   /* 無邊框 */
-      border-radius: 5px;             /* 圓角效果 */
-      color: #ffffff;                 /* 文字顏色為白色 */
-      transition: background-color 0.3s ease; /* 平滑變色效果 */
-    }
-    /* 查看備審按鈕的專屬樣式：綠色系 */
-    .review-button {
-      background-color: #28a745;      /* 基本綠色 */
-    }
-    .review-button:hover {
-      background-color: #218838;      /* 滑鼠懸停時變深 */
-    }
-    /* 查看志願序按鈕的專屬樣式：藍色系 */
-    .order-button {
-      background-color: #007bff;      /* 基本藍色 */
-    }
-    .order-button:hover {
-      background-color: #0069d9;      /* 滑鼠懸停時變深 */
-    }
-    /* 標題樣式 */
-    h2 {
-      text-align: center;
-      margin-top: 30px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班級選擇</title>
+    <style>
+        .class-buttons { display: flex; gap: 10px; }
+        .class-buttons button { background-color: green; color: white; padding: 10px; border: none; cursor: pointer; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
- 
 
-  <!-- 顯示【查看備審】與【查看志願序】兩個按鈕 -->
-  <div class="button-container">
-    <!-- 查看備審按鈕 -->
-    <button id="reviewButton" class="action-button review-button">查看備審</button>
-    <!-- 查看志願序按鈕 -->
-    <button id="orderButton" class="action-button order-button">查看志願序</button>
-  </div>
+    <h2>帶班班級名單</h2>
 
-  <script>
-    // 等待文件載入完成後再執行
-    document.addEventListener("DOMContentLoaded", function() {
-      // 將 PHP 傳入的班級資訊傳給 JavaScript，使用 encodeURIComponent 處理特殊字元
-      var grade = "<?php echo urlencode($grade); ?>";
-      var classValue = "<?php echo urlencode($class); ?>";
+    <!-- 班級選擇按鈕 -->
+    <div class="class-buttons">
+        <?php foreach ($class_list as $class): ?>
+            <button id="btn-<?php echo $class; ?>" onclick="showFunctions('<?php echo $class; ?>')"><?php echo $class; ?></button>
+        <?php endforeach; ?>
+    </div>
 
-      // 當使用者點擊【查看備審】按鈕時，跳轉到 review_class.php
-      document.getElementById("reviewButton").addEventListener("click", function() {
-        // 跳轉並傳送班級資訊作為 GET 參數
-        window.location.href = "index-02.php?grade=" + grade + "&class=" + classValue;
-      });
+    <!-- 功能按鈕區 -->
+    <div id="functions-container">
+        <?php foreach ($class_list as $class): ?>
+            <div id="functions-<?php echo $class; ?>" class="hidden">
+                <h3><?php echo $class; ?> 功能選擇</h3>
+                <form action="index-02.php" method="POST">
+                    <input type="hidden" name="grade" value="<?php echo substr($class, 0, -1); ?>">
+                    <input type="hidden" name="class" value="<?php echo substr($class, -1); ?>">
+                    <button type="submit">查看備審</button>
+                </form>
+                <form action="viewapplicationorder-02.php" method="POST">
+                    <input type="hidden" name="grade" value="<?php echo substr($class, 0, -1); ?>">
+                    <input type="hidden" name="class" value="<?php echo substr($class, -1); ?>">
+                    <button type="submit">查看志願</button>
+                </form>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
-      // 當使用者點擊【查看志願序】按鈕時，跳轉到 order_class.php
-      document.getElementById("orderButton").addEventListener("click", function() {
-        // 跳轉並傳送班級資訊作為 GET 參數
-        window.location.href = "order_class.php?grade=" + grade + "&class=" + classValue;
-      });
-    });
-  </script>
+    <script>
+        function showFunctions(selectedClass) {
+            // 如果使用者只有一個班級，不隱藏其他按鈕
+            const classButtons = document.querySelectorAll(".class-buttons button");
+            if (classButtons.length > 1) {
+                // 隱藏所有功能區塊
+                document.querySelectorAll("[id^='functions-']").forEach(div => {
+                    div.classList.add("hidden");
+                });
+
+                // 顯示選擇的班級對應的功能按鈕
+                document.getElementById("functions-" + selectedClass).classList.remove("hidden");
+            }
+        }
+
+        // 頁面加載後自動檢查是否有多個班級
+        window.onload = function() {
+            const classButtons = document.querySelectorAll(".class-buttons button");
+            if (classButtons.length === 1) {
+                // 只有一個班級時，直接顯示該班級的功能按鈕
+                showFunctions(classButtons[0].innerText);
+            }
+        };
+    </script>
+
 </body>
 </html>
