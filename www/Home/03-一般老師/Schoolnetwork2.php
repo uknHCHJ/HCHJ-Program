@@ -184,13 +184,13 @@ if ($result->num_rows > 0) {
 }
 $stmt->close();
 
-// 抓取學校名稱
-$sql_school = "SELECT school_name FROM School WHERE school_id = ?";
+// 抓取學校名稱 (改為從 Secondskill 表查詢)
+$sql_school = "SELECT name FROM Secondskill WHERE id = ?";
 $stmt_school = $conn->prepare($sql_school);
-$stmt_school->bind_param("i", $school_id);
+$stmt_school->bind_param("s", $school_id);
 $stmt_school->execute();
 $result_school = $stmt_school->get_result();
-$school_name = ($result_school->num_rows > 0) ? $result_school->fetch_assoc()['school_name'] : "未知學校";
+$school_name = ($result_school->num_rows > 0) ? $result_school->fetch_assoc()['name'] : "未知學校";
 $stmt_school->close();
 $conn->close();
 ?>
