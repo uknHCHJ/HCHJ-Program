@@ -175,6 +175,9 @@ $class    = $userData['class'];
                     ?>
                 </tbody>
             </table>
+            <div class="text-center mt-3">
+                <button class="btn btn-primary" onclick="history.back()">返回上一頁</button>
+            </div>
         </section>
 
         <!-- client-logo-section start -->
