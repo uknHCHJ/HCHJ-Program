@@ -103,8 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $columns = implode(", ", array_keys($data));
                         $values = implode(", ", array_values($data));
 
+                        // 取得學校名稱
+                        $schoolName = trim($data['`name`'], "'");
+
                         // 查詢該學校是否已存在
-                        $checkQuery = "SELECT COUNT(*) as count FROM Secondskill WHERE name = '$recordId'";
+                        $checkQuery = "SELECT COUNT(*) as count FROM Secondskill WHERE name = '$schoolName'";
                         $result = mysqli_query($link, $checkQuery);
                         $row = mysqli_fetch_assoc($result);
 
@@ -113,10 +116,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $query = "INSERT INTO Secondskill ($columns) VALUES ($values)";
                             if (mysqli_query($link, $query)) {
                                 $successCount++;
-                                $newEntries[] = trim($data['`name`'], "'");
+                                $newEntries[] = $schoolName;
                             }
                         }
                     }
+
                 }
                 fclose($handle);
 
