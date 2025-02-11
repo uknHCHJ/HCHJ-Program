@@ -296,27 +296,29 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 
 <script>
     function fetchStudentData() {
-  // 取得下拉式選單選取的值 (例如：5a 或 5b)
-  var selectedClass = document.getElementById("table-select").value;
- 
-  // 檢查是否有選取班級
-  if (!selectedClass) {
-    return;
-  }
+    var selectedClass = document.getElementById("table-select").value;
 
-  // 建立 AJAX 請求，向後端 `service-1.php` 獲取資料
-  fetch('pay2.php?class=' + selectedClass)
-    .then(function(response) {
-      if (!response.ok) {
-        throw new Error('無法取得資料：' + response.statusText);
-      }
-      return response.json(); // 確認回傳 JSON 格式的資料
-    })
-    .then(function(data) {
-      console.log(data);
-      // 更新表格內容 (呼叫另一個函式處理資料更新)
-      updateStudentTable(data);
-    })
+    if (!selectedClass) {
+        return;
+    }
+
+    // 正確拼接 URL 參數
+    var url = 'pay2.php?class=' + encodeURIComponent(selectedClass);
+
+    fetch(url)
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('無法取得資料：' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data);
+            updateStudentTable(data);
+        })
+        .catch(function(error) {
+            console.error("發生錯誤:", error);
+        });
 }
 
 

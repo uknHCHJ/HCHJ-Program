@@ -13,46 +13,36 @@ if (!$link) {
 }
 mysqli_query($link, "SET NAMES UTF8");
 
-// 設定回應內容為 JSON
-header('Content-Type: application/json');
-
-// 檢查是否有傳遞有效的 class 參數
-if (!isset($_GET['class']) || empty(trim($_GET['class']))) {
-    echo json_encode(["error" => "請提供有效的 class 參數"], JSON_UNESCAPED_UNICODE);
+// 確保前端有傳送 `class` 參數
+if (!isset($_GET['class'])) {
+    echo json_encode(["error" => "缺少 class 參數"], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-$selectedClass = trim($_GET['class']);
-$selectedClass = mysqli_real_escape_string($link, $selectedClass);
+$class = $_GET['class'];
 
-/*
-  假設資料庫中有兩個資料表：
-  1. students：存放學生資料，欄位包含 student_id（學號）、name（姓名）、class（班級）；
-  2. portfolio：存放學生繳交資料，至少有 student_id 欄位。
-  若學生在 portfolio 有紀錄，則視為已繳交。
-*/
+// 防止 SQL 注入
+$class = mysqli_real_escape_string($link, $class);  // ← 這裡原本錯誤
 
-// 查詢指定班級的所有學生，並利用 LEFT JOIN 判斷是否有繳交資料
-$query = "SELECT s.student_id, s.name,
-           CASE WHEN p.student_id IS NOT NULL THEN '已繳交' ELSE '未繳交' END AS submission_status
-          FROM students s
-          LEFT JOIN portfolio p ON s.student_id = p.student_id
-          WHERE s.class = '$selectedClass'";
+// 查詢學生名單
+$sql = "SELECT class, user, grade, name FROM user WHERE class = '$class'";
+$result = mysqli_query($link, $sql);
 
-// 執行查詢
-$result = mysqli_query($link, $query);
+// 確保查詢成功
 if (!$result) {
     echo json_encode(["error" => "查詢失敗：" . mysqli_error($link)], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-$students = array();
+$students = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $students[] = $row;
 }
 
-echo json_encode($students, JSON_UNESCAPED_UNICODE);
-
-mysqli_free_result($result);
+// 關閉資料庫連線
 mysqli_close($link);
+
+// 回傳 JSON 格式的學生名單
+header('Content-Type: application/json');
+echo json_encode($students, JSON_UNESCAPED_UNICODE);
 ?>
