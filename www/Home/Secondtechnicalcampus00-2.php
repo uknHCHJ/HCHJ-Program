@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $values = implode(", ", array_values($data));
 
                         // 查詢該學校是否已存在
-                        $checkQuery = "SELECT COUNT(*) as count FROM Secondskill WHERE id = '$recordId'";
+                        $checkQuery = "SELECT COUNT(*) as count FROM Secondskill WHERE name = '$recordId'";
                         $result = mysqli_query($link, $checkQuery);
                         $row = mysqli_fetch_assoc($result);
 
