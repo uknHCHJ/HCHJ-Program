@@ -24,6 +24,30 @@ $username = $userData['name'];
 $userId   = $userData['user'];
 $grade    = $userData['grade'];
 $class    = $userData['class'];
+
+// 檢查使用者是否為導師
+$query_role = "SELECT Permissions FROM user WHERE user = '$userId'";
+$result_role = mysqli_query($link, $query_role);
+
+if ($result_role) {
+    $row_role = mysqli_fetch_assoc($result_role);
+    $user_role = $row_role['Permissions'];
+
+    // 轉換字串為陣列
+    $permissionsArray = explode(',', $user_role);
+
+    // 檢查是否包含 '2'
+    if (!in_array('2', $permissionsArray)) {
+        echo "<script>
+                alert('您沒有權限查看此頁面');
+                window.location.href = 'index-00.php';
+              </script>";
+        exit();
+    }
+} else {
+    echo "權限查詢失敗：" . mysqli_error($link);
+    exit();
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="">
