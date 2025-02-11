@@ -13,13 +13,6 @@ $dbname = "HCHJ";
 // 連接 MySQL 資料庫
 $link = mysqli_connect($servername, $dbUser, $dbPassword, $dbname);
 
-// 檢查連接是否成功
-if (!$link) {
-    $response[0] = "無法連接資料庫：" . mysqli_connect_error();
-    echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
 // 抓取資料
 $sql = "SELECT 
         CONCAT(school_name, ' - ', department_name) AS school_department,
