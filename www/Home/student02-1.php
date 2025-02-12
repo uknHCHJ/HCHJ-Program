@@ -193,8 +193,23 @@ foreach ($grades as $grade) {
                 color: #333;
               }
 
-                          /* 班級按鈕 */
-                          .class-button {
+              /* 班級按鈕 */
+              .class-button {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 12px 24px;
+                margin: 5px;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+              }
+
+              /* 班級按鈕 */
+              .class-button {
                 background-color: #4CAF50;
                 color: white;
                 font-size: 18px;
@@ -219,7 +234,7 @@ foreach ($grades as $grade) {
                 color: white;
                 font-size: 18px;
                 font-weight: bold;
-                width: 180px;
+                width: 50%;
                 height: 70px;
                 padding: 10px;
                 border: none;
@@ -238,32 +253,33 @@ foreach ($grades as $grade) {
                 transform: scale(1.08);
               }
 
+
+
               /* 功能按鈕容器 */
               #menu {
                 display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin-top: 20px;
-              }
-
-              /* 按鈕容器 */
-              .button-container {
-                display: flex;
+                flex-wrap: wrap;
                 justify-content: center;
-                gap: 20px; /* 按鈕間距 */
-                margin-bottom: 10px; /* 行間距 */
+                gap: 10px;
+                /* 每個按鈕之間的間距 */
+                margin-top: 20px;
+                width: 100%;
+                /* 容器寬度設為 100% */
               }
 
-              /* 第一排 */
-              .button-container:first-child {
-                margin-bottom: 10px; /* 第一排與第二排之間的間隔設為 1 公分 */
+              
+
+              /* 第一排 6 個按鈕 */
+              #menu :nth-child(-n+6) {
+                flex: 1 1 calc(100% / 6 - 10px);
               }
 
-              /* 第二排 */
-              .button-container:nth-child(2) {
-                margin-top: 10px; /* 第二排與第一排之間的間隔設為 1 公分 */
+              /* 第二排 5 個按鈕 */
+              #menu :nth-child(n+7) {
+                flex: 1 1 calc(100% / 5 - 10px);
               }
 
+             
               /* 返回按鈕 */
               #back-button {
                 margin-top: 20px;
@@ -286,8 +302,6 @@ foreach ($grades as $grade) {
               /* 隱藏元素 */
               .hidden {
                 display: none;
-              }
-
               }
             </style>
             <div id="class-buttons">
