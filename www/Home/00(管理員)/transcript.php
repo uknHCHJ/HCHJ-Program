@@ -166,12 +166,28 @@ if ($result_role) {
         <section class="container mt-5">
             <div class="table-header">
                 <h2>檔案上傳狀態（成績單）</h2>
-                <form action="Access-Control-search.php" method="GET" class="search-form">
-                <input type="text" name="query" id="query" placeholder="輸入帳號搜尋...">
+                <form id="searchForm" class="search-form">
+                <input type="text" name="query" id="query" placeholder="輸入學號搜尋..." oninput="searchStudents()">
                     <button type="submit">
                     <i class="lni lni-search-alt"></i>
                     </button>
                 </form>
+        <script>
+            function searchStudents() {
+                var input = document.getElementById("query").value.trim().toLowerCase();
+                var rows = document.querySelectorAll("tbody tr");
+
+                rows.forEach(function(row) {
+                    var studentId = row.cells[0].innerText.toLowerCase(); // 取得學號
+                    if (studentId.includes(input)) {
+                        row.style.display = ""; // 顯示符合的行
+                    } else {
+                        row.style.display = "none"; // 隱藏不符合的行
+                    }
+                });
+            }
+        </script>
+
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -202,10 +218,11 @@ if ($result_students) {
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='transcript-download.php?id={$student_id}'>📂 下載 ZIP</a>" : "❌";
+        $download_link = ($upload_count > 0) ? "<a href='transcript-download.php?id={$student_id}'>📂 下載 ZIP</a>" : "";
+
 
         echo "<tr>
-                <td>{$student_id}</td>
+                <td>{$student_id}{$download_link}</td>
                 <td>{$student_name}</td>
                 <td>{$latest_upload}</td>
                 <td class='text-center'>{$status}</td>
