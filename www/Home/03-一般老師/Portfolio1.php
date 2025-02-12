@@ -250,113 +250,67 @@ if ($conn->connect_error) {
                     <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
                 </div>
                 <div class="row grid">
-                <?php 
-// 資料庫連線設定
-$servername = "127.0.0.1";
-$username = "HCHJ";
-$password = "xx435kKHq";
-$dbname = "HCHJ";
+                    <?php
+                    // 資料庫連線設定
+                    $servername = "127.0.0.1";
+                    $username = "HCHJ";
+                    $password = "xx435kKHq";
+                    $dbname = "HCHJ";
 
-// 建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
+                    // 建立連線
+                    $conn = new mysqli($servername, $username, $password, $dbname);
 
-// 確認連線是否成功
-if ($conn->connect_error) {
-    die("連線失敗：" . $conn->connect_error);
-}
+                    // 確認連線是否成功
+                    if ($conn->connect_error) {
+                        die("連線失敗：" . $conn->connect_error);
+                    }
 
-// 取得目前登入的使用者 ID（假設從 SESSION 或 POST 取得）
-session_start();
-$userId = $_SESSION['user_id'] ?? $_POST['student_id'] ?? null;
+                    // 查詢該學生的資料
+                    $sql = "SELECT * FROM portfolio WHERE student_id = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $userId);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
-    // 確保 student_id 存在
-    if ($userId === null) {
-        die("錯誤：無法獲取使用者 ID");
-    }
+                    // 檢查是否有資料
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $category_map = [
+                                "成績單" => "transcripts",
+                                "自傳" => "autobiographies",
+                                "學歷證明" => "certificates",
+                                "競賽證明" => "competitions",
+                                "實習證明" => "internships",
+                                "相關證照" => "licenses",
+                                "語言能力證明" => "language-skills",
+                                "專題資料" => "Topics",
+                                "讀書計畫" => "reading-plan",
+                                "其他資料" => "Other-information"
+                            ];
+                            $category_class = $category_map[$row["category"]] ?? "unknown";
 
-    $category = $_POST['category'];
-    $file_name = $_FILES['file']['name'];
-    $file_content = file_get_contents($_FILES['file']['tmp_name']);
+                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
+                                <div class='portfolio-content'>
+                                    <h3>{$row['category']}</h3>
+                                    <p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
+                                    <p>上傳時間：{$row['upload_time']}</p>
+                                    <form action='PortfolioDelete.php' method='post'>
+                                        <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
+                                        <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
+                                            style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
+                                            刪除
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>";
+                        }
+                    } else {
+                        echo "<div class='col-12'><p>尚無資料</p></div>";
+                    }
 
-    // 先查詢 user 表來獲取 grade 和 class
-    $sql_user = "SELECT grade, class FROM user WHERE id = ?";
-    $stmt_user = $conn->prepare($sql_user);
-    $stmt_user->bind_param("i", $userId);
-    $stmt_user->execute();
-    $result_user = $stmt_user->get_result();
-
-    if ($result_user->num_rows > 0) {
-        $row_user = $result_user->fetch_assoc();
-        $grade = $row_user['grade'];
-        $class = $row_user['class'];
-
-        // 插入資料到 portfolio 表
-        $sql_insert = "INSERT INTO portfolio (grade, class, student_id, category, file_name, file_content) VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt_insert = $conn->prepare($sql_insert);
-        $stmt_insert->bind_param("ssisss", $grade, $class, $userId, $category, $file_name, $file_content);
-
-        if ($stmt_insert->execute()) {
-            echo "<script>alert('資料上傳成功！'); window.location.href = 'your_portfolio_page.php';</script>";
-        } else {
-            echo "<script>alert('上傳失敗：" . $stmt_insert->error . "');</script>";
-        }
-
-        $stmt_insert->close();
-    } else {
-        echo "<script>alert('找不到該學生的年級與班級');</script>";
-    }
-
-    $stmt_user->close();
-}
-
-// 查詢該學生的已上傳資料
-$sql = "SELECT * FROM portfolio WHERE student_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// 顯示上傳資料
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $category_map = [
-            "成績單" => "transcripts",
-            "自傳" => "autobiographies",
-            "學歷證明" => "certificates",
-            "競賽證明" => "competitions",
-            "實習證明" => "internships",
-            "相關證照" => "licenses",
-            "語言能力證明" => "language-skills",
-            "專題資料" => "Topics",
-            "讀書計畫" => "reading-plan",
-            "其他資料" => "Other-information"
-        ];
-        $category_class = $category_map[$row["category"]] ?? "unknown";
-
-        echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
-            <div class='portfolio-content'>
-                <h3>{$row['category']}</h3>
-                <p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
-                <p>上傳時間：{$row['upload_time']}</p>
-                <form action='PortfolioDelete.php' method='post'>
-                    <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
-                    <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
-                        style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
-                        刪除
-                    </button>
-                </form>
-            </div>
-        </div>";
-    }
-} else {
-    echo "<div class='col-12'><p>尚無資料</p></div>";
-}
-
-$stmt->close();
-$conn->close();
-?>
-
+                    $stmt->close();
+                    $conn->close();
+                    ?>
                 </div>
             </div>
         </div>
