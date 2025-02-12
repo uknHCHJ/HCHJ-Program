@@ -36,7 +36,7 @@ if ($zip->open($zip_filename, ZipArchive::CREATE) !== TRUE) {
 $index = 1;
 while ($row = mysqli_fetch_assoc($result)) {
     $file_data = $row['file_content']; // 確保是 BLOB
-    $file_name = $student_id . $index . ".doc"; 
+    $file_name = $student_id ."-". $index. ".doc"; 
     $zip->addFromString($file_name, $file_data);
     $index++;
 }
