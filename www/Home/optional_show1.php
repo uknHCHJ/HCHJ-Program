@@ -348,16 +348,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     });
                 });
 
-                // 啟用編輯模式
-                function enableEditMode(button) {
-                    if (window.isEditing) return;
-                    window.isEditing = true;
-                    renderTable(window.studentData);
-
-                    button.disabled = true;
-                    document.getElementById('saveChangesButton').style.display = 'inline-block'; // 顯示「保存變更」按鈕
-                }
-
                 // 渲染表格
                 function renderTable(data) {
                     var table = document.getElementById('data-table');
@@ -365,33 +355,34 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                     tbody.innerHTML = ''; // 清空表格內容
 
-                    if (data.length === 0) {
+                    if (data.length === 0 || data[0] === "查無資料") {
                         var row = tbody.insertRow();
                         var cell = row.insertCell(0);
                         cell.colSpan = 5;
                         cell.textContent = '您還未選擇志願';
                         cell.style.textAlign = 'center';
                         cell.style.color = 'gray';
+
+                        // 隱藏編輯按鈕和保存按鈕
+                        document.getElementById('editButton').style.display = 'none';
+                        document.getElementById('saveChangesButton').style.display = 'none';
                         return;
                     }
 
+                    // 顯示資料
                     data.forEach(function (item, index) {
                         var row = tbody.insertRow();
 
-                        // 志願序號鎖定
                         var preferenceCell = row.insertCell(0);
                         preferenceCell.textContent = index + 1;  // 顯示順序號
                         item.preference_rank = index + 1;  // 更新 preference_rank
 
-                        // 顯示學校名稱和科系
                         row.insertCell(1).textContent = item.school_name;
                         row.insertCell(2).textContent = item.department_name;
 
-                        // 顯示上傳時間
                         var uploadTimeCell = row.insertCell(3);
                         uploadTimeCell.textContent = item.time;
 
-                        // 最後一欄：變更順序，僅在編輯模式顯示
                         var editCell = row.insertCell(4);
                         if (window.isEditing) {
                             var container = document.createElement('div');
@@ -420,54 +411,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     });
                 }
 
-                // 移動項目位置
-                function moveItem(index, direction) {
-                    var newIndex = index + direction;
-
-                    if (newIndex >= 0 && newIndex < window.studentData.length) {
-                        var temp = window.studentData[index];
-                        window.studentData[index] = window.studentData[newIndex];
-                        window.studentData[newIndex] = temp;
-
-                        // 更新 preference_rank
-                        window.studentData[index].preference_rank = index + 1;
-                        window.studentData[newIndex].preference_rank = newIndex + 1;
-
-                        window.isDataChanged = true; // 記錄變更
-                        renderTable(window.studentData);
-                    }
-                }
-
-                // 保存變更
-                function saveChanges() {
-                    console.log(window.studentData);  // 確保顯示資料包含 preference_rank
-
-                    // 傳送到後端
-                    fetch('optional_update.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            preferences: window.studentData.map(item => ({
-                                preference_rank: item.preference_rank,  // 志願序
-                                school_name: item.school_name,          // 學校名稱
-                                department_name: item.department_name   // 科系名稱
-                            }))
-                        }),
-                    })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            alert('變更已保存！');
-                            console.log('後端回應:', data);
-
-                            // 保存後隱藏「保存變更」按鈕
-                            document.getElementById('saveChangesButton').style.display = 'none';
-                        })
-                        .catch((error) => {
-                            console.error('保存失敗:', error);
-                            alert('變更保存失敗，請稍後再試。');
-                        });
-                }
             </script>
+
 
 
             <!-- 按鈕區 -->
