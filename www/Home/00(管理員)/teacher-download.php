@@ -34,11 +34,18 @@ if ($zip->open($zip_filename, ZipArchive::CREATE) !== TRUE) {
     die("無法建立 ZIP 檔案！");
 }
 
-// 依序加入圖片，確保原始二進制不變
 $index = 1;
 while ($row = mysqli_fetch_assoc($result)) {
-    $file_data = $row['file_content']; // 確保是 BLOB
-    $file_name = $student_id ."-". $index. ".doc"; 
+    $file_data = $row['file_content']; // BLOB 格式
+
+    // 判斷是否為圖片
+    if (@getimagesizefromstring($file_data)) {
+        $file_ext = ".jpg"; // 預設為 JPG
+    } else {
+        $file_ext = ".doc"; // 非圖片則使用 .doc
+    }
+
+    $file_name = $student_id ."-". $index. $file_ext;
     $zip->addFromString($file_name, $file_data);
     $index++;
 }
