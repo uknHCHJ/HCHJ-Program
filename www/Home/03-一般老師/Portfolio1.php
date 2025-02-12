@@ -226,98 +226,41 @@ if ($conn->connect_error) {
             <label for="file">上傳檔案：</label>
             <input type="file" name="file" id="file" required>
         </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="wordCount">檔案字數：</label>
+            <span id="wordCount">0</span> <!-- 顯示字數 -->
+        </div>
+
         <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
     </form>
 </div>
 
-<div class="portfolio-section pt-130">
-    <div id="container" class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="portfolio-btn-wrapper">
-                    <button type="button" class="portfolio-btn active" data-filter="*">全部</button>
-                    <button type="button" class="portfolio-btn" data-filter=".transcripts">成績單</button>
-                    <button type="button" class="portfolio-btn" data-filter=".autobiographies">自傳</button>
-                    <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
-                    <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
-                    <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
-                </div>
-                <div class="row grid">
-                    <?php
-                    // 資料庫連線設定
-                    $servername = "127.0.0.1";
-                    $username = "HCHJ";
-                    $password = "xx435kKHq";
-                    $dbname = "HCHJ";
-
-                    // 建立連線
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    // 確認連線是否成功
-                    if ($conn->connect_error) {
-                        die("連線失敗：" . $conn->connect_error);
-                    }
-
-                    // 查詢該學生的資料
-                    $sql = "SELECT * FROM portfolio WHERE student_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $userId);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-
-                    // 檢查是否有資料
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $category_map = [
-                                "成績單" => "transcripts",
-                                "自傳" => "autobiographies",
-                                "學歷證明" => "certificates",
-                                "競賽證明" => "competitions",
-                                "實習證明" => "internships",
-                                "相關證照" => "licenses",
-                                "語言能力證明" => "language-skills",
-                                "專題資料" => "Topics",
-                                "讀書計畫" => "reading-plan",
-                                "其他資料" => "Other-information"
-                            ];
-                            $category_class = $category_map[$row["category"]] ?? "unknown";
-
-                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
-                                <div class='portfolio-content'>
-                                    <h3>{$row['category']}</h3>
-                                    <p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
-                                    <p>上傳時間：{$row['upload_time']}</p>
-                                    <form action='PortfolioDelete.php' method='post'>
-                                        <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
-                                        <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
-                                            style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
-                                            刪除
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>";
-                        }
-                    } else {
-                        echo "<div class='col-12'><p>尚無資料</p></div>";
-                    }
-
-                    $stmt->close();
-                    $conn->close();
-                    ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
+    // 當檔案選擇變更時，觸發檢查字數的函式
+    document.getElementById('file').addEventListener('change', function() {
+        const formData = new FormData();
+        formData.append('file', this.files[0]);
+        
+        fetch('check_word_count.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('wordCount').innerText = data.wordCount;
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('檔案處理錯誤：' + error);
+        });
+    });
+
     function confirmUpload() {
         const fileInput = document.getElementById('file');
         const file = fileInput.files[0];
@@ -336,27 +279,7 @@ if ($conn->connect_error) {
 
         return confirm(`您確定要上傳檔案：${file.name}？`);
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.portfolio-btn');
-        const items = document.querySelectorAll('.portfolio-item');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                buttons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                const filter = button.getAttribute('data-filter');
-                items.forEach(item => {
-                    item.style.display = filter === '*' || item.classList.contains(filter.substring(1))
-                        ? 'block'
-                        : 'none';
-                });
-            });
-        });
-    });
 </script>
-
 
         <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
