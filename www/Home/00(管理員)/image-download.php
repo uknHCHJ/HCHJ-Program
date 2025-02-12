@@ -10,14 +10,16 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']) || !isset($_GET['category'])) {
     die("缺少必要參數！");
 }
 
 $student_id = mysqli_real_escape_string($link, $_GET['id']);
-$query = "SELECT file_content FROM portfolio WHERE student_id = ? AND category = '成績單'";
+$category = mysqli_real_escape_string($link, $_GET['category']);
+
+$query = "SELECT file_content FROM portfolio WHERE student_id = ? AND category = ?";
 $stmt = mysqli_prepare($link, $query);
-mysqli_stmt_bind_param($stmt, "s", $student_id);
+mysqli_stmt_bind_param($stmt, "ss", $student_id, $category);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
@@ -47,7 +49,7 @@ mysqli_close($link);
 
 // 下載 ZIP 檔案
 header("Content-Type: application/zip");
-header("Content-Disposition: attachment; filename=student_{$student_id}_files.zip");
+header("Content-Disposition: attachment; filename=student_{$student_id}_{$category}_files.zip");
 header("Content-Length: " . filesize($zip_filename));
 readfile($zip_filename);
 

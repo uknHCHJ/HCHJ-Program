@@ -10,14 +10,16 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']) || !isset($_GET['category'])) {
     die("缺少必要參數！");
 }
 
 $student_id = mysqli_real_escape_string($link, $_GET['id']);
-$query = "SELECT file_content FROM portfolio WHERE student_id = ? AND category = '自傳'";
+$category = mysqli_real_escape_string($link, $_GET['category']);
+
+$query = "SELECT file_content FROM portfolio WHERE student_id = ? AND category = ?";
 $stmt = mysqli_prepare($link, $query);
-mysqli_stmt_bind_param($stmt, "s", $student_id);
+mysqli_stmt_bind_param($stmt, "ss", $student_id, $category);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
