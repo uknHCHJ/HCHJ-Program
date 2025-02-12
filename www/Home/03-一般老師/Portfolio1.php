@@ -251,6 +251,15 @@ if ($conn->connect_error) {
             </select>
         </div>
 
+        <div id="certificate_div" style="display: none;">
+                <label for="certificate">選擇證照：</label>
+                <select name="certificate" id="certificate">
+                    <!-- 這裡的選項會由後端根據選擇的分類動態填充 -->
+                </select>
+            </div>
+
+        </div>
+
         <div style="margin-bottom: 15px;">
             <label for="file">上傳檔案：</label>
             <input type="file" name="file" id="file" required>
@@ -260,6 +269,51 @@ if ($conn->connect_error) {
         </button>
     </form>
 </div>
+
+<script>
+    function toggleSubCategory() {
+        var category = document.getElementById("category").value;
+        var subCategoryDiv = document.getElementById("sub_category_div");
+        
+        // 如果選擇了「相關技術證照」，顯示相關證照分類選單
+        if (category === "相關證照") {
+            subCategoryDiv.style.display = "block";
+        } else {
+            subCategoryDiv.style.display = "none";
+            document.getElementById("certificate_div").style.display = "none";
+        }
+    }
+
+    function loadCertifications(category) {
+        var certificateDiv = document.getElementById("certificate_div");
+        var certificateSelect = document.getElementById("certificate");
+        
+        // 顯示證照選單
+        certificateDiv.style.display = "block";
+        
+        // 清除現有選項
+        certificateSelect.innerHTML = "";
+
+        // 使用 AJAX 向伺服器請求相應分類的證照
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "GetCertifications.php?category=" + category, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var certifications = JSON.parse(xhr.responseText);
+                
+                // 動態填充證照選項
+                certifications.forEach(function(cert) {
+                    var option = document.createElement("option");
+                    option.value = cert.id;
+                    option.textContent = cert.name;
+                    certificateSelect.appendChild(option);
+                });
+            }
+        };
+        xhr.send();
+    }
+</script>
+
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
