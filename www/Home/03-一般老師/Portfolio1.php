@@ -235,18 +235,19 @@ if ($conn->connect_error) {
             <option value="其他資料">其他資料</option>
         </select><br>
         <div id="sub_category_div" style="display: none;">
-            相關技術證照分類:
+        <label for="category">相關技術證照分類：</label>
             <select name="sub_category">
-                <option value="ACM - CPE">ACM - CPE大學程式能力檢定</option>
+                <option value="ACM - CPE">ACM</option>
                 <option value="Adobe">Adobe</option>
-                <option value="GLAD">GLAD</option>
+                <option value="GLAD">GLAD (Global Learning & Assessment Development)</option>
                 <option value="Microsoft">Microsoft</option>
-                <option value="MOCC">MOCC - 中華民國電腦教育發展協會</option>
+                <option value="MOCC">中華民國電腦教育發展協會(MOCC)</option>
                 <option value="勞動部勞動力發展署">勞動部勞動力發展署</option>
                 <option value="台灣醫學資訊協會">台灣醫學資訊協會 - 醫療資訊管理師</option>
-                <option value="TOEIC">多益(TOEIC) - 美國教育測驗服務社(ETS)</option>
-                <option value="CPR">臺灣急救教育推廣與諮詢中心 - 心肺復甦術(CPR)</option>
-                <option value="TQC">TQC - 財團法人中華民國電腦技能基金會</option>
+                <option value="TOEIC">美國教育測驗服務社(ETS)</option>
+                <option value="CPR">臺灣急救教育推廣與諮詢中心</option>
+                <option value="TQC">財團法人中華民國電腦技能基金會(TQC)</option>
+                <option value="TQC">財團法人語言訓練測驗中心</option>
             </select>
         </div>
 
