@@ -180,7 +180,7 @@ foreach ($grades as $grade) {
       <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
           <div class="section-title text-center mb-55">
-            <span class="wow fadeInDown" data-wow-delay=".2s">帶班班級名單</span>
+            <h1 class="wow fadeInDown" data-wow-delay=".2s">班級學生管理</h1>
             <style>
               body {
                 font-family: Arial, sans-serif;
@@ -234,8 +234,8 @@ foreach ($grades as $grade) {
                 color: white;
                 font-size: 18px;
                 font-weight: bold;
-                width: 50%;
-                height: 70px;
+                width: 500px;
+                height: 55px;
                 padding: 10px;
                 border: none;
                 border-radius: 15px;
