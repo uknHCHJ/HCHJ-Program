@@ -222,11 +222,12 @@ if ($result_students) {
 
 
         echo "<tr>
-                <td>{$student_id}{$download_link}</td>
+                <td>{$student_id}</td>
                 <td>{$student_name}</td>
                 <td>{$latest_upload}</td>
                 <td class='text-center'>{$status}</td>
                 <td class='text-center'>{$upload_count}</td>
+                <td class='text-center'>{$download_link}</td>
               </tr>";
     }
 } else {

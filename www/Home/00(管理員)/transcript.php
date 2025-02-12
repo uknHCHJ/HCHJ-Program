@@ -196,7 +196,8 @@ if ($result_role) {
                         <th>姓名</th>
                         <th>最後上傳時間</th>
                         <th class='text-center'>是否上傳</th>
-                        <th class='text-center'>上傳筆數</th>                  
+                        <th class='text-center'>上傳筆數</th>    
+                        <th class='text-center'>檔案下載</th>              
                     </tr>
                 </thead>
                 <tbody>
@@ -218,15 +219,16 @@ if ($result_students) {
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='image-download.php?id={$student_id}&category=成績單'>📂 下載 ZIP</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='image-download.php?id={$student_id}&category=成績單'>📂 下載</a>" : "";
 
 
         echo "<tr>
-                <td>{$student_id}{$download_link}</td>
+                <td>{$student_id}</td>
                 <td>{$student_name}</td>
                 <td>{$latest_upload}</td>
                 <td class='text-center'>{$status}</td>
                 <td class='text-center'>{$upload_count}</td>
+                <td class='text-center'>{$download_link}</td>
               </tr>";
     }
 } else {
