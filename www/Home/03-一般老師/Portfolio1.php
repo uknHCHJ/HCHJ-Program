@@ -215,7 +215,7 @@ if ($conn->connect_error) {
     </script>
     
         <!-- ========================= page-banner-section end ========================= -->
-        <div style="text-align: center; margin: auto;">
+        <div style="text-align: center; margin: auto;"> 
     <h1>備審資料管理系統</h1>
     <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;" id="uploadForm" onsubmit="return confirmUpload()">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
