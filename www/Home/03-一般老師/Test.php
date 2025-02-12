@@ -1,100 +1,98 @@
 <?php
-// 連接到 MySQL 資料庫
 $servername = "127.0.0.1";
 $username = "HCHJ";
 $password = "xx435kKHq";
-$dbname = "HCHJ"; // 請換成您的資料庫名稱
+$dbname = "HCHJ";
 
-// 創建連接
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// 檢查連接是否成功
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("連接失敗: " . $conn->connect_error);
 }
 
-// 查詢資料庫中的比賽資料（不檢查結束時間）
-$sql = "SELECT name, link FROM information";
-$result = $conn->query($sql);
-
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $grade = $_POST['grade'];
+    $class = $_POST['class'];
+    $student_id = $_POST['student_id'];
+    $category = $_POST['category'];
+    $sub_category = isset($_POST['sub_category']) ? $_POST['sub_category'] : '';
+    
+    if (!empty($_FILES['file']['name'])) {
+        $file_name = $_FILES['file']['name'];
+        $file_tmp = $_FILES['file']['tmp_name'];
+        $file_content = file_get_contents($file_tmp);
+        $file_content = addslashes($file_content);
+        
+        $final_category = ($category == "相關證照") ? $category . " - " . $sub_category : $category;
+        
+        $sql = "INSERT INTO portfolio (grade, class, student_id, category, file_name, file_content) 
+                VALUES ('$grade', '$class', '$student_id', '$final_category', '$file_name', '$file_content')";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "檔案上傳成功！";
+        } else {
+            echo "錯誤: " . $conn->error;
+        }
+    }
+}
+$conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>資管科比賽資訊</title>
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px auto; /* 使表格居中 */
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-a {
-    color: #007BFF;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-    </style>
+    <title>學生備審資料上傳</title>
+    <script>
+        function toggleSubCategory() {
+            var category = document.getElementById("category").value;
+            var subCategoryDiv = document.getElementById("sub_category_div");
+            
+            if (category === "相關證照") {
+                subCategoryDiv.style.display = "block";
+            } else {
+                subCategoryDiv.style.display = "none";
+            }
+        }
+    </script>
 </head>
 <body>
-
-    <h1>資管科比賽資訊</h1>
-
-    <?php
-    // 如果有比賽資料
-    if ($result->num_rows > 0) {
-        echo '<table>';
-        echo '<thead><tr><th>比賽名稱</th><th>連結</th></tr></thead>';
-        echo '<tbody>';
-
-        // 顯示每個比賽的名稱和連結
-        while($row = $result->fetch_assoc()) {
-            echo '<tr>';
-            echo '<td>' . htmlspecialchars($row['name']) . '</td>';
-            echo '<td><a href="' . htmlspecialchars($row['link']) . '" target="_blank">點擊參賽</a></td>';
-            echo '</tr>';
-        }
-
-        echo '</tbody>';
-        echo '</table>';
-    } else {
-        echo "<p>目前沒有任何比賽資訊。</p>";
-    }
-
-    // 關閉資料庫連接
-    $conn->close();
-    ?>
-
+    <h2>學生備審資料上傳</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        年級: <input type="text" name="grade" required><br>
+        班級: <input type="text" name="class" required><br>
+        學號: <input type="number" name="student_id" required><br>
+        資料分類:
+        <select name="category" id="category" onchange="toggleSubCategory()" required>
+            <option value="成績單">成績單</option>
+            <option value="自傳">自傳</option>
+            <option value="學歷證明">學歷證明</option>
+            <option value="競賽證明">競賽證明</option>
+            <option value="實習證明">實習證明</option>
+            <option value="相關證照">相關技術證照</option>
+            <option value="語言能力證明">語言能力證明</option>
+            <option value="專題資料">專題資料</option>
+            <option value="讀書計畫">讀書計畫</option>
+            <option value="其他資料">其他資料</option>
+        </select><br>
+        
+        <div id="sub_category_div" style="display: none;">
+            相關技術證照分類:
+            <select name="sub_category">
+                <option value="ACM - CPE">ACM - CPE大學程式能力檢定</option>
+                <option value="Adobe">Adobe</option>
+                <option value="GLAD">GLAD</option>
+                <option value="Microsoft">Microsoft</option>
+                <option value="MOCC">MOCC - 中華民國電腦教育發展協會</option>
+                <option value="勞動部勞動力發展署">勞動部勞動力發展署</option>
+                <option value="台灣醫學資訊協會">台灣醫學資訊協會 - 醫療資訊管理師</option>
+                <option value="TOEIC">多益(TOEIC) - 美國教育測驗服務社(ETS)</option>
+                <option value="CPR">臺灣急救教育推廣與諮詢中心 - 心肺復甦術(CPR)</option>
+                <option value="TQC">TQC - 財團法人中華民國電腦技能基金會</option>
+            </select>
+        </div>
+        
+        選擇檔案: <input type="file" name="file" required><br>
+        <button type="submit">上傳</button>
+    </form>
 </body>
 </html>
