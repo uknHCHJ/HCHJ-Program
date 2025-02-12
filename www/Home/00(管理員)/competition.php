@@ -54,7 +54,7 @@ if ($result_role) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>學生上傳狀態</title>
+        <title>學生上傳狀態(競賽證明)</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
@@ -218,7 +218,7 @@ if ($result_students) {
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='word-download.php?id={$student_id}'>📂 下載 ZIP</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='image-download.php?id={$student_id}&category=競賽證明'>📂 下載 ZIP</a>" : "";
 
 
         echo "<tr>

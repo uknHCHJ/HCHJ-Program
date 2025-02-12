@@ -54,7 +54,7 @@ if ($result_role) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>學生上傳狀態(成績單)</title>
+        <title>學生上傳狀態(學歷證明)</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
@@ -165,7 +165,7 @@ if ($result_role) {
 
         <section class="container mt-5">
             <div class="table-header">
-                <h2>檔案上傳狀態（成績單）</h2>
+                <h2>檔案上傳狀態（學歷證明）</h2>
                 <form id="searchForm" class="search-form">
                 <input type="text" name="query" id="query" placeholder="輸入學號搜尋..." oninput="searchStudents()">
                     <button type="submit">
@@ -211,14 +211,14 @@ if ($result_students) {
 
         $query = "SELECT MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
                   FROM portfolio 
-                  WHERE student_id='$student_id' AND category='成績單'";
+                  WHERE student_id='$student_id' AND category='學歷證明'";
         $result = mysqli_query($link, $query);
         $row = mysqli_fetch_assoc($result);
         
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='image-download.php?id={$student_id}&category=成績單'>📂 下載 ZIP</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='image-download.php?id={$student_id}&category=學歷證明'>📂 下載 ZIP</a>" : "";
 
 
         echo "<tr>
