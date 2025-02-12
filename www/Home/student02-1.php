@@ -153,8 +153,7 @@ foreach ($grades as $grade) {
   <!-- ========================= header end ========================= -->
 
   <!-- ========================= page-banner-section start ========================= -->
-  <section class="page-banner-section pt-75 pb-75 img-bg"
-    style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
+  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
     <div class="container">
       <div class="row">
         <div class="col-xl-12">
@@ -163,8 +162,8 @@ foreach ($grades as $grade) {
             <div class="page-breadcrumb">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">查看學生備審</li>
+                  <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">學生管理</li>
                 </ol>
               </nav>
             </div>
@@ -183,314 +182,175 @@ foreach ($grades as $grade) {
           <div class="section-title text-center mb-55">
             <span class="wow fadeInDown" data-wow-delay=".2s">帶班班級名單</span>
             <style>
-              /* 按鈕樣式 */
-              /* 按鈕樣式 */
-              .download-button {
-                background-color: #4CAF50;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: transform 0.2s ease;
-              }
-
-              .download-button:hover {
-                transform: scale(1.05);
-              }
-
-              .download-button:active {
-                animation: click-animation 0.5s forwards;
-              }
-
-              /*備審*/
-              .downloadreview {
-                background-color: #4CAF50;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: transform 0.2s ease;
-              }
-
-              .downloadreview:hover {
-                transform: scale(1.05);
-              }
-
-              .downloadreview:active {
-                animation: click-animation 0.5s forwards;
-              }
-
-              /*留言板*/
-              .messageboard {
-                background-color: #17a2b8;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: transform 0.2s ease;
-              }
-
-              .messageboard:hover {
-                transform: scale(1.05);
-              }
-
-              .messageboard:active {
-                animation: click-animation 0.5s forwards;
-              }
-
-              /*競賽*/
-              .viewcompetition {
-                background-color: #ffc107;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: transform 0.2s ease;
-              }
-
-              .viewcompetition:hover {
-                transform: scale(1.05);
-              }
-
-              .viewcompetition:active {
-                animation: click-animation 0.5s forwards;
-              }
-
-              /*志願*/
-              .viewapplicationorder {
-                background-color: #007bff;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: transform 0.2s ease;
-              }
-
-              .viewapplicationorder:hover {
-                transform: scale(1.05);
-              }
-
-              .viewapplicationorder:active {
-                animation: click-animation 0.5s forwards;
-              }
-
-
-              /* 表格容器 */
-              .data-table {
-                width: 100%;
-                max-width: 1500px;
-                border-collapse: collapse;
-                animation: fadeIn 1s ease-in-out;
-                margin: 0 auto;
-              }
-
-              th,
-              td {
-                padding: 10px;
-                border: 1px solid #ccc;
+              body {
+                font-family: Arial, sans-serif;
                 text-align: center;
+                background-color: #f4f4f9;
+                padding: 20px;
               }
 
-              th {
-                background-color: #6A7C92;
-                color: white;
+              h2 {
+                color: #333;
               }
 
-              td {
-                background-color: #f9f9f9;
-              }
-
-              /* 表格淡入動畫 */
-              @keyframes fadeIn {
-                from {
-                  opacity: 0;
-                  transform: translateY(-20px);
-                }
-
-                to {
-                  opacity: 1;
-                  transform: translateY(0);
-                }
-              }
-
-              /* Loading 標誌樣式 */
-              #loading {
-                display: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100vh;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 10;
-                justify-content: center;
-                align-items: center;
-              }
-
-              #loading:before {
-                content: "";
-                display: inline-block;
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                border: 6px solid #f3f3f3;
-                border-color: #f3f3f3 transparent #f3f3f3 transparent;
-                animation: spin 1s linear infinite;
-              }
-
-              @keyframes spin {
-                0% {
-                  transform: rotate(0deg);
-                }
-
-                100% {
-                  transform: rotate(360deg);
-                }
-              }
-
-              /* 設定欄位寬度 */
-              .data-table th:nth-child(1) {
-                width: 150px;
-                /* 學號 */
-              }
-
-              .data-table th:nth-child(2) {
-                width: 200px;
-                /* 姓名 */
-              }
-
-              .data-table th:nth-child(3) {
-                width: 250px;
-                /* 備審 */
-              }
-
-              .data-table th:nth-child(4) {
-                width: 250px;
-                /* 留言板 */
-              }
-
-              .data-table th:nth-child(5) {
-                width: 250px;
-                /* 競賽 */
-              }
-
-              .data-table th:nth-child(6) {
-                width: 250px;
-                /* 志願序 */
-              }
-
-              /*功能按鈕設計*/
-              .menu-button {
-                background-color: #007BFF;
-                /* 統一藍色 */
+                          /* 班級按鈕 */
+                          .class-button {
+                background-color: #4CAF50;
                 color: white;
                 font-size: 18px;
                 font-weight: bold;
+                padding: 12px 24px;
+                margin: 5px;
                 border: none;
-                padding: 12px 20px;
-                border-radius: 10px;
-                margin: 10px;
+                border-radius: 12px;
                 cursor: pointer;
-                transition: 0.3s;
-                display: block;
-                /* 讓按鈕垂直排列 */
-                width: 200px;
-                /* 固定按鈕大小 */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+              }
+
+              .class-button:hover {
+                background-color: #45a049;
+                transform: scale(1.05);
+              }
+
+              /* 功能按鈕樣式 */
+              .download-button {
+                background-color: #007bff;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                width: 180px;
+                height: 70px;
+                padding: 10px;
+                border: none;
+                border-radius: 15px;
+                cursor: pointer;
+                box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+                transition: transform 0.2s ease, background-color 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 text-align: center;
               }
 
-              .menu-button:hover {
+              .download-button:hover {
                 background-color: #0056b3;
-                /* 滑鼠移上變深藍 */
+                transform: scale(1.08);
+              }
+
+              /* 功能按鈕容器 */
+              #menu {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+              }
+
+              /* 按鈕容器 */
+              .button-container {
+                display: flex;
+                justify-content: center;
+                gap: 20px; /* 按鈕間距 */
+                margin-bottom: 10px; /* 行間距 */
+              }
+
+              /* 第一排 */
+              .button-container:first-child {
+                margin-bottom: 10px; /* 第一排與第二排之間的間隔設為 1 公分 */
+              }
+
+              /* 第二排 */
+              .button-container:nth-child(2) {
+                margin-top: 10px; /* 第二排與第一排之間的間隔設為 1 公分 */
+              }
+
+              /* 返回按鈕 */
+              #back-button {
+                margin-top: 20px;
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 14px 24px;
+                border-radius: 10px;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+              }
+
+              #back-button:hover {
+                background-color: #c82333;
+                transform: scale(1.05);
+              }
+
+              /* 隱藏元素 */
+              .hidden {
+                display: none;
+              }
+
               }
             </style>
-            <div class="classList" id="classList">
-              <?php
-              // 動態生成按鈕，根據唯一的 grade-class 組合
-              foreach ($gradeClassPairs as $pair) {
-                $grade = substr($pair, 0, -1);
-                $class = substr($pair, -1);
-                echo '<button type="button" class="download-button" data-grade="' . htmlspecialchars($grade) . '" data-class="' . htmlspecialchars($class) . '">';
-                echo htmlspecialchars($grade) . htmlspecialchars($class);
-                echo '</button>';
-
-              }
-              ?>
+            <div id="class-buttons">
+              <?php foreach ($gradeClassPairs as $pair): ?>
+                <button class="class-button" data-class="<?php echo htmlspecialchars($pair); ?>">
+                  <?php echo htmlspecialchars($pair); ?>
+                </button>
+              <?php endforeach; ?>
             </div>
 
-            <div id="menu" style="display: none;">
-              <ul id="menuList"></ul>
-            </div>
+            <div id="menu" class="hidden"></div>
+            <button id="back-button" class="hidden" onclick="location.reload();">回上一頁</button>
 
             <script>
-              document.addEventListener("click", function (event) {
-                if (event.target.classList.contains("download-button")) {
-                  console.log("✅ 班級按鈕被點擊：" + event.target.innerText);
+              document.addEventListener("DOMContentLoaded", function () {
+                const classButtons = document.querySelectorAll(".class-button");
+                const menuDiv = document.getElementById("menu");
+                const backButton = document.getElementById("back-button");
+                const classButtonsContainer = document.getElementById("class-buttons");
 
-                  // 隱藏其他班級按鈕
-                  document.querySelectorAll(".download-button").forEach(button => {
-                    if (button !== event.target) {
-                      button.style.display = "none";
-                    }
-                  });
+                classButtons.forEach(button => {
+                  button.addEventListener("click", function () {
+                    const selectedClass = this.getAttribute("data-class");
 
-                  // 取得班級資訊
-                  let grade = event.target.getAttribute("data-grade");
-                  let className = event.target.getAttribute("data-class");
+                    // 隱藏所有班級按鈕
+                    classButtons.forEach(btn => btn.classList.add("hidden"));
 
-                  // 向後端請求功能清單
-                  fetch("student02-2.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `grade=${grade}&class=${className}`
-                  })
-                    .then(response => response.json())  // 解析 JSON
-                    .then(menuItems => {
-                      console.log("✅ 後端回傳 JSON:", menuItems);
+                    // 只顯示被點擊的班級按鈕
+                    this.classList.remove("hidden");
+                    this.classList.add("selected-class");
 
-                      const menu = document.getElementById("menu");
-                      if (menu) {
-                        // 生成功能清單的 HTML
-                        let menuHtml = "<ul>";
-                        menuItems.forEach(item => {
-                          menuHtml += `<li><a href="${item.url}">${item.name}</a></li>`;
+                    // 取得後端資料
+                    fetch("student02-2.php?class=" + selectedClass)
+                      .then(response => response.json())
+                      .then(data => {
+                        menuDiv.innerHTML = ""; // 清空 menuDiv
+                        data.forEach(item => {
+                          const btn = document.createElement("button");
+                          btn.className = "download-button";
+                          btn.textContent = item.name;
+                          btn.onclick = () => window.location.href = item.url;
+                          menuDiv.appendChild(btn);
                         });
-                        menuHtml += "</ul>";
 
-                        menu.innerHTML = menuHtml;  // 插入 HTML
-                        menu.style.display = "block";  // 顯示清單
-                      }
-                    })
-                    .catch(error => console.error("❌ 發生錯誤:", error));
+                        menuDiv.classList.remove("hidden"); // 顯示功能按鈕
+                        backButton.classList.remove("hidden"); // 顯示回上一頁按鈕
+                      })
+                      .catch(error => console.error("載入功能按鈕時出錯:", error));
+                  });
+                });
 
-                }
+                // 回上一頁按鈕
+                backButton.addEventListener("click", function () {
+                  menuDiv.classList.add("hidden");
+                  this.classList.add("hidden");
+
+                  // 顯示所有班級按鈕
+                  classButtons.forEach(btn => {
+                    btn.classList.remove("hidden");
+                    btn.classList.remove("selected-class");
+                  });
+                });
               });
-
             </script>
           </div>
         </div>
