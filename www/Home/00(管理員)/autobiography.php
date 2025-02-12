@@ -202,39 +202,38 @@ if ($result_role) {
                 </thead>
                 <tbody>
                 <?php
-$query_students = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'";
-$result_students = mysqli_query($link, $query_students);
+                    $query_students = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'";
+                    $result_students = mysqli_query($link, $query_students);
 
-if ($result_students) {
-    while ($student = mysqli_fetch_assoc($result_students)) {
-        $student_id = $student['user'];
-        $student_name = $student['name'];
+                    if ($result_students) {
+                        while ($student = mysqli_fetch_assoc($result_students)) {
+                            $student_id = $student['user'];
+                            $student_name = $student['name'];
 
-        $query = "SELECT MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
-                  FROM portfolio 
-                  WHERE student_id='$student_id' AND category='自傳'";
-        $result = mysqli_query($link, $query);
-        $row = mysqli_fetch_assoc($result);
+                            $query = "SELECT MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
+                                    FROM portfolio 
+                                    WHERE student_id='$student_id' AND category='自傳'";
+                            $result = mysqli_query($link, $query);
+                            $row = mysqli_fetch_assoc($result);
         
-        $upload_count = $row['upload_count'] ?? 0;
-        $latest_upload = $row['latest_upload'] ?? '無紀錄';
-        $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='teacher-download.php?id={$student_id}&category=自傳'>📂 下載</a>" : "";
+                            $upload_count = $row['upload_count'] ?? 0;
+                            $latest_upload = $row['latest_upload'] ?? '無紀錄';
+                            $status = ($upload_count > 0) ? "✔️" : "❌";
+                            $download_link = ($upload_count > 0) ? "<a href='teacher-download.php?id={$student_id}&category=自傳'>📂 下載</a>" : "";
 
-
-        echo "<tr>
-                <td>{$student_id}</td>
-                <td>{$student_name}</td>
-                <td>{$latest_upload}</td>
-                <td class='text-center'>{$status}</td>
-                <td class='text-center'>{$upload_count}</td>
-                <td class='text-center'>{$download_link}</td>
-              </tr>";
-    }
-} else {
-    echo "<tr><td colspan='5'>查詢失敗：" . mysqli_error($link) . "</td></tr>";
-}
-?>
+                echo "<tr>
+                        <td>{$student_id}</td>
+                        <td>{$student_name}</td>
+                        <td>{$latest_upload}</td>
+                        <td class='text-center'>{$status}</td>
+                        <td class='text-center'>{$upload_count}</td>
+                        <td class='text-center'>{$download_link}</td>
+                    </tr>";
+                        }
+            } else {
+                echo "<tr><td colspan='5'>查詢失敗：" . mysqli_error($link) . "</td></tr>";
+            }
+            ?>
 </tbody>
             </table>
             <div class="text-center mt-3">
