@@ -135,28 +135,52 @@
     </section>
 
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="zh">
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>志願選擇統計</title>
         <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                text-align: center;
+                margin: 20px;
+            }
+
+            h1 {
+                color: #333;
+            }
+
             table {
-                width: 100%;
+                width: 80%;
+                margin: 20px auto;
                 border-collapse: collapse;
-                margin-top: 20px;
+                background: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
             }
 
             th,
             td {
-                border: 1px solid #ccc;
-                padding: 8px;
-                text-align: left;
+                padding: 12px;
+                border: 1px solid #ddd;
+                text-align: center;
             }
 
             th {
-                background-color: #f4f4f4;
+                background-color: #007bff;
+                color: white;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            tr:hover {
+                background-color: #ddd;
             }
         </style>
     </head>
