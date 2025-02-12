@@ -427,17 +427,34 @@ foreach ($grades as $grade) {
                 document.addEventListener("DOMContentLoaded", function () {
                   console.log("JavaScript 載入成功");
 
+                  const menuButton = document.getElementById("menuButton");
+                  const menu = document.getElementById("menu");
+                  const menuList = document.getElementById("menuList");
+
+                  if (!menuList) {
+                    console.error("menuList 不存在，請確認 HTML 是否有 <ul id='menuList'></ul>");
+                    return;
+                  }
+
+                  // **按下按鈕後，切換顯示/隱藏功能表**
+                  menuButton.addEventListener("click", function () {
+                    if (menu.style.display === "none" || menu.style.display === "") {
+                      menu.style.display = "block";
+                    } else {
+                      menu.style.display = "none";
+                    }
+                  });
+
                   fetch("student02-2.php")
                     .then(response => response.json())
                     .then(data => {
-                      console.log("從後端獲取的數據：", data); // **在 Console 檢查 JSON**
+                      console.log("從後端獲取的數據：", data); // 確認 JSON 是否正常
 
                       if (data.error) {
                         console.error("後端錯誤:", data.error);
                         return;
                       }
 
-                      const menuList = document.getElementById("menuList");
                       menuList.innerHTML = ""; // 清空按鈕列表
 
                       data.forEach(button => {
@@ -449,10 +466,11 @@ foreach ($grades as $grade) {
                         menuList.appendChild(li);
                       });
 
-                      console.log("按鈕已載入");
+                      console.log("按鈕已載入，檢查 menuList 內容：", menuList.innerHTML);
                     })
                     .catch(error => console.error("載入按鈕失敗:", error));
                 });
+
               </script>
             </div>
           </div>
