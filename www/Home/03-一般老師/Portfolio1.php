@@ -228,26 +228,26 @@ if ($conn->connect_error) {
             <option value="學歷證明">學歷證明</option>
             <option value="競賽證明">競賽證明</option>
             <option value="實習證明">實習證明</option>
-            <option value="相關證照">相關技術證照</option>
+            <option value="相關證照">相關證照</option>
             <option value="語言能力證明">語言能力證明</option>
             <option value="專題資料">專題資料</option>
             <option value="讀書計畫">讀書計畫</option>
             <option value="其他資料">其他資料</option>
         </select><br>
         <div id="sub_category_div" style="display: none;">
-        <label for="category">相關技術證照分類：</label>
+        <label for="category">相關證照分類：</label>
             <select name="sub_category">
-                <option value="ACM - CPE">ACM</option>
+                <option value="ACM">ACM</option>
                 <option value="Adobe">Adobe</option>
-                <option value="GLAD">GLAD (Global Learning & Assessment Development)</option>
+                <option value="GLAD (Global Learning & Assessment Development)">GLAD (Global Learning & Assessment Development)</option>
                 <option value="Microsoft">Microsoft</option>
-                <option value="MOCC">中華民國電腦教育發展協會(MOCC)</option>
+                <option value="中華民國電腦教育發展協會(MOCC)">中華民國電腦教育發展協會(MOCC)</option>
                 <option value="勞動部勞動力發展署">勞動部勞動力發展署</option>
-                <option value="台灣醫學資訊協會">台灣醫學資訊協會 - 醫療資訊管理師</option>
-                <option value="TOEIC">美國教育測驗服務社(ETS)</option>
-                <option value="CPR">臺灣急救教育推廣與諮詢中心</option>
-                <option value="TQC">財團法人中華民國電腦技能基金會(TQC)</option>
-                <option value="TQC">財團法人語言訓練測驗中心</option>
+                <option value="台灣醫學資訊協會">台灣醫學資訊協會</option>
+                <option value="美國教育測驗服務社(ETS)">美國教育測驗服務社(ETS)</option>
+                <option value="臺灣急救教育推廣與諮詢中心">臺灣急救教育推廣與諮詢中心</option>
+                <option value="財團法人中華民國電腦技能基金會(TQC)">財團法人中華民國電腦技能基金會(TQC)</option>
+                <option value="財團法人語言訓練測驗中心">財團法人語言訓練測驗中心</option>
             </select>
         </div>
 
@@ -271,6 +271,7 @@ if ($conn->connect_error) {
 </div>
 
 <script>
+    // 控制選擇資料類型後，顯示或隱藏證照分類及證照選項
     function toggleSubCategory() {
         var category = document.getElementById("category").value;
         var subCategoryDiv = document.getElementById("sub_category_div");
@@ -280,11 +281,13 @@ if ($conn->connect_error) {
             subCategoryDiv.style.display = "block";
         } else {
             subCategoryDiv.style.display = "none";
-            document.getElementById("certificate_div").style.display = "none";
+            document.getElementById("certificate_div").style.display = "none"; // 隱藏證照選單
         }
     }
 
-    function loadCertifications(category) {
+    // 根據選擇的相關證照分類載入相應的證照
+    function loadCertifications() {
+        var category = document.querySelector("select[name='sub_category']").value;
         var certificateDiv = document.getElementById("certificate_div");
         var certificateSelect = document.getElementById("certificate");
         
@@ -292,7 +295,7 @@ if ($conn->connect_error) {
         certificateDiv.style.display = "block";
         
         // 清除現有選項
-        certificateSelect.innerHTML = "";
+        certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
 
         // 使用 AJAX 向伺服器請求相應分類的證照
         var xhr = new XMLHttpRequest();
@@ -312,6 +315,9 @@ if ($conn->connect_error) {
         };
         xhr.send();
     }
+
+    // 在相關證照分類改變時載入對應的證照
+    document.querySelector("select[name='sub_category']").addEventListener('change', loadCertifications);
 </script>
 
 
