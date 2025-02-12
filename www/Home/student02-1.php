@@ -11,17 +11,17 @@ if ($link) {
 }
 
 if (!isset($_SESSION['user'])) {
-    echo("<script>
+  echo ("<script>
                     alert('請先登入！！');
                     window.location.href = '/~HCHJ/index.html'; 
                   </script>");
-    exit();
+  exit();
 }
 
 $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username= $userData['name']; // 例如從 SESSION 中獲取 user_id
-$userId= $userData['user'];
+$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userId = $userData['user'];
 
 
 $permissions = explode(",", $userData['Permissions']); // 權限以逗號分隔
@@ -86,70 +86,69 @@ foreach ($grades as $grade) {
 
   <!-- ========================= header start ========================= -->
   <header class="header navbar-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-02.php">
-                            <img src="schoolimages/uknlogo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="index-02.php">
+              <img src="schoolimages/uknlogo.png" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="toggler-icon"></span>
+              <span class="toggler-icon"></span>
+              <span class="toggler-icon"></span>
+            </button>
 
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                            <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
-                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">比賽資訊</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
-                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
-                                    </ul>
-                                </li>
+            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+              <ul id="nav" class="navbar-nav ml-auto">
+                <li class="nav-item">
+                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">個人資料</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
+                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="page-scroll" href="student02-1.php">學生管理</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">二技校園網</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
+                    <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
+                    <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">比賽資訊</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                    <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                    <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
+                  </ul>
+                </li>
 
 
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="javascript:void(0)" onclick="submitLogout()">登出</a>
-                                </li>
-                        </div> <!-- navbar collapse -->
-                    </nav> <!-- navbar -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
+                <li class="nav-item">
+                  <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                </li>
+                <li class="nav-item">
+                  <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
+                </li>
+                <li class="nav-item">
+                  <a href="javascript:void(0)" onclick="submitLogout()">登出</a>
+                </li>
+            </div> <!-- navbar collapse -->
+          </nav> <!-- navbar -->
+        </div>
+      </div> <!-- row -->
+    </div> <!-- container -->
 
-    </header>
+  </header>
   <!-- ========================= header end ========================= -->
 
   <!-- ========================= page-banner-section start ========================= -->
@@ -163,7 +162,7 @@ foreach ($grades as $grade) {
             <div class="page-breadcrumb">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                  <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
                   <li class="breadcrumb-item active" aria-current="page">查看學生備審</li>
                 </ol>
               </nav>
@@ -184,120 +183,120 @@ foreach ($grades as $grade) {
             <span class="wow fadeInDown" data-wow-delay=".2s">帶班班級名單</span>
             <style>
               /* 按鈕樣式 */
-/* 按鈕樣式 */
-.download-button {
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
+              /* 按鈕樣式 */
+              .download-button {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease;
+              }
 
-.download-button:hover {
-  transform: scale(1.05);
-}
+              .download-button:hover {
+                transform: scale(1.05);
+              }
 
-.download-button:active {
-  animation: click-animation 0.5s forwards;
-}
+              .download-button:active {
+                animation: click-animation 0.5s forwards;
+              }
 
-/*備審*/
-.downloadreview {
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
+              /*備審*/
+              .downloadreview {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease;
+              }
 
-.downloadreview:hover {
-  transform: scale(1.05);
-}
+              .downloadreview:hover {
+                transform: scale(1.05);
+              }
 
-.downloadreview:active {
-  animation: click-animation 0.5s forwards;
-}
+              .downloadreview:active {
+                animation: click-animation 0.5s forwards;
+              }
 
-/*留言板*/
-.messageboard {
-  background-color: #17a2b8;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
+              /*留言板*/
+              .messageboard {
+                background-color: #17a2b8;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease;
+              }
 
-.messageboard:hover {
-  transform: scale(1.05);
-}
+              .messageboard:hover {
+                transform: scale(1.05);
+              }
 
-.messageboard:active {
-  animation: click-animation 0.5s forwards;
-}
+              .messageboard:active {
+                animation: click-animation 0.5s forwards;
+              }
 
-/*競賽*/
-.viewcompetition {
-  background-color: #ffc107;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
+              /*競賽*/
+              .viewcompetition {
+                background-color: #ffc107;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease;
+              }
 
-.viewcompetition:hover {
-  transform: scale(1.05);
-}
+              .viewcompetition:hover {
+                transform: scale(1.05);
+              }
 
-.viewcompetition:active {
-  animation: click-animation 0.5s forwards;
-}
+              .viewcompetition:active {
+                animation: click-animation 0.5s forwards;
+              }
 
-/*志願*/
-.viewapplicationorder {
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
+              /*志願*/
+              .viewapplicationorder {
+                background-color: #007bff;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease;
+              }
 
-.viewapplicationorder:hover {
-  transform: scale(1.05);
-}
+              .viewapplicationorder:hover {
+                transform: scale(1.05);
+              }
 
-.viewapplicationorder:active {
-  animation: click-animation 0.5s forwards;
-}
+              .viewapplicationorder:active {
+                animation: click-animation 0.5s forwards;
+              }
 
 
               /* 表格容器 */
@@ -411,7 +410,7 @@ foreach ($grades as $grade) {
                 $grade = substr($pair, 0, -1);
                 $class = substr($pair, -1);
                 echo '<button type="button" class="download-button" data-grade="' . htmlspecialchars($grade) . '" data-class="' . htmlspecialchars($class) . '">';
-                echo  htmlspecialchars($grade) . htmlspecialchars($class);
+                echo htmlspecialchars($grade) . htmlspecialchars($class);
                 echo '</button>';
 
               }
@@ -419,39 +418,55 @@ foreach ($grades as $grade) {
             </div>
             <div id="table-container" class="table-container">
 
+
               <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  const buttons = document.querySelectorAll('.download-button');
-                  const tableContainer = document.getElementById('table-container');
+                $(document).ready(function () {
+                  $.ajax({
+                    url: 'student02-2.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                      console.log("AJAX 回傳資料：", response);
+                      const classes = response.classes;
+                      const buttons = response.buttons;
 
-                  buttons.forEach(button => {
-                    button.addEventListener('click', function () {
-                      const grade = this.getAttribute('data-grade');
-                      const className = this.getAttribute('data-class');
-
-                      // 顯示並重置表格內容
-                      tableContainer.style.display = 'block';
-                      tableContainer.innerHTML = '<p>載入中...</p>';
-
-                      // 使用 fetch 發送 POST 請求
-                      fetch('student02-2.php', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: `grade=${grade}&class=${className}`
-                      })
-                        .then(response => response.text())
-                        .then(data => {
-                          tableContainer.innerHTML = data;
-                        })
-                        .catch(error => {
-                          console.error('錯誤:', error);
-                          tableContainer.innerHTML = '<p>無法載入資料，請稍後再試。</p>';
+                      if (classes.length === 1) {
+                        // 若只有一個班級，直接隱藏班級選單並顯示功能按鈕
+                        $("#class-section").hide();
+                        displayButtons(buttons);
+                      } else if (classes.length > 1) {
+                        // 多個班級：動態產生班級按鈕供使用者選擇
+                        classes.forEach(cls => {
+                          $("#class-buttons").append(
+                            `<button class="btn class-btn" data-class-id="${cls.id}">${cls.name}</button>`
+                          );
                         });
-                    });
+                        // 為動態產生的按鈕綁定 click 事件
+                        $(".class-btn").click(function () {
+                          $(".class-btn").hide(); // 隱藏所有班級按鈕
+                          displayButtons(buttons);
+                        });
+                      } else {
+                        // 若沒有班級資料，提示錯誤訊息
+                        $("#class-section").html("<p>無法取得班級資料，請聯繫管理員！</p>");
+                      }
+                    },
+                    error: function (xhr, status, error) {
+                      console.error("AJAX 發生錯誤：", status, error);
+                      alert("無法載入資料，請稍後再試！");
+                    }
                   });
                 });
+
+                function displayButtons(buttons) {
+                  $("#function-buttons").empty();
+                  buttons.forEach(btn => {
+                    $("#function-buttons").append(
+                      `<button class="btn" onclick="location.href='${btn.url}'">${btn.name}</button>`
+                    );
+                  });
+                  $("#function-section").removeClass("hidden");
+                }
               </script>
             </div>
           </div>

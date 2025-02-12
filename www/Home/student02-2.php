@@ -1,98 +1,44 @@
 <?php
-session_start();
-$user_id = $_SESSION['user_id'] ?? null; // 確保有使用者 ID
+// 設定回傳格式為 JSON
+header('Content-Type: application/json');
+session_start(); // 請確保只呼叫一次 session_start()
 
-// 連接資料庫
-$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if (!$link) {
-    die("資料庫連接失敗: " . mysqli_connect_error());
+// 模擬資料：根據使用者 ID 回傳班級資料
+$userClassesData = [
+    'user1' => [
+        ['id' => 1, 'name' => '班級A'],
+        ['id' => 2, 'name' => '班級B']
+    ],
+    'user2' => [
+        ['id' => 3, 'name' => '班級C']
+    ]
+];
+
+// 功能按鈕清單
+$buttons = [
+    ['name' => '成績單', 'url' => 'transcript.php'],
+    ['name' => '自傳', 'url' => 'autobiography.php'],
+    ['name' => '學歷證明', 'url' => 'education_certificate.php'],
+    ['name' => '競賽證明', 'url' => 'competition_certificate.php'],
+    ['name' => '實習證明', 'url' => 'internship_certificate.php'],
+    ['name' => '相關證照', 'url' => 'related_certificates.php'],
+    ['name' => '語言能力證明', 'url' => 'language_proficiency.php'],
+    ['name' => '專題資料', 'url' => 'project_data.php'],
+    ['name' => '其他資料', 'url' => 'other_documents.php'],
+    ['name' => '讀書計畫', 'url' => 'study_plan.php'],
+    ['name' => '志願查看', 'url' => 'volunteer_view.php']
+];
+
+$userID = $_SESSION['user'] ?? 'guest';
+if ($userID === 'guest') {
+    // 測試時預設使用 user1，確保有班級資料
+    $userID = 'user1';
 }
 
-$class_list = [];
+$userClasses = $userClassesData[$userID] ?? [];
 
-if ($user_id) {
-  $stmt = mysqli_prepare($link, "SELECT grade, class FROM user_classes WHERE user_id = ?");
-  mysqli_stmt_bind_param($stmt, "s", $user_id);
-  mysqli_stmt_execute($stmt);
-  $result = mysqli_stmt_get_result($stmt);
-
-  while ($row = mysqli_fetch_assoc($result)) {
-      $class_list[] = $row['grade'] . $row['class'];
-  }
-  mysqli_stmt_close($stmt);
-}
-
-
-// 關閉資料庫連線
-mysqli_close($link);
+echo json_encode([
+    'classes' => $userClasses,
+    'buttons' => $buttons
+]);
 ?>
-
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>班級選擇</title>
-    <style>
-        .class-buttons { display: flex; gap: 10px; }
-        .class-buttons button { background-color: green; color: white; padding: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .hidden { display: none; }
-    </style>
-</head>
-<body>
-
-    <h2>帶班班級名單</h2>
-
-    <!-- 班級選擇按鈕 -->
-    <div class="class-buttons">
-        <?php foreach ($class_list as $class): ?>
-            <button id="btn-<?php echo $class; ?>" onclick="showFunctions('<?php echo $class; ?>')"><?php echo $class; ?></button>
-        <?php endforeach; ?>
-    </div>
-
-    <!-- 功能按鈕區 -->
-    <div id="functions-container">
-        <?php foreach ($class_list as $class): ?>
-            <div id="functions-<?php echo $class; ?>" class="hidden">
-                <h3><?php echo $class; ?> 功能選擇</h3>
-                <form action="index-02.php" method="POST">
-                    <input type="hidden" name="grade" value="<?php echo substr($class, 0, -1); ?>">
-                    <input type="hidden" name="class" value="<?php echo substr($class, -1); ?>">
-                    <button type="submit">查看備審</button>
-                </form>
-                <form action="viewapplicationorder-02.php" method="POST">
-                    <input type="hidden" name="grade" value="<?php echo substr($class, 0, -1); ?>">
-                    <input type="hidden" name="class" value="<?php echo substr($class, -1); ?>">
-                    <button type="submit">查看志願</button>
-                </form>
-            </div>
-        <?php endforeach; ?>
-    </div>
-
-    <script>
-        function showFunctions(selectedClass) {
-            // 如果使用者只有一個班級，不隱藏其他按鈕
-            const classButtons = document.querySelectorAll(".class-buttons button");
-            if (classButtons.length > 1) {
-                // 隱藏所有功能區塊
-                document.querySelectorAll("[id^='functions-']").forEach(div => {
-                    div.classList.add("hidden");
-                });
-
-                // 顯示選擇的班級對應的功能按鈕
-                document.getElementById("functions-" + selectedClass).classList.remove("hidden");
-            }
-        }
-
-        // 頁面加載後自動檢查是否有多個班級
-        window.onload = function() {
-            const classButtons = document.querySelectorAll(".class-buttons button");
-            if (classButtons.length === 1) {
-                // 只有一個班級時，直接顯示該班級的功能按鈕
-                showFunctions(classButtons[0].innerText);
-            }
-        };
-    </script>
-
-</body>
-</html>
