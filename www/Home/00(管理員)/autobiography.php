@@ -218,7 +218,7 @@ if ($result_students) {
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='autobiography-download.php?id={$student_id}'>📂 下載 ZIP</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='word-download.php?id={$student_id}&category=自傳'>📂 下載 ZIP</a>" : "";
 
 
         echo "<tr>
