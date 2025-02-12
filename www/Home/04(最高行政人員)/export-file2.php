@@ -76,12 +76,17 @@ $options = isset($_POST['options']) ? $_POST['options'] : [];
 if (empty($options)) {
     die("未選擇任何匯出選項！");
 }
-
+if (isset($_POST['autobiography_file'])) {
+    $autobiographyFile = $_POST['autobiography_file'];
+    // 進行處理，如將自傳檔案與其他選項一起處理或存入資料庫等
+}else{
+    $autobiographyFile ='';
+}
 // 定義查詢選項對應（除了 'other' 之外）
 $queryMap = [
     'competition'   => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
     'transcript'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
-    'autobiography' => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '自傳'",
+    'autobiography' => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '自傳' AND file_name='$autobiographyFile'",
     'diploma'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照'",

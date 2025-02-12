@@ -235,19 +235,29 @@ if ($conn->connect_error) {
             <option value="其他資料">其他資料</option>
         </select><br>
         <div id="sub_category_div" style="display: none;">
-            相關技術證照分類:
+        <label for="category">相關技術證照分類：</label>
             <select name="sub_category">
-                <option value="ACM - CPE">ACM - CPE大學程式能力檢定</option>
+                <option value="ACM - CPE">ACM</option>
                 <option value="Adobe">Adobe</option>
-                <option value="GLAD">GLAD</option>
+                <option value="GLAD">GLAD (Global Learning & Assessment Development)</option>
                 <option value="Microsoft">Microsoft</option>
-                <option value="MOCC">MOCC - 中華民國電腦教育發展協會</option>
+                <option value="MOCC">中華民國電腦教育發展協會(MOCC)</option>
                 <option value="勞動部勞動力發展署">勞動部勞動力發展署</option>
                 <option value="台灣醫學資訊協會">台灣醫學資訊協會 - 醫療資訊管理師</option>
-                <option value="TOEIC">多益(TOEIC) - 美國教育測驗服務社(ETS)</option>
-                <option value="CPR">臺灣急救教育推廣與諮詢中心 - 心肺復甦術(CPR)</option>
-                <option value="TQC">TQC - 財團法人中華民國電腦技能基金會</option>
+                <option value="TOEIC">美國教育測驗服務社(ETS)</option>
+                <option value="CPR">臺灣急救教育推廣與諮詢中心</option>
+                <option value="TQC">財團法人中華民國電腦技能基金會(TQC)</option>
+                <option value="TQC">財團法人語言訓練測驗中心</option>
             </select>
+        </div>
+
+        <div id="certificate_div" style="display: none;">
+                <label for="certificate">選擇證照：</label>
+                <select name="certificate" id="certificate">
+                    <!-- 這裡的選項會由後端根據選擇的分類動態填充 -->
+                </select>
+            </div>
+
         </div>
 
         <div style="margin-bottom: 15px;">
@@ -259,6 +269,51 @@ if ($conn->connect_error) {
         </button>
     </form>
 </div>
+
+<script>
+    function toggleSubCategory() {
+        var category = document.getElementById("category").value;
+        var subCategoryDiv = document.getElementById("sub_category_div");
+        
+        // 如果選擇了「相關技術證照」，顯示相關證照分類選單
+        if (category === "相關證照") {
+            subCategoryDiv.style.display = "block";
+        } else {
+            subCategoryDiv.style.display = "none";
+            document.getElementById("certificate_div").style.display = "none";
+        }
+    }
+
+    function loadCertifications(category) {
+        var certificateDiv = document.getElementById("certificate_div");
+        var certificateSelect = document.getElementById("certificate");
+        
+        // 顯示證照選單
+        certificateDiv.style.display = "block";
+        
+        // 清除現有選項
+        certificateSelect.innerHTML = "";
+
+        // 使用 AJAX 向伺服器請求相應分類的證照
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "GetCertifications.php?category=" + category, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var certifications = JSON.parse(xhr.responseText);
+                
+                // 動態填充證照選項
+                certifications.forEach(function(cert) {
+                    var option = document.createElement("option");
+                    option.value = cert.id;
+                    option.textContent = cert.name;
+                    certificateSelect.appendChild(option);
+                });
+            }
+        };
+        xhr.send();
+    }
+</script>
+
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
