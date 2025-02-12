@@ -97,7 +97,7 @@
             }
 
             // 從資料庫抓取學校資料
-            $sql = "SELECT school_name, min_score FROM School";
+            $sql = "SELECT school_name, min_score FROM University";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
