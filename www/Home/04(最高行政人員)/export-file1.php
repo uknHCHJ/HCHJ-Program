@@ -108,7 +108,7 @@ $username = $userData['name'];
                                     fetch('get-autobiography.php?type=autobiography')
                                         .then(response => response.json())
                                         .then(data => {
-                                        fileSelect.innerHTML = '<option value="">請選擇檔案</option>';
+                                        fileSelect.innerHTML = '<option value="">請選擇檔案...</option>';
                                             data.forEach(file => {
                                                 fileSelect.innerHTML += `<option value="${file.filename}">${file.filename}</option>`;
                                             });
