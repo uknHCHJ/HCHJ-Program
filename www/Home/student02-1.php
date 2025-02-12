@@ -1,6 +1,5 @@
 <?php
 session_start();
-session_start();
 /** 資料庫連線 */
 $link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
 if ($link) {
@@ -23,10 +22,10 @@ $userData = $_SESSION['user'];
 $username = $userData['name']; // 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
 
-
 $permissions = explode(",", $userData['Permissions']); // 權限以逗號分隔
 $grades = explode(",", $userData['grade']);  // 年級以逗號分隔
 $classes = explode(",", $userData['class']);  // 班級以逗號分隔
+
 // 將年級和班級組合成唯一的鍵
 $gradeClassPairs = [];
 foreach ($grades as $grade) {
@@ -45,6 +44,8 @@ foreach ($grades as $grade) {
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>查看學生志願序</title>
+   <!-- 確認已正確載入 jQuery -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -419,55 +420,61 @@ foreach ($grades as $grade) {
             <div id="table-container" class="table-container">
 
 
-              <script>
-                $(document).ready(function () {
-                  $.ajax({
-                    url: 'student02-2.php',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                      console.log("AJAX 回傳資料：", response);
-                      const classes = response.classes;
-                      const buttons = response.buttons;
+            <script>
+              $(document).ready(function () {
+                // 宣告全域變數，用來儲存功能按鈕資料
+                var globalButtons = [];
 
-                      if (classes.length === 1) {
-                        // 若只有一個班級，直接隱藏班級選單並顯示功能按鈕
-                        $("#class-section").hide();
-                        displayButtons(buttons);
-                      } else if (classes.length > 1) {
-                        // 多個班級：動態產生班級按鈕供使用者選擇
-                        classes.forEach(cls => {
-                          $("#class-buttons").append(
-                            `<button class="btn class-btn" data-class-id="${cls.id}">${cls.name}</button>`
-                          );
-                        });
-                        // 為動態產生的按鈕綁定 click 事件
-                        $(".class-btn").click(function () {
-                          $(".class-btn").hide(); // 隱藏所有班級按鈕
-                          displayButtons(buttons);
-                        });
-                      } else {
-                        // 若沒有班級資料，提示錯誤訊息
-                        $("#class-section").html("<p>無法取得班級資料，請聯繫管理員！</p>");
-                      }
-                    },
-                    error: function (xhr, status, error) {
-                      console.error("AJAX 發生錯誤：", status, error);
-                      alert("無法載入資料，請稍後再試！");
+                $.ajax({
+                  url: 'student02-2.php',
+                  type: 'GET',
+                  dataType: 'json',
+                  success: function (response) {
+                    console.log("AJAX 回傳資料：", response);
+                    const classes = response.classes;
+                    globalButtons = response.buttons;  // 將按鈕資料存到全域變數
+
+                    if (classes.length === 1) {
+                      // 只有一個班級時，隱藏班級區塊並直接顯示功能按鈕
+                      $("#class-section").hide();
+                      displayButtons(globalButtons);
+                    } else if (classes.length > 1) {
+                      // 多個班級時，動態產生班級按鈕
+                      classes.forEach(cls => {
+                        $("#class-buttons").append(
+                          `<button class="btn class-btn" data-class-id="${cls.id}">${cls.name}</button>`
+                        );
+                      });
+                    } else {
+                      // 若無班級資料
+                      $("#class-section").html("<p>無法取得班級資料，請聯繫管理員！</p>");
                     }
-                  });
+                  },
+                  error: function (xhr, status, error) {
+                    console.error("AJAX 發生錯誤：", status, error);
+                    alert("無法載入資料，請稍後再試！");
+                  }
                 });
 
-                function displayButtons(buttons) {
-                  $("#function-buttons").empty();
-                  buttons.forEach(btn => {
-                    $("#function-buttons").append(
-                      `<button class="btn" onclick="location.href='${btn.url}'">${btn.name}</button>`
-                    );
-                  });
-                  $("#function-section").removeClass("hidden");
-                }
-              </script>
+                // 這裡採用事件委派，確保動態新增的 .class-btn 也能正常綁定點擊事件
+                $("#class-buttons").on("click", ".class-btn", function () {
+                  console.log("班級按鈕被點擊");
+                  $(".class-btn").hide(); // 隱藏所有班級按鈕
+                  displayButtons(globalButtons);
+                });
+              });
+
+              // 顯示功能按鈕函數
+              function displayButtons(buttons) {
+                $("#function-buttons").empty();
+                buttons.forEach(btn => {
+                  $("#function-buttons").append(
+                    `<button class="btn" onclick="location.href='${btn.url}'">${btn.name}</button>`
+                  );
+                });
+                $("#function-section").removeClass("hidden");
+              }
+            </script>
             </div>
           </div>
         </div>

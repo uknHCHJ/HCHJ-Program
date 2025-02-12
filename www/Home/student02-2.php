@@ -13,7 +13,7 @@ $userClassesData = [
         ['id' => 3, 'name' => '班級C']
     ]
 ];
-
+$_SESSION['user'] = '109534208'; 
 // 功能按鈕清單
 $buttons = [
     ['name' => '成績單', 'url' => 'transcript.php'],
