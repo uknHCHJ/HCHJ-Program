@@ -1,7 +1,8 @@
 <?php
 // 設定回傳格式為 JSON
 header('Content-Type: application/json');
-session_start(); // 請確保只呼叫一次 session_start()
+session_start();
+ // 請確保只呼叫一次 session_start()
 
 // 模擬資料：根據使用者 ID 回傳班級資料
 $userClassesData = [
@@ -13,8 +14,8 @@ $userClassesData = [
         ['id' => 3, 'name' => '班級C']
     ]
 ];
-$_SESSION['user'] = '109534208'; 
-// 功能按鈕清單
+
+// 你的功能按鈕陣列
 $buttons = [
     ['name' => '成績單', 'url' => 'transcript.php'],
     ['name' => '自傳', 'url' => 'autobiography.php'],
@@ -29,16 +30,11 @@ $buttons = [
     ['name' => '志願查看', 'url' => 'volunteer_view.php']
 ];
 
-$userID = $_SESSION['user'] ?? 'guest';
-if ($userID === 'guest') {
-    // 測試時預設使用 user1，確保有班級資料
-    $userID = 'user1';
+// **檢查是否有資料**
+if (empty($buttons)) {
+    echo json_encode(["error" => "No buttons found"]);
+} else {
+    echo json_encode($buttons);
 }
-
-$userClasses = $userClassesData[$userID] ?? [];
-
-echo json_encode([
-    'classes' => $userClasses,
-    'buttons' => $buttons
-]);
+exit();
 ?>

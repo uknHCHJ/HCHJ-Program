@@ -44,8 +44,8 @@ foreach ($grades as $grade) {
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>查看學生志願序</title>
-   <!-- 確認已正確載入 jQuery -->
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- 確認已正確載入 jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -418,63 +418,42 @@ foreach ($grades as $grade) {
               ?>
             </div>
             <div id="table-container" class="table-container">
+              <button id="menuButton">不知對不對</button>
+              <div id="menu" style="display: none;">
+                <ul id="menuList"></ul>
+              </div>
 
+              <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                  console.log("JavaScript 載入成功");
 
-            <script>
-              $(document).ready(function () {
-                // 宣告全域變數，用來儲存功能按鈕資料
-                var globalButtons = [];
+                  fetch("student02-2.php")
+                    .then(response => response.json())
+                    .then(data => {
+                      console.log("從後端獲取的數據：", data); // **在 Console 檢查 JSON**
 
-                $.ajax({
-                  url: 'student02-2.php',
-                  type: 'GET',
-                  dataType: 'json',
-                  success: function (response) {
-                    console.log("AJAX 回傳資料：", response);
-                    const classes = response.classes;
-                    globalButtons = response.buttons;  // 將按鈕資料存到全域變數
+                      if (data.error) {
+                        console.error("後端錯誤:", data.error);
+                        return;
+                      }
 
-                    if (classes.length === 1) {
-                      // 只有一個班級時，隱藏班級區塊並直接顯示功能按鈕
-                      $("#class-section").hide();
-                      displayButtons(globalButtons);
-                    } else if (classes.length > 1) {
-                      // 多個班級時，動態產生班級按鈕
-                      classes.forEach(cls => {
-                        $("#class-buttons").append(
-                          `<button class="btn class-btn" data-class-id="${cls.id}">${cls.name}</button>`
-                        );
+                      const menuList = document.getElementById("menuList");
+                      menuList.innerHTML = ""; // 清空按鈕列表
+
+                      data.forEach(button => {
+                        const li = document.createElement("li");
+                        const a = document.createElement("a");
+                        a.textContent = button.name;
+                        a.href = button.url;
+                        li.appendChild(a);
+                        menuList.appendChild(li);
                       });
-                    } else {
-                      // 若無班級資料
-                      $("#class-section").html("<p>無法取得班級資料，請聯繫管理員！</p>");
-                    }
-                  },
-                  error: function (xhr, status, error) {
-                    console.error("AJAX 發生錯誤：", status, error);
-                    alert("無法載入資料，請稍後再試！");
-                  }
-                });
 
-                // 這裡採用事件委派，確保動態新增的 .class-btn 也能正常綁定點擊事件
-                $("#class-buttons").on("click", ".class-btn", function () {
-                  console.log("班級按鈕被點擊");
-                  $(".class-btn").hide(); // 隱藏所有班級按鈕
-                  displayButtons(globalButtons);
+                      console.log("按鈕已載入");
+                    })
+                    .catch(error => console.error("載入按鈕失敗:", error));
                 });
-              });
-
-              // 顯示功能按鈕函數
-              function displayButtons(buttons) {
-                $("#function-buttons").empty();
-                buttons.forEach(btn => {
-                  $("#function-buttons").append(
-                    `<button class="btn" onclick="location.href='${btn.url}'">${btn.name}</button>`
-                  );
-                });
-                $("#function-section").removeClass("hidden");
-              }
-            </script>
+              </script>
             </div>
           </div>
         </div>
