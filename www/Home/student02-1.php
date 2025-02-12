@@ -403,6 +403,31 @@ foreach ($grades as $grade) {
                 width: 250px;
                 /* 志願序 */
               }
+
+              /*功能按鈕設計*/
+              .menu-button {
+                background-color: #007BFF;
+                /* 統一藍色 */
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 10px;
+                margin: 10px;
+                cursor: pointer;
+                transition: 0.3s;
+                display: block;
+                /* 讓按鈕垂直排列 */
+                width: 200px;
+                /* 固定按鈕大小 */
+                text-align: center;
+              }
+
+              .menu-button:hover {
+                background-color: #0056b3;
+                /* 滑鼠移上變深藍 */
+              }
             </style>
             <div class="classList" id="classList">
               <?php
@@ -418,61 +443,52 @@ foreach ($grades as $grade) {
               ?>
             </div>
 
-            <div id="menu" style="display:none;">
+            <div id="menu" style="display: none;">
               <ul id="menuList"></ul>
             </div>
 
             <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                console.log("✅ JavaScript 成功載入！");
+              document.addEventListener("click", function (event) {
+                if (event.target.classList.contains("download-button")) {
+                  console.log("✅ 班級按鈕被點擊：" + event.target.innerText);
 
-                const classList = document.getElementById("classList"); // 取得班級按鈕的容器
-                const menu = document.getElementById("menu");
-                const menuList = document.getElementById("menuList");
+                  // 隱藏其他班級按鈕
+                  document.querySelectorAll(".download-button").forEach(button => {
+                    if (button !== event.target) {
+                      button.style.display = "none";
+                    }
+                  });
 
-                // **確認 menuList 是否存在**
-                if (!menuList) {
-                  console.error("menuList 不存在，請確認 HTML 是否有 <ul id='menuList'></ul>");
-                  return;
-                }
+                  // 取得班級資訊
+                  let grade = event.target.getAttribute("data-grade");
+                  let className = event.target.getAttribute("data-class");
 
-                if (!classList) {
-                  console.error("lassList 不存在，請確認 HTML 是否有 <div id='classList'></div>");
-                  return;
-                }
+                  // 向後端請求功能清單
+                  fetch("student02-2.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `grade=${grade}&class=${className}`
+                  })
+                    .then(response => response.json())  // 解析 JSON
+                    .then(menuItems => {
+                      console.log("✅ 後端回傳 JSON:", menuItems);
 
-                // **監聽班級按鈕的點擊**
-                classList.addEventListener("click", function (event) {
-                  if (event.target.classList.contains("download-button")) {
-                    console.log("✅ 班級按鈕被點擊，載入功能清單...");
-                    menu.style.display = "block"; // 顯示功能清單
-
-                    fetch("student02-2.php")
-                      .then(response => response.json())
-                      .then(data => {
-                        console.log("📥 從後端獲取的數據：", data);
-
-                        if (data.error) {
-                          console.error("❌ 後端錯誤:", data.error);
-                          return;
-                        }
-
-                        menuList.innerHTML = ""; // 清空按鈕列表
-
-                        data.forEach(button => {
-                          const li = document.createElement("li");
-                          const a = document.createElement("a");
-                          a.textContent = button.name;
-                          a.href = button.url;
-                          li.appendChild(a);
-                          menuList.appendChild(li);
+                      const menu = document.getElementById("menu");
+                      if (menu) {
+                        // 生成功能清單的 HTML
+                        let menuHtml = "<ul>";
+                        menuItems.forEach(item => {
+                          menuHtml += `<li><a href="${item.url}">${item.name}</a></li>`;
                         });
+                        menuHtml += "</ul>";
 
-                        console.log("✅ 按鈕已載入，menuList 內容：", menuList.innerHTML);
-                      })
-                      .catch(error => console.error("❌ 載入按鈕失敗:", error));
-                  }
-                });
+                        menu.innerHTML = menuHtml;  // 插入 HTML
+                        menu.style.display = "block";  // 顯示清單
+                      }
+                    })
+                    .catch(error => console.error("❌ 發生錯誤:", error));
+
+                }
               });
 
             </script>
