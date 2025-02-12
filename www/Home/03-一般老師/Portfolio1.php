@@ -239,7 +239,7 @@ if ($conn->connect_error) {
             <select name="sub_category">
                 <option value="ACM">ACM</option>
                 <option value="Adobe">Adobe</option>
-                <option value="GLAD (Global Learning & Assessment Development)">GLAD (Global Learning & Assessment Development)</option>
+                <option value="GLAD">GLAD (Global Learning & Assessment Development)</option>
                 <option value="Microsoft">Microsoft</option>
                 <option value="中華民國電腦教育發展協會(MOCC)">中華民國電腦教育發展協會(MOCC)</option>
                 <option value="勞動部勞動力發展署">勞動部勞動力發展署</option>
