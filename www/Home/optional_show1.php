@@ -292,7 +292,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 }
             </style>
 
-            <div id="loading">  
+            <div id="loading">
                 <p>正在載入資料...</p>
             </div>
 
@@ -308,7 +308,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         </tr>
                     </thead>
                     <tbody>
-
                     </tbody>
                 </table>
             </div>
@@ -323,53 +322,66 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                     // 發送請求到後端取出資料
                     fetch('optional_show2.php?user=' + encodeURIComponent(userValue))
-                        .then(function (response) {
-                            return response.json();
-                        })
-                        .then(function (data) {
+                        .then(response => response.json())
+                        .then(data => {
                             window.studentData = data;
                             window.isEditing = false; // 初始為非編輯狀態
+                            window.isDataChanged = false; // 用於監測是否變更
+
                             renderTable(window.studentData);
 
                             // 隱藏載入動畫
                             document.getElementById('loading').style.display = 'none';
                         })
-                        .catch(function (error) {
+                        .catch(error => {
                             console.error('錯誤:', error);
                             // 隱藏載入動畫
                             document.getElementById('loading').style.display = 'none';
                         });
+
+                    // 防止未保存變更就離開
+                    window.addEventListener('beforeunload', function (event) {
+                        if (window.isDataChanged) {
+                            event.preventDefault();
+                            event.returnValue = '您有未保存的變更，確定要離開嗎？';
+                        }
+                    });
                 });
 
+                // 啟用編輯模式
+                function enableEditMode(button) {
+                    if (window.isEditing) return;
+                    window.isEditing = true;
+                    renderTable(window.studentData);
+
+                    button.disabled = true;
+                    document.getElementById('saveChangesButton').style.display = 'inline-block'; // 顯示「保存變更」按鈕
+                }
 
                 // 渲染表格
                 function renderTable(data) {
                     var table = document.getElementById('data-table');
-                    var thead = table.getElementsByTagName('thead')[0];
                     var tbody = table.getElementsByTagName('tbody')[0];
-
-                    // 更新表頭：根據是否在編輯模式，控制最後一欄的顯示
-                    var editHeader = document.getElementById('edit-header');
-                    editHeader.style.display = window.isEditing ? '' : 'none';
 
                     tbody.innerHTML = ''; // 清空表格內容
 
                     if (data.length === 0) {
-                        // 當數據為空時顯示提示行
                         var row = tbody.insertRow();
                         var cell = row.insertCell(0);
-                        cell.colSpan = 5; // 跨越整個表格的列數
+                        cell.colSpan = 5;
                         cell.textContent = '您還未選擇志願';
-                        cell.style.textAlign = 'center'; // 置中顯示文字
-                        cell.style.color = 'gray'; // 文字顏色
-                        return; // 停止渲染其他內容
+                        cell.style.textAlign = 'center';
+                        cell.style.color = 'gray';
+                        return;
                     }
 
                     data.forEach(function (item, index) {
                         var row = tbody.insertRow();
 
                         // 志願序號鎖定
-                        row.insertCell(0).textContent = index + 1;
+                        var preferenceCell = row.insertCell(0);
+                        preferenceCell.textContent = index + 1;  // 顯示順序號
+                        item.preference_rank = index + 1;  // 更新 preference_rank
 
                         // 顯示學校名稱和科系
                         row.insertCell(1).textContent = item.school_name;
@@ -408,41 +420,47 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     });
                 }
 
-                // 點擊編輯按鈕進入編輯模式
-                function enableEditMode(button) {
-                    if (window.isEditing) return; // 禁止再次點擊
-                    window.isEditing = true;
-                    renderTable(window.studentData); // 更新表格
-                    button.disabled = true; // 禁用編輯按鈕
-                    document.getElementById('saveChangesButton').style.display = 'inline-block'; // 顯示保存按鈕
-                }
-
-                // 移動項目的位置
+                // 移動項目位置
                 function moveItem(index, direction) {
                     var newIndex = index + direction;
 
-                    // 確保新位置在範圍內
                     if (newIndex >= 0 && newIndex < window.studentData.length) {
                         var temp = window.studentData[index];
                         window.studentData[index] = window.studentData[newIndex];
                         window.studentData[newIndex] = temp;
 
-                        // 重新渲染表格
+                        // 更新 preference_rank
+                        window.studentData[index].preference_rank = index + 1;
+                        window.studentData[newIndex].preference_rank = newIndex + 1;
+
+                        window.isDataChanged = true; // 記錄變更
                         renderTable(window.studentData);
                     }
                 }
 
-                // 保存變更到後端
+                // 保存變更
                 function saveChanges() {
+                    console.log(window.studentData);  // 確保顯示資料包含 preference_rank
+
+                    // 傳送到後端
                     fetch('optional_update.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(window.studentData),
+                        body: JSON.stringify({
+                            preferences: window.studentData.map(item => ({
+                                preference_rank: item.preference_rank,  // 志願序
+                                school_name: item.school_name,          // 學校名稱
+                                department_name: item.department_name   // 科系名稱
+                            }))
+                        }),
                     })
                         .then((response) => response.json())
                         .then((data) => {
                             alert('變更已保存！');
                             console.log('後端回應:', data);
+
+                            // 保存後隱藏「保存變更」按鈕
+                            document.getElementById('saveChangesButton').style.display = 'none';
                         })
                         .catch((error) => {
                             console.error('保存失敗:', error);
@@ -450,6 +468,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         });
                 }
             </script>
+
 
             <!-- 按鈕區 -->
             <div style="text-align: center; margin-top: 20px;">
@@ -466,6 +485,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     保存變更
                 </button>
             </div>
+
 
             <!-- ========================= page-404-section end ========================= -->
 

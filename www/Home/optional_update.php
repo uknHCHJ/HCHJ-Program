@@ -37,27 +37,57 @@ if ($data === null) {
 $conn->begin_transaction();
 
 try {
-    // 更新或插入資料
-    $sqlUpdate = 
-        'INSERT INTO Preferences (user, serial_number, school_id, department_id)
+    // 先刪除原有的資料
+    $sqlDelete = "DELETE FROM preferences WHERE student_user = ?";
+    $stmtDelete = $conn->prepare($sqlDelete);
+    $stmtDelete->bind_param("i", $userId);
+    if (!$stmtDelete->execute()) {
+        throw new Exception("刪除原有資料失敗: " . $stmtDelete->error);
+    }
+    $stmtDelete->close(); // 關閉刪除語句
+
+    // 逐條處理學校和科系資料
+    $sqlGetSchoolId = "SELECT id FROM Secondskill WHERE name = ? LIMIT 1";
+    $sqlGetDepartmentId = "SELECT department_id FROM School_Department WHERE department_name = ? LIMIT 1";
+
+    $stmtSchool = $conn->prepare($sqlGetSchoolId);
+    $stmtDepartment = $conn->prepare($sqlGetDepartmentId);
+
+    // 使用 INSERT ... ON DUPLICATE KEY UPDATE 來處理資料更新
+    $sqlInsert = 'INSERT INTO preferences (student_user, preference_rank, Secondskill_id, department_id)
         VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
-        school_id = VALUES(school_id),
-        department_id = VALUES(department_id)';
-    $stmt = $conn->prepare($sqlUpdate);
+        Secondskill_id = VALUES(Secondskill_id),
+        department_id = VALUES(department_id),
+        preference_rank = VALUES(preference_rank)';
+
+    $stmtInsert = $conn->prepare($sqlInsert);
 
     foreach ($data['preferences'] as $preference) {
-        $serial_number = $preference['serial_number'];
-        $school_id = $preference['school_id'];
-        $department_id = $preference['department_id'];
+        $preference_rank = $preference['preference_rank'];
+        $school_name = $preference['school_name'];
+        $department_name = $preference['department_name'];
 
-        // 綁定參數
-        $stmt->bind_param("iiii", $userId, $serial_number, $school_id, $department_id);
-        if (!$stmt->execute()) {
-            throw new Exception("更新或插入資料失敗: " . $stmt->error);
+        // 查詢學校 ID
+        $stmtSchool->bind_param("s", $school_name);
+        $stmtSchool->execute();
+        $stmtSchool->bind_result($Secondskill_id);
+        $stmtSchool->fetch();
+        $stmtSchool->free_result(); // 釋放結果集
+
+        // 查詢科系 ID
+        $stmtDepartment->bind_param("s", $department_name);
+        $stmtDepartment->execute();
+        $stmtDepartment->bind_result($department_id);
+        $stmtDepartment->fetch();
+        $stmtDepartment->free_result(); // 釋放結果集
+
+        // 綁定參數並執行插入或更新
+        $stmtInsert->bind_param("iiii", $userId, $preference_rank, $Secondskill_id, $department_id);
+        if (!$stmtInsert->execute()) {
+            throw new Exception("插入資料失敗: " . $stmtInsert->error);
         }
     }
-    $stmt->close();
 
     // 提交交易
     $conn->commit();
@@ -70,5 +100,8 @@ try {
 }
 
 // 關閉連線
+$stmtSchool->close();
+$stmtDepartment->close();
+$stmtInsert->close();
 $conn->close();
 ?>
