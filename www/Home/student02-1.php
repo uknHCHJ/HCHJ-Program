@@ -404,7 +404,7 @@ foreach ($grades as $grade) {
                 /* 志願序 */
               }
             </style>
-            <div class="button-container">
+            <div class="classList" id="classList">
               <?php
               // 動態生成按鈕，根據唯一的 grade-class 組合
               foreach ($gradeClassPairs as $pair) {
@@ -417,65 +417,69 @@ foreach ($grades as $grade) {
               }
               ?>
             </div>
-            <div id="table-container" class="table-container">
-              <button id="menuButton">不知對不對</button>
-              <div id="menu" style="display: none;">
-                <ul id="menuList"></ul>
-              </div>
 
-              <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                  console.log("JavaScript 載入成功");
-
-                  const menuButton = document.getElementById("menuButton");
-                  const menu = document.getElementById("menu");
-                  const menuList = document.getElementById("menuList");
-
-                  if (!menuList) {
-                    console.error("menuList 不存在，請確認 HTML 是否有 <ul id='menuList'></ul>");
-                    return;
-                  }
-
-                  // **按下按鈕後，切換顯示/隱藏功能表**
-                  menuButton.addEventListener("click", function () {
-                    if (menu.style.display === "none" || menu.style.display === "") {
-                      menu.style.display = "block";
-                    } else {
-                      menu.style.display = "none";
-                    }
-                  });
-
-                  fetch("student02-2.php")
-                    .then(response => response.json())
-                    .then(data => {
-                      console.log("從後端獲取的數據：", data); // 確認 JSON 是否正常
-
-                      if (data.error) {
-                        console.error("後端錯誤:", data.error);
-                        return;
-                      }
-
-                      menuList.innerHTML = ""; // 清空按鈕列表
-
-                      data.forEach(button => {
-                        const li = document.createElement("li");
-                        const a = document.createElement("a");
-                        a.textContent = button.name;
-                        a.href = button.url;
-                        li.appendChild(a);
-                        menuList.appendChild(li);
-                      });
-
-                      console.log("按鈕已載入，檢查 menuList 內容：", menuList.innerHTML);
-                    })
-                    .catch(error => console.error("載入按鈕失敗:", error));
-                });
-
-              </script>
+            <div id="menu" style="display:none;">
+              <ul id="menuList"></ul>
             </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                console.log("✅ JavaScript 成功載入！");
+
+                const classList = document.getElementById("classList"); // 取得班級按鈕的容器
+                const menu = document.getElementById("menu");
+                const menuList = document.getElementById("menuList");
+
+                // **確認 menuList 是否存在**
+                if (!menuList) {
+                  console.error("menuList 不存在，請確認 HTML 是否有 <ul id='menuList'></ul>");
+                  return;
+                }
+
+                if (!classList) {
+                  console.error("lassList 不存在，請確認 HTML 是否有 <div id='classList'></div>");
+                  return;
+                }
+
+                // **監聽班級按鈕的點擊**
+                classList.addEventListener("click", function (event) {
+                  if (event.target.classList.contains("download-button")) {
+                    console.log("✅ 班級按鈕被點擊，載入功能清單...");
+                    menu.style.display = "block"; // 顯示功能清單
+
+                    fetch("student02-2.php")
+                      .then(response => response.json())
+                      .then(data => {
+                        console.log("📥 從後端獲取的數據：", data);
+
+                        if (data.error) {
+                          console.error("❌ 後端錯誤:", data.error);
+                          return;
+                        }
+
+                        menuList.innerHTML = ""; // 清空按鈕列表
+
+                        data.forEach(button => {
+                          const li = document.createElement("li");
+                          const a = document.createElement("a");
+                          a.textContent = button.name;
+                          a.href = button.url;
+                          li.appendChild(a);
+                          menuList.appendChild(li);
+                        });
+
+                        console.log("✅ 按鈕已載入，menuList 內容：", menuList.innerHTML);
+                      })
+                      .catch(error => console.error("❌ 載入按鈕失敗:", error));
+                  }
+                });
+              });
+
+            </script>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </section>
   <!-- ========================= page-404-section end ========================= -->
