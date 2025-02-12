@@ -12,7 +12,7 @@ if (!isset($_SESSION['user'])) {
 
 $userData = $_SESSION['user'];
 $userId = $userData['user']; 
-$username = $userData['name']; 
+$username = $userData['name'];
 ?>
 <!doctype html>
 <html class="no-js" lang="zh-TW">
@@ -118,7 +118,6 @@ $username = $userData['name'];
                                 }
                             });
                         </script>
-
                         <li class="list-group-item" data-value="diploma"><input type="checkbox" name="options[]" value="diploma"> 學歷證明</li>
                         <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
                         <li class="list-group-item" data-value="internship"><input type="checkbox" name="options[]" value="internship"> 實習證明</li>
