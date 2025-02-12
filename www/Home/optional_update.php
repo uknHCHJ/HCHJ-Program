@@ -13,7 +13,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 $userData = $_SESSION['user'];
-$userId = $userData['user'];
+$userId = $userData['user'];  // 確認這裡是正確的 user ID
 
 // 建立連線
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -40,9 +40,17 @@ try {
     // 先刪除原有的資料
     $sqlDelete = "DELETE FROM preferences WHERE student_user = ?";
     $stmtDelete = $conn->prepare($sqlDelete);
+    if ($stmtDelete === false) {
+        throw new Exception("刪除準備語句失敗: " . $conn->error);
+    }
     $stmtDelete->bind_param("i", $userId);
     if (!$stmtDelete->execute()) {
         throw new Exception("刪除原有資料失敗: " . $stmtDelete->error);
+    }
+
+    // 確認刪除
+    if ($stmtDelete->affected_rows === 0) {
+        throw new Exception("沒有找到需要刪除的資料");
     }
     $stmtDelete->close(); // 關閉刪除語句
 
