@@ -1,4 +1,4 @@
-<?php
+<?php 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         // 取得檔案資訊
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 取得學生 ID 和類別
         $studentId = intval($_POST['student_id']); // 學生ID
         $category = $conn->real_escape_string($_POST['category']); // 類別名稱
+        $subCategory = isset($_POST['sub_category']) ? $conn->real_escape_string($_POST['sub_category']) : null; // 相關證照機構（如果有）
 
         // 如果是圖片，調整圖片大小
         if ($fileType === 'image/jpeg' || $fileType === 'image/png') {
@@ -90,14 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 儲存到資料庫
-        $sql = "INSERT INTO portfolio (student_id, category, file_name, file_content, upload_time) 
-                VALUES (?, ?, ?, ?, NOW())";
+        $sql = "INSERT INTO portfolio (student_id, category, organization, file_name, file_content, upload_time) 
+                VALUES (?, ?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             die("預處理語句建立失敗：" . $conn->error);
             header("Location:Portfolio1.php");
         }
-        $stmt->bind_param("isss", $studentId, $category, $fileName, $fileContent);
+        $stmt->bind_param("issss", $studentId, $category, $subCategory, $fileName, $fileContent);
 
         if ($stmt->execute()) {
             echo "檔案上傳並儲存成功！";
