@@ -92,32 +92,32 @@ $username = $userData['name'];
                     <ul id="sortable-list" class="list-group">
                         <li class="list-group-item" data-value="transcript"><input type="checkbox" name="options[]" value="transcript"> 成績單</li>
                         <li class="list-group-item" data-value="autobiography">
-    <input type="checkbox" id="autobiography-checkbox" name="options[]" value="autobiography"> 自傳
-    <select id="autobiography-files" name="autobiography_file" class="form-control" style="display: none;">
-        <option value="">請選擇檔案</option>
-    </select>
-</li>
+                        <input type="checkbox" id="autobiography-checkbox" name="options[]" value="autobiography"> 自傳
+                        <select id="autobiography-files" name="autobiography_file" class="form-control" style="display: none;">
+                            <option value="">請選擇檔案</option>
+                        </select>
+                        </li>
 
-<script>
-    document.getElementById('autobiography-checkbox').addEventListener('change', function() {
-        var fileSelect = document.getElementById('autobiography-files');
-        if (this.checked) {
-            fileSelect.style.display = 'block';
+                        <script>
+                            document.getElementById('autobiography-checkbox').addEventListener('change', function() {
+                            var fileSelect = document.getElementById('autobiography-files');
+                                if (this.checked) {
+                                    fileSelect.style.display = 'block';
 
-            // 發送 AJAX 取得自傳檔案
-            fetch('get-autobiography.php?type=autobiography')
-                .then(response => response.json())
-                .then(data => {
-                    fileSelect.innerHTML = '<option value="">請選擇檔案</option>';
-                    data.forEach(file => {
-                        fileSelect.innerHTML += `<option value="${file.filename}">${file.filename}</option>`;
-                    });
-                });
-        } else {
-            fileSelect.style.display = 'none';
-        }
-    });
-</script>
+                                    // 發送 AJAX 取得自傳檔案
+                                    fetch('get-autobiography.php?type=autobiography')
+                                        .then(response => response.json())
+                                        .then(data => {
+                                        fileSelect.innerHTML = '<option value="">請選擇檔案</option>';
+                                            data.forEach(file => {
+                                                fileSelect.innerHTML += `<option value="${file.filename}">${file.filename}</option>`;
+                                            });
+                                        });
+                                } else {
+                                    fileSelect.style.display = 'none';
+                                }
+                            });
+                        </script>
 
                         <li class="list-group-item" data-value="diploma"><input type="checkbox" name="options[]" value="diploma"> 學歷證明</li>
                         <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
