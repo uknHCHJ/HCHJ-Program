@@ -164,40 +164,58 @@ if ($result_role) {
         <!-- page-banner-section end -->
 
         <section class="container mt-5">
-            <h2 class="text-center">檔案上傳狀態(成績單)</h2>
+            <div class="table-header">
+                <h2>檔案上傳狀態（成績單）</h2>
+                <form action="Access-Control-search.php" method="GET" class="search-form">
+                <input type="text" name="query" id="query" placeholder="輸入帳號搜尋...">
+                    <button type="submit">
+                    <i class="lni lni-search-alt"></i>
+                    </button>
+                </form>
+            </div>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>學號</th>
+                        <th>姓名</th>
                         <th>最後上傳時間</th>
                         <th class='text-center'>是否上傳</th>
                         <th class='text-center'>上傳筆數</th>                  
                     </tr>
                 </thead>
                 <tbody>
-    <?php
-    $query = "SELECT student_id, MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
-              FROM portfolio 
-              WHERE class='$class' AND grade='$grade' AND category = '成績單'
-              GROUP BY student_id";
+                <?php
+$query_students = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'";
+$result_students = mysqli_query($link, $query_students);
 
-    $result = mysqli_query($link, $query);
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $status = ($row['upload_count'] > 0) ? "✔️" : "❌";
-            $download_link = ($row['upload_count'] > 0) ? "<a href='transcript-download.php?id={$row['student_id']}'>📂 下載 ZIP</a>" : "❌";;
+if ($result_students) {
+    while ($student = mysqli_fetch_assoc($result_students)) {
+        $student_id = $student['user'];
+        $student_name = $student['name'];
 
-            echo "<tr>
-                    <td>{$row['student_id']} $download_link</td>
-                    <td>{$row['latest_upload']}</td>
-                    <td class='text-center'>$status</td>
-                    <td class='text-center'>{$row['upload_count']}</td>
-                  </tr>";
-        }
-    } else {
-        echo "<tr><td colspan='4'>查詢失敗：" . mysqli_error($link) . "</td></tr>";
+        $query = "SELECT MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
+                  FROM portfolio 
+                  WHERE student_id='$student_id' AND category='成績單'";
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_assoc($result);
+        
+        $upload_count = $row['upload_count'] ?? 0;
+        $latest_upload = $row['latest_upload'] ?? '無紀錄';
+        $status = ($upload_count > 0) ? "✔️" : "❌";
+        $download_link = ($upload_count > 0) ? "<a href='transcript-download.php?id={$student_id}'>📂 下載 ZIP</a>" : "❌";
+
+        echo "<tr>
+                <td>{$student_id}</td>
+                <td>{$student_name}</td>
+                <td>{$latest_upload}</td>
+                <td class='text-center'>{$status}</td>
+                <td class='text-center'>{$upload_count}</td>
+              </tr>";
     }
-    ?>
+} else {
+    echo "<tr><td colspan='5'>查詢失敗：" . mysqli_error($link) . "</td></tr>";
+}
+?>
 </tbody>
             </table>
             <div class="text-center mt-3">
@@ -264,6 +282,12 @@ if ($result_role) {
                                 }
                                 .footer-widget {                                   
                                     text-align: right;
+                                }
+                                .table-header {
+                                    display: flex;
+                                    justify-content: space-between; /* 讓標題靠左，搜尋框靠右 */
+                                    align-items: center;
+                                    margin-bottom: 10px; /* 調整與表格的間距 */
                                 }
                             </style>
                         </div>
