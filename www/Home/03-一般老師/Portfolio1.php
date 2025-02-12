@@ -207,6 +207,16 @@ if ($conn->connect_error) {
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
 
         <div style="margin-bottom: 15px;">
+            <label for="grade">年級：</label>
+            <input type="number" name="grade" id="grade" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="class">班級：</label>
+            <input type="text" name="class" id="class" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
             <label for="category">選擇資料類型：</label>
             <select name="category" id="category" required>
                 <option value="成績單">成績單</option>
@@ -226,6 +236,7 @@ if ($conn->connect_error) {
             <label for="file">上傳檔案：</label>
             <input type="file" name="file" id="file" required>
         </div>
+
         <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
@@ -241,57 +252,24 @@ if ($conn->connect_error) {
                     <button type="button" class="portfolio-btn" data-filter=".transcripts">成績單</button>
                     <button type="button" class="portfolio-btn" data-filter=".autobiographies">自傳</button>
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
-                    <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
-                    <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
                 </div>
                 <div class="row grid">
                     <?php
-                    // 資料庫連線設定
-                    $servername = "127.0.0.1";
-                    $username = "HCHJ";
-                    $password = "xx435kKHq";
-                    $dbname = "HCHJ";
-
-                    // 建立連線
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    // 確認連線是否成功
+                    $conn = new mysqli("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
                     if ($conn->connect_error) {
                         die("連線失敗：" . $conn->connect_error);
                     }
-
-                    // 查詢該學生的資料
                     $sql = "SELECT * FROM portfolio WHERE student_id = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("i", $userId);
                     $stmt->execute();
                     $result = $stmt->get_result();
-
-                    // 檢查是否有資料
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            $category_map = [
-                                "成績單" => "transcripts",
-                                "自傳" => "autobiographies",
-                                "學歷證明" => "certificates",
-                                "競賽證明" => "competitions",
-                                "實習證明" => "internships",
-                                "相關證照" => "licenses",
-                                "語言能力證明" => "language-skills",
-                                "專題資料" => "Topics",
-                                "讀書計畫" => "reading-plan",
-                                "其他資料" => "Other-information"
-                            ];
-                            $category_class = $category_map[$row["category"]] ?? "unknown";
-
-                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
+                            echo "<div class='col-lg-4 col-md-6 portfolio-item'>
                                 <div class='portfolio-content'>
                                     <h3>{$row['category']}</h3>
+                                    <p>年級：{$row['grade']} 班級：{$row['class']}</p>
                                     <p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
                                     <p>上傳時間：{$row['upload_time']}</p>
                                     <form action='PortfolioDelete.php' method='post'>
@@ -307,7 +285,6 @@ if ($conn->connect_error) {
                     } else {
                         echo "<div class='col-12'><p>尚無資料</p></div>";
                     }
-
                     $stmt->close();
                     $conn->close();
                     ?>
@@ -321,40 +298,12 @@ if ($conn->connect_error) {
     function confirmUpload() {
         const fileInput = document.getElementById('file');
         const file = fileInput.files[0];
-
         if (!file) {
             alert('請選擇一個檔案來上傳');
             return false;
         }
-
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
-        if (!allowedExtensions.includes(fileExtension)) {
-            alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
-            return false;
-        }
-
         return confirm(`您確定要上傳檔案：${file.name}？`);
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.portfolio-btn');
-        const items = document.querySelectorAll('.portfolio-item');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                buttons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                const filter = button.getAttribute('data-filter');
-                items.forEach(item => {
-                    item.style.display = filter === '*' || item.classList.contains(filter.substring(1))
-                        ? 'block'
-                        : 'none';
-                });
-            });
-        });
-    });
 </script>
 
 
