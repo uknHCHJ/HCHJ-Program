@@ -27,7 +27,8 @@ $buttons = [
     ['name' => '專題資料', 'url' => 'project_data.php'],
     ['name' => '其他資料', 'url' => 'other_documents.php'],
     ['name' => '讀書計畫', 'url' => 'study_plan.php'],
-    ['name' => '志願查看', 'url' => 'volunteer_view.php']
+    ['name' => '志願查看', 'onclick' => 'volunteer_view.php'],
+    //<button type="button" class="btn btn-secondary" ="window.history.back();">返回上一頁</button>
 ];
 
 // **檢查是否有資料**
