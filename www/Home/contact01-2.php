@@ -19,6 +19,7 @@ if ($conn->connect_error) {
 // 確保 SESSION 中儲存了唯一識別符 (例如 user_id 或 username)
 $userData = $_SESSION['user'];
 $userId = $userData['user'];
+$name = $userData['name'];
 $grade = $userData['grade'];//學生年級
 $class = $userData['class'];//學生班級
 $currentUserId = $userData['id'];///學生id
@@ -84,6 +85,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
   </script>";
 
 }
+//-----------------------------------------------------------傳郵件---------------------------------------------------------------------------
+//-----------------------學生------------------
+$sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+$result = mysqli_query($link, $sql);
+if ($row = mysqli_fetch_assoc($result)) {
+        $studentemail="";
+        $studentemail=$row['email'];
+  }
+//-----------------------老師--------------------
 //抓跟學生一樣年級班級的老師，用id判斷先查詢
 $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
 $result = mysqli_query($link, $sql);
@@ -136,7 +146,7 @@ if (count($$email[]) == 1) {
     try {
       // 設定 SMTP 伺服器
       $mail->isSMTP();
-      $mail->Host = 'smtp.example.com';  // 請替換成你自己的 SMTP 伺服器
+      $mail->Host = 'smtp.gmail.com';  // 請替換成你自己的 SMTP 伺服器
       $mail->SMTPAuth = true;
       $mail->Username = 'your_email@example.com'; // 這裡使用你自己的郵件帳號來發送郵件
       $mail->Password = 'your_smtp_password'; // 使用你 SMTP 帳戶的應用程式密碼
