@@ -293,29 +293,13 @@ if ($conn->connect_error) {
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const categorySelect = document.getElementById("category");
-        const subCategoryDiv = document.getElementById("sub_category_div");
         const certificateDiv = document.getElementById("certificate_div");
-        const subCategorySelect = document.getElementById("sub_category");
         const certificateSelect = document.getElementById("certificate");
         const certificateNameInput = document.getElementById("certificate_name");
 
-        const subCategories = ["ACM", "Adobe", "Microsoft", "GLAD", "中華民國電腦教育發展協會(MOCC)", "財團法人中華民國電腦技能基金會(TQC)","勞動部勞動力發展署",  "美國教育測驗服務社(ETS)", "台灣醫學資訊協會"];
-        subCategorySelect.innerHTML = subCategories.map(sc => `<option value="${sc}">${sc}</option>`).join('');
-
         categorySelect.addEventListener("change", () => {
             const isLicense = categorySelect.value === "相關證照";
-            subCategoryDiv.style.display = isLicense ? "block" : "none";
             certificateDiv.style.display = "none";
-        });
-
-        subCategorySelect.addEventListener("change", () => {
-            fetch(`GetCertifications.php?category=${subCategorySelect.value}`)
-                .then(res => res.json())
-                .then(data => {
-                    certificateSelect.innerHTML = `<option value=''>請選擇證照</option>` +
-                        data.map(cert => `<option value="${cert.id}">${cert.name}</option>`).join('');
-                    certificateDiv.style.display = "block";
-                });
         });
 
         certificateSelect.addEventListener("change", () => {
@@ -335,56 +319,31 @@ if ($conn->connect_error) {
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses" id="licenses-btn">相關證照</button>
+                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
                     <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
                     <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
                     <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
-
-                    <!-- 相關證照機構分類（初始隱藏） -->
-                    <div id="license-category-buttons" style="display: none;">
-                        <?php
-                        // 定義相關證照機構
-                        $organizations = [
-                            "ACM", "Adobe", "Microsoft", "GLAD",
-                            "中華民國電腦教育發展協會(MOCC)",
-                            "財團法人中華民國電腦技能基金會(TQC)",
-                            "美國教育測驗服務社(ETS)",
-                            "台灣醫學資訊協會"
-                        ];
-
-                        // 動態生成按鈕
-                        foreach ($organizations as $org) {
-                            echo "<button type='button' class='portfolio-btn' data-filter='.licenses-" . htmlspecialchars($org, ENT_QUOTES, 'UTF-8') . "'>$org</button>";
-                        }
-                        ?>
-                    </div>
                 </div>
 
                 <div class="row grid">
                     <?php
-                    // 資料庫連線設定
                     $servername = "127.0.0.1";
                     $username = "HCHJ";
                     $password = "xx435kKHq";
                     $dbname = "HCHJ";
-
-                    // 建立連線
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
-                    // 確認連線是否成功
                     if ($conn->connect_error) {
                         die("連線失敗：" . $conn->connect_error);
                     }
 
-                    // 查詢該學生的資料
                     $sql = "SELECT * FROM portfolio WHERE student_id = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("i", $userId);
                     $stmt->execute();
                     $result = $stmt->get_result();
 
-                    // 定義類別對應關係
                     $category_map = [
                         "成績單" => "transcripts",
                         "自傳" => "autobiographies",
@@ -398,27 +357,18 @@ if ($conn->connect_error) {
                         "其他資料" => "Other-information"
                     ];
 
-                    // 檢查是否有資料
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $category_class = $category_map[$row["category"]] ?? "unknown";
-                            $organization_class = "";
-
-                            // 如果是「相關證照」，則根據 organization 再分類
-                            if ($row["category"] === "相關證照" && in_array($row["organization"], $organizations)) {
-                                $organization_class = " licenses-" . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8');
-                            }
-
-                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}{$organization_class}'>
+                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
                                 <div class='portfolio-content'>
                                     <h3>{$row['category']}</h3>";
-
-                            // 如果是相關證照，顯示機構名稱
+                            
                             if ($row["category"] === "相關證照") {
                                 echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
                                 echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
                             }
-
+                            
                             echo "<p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
                                     <p>上傳時間：{$row['upload_time']}</p>
                                     <form action='PortfolioDelete.php' method='post'>
@@ -427,6 +377,7 @@ if ($conn->connect_error) {
                                             style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
                                             刪除
                                         </button>
+
                                     </form>
                                 </div>
                             </div>";
@@ -444,47 +395,6 @@ if ($conn->connect_error) {
     </div>
 </div>
 
-<!-- JavaScript 控制機構按鈕顯示 -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const licensesBtn = document.getElementById("licenses-btn");
-    const licenseCategoryButtons = document.getElementById("license-category-buttons");
-
-    // 初始隱藏細分類
-    licenseCategoryButtons.style.display = "none";
-
-    // 點擊「相關證照」時，顯示/隱藏分類
-    licensesBtn.addEventListener("click", function (event) {
-        event.preventDefault();  // 防止默認行為導致刷新
-        event.stopPropagation(); // 防止事件冒泡影響篩選
-
-        licenseCategoryButtons.style.display =
-            licenseCategoryButtons.style.display === "none" ? "block" : "none";
-    });
-
-    // 避免點擊細分類時畫面跳掉
-    document.querySelectorAll(".sub-license").forEach((button) => {
-        button.addEventListener("click", function (event) {
-            event.preventDefault();  // 防止頁面刷新
-            event.stopPropagation(); // 防止影響其他篩選
-
-            // 移除所有按鈕的 "active" 樣式
-            document.querySelectorAll(".portfolio-btn").forEach((btn) => btn.classList.remove("active"));
-            button.classList.add("active");
-        });
-    });
-
-    // 點擊其他分類時，隱藏「相關證照」細分類
-    document.querySelectorAll(".portfolio-btn").forEach((button) => {
-        if (button !== licensesBtn) {
-            button.addEventListener("click", function () {
-                licenseCategoryButtons.style.display = "none";
-            });
-        }
-    });
-});
-
-</script>
 
 <script>
     function confirmUpload() {
