@@ -286,6 +286,21 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     /* 左側藍條 */
                     color: #333;
                 }
+
+                /* 垃圾桶圖示按鈕的樣式 */
+                .delete-btn {
+                    background: url('https://img.icons8.com/ios/452/trash.png') no-repeat center center;
+                    background-size: 20px;
+                    width: 24px;
+                    height: 24px;
+                    border: none;
+                    cursor: pointer;
+                    margin-left: 10px;
+                }
+
+                .delete-btn:hover {
+                    background-color: #f44336;
+                }
             </style>
         </head>
 
@@ -298,160 +313,235 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
             <!-- ========================= form section start ========================= -->
             <section class="form-section pt-75 pb-75">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
                 <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-6">
-                            <div class="container">
-                                <h1>選擇你的志願</h1>
+                    <h1>選擇你的志願</h1>
 
-                                <label for="schoolSelect">選擇學校:</label>
-                                <select id="schoolSelect" onchange="fetchDepartments()">
-                                    <option value="">--請選擇學校--</option>
-                                </select>
+                    <label for="schoolSelect">選擇學校:</label>
+                    <select id="schoolSelect" onchange="fetchDepartments()">
+                        <option value="">--請選擇學校--</option>
+                    </select>
 
-                                <label for="departmentSelect">選擇科系:</label>
-                                <select id="departmentSelect">
-                                    <option value="">--請選擇科系--</option>
-                                </select>
+                    <label for="departmentSelect">選擇科系:</label>
+                    <select id="departmentSelect">
+                        <option value="">--請選擇科系--</option>
+                    </select>
 
-                                <!-- 新增兩個按鈕 -->
-                                <button onclick="add()">添加到清單</button>
+                    <!-- 新增兩個按鈕 -->
+                    <button onclick="add()">添加到清單</button>
 
-                                <h2>你的志願序(最多5個)</h2>
-                                <ul id="preferenceList"></ul>
-                                <button onclick="submit()">送出志願</button>
+                    <h2>你的志願序(最多5個)</h2>
+                    <ul id="preferenceList"></ul>
+                    <button onclick="submit()">送出志願</button>
 
-                            </div>
-                        </div>
-                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <script>
-                    const maxPreferences = 5;
-                    let preferences = [];
+<style>
+    /* 基本樣式 */
+    #preferenceList {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        list-style-type: none;
+        margin-top: 15px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
 
-                    document.addEventListener('DOMContentLoaded', () => {
-                        fetchSchools();
-                    });
+    #preferenceList li {
+        background-color: #e7f3fe;
+        margin: 5px 0;
+        padding: 10px;
+        border-left: 5px solid #2196F3;
+        display: flex;
+        justify-content: space-between;  /* 讓刪除按鈕置於右邊 */
+        align-items: center;
+        color: #333;
+        border-radius: 5px;
+    }
 
-                    function fetchSchools() {
-                        fetch('getSchools.php')
-                            .then(response => response.json())
-                            .then(data => {
-                                const schoolSelect = document.getElementById('schoolSelect');
-                                data.forEach(school => {
-                                    const option = document.createElement('option');
-                                    option.value = school.school_id;
-                                    option.textContent = school.school_name;
-                                    schoolSelect.appendChild(option);
-                                });
-                            });
-                    }
+    /* 刪除按鈕樣式 */
+    .delete-btn {
+        
+        color: black;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-                    function fetchDepartments() {
-                        const schoolId = document.getElementById('schoolSelect').value;
-                        if (!schoolId) return;
+  
+</style>
 
-                        fetch(`getDepartments.php?school_id=${schoolId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                const departmentSelect = document.getElementById('departmentSelect');
-                                departmentSelect.innerHTML = '<option value="">--請選擇科系--</option>';
-                                data.forEach(dept => {
-                                    const option = document.createElement('option');
-                                    option.value = dept.department_id;
-                                    option.textContent = dept.department_name;
-                                    departmentSelect.appendChild(option);
-                                });
-                            });
-                    }
+<script>
+    const maxPreferences = 5;
+    let preferences = [];
 
-                    function add() {
-                        const schoolSelect = document.getElementById('schoolSelect');
-                        const departmentSelect = document.getElementById('departmentSelect');
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchSchools();
+    });
 
-                        // 確保選擇了學校和科系
-                        if (!schoolSelect.value || !departmentSelect.value) {
-                            alert('請先選擇學校和科系');
-                            return;
-                        }
+    function fetchSchools() {
+        fetch('getSchools.php')
+            .then(response => response.json())
+            .then(data => {
+                const schoolSelect = document.getElementById('schoolSelect');
+                data.forEach(school => {
+                    const option = document.createElement('option');
+                    option.value = school.school_id;
+                    option.textContent = school.school_name;
+                    schoolSelect.appendChild(option);
+                });
+            });
+    }
 
-                        const preference = `${schoolSelect.options[schoolSelect.selectedIndex].text} - ${departmentSelect.options[departmentSelect.selectedIndex].text}`;
+    function fetchDepartments() {
+        const schoolId = document.getElementById('schoolSelect').value;
+        if (!schoolId) return;
 
-                        // 檢查志願是否已經被選過
-                        if (preferences.some(p => p.preference_rank === preference)) {
-                            alert('此志願已經選擇過，請選擇其他的志願');
-                            return;
-                        }
+        fetch(`getDepartments.php?school_id=${schoolId}`)
+            .then(response => response.json())
+            .then(data => {
+                const departmentSelect = document.getElementById('departmentSelect');
+                departmentSelect.innerHTML = '<option value="">--請選擇科系--</option>';
+                data.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept.department_id;
+                    option.textContent = dept.department_name;
+                    departmentSelect.appendChild(option);
+                });
+            });
+    }
+
+    function add() {
+        const schoolSelect = document.getElementById('schoolSelect');
+        const departmentSelect = document.getElementById('departmentSelect');
+
+        // 確保選擇了學校和科系
+        if (!schoolSelect.value || !departmentSelect.value) {
+            alert('請先選擇學校和科系');
+            return;
+        }
+
+        const preference = `${schoolSelect.options[schoolSelect.selectedIndex].text} - ${departmentSelect.options[departmentSelect.selectedIndex].text}`;
+
+        // 檢查志願是否已經被選過
+        if (preferences.some(p => p.preference_rank === preference)) {
+            alert('此志願已經選擇過，請選擇其他的志願');
+            return;
+        }
+
+        if (preferences.length >= maxPreferences) {
+            alert('最多只能選擇5個志願');
+            return;
+        }
+
+        // 添加序號和選擇的志願資訊
+        const order = preferences.length + 1;
+        preferences.push({
+            order: order,
+            Secondskill_id: schoolSelect.value,
+            school_name: schoolSelect.options[schoolSelect.selectedIndex].text,
+            departmentId: departmentSelect.value,
+            department_name: departmentSelect.options[departmentSelect.selectedIndex].text,
+            preference_rank: preference
+        });
+
+        // 顯示志願清單並添加序號
+        const preferenceList = document.getElementById('preferenceList');
+        const li = document.createElement('li');
+        li.textContent = `${order}. ${preference}`;
+
+        // 創建刪除按鈕，並將其放置在每個項目的末尾
+        const deleteBtn = document.createElement('button');
+       
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.onclick = () => deletePreference(order - 1);  // 刪除該志願項目
+
+        li.appendChild(deleteBtn);  // 確保刪除按鈕在項目的末尾
+        preferenceList.appendChild(li);
+    }
+
+    // 刪除志願項目
+    function deletePreference(index) {
+        preferences.splice(index, 1);
+        renderPreferences();
+    }
+
+    // 渲染志願列表
+    function renderPreferences() {
+        const preferenceList = document.getElementById('preferenceList');
+        preferenceList.innerHTML = '';
+
+        preferences.forEach((preference, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${preference.order}. ${preference.preference_rank}`;
+
+            // 創建刪除按鈕，並將其放置在每個項目的末尾
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '刪除';  // 刪除文字
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.onclick = () => deletePreference(index);  // 刪除該志願項目
+
+            li.appendChild(deleteBtn);  // 確保刪除按鈕在項目的末尾
+            preferenceList.appendChild(li);
+        });
+    }
+
+    function submit() {
+        if (preferences.length === 0) {
+            alert("請先添加至少一個志願");
+            return;
+        }
+
+        fetch("addPreference.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                preferences: preferences.map((pref, index) => ({
+                    serial_number: index + 1,
+                    Secondskill_id: pref.Secondskill_id,
+                    department_id: pref.departmentId,
+                    school_name: pref.school_name,
+                    department_name: pref.department_name
+                })),
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    // 捕捉非 2xx 狀態碼的回應
+                    throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
+                }
+                return response.json(); // 解析 JSON 回應
+            })
+            .then((data) => {
+                if (data.success) {
+                    alert("志願序送出成功");
+                    window.location.href = "optional_show1.php";
+                } else {
+                    alert("儲存失敗: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("發生錯誤: " + error.message);
+            });
+    }
+</script>
 
 
-                        if (preferences.length >= maxPreferences) {
-                            alert('最多只能選擇5個志願');
-                            return;
-                        }
 
-                        // 添加序號和選擇的志願資訊
-                        const order = preferences.length + 1;
-                        preferences.push({
-                            order: order,
-                            Secondskill_id: schoolSelect.value,
-                            school_name: schoolSelect.options[schoolSelect.selectedIndex].text,
-                            departmentId: departmentSelect.value,
-                            department_name: departmentSelect.options[departmentSelect.selectedIndex].text,
-                            preference_rank: preference
-                        });
-
-                        // 顯示志願清單並添加序號
-                        const preferenceList = document.getElementById('preferenceList');
-                        const li = document.createElement('li');
-                        li.textContent = `${order}. ${preference}`;
-                        preferenceList.appendChild(li);
-                    }
-
-                    function submit() {
-                        if (preferences.length === 0) {
-                            alert("請先添加至少一個志願");
-                            return;
-                        }
-
-                        fetch("addPreference.php", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                preferences: preferences.map((pref, index) => ({
-                                    serial_number: index + 1,
-                                    Secondskill_id: pref.Secondskill_id,
-                                    department_id: pref.departmentId,
-                                    school_name: pref.school_name,
-                                    department_name: pref.department_name
-                                })),
-                            }),
-                        })
-                            .then((response) => {
-                                if (!response.ok) {
-                                    // 捕捉非 2xx 狀態碼的回應
-                                    throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
-                                }
-                                return response.json(); // 解析 JSON 回應
-                            })
-                            .then((data) => {
-                                if (data.success) {
-                                    alert("志願序送出成功");
-                                    window.location.href = "optional_show1.php";
-                                } else {
-                                    alert("儲存失敗: " + data.message);
-                                }
-                            })
-                            .catch((error) => {
-                                console.error("Error:", error);
-                                alert("發生錯誤: " + error.message);
-                            });
-                    }
-                </script>
-
-            </section>
             <!-- ========================= footer end ========================= -->
             <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
             <link rel="stylesheet" href="assets/css/tiny-slider.css">
