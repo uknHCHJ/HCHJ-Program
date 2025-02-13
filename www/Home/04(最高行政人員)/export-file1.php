@@ -95,30 +95,56 @@ $username = $userData['name'];
               <input type="checkbox" name="options[]" value="transcript"> 成績單
             </li>
             <li class="list-group-item" data-value="autobiography">
-              <input type="checkbox" id="autobiography-checkbox" name="options[]" value="autobiography"> 自傳
-              <select id="autobiography-files" name="autobiography_file" class="form-control" style="display: none;">
-                <option value="">請選擇檔案</option>
-              </select>
-            </li>
-            <script>
-              document.getElementById('autobiography-checkbox').addEventListener('change', function() {
-                var fileSelect = document.getElementById('autobiography-files');
-                if (this.checked) {
-                  fileSelect.style.display = 'block';
-                  // 發送 AJAX 取得自傳檔案
-                  fetch('get-autobiography.php?type=autobiography')
-                    .then(response => response.json())
-                    .then(data => {
-                      fileSelect.innerHTML = '<option value="">請選擇檔案...</option>';
-                      data.forEach(file => {
-                        fileSelect.innerHTML += `<option value="${file.filename}">${file.filename}</option>`;
-                      });
-                    });
-                } else {
-                  fileSelect.style.display = 'none';
-                }
-              });
-            </script>
+  <input type="checkbox" id="autobiography-checkbox" name="options[]" value="autobiography"> 自傳
+  <div id="autobiography-container" style="display: none; margin-top: 10px;">
+    <div id="autobiography-options" class="autobiography-options"></div>
+    <div id="autobiography-output" style="margin-top: 10px; font-weight: bold;"></div>
+  </div>
+</li>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var autoCheckbox = document.getElementById('autobiography-checkbox');
+    var autoContainer = document.getElementById('autobiography-container');
+    var autoOptionsDiv = document.getElementById('autobiography-options');
+    var autoOutputDiv = document.getElementById('autobiography-output');
+
+    autoCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        autoContainer.style.display = 'block';
+        fetch('get-autobiography.php?type=autobiography')
+          .then(response => response.json())
+          .then(data => {
+            autoOptionsDiv.innerHTML = '';
+            data.forEach(file => {
+              var label = document.createElement('label');
+              var optCheckbox = document.createElement('input');
+              optCheckbox.type = 'checkbox';
+              optCheckbox.name = 'autobiography_files[]';
+              optCheckbox.value = file.filename;
+              optCheckbox.addEventListener('change', updateAutoOutput);
+              label.appendChild(optCheckbox);
+              label.appendChild(document.createTextNode(' ' + file.filename));
+              autoOptionsDiv.appendChild(label);
+            });
+          })
+          .catch(error => console.error('取得自傳清單錯誤:', error));
+      } else {
+        autoContainer.style.display = 'none';
+        autoOptionsDiv.innerHTML = '';
+        autoOutputDiv.innerText = '';
+      }
+    });
+
+    function updateAutoOutput() {
+      var selectedAutos = [];
+      autoOptionsDiv.querySelectorAll('input[type="checkbox"]:checked').forEach(function(chk) {
+        selectedAutos.push(chk.value);
+      });
+      autoOutputDiv.innerText = selectedAutos.length > 0 ? '選取的自傳：' + selectedAutos.join(', ') : '';
+    }
+  });
+</script>
             <li class="list-group-item" data-value="diploma">
               <input type="checkbox" name="options[]" value="diploma"> 學歷證明
             </li>
@@ -227,7 +253,7 @@ $username = $userData['name'];
 <style>
   .list-group-item { cursor: move; }
   .sortable-ghost { opacity: 0.5; background: #f0f0f0; }
-   /* 證照選項間距調整 */
+   /* 相關證照選項間距調整 */
    .certifications-options label {
       display: inline-block;
       margin: 5px; /* 上下左右皆有 5px 間距 */
@@ -236,6 +262,14 @@ $username = $userData['name'];
       border-radius: 4px;
       cursor: pointer;
     }
+    .autobiography-options label {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 </style>
 
 <!-- ========================= footer start ========================= -->
