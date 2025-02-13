@@ -299,7 +299,7 @@ if ($conn->connect_error) {
         const certificateSelect = document.getElementById("certificate");
         const certificateNameInput = document.getElementById("certificate_name");
 
-        const subCategories = ["ACM", "Adobe", "Microsoft", "GLAD", "中華民國電腦教育發展協會(MOCC)", "財團法人中華民國電腦技能基金會(TQC)", "美國教育測驗服務社(ETS)", "台灣醫學資訊協會"];
+        const subCategories = ["ACM", "Adobe", "Microsoft", "GLAD", "中華民國電腦教育發展協會(MOCC)", "財團法人中華民國電腦技能基金會(TQC)","勞動部勞動力發展署",  "美國教育測驗服務社(ETS)", "台灣醫學資訊協會"];
         subCategorySelect.innerHTML = subCategories.map(sc => `<option value="${sc}">${sc}</option>`).join('');
 
         categorySelect.addEventListener("change", () => {
@@ -335,27 +335,30 @@ if ($conn->connect_error) {
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
+                    <button type="button" class="portfolio-btn" data-filter=".licenses" id="licenses-btn">相關證照</button>
                     <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
                     <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
                     <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
 
-                    <?php
-                    // 定義相關證照機構
-                    $organizations = [
-                        "ACM", "Adobe", "Microsoft", "GLAD",
-                        "中華民國電腦教育發展協會(MOCC)",
-                        "財團法人中華民國電腦技能基金會(TQC)",
-                        "美國教育測驗服務社(ETS)",
-                        "台灣醫學資訊協會"
-                    ];
+                    <!-- 相關證照機構分類（初始隱藏） -->
+                    <div id="license-category-buttons" style="display: none;">
+                        <?php
+                        // 定義相關證照機構
+                        $organizations = [
+                            "ACM", "Adobe", "Microsoft", "GLAD",
+                            "中華民國電腦教育發展協會(MOCC)",
+                            "財團法人中華民國電腦技能基金會(TQC)",
+                            "美國教育測驗服務社(ETS)",
+                            "台灣醫學資訊協會"
+                        ];
 
-                    // 顯示相關證照機構的篩選按鈕
-                    foreach ($organizations as $org) {
-                        echo "<button type='button' class='portfolio-btn' data-filter='.licenses-" . htmlspecialchars($org, ENT_QUOTES, 'UTF-8') . "'>$org</button>";
-                    }
-                    ?>
+                        // 動態生成按鈕
+                        foreach ($organizations as $org) {
+                            echo "<button type='button' class='portfolio-btn' data-filter='.licenses-" . htmlspecialchars($org, ENT_QUOTES, 'UTF-8') . "'>$org</button>";
+                        }
+                        ?>
+                    </div>
                 </div>
 
                 <div class="row grid">
@@ -440,6 +443,29 @@ if ($conn->connect_error) {
         </div>
     </div>
 </div>
+
+<!-- JavaScript 控制機構按鈕顯示 -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const licensesBtn = document.getElementById("licenses-btn");
+    const licenseCategoryButtons = document.getElementById("license-category-buttons");
+    const allButtons = document.querySelectorAll(".portfolio-btn");
+
+    // 初始隱藏機構分類按鈕
+    licenseCategoryButtons.style.display = "none";
+
+    // 監聽按鈕點擊事件
+    allButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            if (this === licensesBtn) {
+                licenseCategoryButtons.style.display = "block";  // 顯示相關證照分類
+            } else {
+                licenseCategoryButtons.style.display = "none";   // 隱藏相關證照分類
+            }
+        });
+    });
+});
+</script>
 
 <script>
     function confirmUpload() {
