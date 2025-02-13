@@ -122,6 +122,106 @@ $username = $userData['name'];
                         <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
                         <li class="list-group-item" data-value="internship"><input type="checkbox" name="options[]" value="internship"> 實習證明</li>
                         <li class="list-group-item" data-value="certifications"><input type="checkbox" name="options[]" value="certifications"> 相關證照</li>
+
+
+<li class="list-group-item" data-value="certifications">
+    <input type="checkbox" id="certifications-checkbox" name="options[]" value="certifications"> 相關證照
+    <div id="certifications-container" class="custom-dropdown" style="display: none;">
+        <button type="button" id="certifications-dropdown-btn" class="dropdown-btn">請選擇證照...</button>
+        <div id="certifications-options" class="dropdown-options"></div>
+    </div>
+</li>
+
+<style>
+/* 自訂下拉式選單樣式 */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+}
+
+.dropdown-btn {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-options {
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    z-index: 10;
+}
+
+.dropdown-options label {
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.dropdown-options label:hover {
+    background: #f0f0f0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setupDropdown('certifications', 'get-certifications.php?type=certifications');
+});
+
+function setupDropdown(id, url) {
+    var checkbox = document.getElementById(id + '-checkbox');
+    var container = document.getElementById(id + '-container');
+    var dropdownBtn = document.getElementById(id + '-dropdown-btn');
+    var optionsDiv = document.getElementById(id + '-options');
+
+    // 勾選時顯示/隱藏選單
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            container.style.display = 'block';
+
+            // 發送 AJAX 取得檔案列表
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    optionsDiv.innerHTML = ''; // 清空選項
+                    data.forEach(file => {
+                        var label = document.createElement('label');
+                        var checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.name = id + '_file[]';
+                        checkbox.value = file.filename;
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(' ' + file.filename));
+                        optionsDiv.appendChild(label);
+                    });
+                });
+        } else {
+            container.style.display = 'none';
+        }
+    });
+
+    // 點擊按鈕時顯示/隱藏選項
+    dropdownBtn.addEventListener('click', function() {
+        optionsDiv.style.display = optionsDiv.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // 點擊外部時關閉選單
+    document.addEventListener('click', function(event) {
+        if (!container.contains(event.target)) {
+            optionsDiv.style.display = 'none';
+        }
+    });
+}
+</script>
+
                         <li class="list-group-item" data-value="language"><input type="checkbox" name="options[]" value="language"> 語言能力證明</li>
                         <li class="list-group-item" data-value="topics"><input type="checkbox" name="options[]" value="topics"> 專題資料</li>
                         <li class="list-group-item" data-value="other"><input type="checkbox" name="options[]" value="other"> 其他資料</li>
