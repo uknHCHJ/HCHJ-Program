@@ -93,40 +93,38 @@ sendEmailToTeacher($grade, $class, $currentUserId, $studentName);
 require 'vendor/autoload.php';
 
 function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn) {
-  // 取得老師的 email
+  // 🔍 查詢所有符合條件的導師
   $sql = "SELECT email FROM testemail WHERE name IN (
               SELECT name FROM user WHERE grade LIKE '%$grade%' 
               AND class LIKE '%$class%' 
               AND id != $currentUserId 
               AND FIND_IN_SET('2', Permissions)
-          ) LIMIT 1";
+          )";
 
   $result = $conn->query($sql);
+
   if (!$result || $result->num_rows == 0) {
-      echo "❌ 找不到老師的 email";
+      echo "❌ 找不到導師的 email";
       return;
   }
 
-  $teacheremail = $result->fetch_assoc()['email'];
+  // 📌 逐一發送郵件給每位導師
+  while ($row = $result->fetch_assoc()) {
+      $teacheremail = $row['email'];
 
-  // 測試是否正確獲取 email
-  if (empty($teacheremail)) {
-      echo "❌ SQL 查詢成功，但 email 為空！請檢查資料庫內容。";
-      return;
-  }
+      if (!empty($teacheremail)) {
+          $subject = "學生 $studentName 已更新頭貼";
+          $message = "<h2>學生 $studentName 已更新頭貼</h2>";
+          $headers = "From: 109534209@stu.ukn.edu.tw\r\n";  
+          $headers .= "Reply-To: 109534209@stu.ukn.edu.tw\r\n"; 
+          $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-  // 📌 設定郵件標頭
-  $subject = "學生 $studentName 已更新頭貼";
-  $message = "<h2>學生 $studentName 已更新頭貼</h2>";
-  $headers = "From: 109534209@stu.ukn.edu.tw\r\n";  
-  $headers .= "Reply-To: 109534209@stu.ukn.edu.tw\r\n"; 
-  $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-  // 📌 用 mail() 傳送郵件
-  if (mail($teacheremail, $subject, $message, $headers)) {
-      echo "✅ 郵件已發送給 $teacheremail！";
-  } else {
-      echo "❌ 郵件發送失敗！請確認 mail() 設定。";
+          if (mail($teacheremail, $subject, $message, $headers)) {
+              echo "✅ 郵件已發送給 $teacheremail！<br>";
+          } else {
+              echo "❌ 郵件發送失敗給 $teacheremail！<br>";
+          }
+      }
   }
 }
 
