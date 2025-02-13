@@ -446,25 +446,44 @@ if ($conn->connect_error) {
 
 <!-- JavaScript 控制機構按鈕顯示 -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const licensesBtn = document.getElementById("licenses-btn");
     const licenseCategoryButtons = document.getElementById("license-category-buttons");
-    const allButtons = document.querySelectorAll(".portfolio-btn");
 
-    // 初始隱藏機構分類按鈕
+    // 初始隱藏細分類
     licenseCategoryButtons.style.display = "none";
 
-    // 監聽按鈕點擊事件
-    allButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            if (this === licensesBtn) {
-                licenseCategoryButtons.style.display = "block";  // 顯示相關證照分類
-            } else {
-                licenseCategoryButtons.style.display = "none";   // 隱藏相關證照分類
-            }
+    // 點擊「相關證照」時，顯示/隱藏分類
+    licensesBtn.addEventListener("click", function (event) {
+        event.preventDefault();  // 防止默認行為導致刷新
+        event.stopPropagation(); // 防止事件冒泡影響篩選
+
+        licenseCategoryButtons.style.display =
+            licenseCategoryButtons.style.display === "none" ? "block" : "none";
+    });
+
+    // 避免點擊細分類時畫面跳掉
+    document.querySelectorAll(".sub-license").forEach((button) => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();  // 防止頁面刷新
+            event.stopPropagation(); // 防止影響其他篩選
+
+            // 移除所有按鈕的 "active" 樣式
+            document.querySelectorAll(".portfolio-btn").forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
         });
     });
+
+    // 點擊其他分類時，隱藏「相關證照」細分類
+    document.querySelectorAll(".portfolio-btn").forEach((button) => {
+        if (button !== licensesBtn) {
+            button.addEventListener("click", function () {
+                licenseCategoryButtons.style.display = "none";
+            });
+        }
+    });
 });
+
 </script>
 
 <script>
