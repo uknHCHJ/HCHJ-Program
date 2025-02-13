@@ -205,13 +205,45 @@ if ($conn->connect_error) {
         function toggleSubCategory() {
             var category = document.getElementById("category").value;
             var subCategoryDiv = document.getElementById("sub_category_div");
-            
+            var certificateDiv = document.getElementById("certificate_div");
+
             if (category === "相關證照") {
                 subCategoryDiv.style.display = "block";
             } else {
                 subCategoryDiv.style.display = "none";
+                certificateDiv.style.display = "none";
             }
         }
+
+        function loadCertifications() {
+            var category = document.getElementById("sub_category").value;
+            var certificateSelect = document.getElementById("certificate");
+            var certificateDiv = document.getElementById("certificate_div");
+
+            certificateDiv.style.display = "block";
+            certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "GetCertifications.php?category=" + category, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var certifications = JSON.parse(xhr.responseText);
+                    certifications.forEach(function(cert) {
+                        var option = document.createElement("option");
+                        option.value = cert.id;
+                        option.textContent = cert.name;
+                        certificateSelect.appendChild(option);
+                    });
+                }
+            };
+            xhr.send();
+        }
+
+        document.getElementById("sub_category").addEventListener("change", loadCertifications);
+        document.getElementById("certificate").addEventListener("change", function() {
+            var selectedCertificate = this.options[this.selectedIndex].text;
+            document.getElementById("certificate_name").value = selectedCertificate;
+        });
     </script>
     
         <!-- ========================= page-banner-section end ========================= -->
@@ -223,20 +255,21 @@ if ($conn->connect_error) {
         <div style="margin-bottom: 15px;">
             <label for="category">選擇資料類型：</label>
             <select name="category" id="category" onchange="toggleSubCategory()" required>
-            <option value="成績單">成績單</option>
-            <option value="自傳">自傳</option>
-            <option value="學歷證明">學歷證明</option>
-            <option value="競賽證明">競賽證明</option>
-            <option value="實習證明">實習證明</option>
-            <option value="相關證照">相關證照</option>
-            <option value="語言能力證明">語言能力證明</option>
-            <option value="專題資料">專題資料</option>
-            <option value="讀書計畫">讀書計畫</option>
-            <option value="其他資料">其他資料</option>
-        </select><br>
-        <div id="sub_category_div" style="display: none;">
-        <label for="category">相關證照分類：</label>
-            <select name="sub_category">
+                <option value="成績單">成績單</option>
+                <option value="自傳">自傳</option>
+                <option value="學歷證明">學歷證明</option>
+                <option value="競賽證明">競賽證明</option>
+                <option value="實習證明">實習證明</option>
+                <option value="相關證照">相關證照</option>
+                <option value="語言能力證明">語言能力證明</option>
+                <option value="專題資料">專題資料</option>
+                <option value="讀書計畫">讀書計畫</option>
+                <option value="其他資料">其他資料</option>
+            </select><br>
+
+            <div id="sub_category_div" style="display: none;">
+                <label for="sub_category">相關證照分類：</label>
+                <select name="sub_category" id="sub_category">
                 <option value="ACM">ACM</option>
                 <option value="Adobe">Adobe</option>
                 <option value="GLAD">GLAD (Global Learning & Assessment Development)</option>
@@ -247,17 +280,15 @@ if ($conn->connect_error) {
                 <option value="美國教育測驗服務社(ETS)">美國教育測驗服務社(ETS)</option>
                 <option value="臺灣急救教育推廣與諮詢中心">臺灣急救教育推廣與諮詢中心</option>
                 <option value="財團法人中華民國電腦技能基金會(TQC)">財團法人中華民國電腦技能基金會(TQC)</option>
-                <option value="財團法人語言訓練測驗中心">財團法人語言訓練測驗中心</option>
-            </select>
-        </div>
-
-        <div id="certificate_div" style="display: none;">
-                <label for="certificate">選擇證照：</label>
-                <select name="certificate" id="certificate">
-                    <!-- 這裡的選項會由後端根據選擇的分類動態填充 -->
+                <option value="財團法人語言訓練測驗中心">財團法人語言訓練測驗中心</option>            
                 </select>
             </div>
 
+            <div id="certificate_div" style="display: none;">
+                <label for="certificate">選擇證照：</label>
+                <select name="certificate" id="certificate"></select>
+                <input type="hidden" name="certificate_name" id="certificate_name">
+            </div>
         </div>
 
         <div style="margin-bottom: 15px;">
@@ -271,40 +302,32 @@ if ($conn->connect_error) {
 </div>
 
 <script>
-    // 控制選擇資料類型後，顯示或隱藏證照分類及證照選項
     function toggleSubCategory() {
         var category = document.getElementById("category").value;
         var subCategoryDiv = document.getElementById("sub_category_div");
-        
-        // 如果選擇了「相關技術證照」，顯示相關證照分類選單
+        var certificateDiv = document.getElementById("certificate_div");
+
         if (category === "相關證照") {
             subCategoryDiv.style.display = "block";
         } else {
             subCategoryDiv.style.display = "none";
-            document.getElementById("certificate_div").style.display = "none"; // 隱藏證照選單
+            certificateDiv.style.display = "none";
         }
     }
 
-    // 根據選擇的相關證照分類載入相應的證照
     function loadCertifications() {
-        var category = document.querySelector("select[name='sub_category']").value;
-        var certificateDiv = document.getElementById("certificate_div");
+        var category = document.getElementById("sub_category").value;
         var certificateSelect = document.getElementById("certificate");
-        
-        // 顯示證照選單
+        var certificateDiv = document.getElementById("certificate_div");
+
         certificateDiv.style.display = "block";
-        
-        // 清除現有選項
         certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
 
-        // 使用 AJAX 向伺服器請求相應分類的證照
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "GetCertifications.php?category=" + category, true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var certifications = JSON.parse(xhr.responseText);
-                
-                // 動態填充證照選項
                 certifications.forEach(function(cert) {
                     var option = document.createElement("option");
                     option.value = cert.id;
@@ -316,8 +339,29 @@ if ($conn->connect_error) {
         xhr.send();
     }
 
-    // 在相關證照分類改變時載入對應的證照
-    document.querySelector("select[name='sub_category']").addEventListener('change', loadCertifications);
+    document.getElementById("sub_category").addEventListener("change", loadCertifications);
+    document.getElementById("certificate").addEventListener("change", function() {
+        var selectedCertificate = this.options[this.selectedIndex].text;
+        document.getElementById("certificate_name").value = selectedCertificate;
+    });
+
+    function confirmUpload() {
+        const fileInput = document.getElementById('file');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('請選擇一個檔案來上傳');
+            return false;
+        }
+
+        const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
+        if (!allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
+            alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
+            return false;
+        }
+
+        return confirm(`您確定要上傳檔案：${file.name}？`);
+    }
 </script>
 
 
