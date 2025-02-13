@@ -3,6 +3,8 @@ session_start();
 $userData = $_SESSION['user'];
 $userId = $userData['user'] ?? null; // 檢查 session 是否有效
 $username = $userData['name'] ?? null;
+$grade = $userData['grade'];
+$class = $userData['class'];
 
 // 資料庫連接設定
 $servername = "127.0.0.1";
@@ -18,8 +20,10 @@ if ($conn->connect_error) {
     exit;
 }
 
+
 // 抓取資料，修改 SQL 查詢，將每位學生獨立列出
 $sql = "SELECT 
+            u.user AS student_user,
             u.name AS student_name,
             p.school_name,
             p.department_name,

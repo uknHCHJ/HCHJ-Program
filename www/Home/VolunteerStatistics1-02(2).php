@@ -19,8 +19,12 @@ if (!isset($_SESSION['user'])) {
 
 $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
+
+// 從 SESSION 中取得使用者資訊
+$username = $userData['name'];
 $userId = $userData['user'];
+$grade = $userData['grade'];
+$class = $userData['class'];
 ?>
 
 <!doctype html>
@@ -184,13 +188,16 @@ $userId = $userData['user'];
             }
 
             table {
-                width: 80%;
+                width: 95%;
+                /* 原本是 80%，改成 95% 或 100% 讓表格更寬 */
                 margin: 20px auto;
                 border-collapse: collapse;
                 background: #fff;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 border-radius: 8px;
                 overflow: hidden;
+                
+                /* 確保表格均勻分布 */
             }
 
             th,
@@ -198,6 +205,10 @@ $userId = $userData['user'];
                 padding: 12px;
                 border: 1px solid #ddd;
                 text-align: center;
+                white-space: nowrap;
+                /* 防止文字換行 */
+                min-width: 120px;
+                /* 設定最小寬度，避免字太擠 */
             }
 
             th {
@@ -220,7 +231,8 @@ $userId = $userData['user'];
         <table>
             <thead>
                 <tr>
-                    <th>學生姓名</th>
+                    <th>學號</th>
+                    <th>姓名</th>
                     <th>第一志願</th>
                     <th>第二志願</th>
                     <th>第三志願</th>
@@ -229,9 +241,9 @@ $userId = $userData['user'];
                 </tr>
             </thead>
             <tbody id="data-body">
+
             </tbody>
         </table>
-
         <script>
             fetch('VolunteerStatistics2-02(2).php')
                 .then(response => {
@@ -244,23 +256,30 @@ $userId = $userData['user'];
                     const tableBody = document.getElementById('data-body');
                     tableBody.innerHTML = ''; // 清空表格
 
-                    // 處理資料並顯示在表格中
                     const students = {};
 
                     // 分組每位學生的選擇
                     data.forEach(item => {
-                        const { student_name, school_name, department_name, preference_rank } = item;
+                        const { student_user, student_name, school_name, department_name, preference_rank } = item;
+
                         if (!students[student_name]) {
-                            students[student_name] = [];
+                            students[student_name] = {
+                                student_user: student_user, // 存學號
+                                preferences: []
+                            };
                         }
-                        students[student_name][preference_rank - 1] = `${school_name} - ${department_name}`;
+                        students[student_name].preferences[preference_rank - 1] = `${school_name} - ${department_name}`;
                     });
 
                     // 顯示每位學生的選擇
                     for (const studentName in students) {
-                        const preferences = students[studentName];
+                        const { student_user, preferences } = students[studentName];
+
                         const row = tableBody.insertRow();
-                        const nameCell = row.insertCell();
+                        const studentIdCell = row.insertCell(); // 學號欄位
+                        studentIdCell.textContent = student_user;
+
+                        const nameCell = row.insertCell(); // 姓名欄位
                         nameCell.textContent = studentName;
 
                         for (let i = 0; i < 5; i++) {
@@ -270,8 +289,10 @@ $userId = $userData['user'];
                     }
                 })
                 .catch(error => console.error('Error fetching data:', error));
+
         </script>
     </body>
+
     </html>
 
     <section class="client-logo-section pt-100">
