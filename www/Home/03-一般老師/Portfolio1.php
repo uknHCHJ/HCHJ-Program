@@ -247,123 +247,82 @@ if ($conn->connect_error) {
     </script>
     
         <!-- ========================= page-banner-section end ========================= -->
-        <div style="text-align: center; margin: auto;"> 
+        <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
-    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: center;" id="uploadForm" onsubmit="return confirmUpload()">
+    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
-
-        <div style="margin-bottom: 15px;">
-            <label for="category">選擇資料類型：</label>
-            <select name="category" id="category" onchange="toggleSubCategory()" required>
-                <option value="成績單">成績單</option>
-                <option value="自傳">自傳</option>
-                <option value="學歷證明">學歷證明</option>
-                <option value="競賽證明">競賽證明</option>
-                <option value="實習證明">實習證明</option>
-                <option value="相關證照">相關證照</option>
-                <option value="語言能力證明">語言能力證明</option>
-                <option value="專題資料">專題資料</option>
-                <option value="讀書計畫">讀書計畫</option>
-                <option value="其他資料">其他資料</option>
-            </select><br>
-
-            <div id="sub_category_div" style="display: none;">
-                <label for="sub_category">相關證照分類：</label>
-                <select name="sub_category" id="sub_category">
-                <option value="ACM">ACM</option>
-                <option value="Adobe">Adobe</option>
-                <option value="GLAD">GLAD (Global Learning & Assessment Development)</option>
-                <option value="Microsoft">Microsoft</option>
-                <option value="中華民國電腦教育發展協會(MOCC)">中華民國電腦教育發展協會(MOCC)</option>
-                <option value="勞動部勞動力發展署">勞動部勞動力發展署</option>
-                <option value="台灣醫學資訊協會">台灣醫學資訊協會</option>
-                <option value="美國教育測驗服務社(ETS)">美國教育測驗服務社(ETS)</option>
-                <option value="臺灣急救教育推廣與諮詢中心">臺灣急救教育推廣與諮詢中心</option>
-                <option value="財團法人中華民國電腦技能基金會(TQC)">財團法人中華民國電腦技能基金會(TQC)</option>
-                <option value="財團法人語言訓練測驗中心">財團法人語言訓練測驗中心</option>            
-                </select>
-            </div>
-
-            <div id="certificate_div" style="display: none;">
-                <label for="certificate">選擇證照：</label>
-                <select name="certificate" id="certificate"></select>
-                <input type="hidden" name="certificate_name" id="certificate_name">
-            </div>
+        
+        <label for="category">選擇資料類型：</label>
+        <select name="category" id="category" required>
+            <option value="成績單">成績單</option>
+            <option value="自傳">自傳</option>
+            <option value="學歷證明">學歷證明</option>
+            <option value="競賽證明">競賽證明</option>
+            <option value="實習證明">實習證明</option>
+            <option value="相關證照">相關證照</option>
+            <option value="語言能力證明">語言能力證明</option>
+            <option value="專題資料">專題資料</option>
+            <option value="讀書計畫">讀書計畫</option>
+            <option value="其他資料">其他資料</option>
+        </select>
+        
+        <div id="sub_category_div" style="display: none;">
+            <label for="sub_category">相關證照分類：</label>
+            <select name="sub_category" id="sub_category"></select>
         </div>
-
-        <div style="margin-bottom: 15px;">
-            <label for="file">上傳檔案：</label>
-            <input type="file" name="file" id="file" required>
+        
+        <div id="certificate_div" style="display: none;">
+            <label for="certificate">選擇證照：</label>
+            <select name="certificate" id="certificate"></select>
+            <input type="hidden" name="certificate_name" id="certificate_name">
         </div>
+        
+        <label for="file">上傳檔案：</label>
+        <input type="file" name="file" id="file" required>
+
+        <!-- 添加間距 -->
+        <br><br>
+
         <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
+
     </form>
 </div>
 
 <script>
-    function toggleSubCategory() {
-        var category = document.getElementById("category").value;
-        var subCategoryDiv = document.getElementById("sub_category_div");
-        var certificateDiv = document.getElementById("certificate_div");
+    document.addEventListener('DOMContentLoaded', () => {
+        const categorySelect = document.getElementById("category");
+        const subCategoryDiv = document.getElementById("sub_category_div");
+        const certificateDiv = document.getElementById("certificate_div");
+        const subCategorySelect = document.getElementById("sub_category");
+        const certificateSelect = document.getElementById("certificate");
+        const certificateNameInput = document.getElementById("certificate_name");
 
-        if (category === "相關證照") {
-            subCategoryDiv.style.display = "block";
-        } else {
-            subCategoryDiv.style.display = "none";
+        const subCategories = ["ACM", "Adobe", "Microsoft", "GLAD", "中華民國電腦教育發展協會(MOCC)", "財團法人中華民國電腦技能基金會(TQC)","勞動部勞動力發展署",  "美國教育測驗服務社(ETS)", "台灣醫學資訊協會"];
+        subCategorySelect.innerHTML = subCategories.map(sc => `<option value="${sc}">${sc}</option>`).join('');
+
+        categorySelect.addEventListener("change", () => {
+            const isLicense = categorySelect.value === "相關證照";
+            subCategoryDiv.style.display = isLicense ? "block" : "none";
             certificateDiv.style.display = "none";
-        }
-    }
+        });
 
-    function loadCertifications() {
-        var category = document.getElementById("sub_category").value;
-        var certificateSelect = document.getElementById("certificate");
-        var certificateDiv = document.getElementById("certificate_div");
-
-        certificateDiv.style.display = "block";
-        certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "GetCertifications.php?category=" + category, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var certifications = JSON.parse(xhr.responseText);
-                certifications.forEach(function(cert) {
-                    var option = document.createElement("option");
-                    option.value = cert.id;
-                    option.textContent = cert.name;
-                    certificateSelect.appendChild(option);
+        subCategorySelect.addEventListener("change", () => {
+            fetch(`GetCertifications.php?category=${subCategorySelect.value}`)
+                .then(res => res.json())
+                .then(data => {
+                    certificateSelect.innerHTML = `<option value=''>請選擇證照</option>` +
+                        data.map(cert => `<option value="${cert.id}">${cert.name}</option>`).join('');
+                    certificateDiv.style.display = "block";
                 });
-            }
-        };
-        xhr.send();
-    }
+        });
 
-    document.getElementById("sub_category").addEventListener("change", loadCertifications);
-    document.getElementById("certificate").addEventListener("change", function() {
-        var selectedCertificate = this.options[this.selectedIndex].text;
-        document.getElementById("certificate_name").value = selectedCertificate;
+        certificateSelect.addEventListener("change", () => {
+            certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
+        });
     });
-
-    function confirmUpload() {
-        const fileInput = document.getElementById('file');
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert('請選擇一個檔案來上傳');
-            return false;
-        }
-
-        const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
-        if (!allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
-            alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
-            return false;
-        }
-
-        return confirm(`您確定要上傳檔案：${file.name}？`);
-    }
 </script>
-
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
@@ -376,12 +335,32 @@ if ($conn->connect_error) {
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
+                    <button type="button" class="portfolio-btn" data-filter=".licenses" id="licenses-btn">相關證照</button>
                     <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
                     <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
                     <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
+
+                    <!-- 相關證照機構分類（初始隱藏） -->
+                    <div id="license-category-buttons" style="display: none;">
+                        <?php
+                        // 定義相關證照機構
+                        $organizations = [
+                            "ACM", "Adobe", "Microsoft", "GLAD",
+                            "中華民國電腦教育發展協會(MOCC)",
+                            "財團法人中華民國電腦技能基金會(TQC)",
+                            "美國教育測驗服務社(ETS)",
+                            "台灣醫學資訊協會"
+                        ];
+
+                        // 動態生成按鈕
+                        foreach ($organizations as $org) {
+                            echo "<button type='button' class='portfolio-btn' data-filter='.licenses-" . htmlspecialchars($org, ENT_QUOTES, 'UTF-8') . "'>$org</button>";
+                        }
+                        ?>
+                    </div>
                 </div>
+
                 <div class="row grid">
                     <?php
                     // 資料庫連線設定
@@ -405,27 +384,42 @@ if ($conn->connect_error) {
                     $stmt->execute();
                     $result = $stmt->get_result();
 
+                    // 定義類別對應關係
+                    $category_map = [
+                        "成績單" => "transcripts",
+                        "自傳" => "autobiographies",
+                        "學歷證明" => "certificates",
+                        "競賽證明" => "competitions",
+                        "實習證明" => "internships",
+                        "相關證照" => "licenses",
+                        "語言能力證明" => "language-skills",
+                        "專題資料" => "Topics",
+                        "讀書計畫" => "reading-plan",
+                        "其他資料" => "Other-information"
+                    ];
+
                     // 檢查是否有資料
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            $category_map = [
-                                "成績單" => "transcripts",
-                                "自傳" => "autobiographies",
-                                "學歷證明" => "certificates",
-                                "競賽證明" => "competitions",
-                                "實習證明" => "internships",
-                                "相關證照" => "licenses",
-                                "語言能力證明" => "language-skills",
-                                "專題資料" => "Topics",
-                                "讀書計畫" => "reading-plan",
-                                "其他資料" => "Other-information"
-                            ];
                             $category_class = $category_map[$row["category"]] ?? "unknown";
+                            $organization_class = "";
 
-                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
+                            // 如果是「相關證照」，則根據 organization 再分類
+                            if ($row["category"] === "相關證照" && in_array($row["organization"], $organizations)) {
+                                $organization_class = " licenses-" . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8');
+                            }
+
+                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}{$organization_class}'>
                                 <div class='portfolio-content'>
-                                    <h3>{$row['category']}</h3>
-                                    <p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
+                                    <h3>{$row['category']}</h3>";
+
+                            // 如果是相關證照，顯示機構名稱
+                            if ($row["category"] === "相關證照") {
+                                echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
+                                echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
+                            }
+
+                            echo "<p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
                                     <p>上傳時間：{$row['upload_time']}</p>
                                     <form action='PortfolioDelete.php' method='post'>
                                         <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
@@ -449,6 +443,48 @@ if ($conn->connect_error) {
         </div>
     </div>
 </div>
+
+<!-- JavaScript 控制機構按鈕顯示 -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const licensesBtn = document.getElementById("licenses-btn");
+    const licenseCategoryButtons = document.getElementById("license-category-buttons");
+
+    // 初始隱藏細分類
+    licenseCategoryButtons.style.display = "none";
+
+    // 點擊「相關證照」時，顯示/隱藏分類
+    licensesBtn.addEventListener("click", function (event) {
+        event.preventDefault();  // 防止默認行為導致刷新
+        event.stopPropagation(); // 防止事件冒泡影響篩選
+
+        licenseCategoryButtons.style.display =
+            licenseCategoryButtons.style.display === "none" ? "block" : "none";
+    });
+
+    // 避免點擊細分類時畫面跳掉
+    document.querySelectorAll(".sub-license").forEach((button) => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();  // 防止頁面刷新
+            event.stopPropagation(); // 防止影響其他篩選
+
+            // 移除所有按鈕的 "active" 樣式
+            document.querySelectorAll(".portfolio-btn").forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+        });
+    });
+
+    // 點擊其他分類時，隱藏「相關證照」細分類
+    document.querySelectorAll(".portfolio-btn").forEach((button) => {
+        if (button !== licensesBtn) {
+            button.addEventListener("click", function () {
+                licenseCategoryButtons.style.display = "none";
+            });
+        }
+    });
+});
+
+</script>
 
 <script>
     function confirmUpload() {

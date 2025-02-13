@@ -10,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 允許的檔案類型
         $allowedTypes = ['image/png', 'image/jpeg', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
         if (!in_array($fileType, $allowedTypes)) {
-            die("檔案類型不支援！僅支援 PNG, JPEG, DOC 和 DOCX 格式。");
-            header("location:Portfolio1.php");
+            echo "<script>alert('檔案類型不支援！僅支援 PNG, JPEG, DOC 和 DOCX 格式。'); window.location.href='Portfolio1.php';</script>";
+            exit;
         }
 
         // 連接資料庫
@@ -23,9 +23,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = new mysqli($servername, $username, $password, $dbname);
         if ($conn->connect_error) {
             die("資料庫連線失敗：" . $conn->connect_error);
-            header("location:Portfolio1.php");
         }
         $conn->set_charset("utf8mb4");
+
+        // 檢查資料庫是否已有相同檔名
+        $checkSql = "SELECT COUNT(*) FROM portfolio WHERE file_name = ?";
+        $stmt = $conn->prepare($checkSql);
+        $stmt->bind_param("s", $fileName);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($count > 0) {
+            echo "<script>alert('檔案名稱已存在，請重新命名或選擇其他檔案！'); window.location.href='Portfolio1.php';</script>";
+            exit;
+        }
 
         // 取得表單資料
         $studentId = intval($_POST['student_id']);
@@ -61,23 +74,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             die("SQL 錯誤：" . $conn->error);
-            header("location:Portfolio1.php");
         }
         $stmt->bind_param("isssss", $studentId, $category, $organization, $certificateName, $fileName, $fileContent);
 
         if ($stmt->execute()) {
-            echo "檔案上傳成功！";
-            header("location:Portfolio1.php");
+            echo "<script>alert('檔案上傳成功！'); window.location.href='Portfolio1.php';</script>";
         } else {
-            echo "資料儲存失敗：" . $stmt->error;
-            header("location:Portfolio1.php");
+            echo "<script>alert('資料儲存失敗：" . $stmt->error . "'); window.location.href='Portfolio1.php';</script>";
         }
 
         $stmt->close();
         $conn->close();
     } else {
-        die("檔案上傳錯誤！");
-        header("location:Portfolio1.php");
+        echo "<script>alert('檔案上傳錯誤！'); window.location.href='Portfolio1.php';</script>";
     }
 }
 ?>
