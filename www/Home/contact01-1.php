@@ -268,7 +268,7 @@ $result = mysqli_query($link, $query);
                         }
                       </script>
 
-                      <h2 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 同學</h2>
+                      <h3 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 同學</h3>
                     </div>
                   </div>
                 </div>
@@ -280,41 +280,41 @@ $result = mysqli_query($link, $query);
               <p><strong>帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p>
               <p><strong>科系：</strong> <?php echo $_SESSION['user']['department']; ?></p>
               <p><strong>班級：</strong> <?php echo $_SESSION['user']['grade'], $_SESSION['user']['class']; ?></p>
-            </div>
 
-            <!-- 班導資訊 -->
-            <?php
-            $link = mysqli_connect($servername, $username, $password, $dbname);
-            if ($link) {
-              mysqli_query($link, 'SET NAMES UTF8');
-            } else {
-              echo "無法連接資料庫：" . mysqli_connect_error();
-              exit();
-            }
 
-            $userData = $_SESSION['user'];
-            $grade = $userData['grade'];
-            $class = $userData['class'];
-            $currentUserId = $userData['id'];
-            $permissions1 = explode(',', $userData['Permissions']);
-
-            $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
-            $result = mysqli_query($link, $sql);
-
-            if ($result) {
-              $teachers = [];
-              while ($row = mysqli_fetch_assoc($result)) {
-                $permissions2 = explode(',', $row['Permissions']);
-                if (in_array('2', $permissions2)) {
-                  $teachers[] = $row['name'];
-                }
+              <!-- 班導資訊 -->
+              <?php
+              $link = mysqli_connect($servername, $username, $password, $dbname);
+              if ($link) {
+                mysqli_query($link, 'SET NAMES UTF8');
+              } else {
+                echo "無法連接資料庫：" . mysqli_connect_error();
+                exit();
               }
-            } else {
-              echo "查詢失敗：" . mysqli_error($link);
-            }
-            ?>
-              <p><strong>班級導師：</strong> <?php echo implode("、", array_pad($teachers, 2, "無")); ?></p>
 
+              $userData = $_SESSION['user'];
+              $grade = $userData['grade'];
+              $class = $userData['class'];
+              $currentUserId = $userData['id'];
+              $permissions1 = explode(',', $userData['Permissions']);
+
+              $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
+              $result = mysqli_query($link, $sql);
+
+              if ($result) {
+                $teachers = [];
+                while ($row = mysqli_fetch_assoc($result)) {
+                  $permissions2 = explode(',', $row['Permissions']);
+                  if (in_array('2', $permissions2)) {
+                    $teachers[] = $row['name'];
+                  }
+                }
+              } else {
+                echo "查詢失敗：" . mysqli_error($link);
+              }
+              ?>
+              <p><strong>班級導師：</strong> <?php echo implode("、", array_pad($teachers, 2, "無")); ?></p>
+            </div>
           </div>
         </div>
       </div>
