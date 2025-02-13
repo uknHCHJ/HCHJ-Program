@@ -87,7 +87,7 @@ if (isset($_POST['autobiography_file'])) {
 $queryMap = [
     'competition'   => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
     'transcript'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
-    'autobiography' => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '自傳' AND file_name='$autobiographyFile'",
+    'autobiography' => "",
     'diploma'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'=> "",
@@ -108,6 +108,26 @@ if (!empty($_POST['certifications_files'])) {
         $queryMap['certifications'] = "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照' AND organization IN ($certInCondition)";
     }
 }
+
+if (!empty($_POST['autobiography_files'])) {
+    $selectedAutobiographies = $_POST['autobiography_files'];
+    
+    // 逃脫選中的檔案名稱
+    $escapedAutobiographies = array_map(function($file) use ($conn) {
+        return "'" . $conn->real_escape_string($file) . "'";
+    }, $selectedAutobiographies);
+    
+    // 創建 IN 條件
+    $autoInCondition = implode(',', $escapedAutobiographies);
+    
+    // 如果有選擇檔案，直接取出
+    if (!empty($autoInCondition)) {
+        $queryMap['autobiography'] = "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '自傳' AND file_name IN ($autoInCondition)";
+    }
+}
+
+
+
 
 
 // 定義中文選項標題對應（除了專題輸出部分）
