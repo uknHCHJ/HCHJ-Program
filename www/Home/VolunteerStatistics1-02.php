@@ -1,3 +1,28 @@
+<?php
+session_start();
+/** 資料庫連線 */
+$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
+if ($link) {
+    mysqli_query($link, 'SET NAMES UTF8');
+
+} else {
+    echo "資料庫連接失敗: " . mysqli_connect_error();
+}
+
+if (!isset($_SESSION['user'])) {
+    echo ("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
+
+$userData = $_SESSION['user'];
+// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userId = $userData['user'];
+?>
+
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -66,6 +91,7 @@
                                 <li class="nav-item">
                                 <li class="nav-item"><a href="index-02.php">首頁</a></li>
                                 </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -74,7 +100,11 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
+                                    </ul>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">二技校園網</a>
@@ -101,7 +131,7 @@
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="javascript:void(0)" onclick="submitLogout()">登出</a>
+                                    <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
@@ -186,7 +216,6 @@
     </head>
 
     <body>
-        <h1>志願選擇統計</h1>
         <table>
             <thead>
                 <tr>
@@ -232,7 +261,6 @@
     </body>
 
     </html>
-
 
     </script>
     <section class="client-logo-section pt-100">

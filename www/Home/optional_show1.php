@@ -370,9 +370,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     return;
                 }
 
-
-
-
                 // 顯示資料
                 data.forEach(function (item, index) {
                     var row = tbody.insertRow();
