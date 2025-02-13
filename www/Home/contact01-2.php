@@ -93,7 +93,7 @@ sendEmailToTeacher($grade, $class, $currentUserId, $studentName);
 require 'vendor/autoload.php';
 
 function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn) {
-  // 查找符合條件的老師 email
+  // 取得老師的 email
   $sql = "SELECT email FROM testemail WHERE name IN (
               SELECT name FROM user WHERE grade LIKE '%$grade%' 
               AND class LIKE '%$class%' 
@@ -115,34 +115,18 @@ function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn)
       return;
   }
 
-  $mail = new PHPMailer(true);
+  // 📌 設定郵件標頭
+  $subject = "學生 $studentName 已更新頭貼";
+  $message = "<h2>學生 $studentName 已更新頭貼</h2>";
+  $headers = "From: 109534209@stu.ukn.edu.tw\r\n";  
+  $headers .= "Reply-To: 109534209@stu.ukn.edu.tw\r\n"; 
+  $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-  try {
-      // ✅ SMTP 伺服器設置
-      $mail->isSMTP();
-      $mail->Host = 'smtp.gmail.com';  // ✅ 請更換為你的 SMTP 伺服器
-      $mail->SMTPAuth = true;
-      $mail->Username = '109534208@stu.ukn.edu.tw'; // ✅ 請輸入你的郵件帳號
-      $mail->Password = 'f230991192';  // ❗ 這裡不能留空！若用 Gmail, 需用 App Password
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      $mail->Port = 587;
-
-      // ✅ 郵件收件人 & 內容
-      $mail->setFrom('109534209@stu.ukn.edu.tw', '學生系統');
-      $mail->addAddress($teacheremail); // 發送給老師
-      $mail->isHTML(true);
-      $mail->Subject = "學生 $studentName 已更新頭貼";
-      $mail->Body = "<h2>學生 $studentName 已更新頭貼</h2>";
-
-      // ✅ 發送郵件
-      if ($mail->send()) {
-          echo "✅ 郵件已發送！";
-      } else {
-          echo "❌ 郵件發送失敗: " . $mail->ErrorInfo;
-      }
-
-  } catch (Exception $e) {
-      echo "❌ 郵件發送失敗: {$mail->ErrorInfo}";
+  // 📌 用 mail() 傳送郵件
+  if (mail($teacheremail, $subject, $message, $headers)) {
+      echo "✅ 郵件已發送給 $teacheremail！";
+  } else {
+      echo "❌ 郵件發送失敗！請確認 mail() 設定。";
   }
 }
 
