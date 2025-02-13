@@ -186,10 +186,13 @@ $result = mysqli_query($link, $query);
       border-radius: 50%;
       /* 讓圖片本身也是圓形 */
     }
+
     strong {
-            font-weight: 700; /* 粗體 */
-            font-size: 18px;  /* 設定大小 */
-        }
+      font-weight: 700;
+      /* 粗體 */
+      font-size: 18px;
+      /* 設定大小 */
+    }
   </style>
 
   <!-- ========================= 個人資料區塊 Start ========================= -->
@@ -281,7 +284,7 @@ $result = mysqli_query($link, $query);
 
             <!-- 個人資料卡 -->
             <div class="bg-light p-4 rounded shadow-sm text-center">
-              <p><strong >帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p></br>
+              <p><strong>帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p></br>
               <p><strong>科系：</strong> <?php echo $_SESSION['user']['department']; ?></p></br>
               <p><strong>班級：</strong> <?php echo $_SESSION['user']['grade'], $_SESSION['user']['class']; ?></p></br>
 
@@ -316,8 +319,12 @@ $result = mysqli_query($link, $query);
               } else {
                 echo "查詢失敗：" . mysqli_error($link);
               }
+              if (count($teachers) == 1) {
+                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "</span></p>";
+              } else {
+                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] ."、".$teachers[1] ."</span></p>";
+              }
               ?>
-              <p><strong>班級導師：</strong> <?php echo implode("、", array_pad($teachers, 2, "無")); ?></p>
             </div>
           </div>
         </div>
