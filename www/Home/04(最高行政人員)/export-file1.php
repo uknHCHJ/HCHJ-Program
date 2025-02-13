@@ -121,10 +121,7 @@ $username = $userData['name'];
                         <li class="list-group-item" data-value="diploma"><input type="checkbox" name="options[]" value="diploma"> 學歷證明</li>
                         <li class="list-group-item" data-value="competition"><input type="checkbox" name="options[]" value="competition"> 競賽證明</li>
                         <li class="list-group-item" data-value="internship"><input type="checkbox" name="options[]" value="internship"> 實習證明</li>
-                        <li class="list-group-item" data-value="certifications"><input type="checkbox" name="options[]" value="certifications"> 相關證照</li>
-
-
-<li class="list-group-item" data-value="certifications">
+                        <li class="list-group-item" data-value="certifications">
     <input type="checkbox" id="certifications-checkbox" name="options[]" value="certifications"> 相關證照
     <div id="certifications-container" class="custom-dropdown" style="display: none;">
         <button type="button" id="certifications-dropdown-btn" class="dropdown-btn">請選擇證照...</button>
@@ -137,7 +134,7 @@ $username = $userData['name'];
 .custom-dropdown {
     position: relative;
     display: inline-block;
-    width: 200px;
+    width: 100%;
 }
 
 .dropdown-btn {
@@ -173,22 +170,18 @@ $username = $userData['name'];
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    setupDropdown('certifications', 'get-certifications.php?type=certifications');
-});
+    var checkbox = document.getElementById('certifications-checkbox');
+    var container = document.getElementById('certifications-container');
+    var dropdownBtn = document.getElementById('certifications-dropdown-btn');
+    var optionsDiv = document.getElementById('certifications-options');
 
-function setupDropdown(id, url) {
-    var checkbox = document.getElementById(id + '-checkbox');
-    var container = document.getElementById(id + '-container');
-    var dropdownBtn = document.getElementById(id + '-dropdown-btn');
-    var optionsDiv = document.getElementById(id + '-options');
-
-    // 勾選時顯示/隱藏選單
+    // 監聽「相關證照」勾選狀態
     checkbox.addEventListener('change', function() {
         if (this.checked) {
             container.style.display = 'block';
 
-            // 發送 AJAX 取得檔案列表
-            fetch(url)
+            // 發送 AJAX 取得證照清單
+            fetch('get-certifications.php?type=certifications')
                 .then(response => response.json())
                 .then(data => {
                     optionsDiv.innerHTML = ''; // 清空選項
@@ -196,20 +189,22 @@ function setupDropdown(id, url) {
                         var label = document.createElement('label');
                         var checkbox = document.createElement('input');
                         checkbox.type = 'checkbox';
-                        checkbox.name = id + '_file[]';
-                        checkbox.value = file.filename;
+                        checkbox.name = 'certifications_files[]'; // 確保資料能被表單提交
+                        checkbox.value = file.organization;
                         label.appendChild(checkbox);
-                        label.appendChild(document.createTextNode(' ' + file.filename));
+                        label.appendChild(document.createTextNode(' ' + file.organization));
                         optionsDiv.appendChild(label);
                     });
-                });
+                })
+                .catch(error => console.error('取得證照清單錯誤:', error));
         } else {
             container.style.display = 'none';
         }
     });
 
-    // 點擊按鈕時顯示/隱藏選項
-    dropdownBtn.addEventListener('click', function() {
+    // 點擊按鈕時顯示/隱藏選單
+    dropdownBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
         optionsDiv.style.display = optionsDiv.style.display === 'block' ? 'none' : 'block';
     });
 
@@ -219,9 +214,8 @@ function setupDropdown(id, url) {
             optionsDiv.style.display = 'none';
         }
     });
-}
+});
 </script>
-
                         <li class="list-group-item" data-value="language"><input type="checkbox" name="options[]" value="language"> 語言能力證明</li>
                         <li class="list-group-item" data-value="topics"><input type="checkbox" name="options[]" value="topics"> 專題資料</li>
                         <li class="list-group-item" data-value="other"><input type="checkbox" name="options[]" value="other"> 其他資料</li>

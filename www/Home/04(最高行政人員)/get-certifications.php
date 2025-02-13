@@ -25,13 +25,12 @@ if ($type == 'certifications') {
 
     $files = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        // 正確使用欄位名稱 file_name
-        $files[] = ['filename' => $row['file_name']];
+        if (!empty($row['organization'])) { 
+            $files[] = ['organization' => $row['organization']]; 
+        }
     }
-
+    header('Content-Type: application/json');
     echo json_encode($files, JSON_UNESCAPED_UNICODE);
     exit();
 }
-
-echo json_encode([]);
 ?>
