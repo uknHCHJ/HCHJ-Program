@@ -1,4 +1,7 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         // 取得檔案資訊
@@ -25,6 +28,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die("資料庫連線失敗：" . $conn->connect_error);
         }
         $conn->set_charset("utf8mb4");
+        $userData = $_SESSION['user'];
+$userId = $userData['user'];
+$studentName = $userData['name'];
+$grade = $userData['grade'];  // 學生年級
+$class = $userData['class'];  // 學生班級
+$currentUserId = $userData['id']; // 學生 id
+$permissions1 = explode(',', $userData['Permissions']); // 拆分學生的權限
+$sql = "SELECT * FROM testemail WHERE `name`='$studentName'";
+$result = mysqli_query($conn, $sql);
+
+if ($result) {
+  $studentemail = "";
+  while ($row = mysqli_fetch_assoc($result)) {
+    $studentemail = $row['email'];
+  }
+}
 
         // 檢查資料庫是否已有相同檔名
         $checkSql = "SELECT COUNT(*) FROM portfolio WHERE file_name = ?";
@@ -89,4 +108,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('檔案上傳錯誤！'); window.location.href='Portfolio1.php';</script>";
     }
 }
+function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn) {
+    // 🔍 查詢所有符合條件的導師
+    $sql = "SELECT email FROM testemail WHERE name IN (
+                SELECT name FROM user WHERE grade LIKE '%$grade%' 
+                AND class LIKE '%$class%' 
+                AND id != $currentUserId 
+                AND FIND_IN_SET('2', Permissions)
+            )";
+  
+    $result = $conn->query($sql);
+  
+    if (!$result || $result->num_rows == 0) {
+        echo "❌ 找不到導師的 email";
+        return;
+    }
+  
+    // 📌 逐一發送郵件給每位導師
+    while ($row = $result->fetch_assoc()) {
+        $teacheremail = $row['email'];
+  
+        if (!empty($teacheremail)) {
+            $subject = "學生 $studentName 已更新頭貼";
+            $message = "<h2>學生 $studentName 已更新頭貼</h2>";
+            $headers = "From: 109534209@stu.ukn.edu.tw\r\n";  
+            $headers .= "Reply-To: 109534209@stu.ukn.edu.tw\r\n"; 
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+  
+            if (mail($teacheremail, $subject, $message, $headers)) {
+                echo "✅ 郵件已發送給 $teacheremail！<br>";
+            } else {
+                echo "❌ 郵件發送失敗給 $teacheremail！<br>";
+            }
+        }
+    }
+  }
+  
 ?>

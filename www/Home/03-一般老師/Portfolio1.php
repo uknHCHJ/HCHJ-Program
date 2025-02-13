@@ -202,6 +202,7 @@ if ($conn->connect_error) {
         </section>
 
         <script>
+            
         function toggleSubCategory() {
             var category = document.getElementById("category").value;
             var subCategoryDiv = document.getElementById("sub_category_div");
@@ -435,7 +436,6 @@ if ($conn->connect_error) {
         });
     });
 </script>
-
 
         <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
