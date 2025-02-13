@@ -186,6 +186,10 @@ $result = mysqli_query($link, $query);
       border-radius: 50%;
       /* 讓圖片本身也是圓形 */
     }
+    strong {
+            font-weight: 700; /* 粗體 */
+            font-size: 18px;  /* 設定大小 */
+        }
   </style>
 
   <!-- ========================= 個人資料區塊 Start ========================= -->
@@ -277,9 +281,9 @@ $result = mysqli_query($link, $query);
 
             <!-- 個人資料卡 -->
             <div class="bg-light p-4 rounded shadow-sm text-center">
-              <p><strong>帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p>
-              <p><strong>科系：</strong> <?php echo $_SESSION['user']['department']; ?></p>
-              <p><strong>班級：</strong> <?php echo $_SESSION['user']['grade'], $_SESSION['user']['class']; ?></p>
+              <p><strong >帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p></br>
+              <p><strong>科系：</strong> <?php echo $_SESSION['user']['department']; ?></p></br>
+              <p><strong>班級：</strong> <?php echo $_SESSION['user']['grade'], $_SESSION['user']['class']; ?></p></br>
 
 
               <!-- 班導資訊 -->
