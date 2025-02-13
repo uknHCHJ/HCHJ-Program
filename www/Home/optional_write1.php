@@ -379,10 +379,11 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         const preference = `${schoolSelect.options[schoolSelect.selectedIndex].text} - ${departmentSelect.options[departmentSelect.selectedIndex].text}`;
 
                         // 檢查志願是否已經被選過
-                        if (preferences.some(p => p.preference === preference)) {
+                        if (preferences.some(p => p.preference_rank === preference)) {
                             alert('此志願已經選擇過，請選擇其他的志願');
                             return;
                         }
+
 
                         if (preferences.length >= maxPreferences) {
                             alert('最多只能選擇5個志願');
@@ -423,7 +424,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                                     serial_number: index + 1,
                                     Secondskill_id: pref.Secondskill_id,
                                     department_id: pref.departmentId,
-                                    school_name: pref.school_name, 
+                                    school_name: pref.school_name,
                                     department_name: pref.department_name
                                 })),
                             }),

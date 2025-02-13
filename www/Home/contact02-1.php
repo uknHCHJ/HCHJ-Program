@@ -74,9 +74,10 @@ $result = mysqli_query($link, $query);
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -85,7 +86,11 @@ $result = mysqli_query($link, $query);
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
+                                    </ul>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">二技校園網</a>
