@@ -22,7 +22,7 @@ $userId = $userData['user'];
 $grade = $userData['grade'];//學生年級
 $class = $userData['class'];//學生班級
 $currentUserId = $userData['id'];///學生id
-$permissions1 = explode(',', $userData['Permissions']);//把權限拆出來
+$permissions1 = explode(',', $userData['Permissions']);//把權限拆出來學生
 // 查詢資料庫以確認使用者是否存在
 $query = sprintf("SELECT user FROM `user` WHERE user = '%s'", $conn->real_escape_string($userId));
 $result = $conn->query($query);
@@ -84,39 +84,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
   </script>";
 
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $mail = new PHPMailer(true);
+//抓跟學生一樣年級班級的老師，用id判斷先查詢
+$sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
+$result = mysqli_query($link, $sql);
+if ($result) {
+  $teachers = [];
+  while ($row = mysqli_fetch_assoc($result)) {
+    //$permissions2是存老師的權限拆出來個別看有2的人
+    $permissions2 = explode(',', $row['Permissions']);
+    //如果有2就把查詢出來的老師名字存進去資料庫
+    if (in_array('2', $permissions2)) {
+      $teachers[] = $row['name'];
+    }
+  }
+} else {
+  echo "查詢失敗：" . mysqli_error($link);
+}
+//如果陣列長度是2那就把老師的名字存進變數
+if (count($teachers) == 1) {//只有一個老師
+  $teachers1 = "";
+  $teachers1 = $teachers[0];
+  $sql = "SELECT * FROM `testemail` WHERE `name` LIKE '%$teachers1%'";
+  $result = mysqli_query($link, $sql);
+  if ($result) {
+    $email[] = "";
+    while ($row = mysqli_fetch_assoc($result)) {
+      $email[] = $row['email'];
+    }
+  } else {
+    echo "查詢失敗：" . mysqli_error($link);
+  }
+} else {//2個老師
+  $teachers1 = "";
+  $teachers2 = "";
+  $teachers1 = $teachers[0];
+  $teachers2 = $teachers[1];
+  $sql = "SELECT * FROM `testemail` WHERE name IN ($teachers1, $teachers2)";
+  $result = mysqli_query($link, $sql);
+  if ($result) {
+    $email[] = "";
+    while ($row = mysqli_fetch_assoc($result)) {
+      $email[] = $row['email'];
+    }
+  } else {
+    echo "查詢失敗：" . mysqli_error($link);
+  }
+}
+if (count($$email[]) == 1) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $mail = new PHPMailer(true);
+    try {
+      // 設定 SMTP 伺服器
+      $mail->isSMTP();
+      $mail->Host = 'smtp.example.com';  // 請替換成你自己的 SMTP 伺服器
+      $mail->SMTPAuth = true;
+      $mail->Username = 'your_email@example.com'; // 這裡使用你自己的郵件帳號來發送郵件
+      $mail->Password = 'your_smtp_password'; // 使用你 SMTP 帳戶的應用程式密碼
+      $mail->SMTPSecure = 'tls';
+      $mail->Port = 587;
 
-  try {
-    // 設定 SMTP 伺服器
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = $sendemail; // 你的 Gmail 帳號
-    $mail->Password = 'your_password'; // Gmail 應用程式密碼
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
+      // 設定發送者與接收者
+      $mail->setFrom('your_email@example.com', '系統通知');
+      $mail->addAddress('recipient@example.com'); // 這裡填寫接收郵件的地址
 
-    // 設定發送者與接收者
-    $mail->setFrom('your_email@gmail.com', '系統通知');
-    $mail->addAddress('recipient@example.com'); // 接收者的 Email
+      // Email 內容
+      $mail->isHTML(true);
+      $mail->Subject = "學生資料通知 - " . $_POST['user_name'];
+      $mail->Body = "
+          <h2>學生資料</h2>
+          <p><strong>姓名：</strong> {$_POST['user_name']}</p>
+          <p><strong>帳號：</strong> {$_POST['user_email']}</p>
+          <p><strong>科系：</strong> {$_POST['user_department']}</p>
+          <p><strong>班級：</strong> {$_POST['user_grade']} {$_POST['user_class']}</p>
+          <p><strong>負責老師：</strong> $teacherName</p>
+        ";
 
-    // Email 內容
-    $mail->isHTML(true);
-    $mail->Subject = "學生資料通知 - " . $_POST['user_name'];
-    $mail->Body = "
-        <h2>學生資料</h2>
-        <p><strong>姓名：</strong> {$_POST['user_name']}</p>
-        <p><strong>帳號：</strong> {$_POST['user_email']}</p>
-        <p><strong>科系：</strong> {$_POST['user_department']}</p>
-        <p><strong>班級：</strong> {$_POST['user_grade']} {$_POST['user_class']}</p>
-      ";
-
-    // 發送郵件
-    $mail->send();
-    echo "<script>alert('Email 發送成功！'); window.location.href = 'index.php';</script>";
-  } catch (Exception $e) {
-    echo "<script>alert('Email 發送失敗：" . $mail->ErrorInfo . "'); window.history.back();</script>";
+      // 發送郵件
+      $mail->send();
+      echo "<script>alert('Email 發送成功！'); window.location.href = 'index.php';</script>";
+    } catch (Exception $e) {
+      echo "<script>alert('Email 發送失敗：" . $mail->ErrorInfo . "'); window.history.back();</script>";
+    }
   }
 }
 $conn->close();
