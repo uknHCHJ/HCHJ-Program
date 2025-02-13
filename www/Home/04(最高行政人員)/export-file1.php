@@ -165,52 +165,76 @@ $username = $userData['name'];
             </li>
             <script>
               document.addEventListener('DOMContentLoaded', function() {
-                var certCheckbox = document.getElementById('certifications-checkbox');
-                var certContainer = document.getElementById('certifications-container');
-                var certOptionsDiv = document.getElementById('certifications-options');
-                var certOutputDiv = document.getElementById('certifications-output');
+              var certCheckbox = document.getElementById('certifications-checkbox');
+              var certContainer = document.getElementById('certifications-container');
+              var certOptionsDiv = document.getElementById('certifications-options');
+              var certOutputDiv = document.getElementById('certifications-output');
 
-                // 當使用者勾選「相關證照」時，載入選項
-                certCheckbox.addEventListener('change', function() {
-                  if (this.checked) {
-                    certContainer.style.display = 'block';
-                    // 發送 AJAX 取得證照清單
-                    fetch('get-certifications.php?type=certifications')
-                      .then(response => response.json())
-                      .then(data => {
-                        certOptionsDiv.innerHTML = ''; // 清空選項
-                        data.forEach(file => {
-                          var label = document.createElement('label');
-                          var optCheckbox = document.createElement('input');
-                          optCheckbox.type = 'checkbox';
-                          optCheckbox.name = 'certifications_files[]';
-                          optCheckbox.value = file.organization;
-                          // 當選項變更時更新輸出
-                          optCheckbox.addEventListener('change', updateCertOutput);
-                          label.appendChild(optCheckbox);
-                          label.appendChild(document.createTextNode(' ' + file.organization));
-                          certOptionsDiv.appendChild(label);
-                        });
-                      })
-                      .catch(error => console.error('取得證照清單錯誤:', error));
-                  } else {
-                    certContainer.style.display = 'none';
-                    certOptionsDiv.innerHTML = '';
-                    certOutputDiv.innerText = '';
-                  }
-                });
+  certCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+      certContainer.style.display = 'block';
+      fetch('get-certifications.php?type=certifications')
+        .then(response => response.json())
+        .then(data => {
+          certOptionsDiv.innerHTML = ''; // 清空選項
 
-                // 更新「選取的證照」輸出內容：只輸出已勾選的項目
-                function updateCertOutput() {
-                  var selectedCerts = [];
-                  certOptionsDiv.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
-                    if (chk.checked) {
-                      selectedCerts.push(chk.value);
-                    }
-                  });
-                  certOutputDiv.innerText = selectedCerts.length > 0 ? '選取的證照：' + selectedCerts.join(', ') : '';
-                }
-              });
+          // 1. 添加「全選」選項
+          var selectAllLabel = document.createElement('label');
+          var selectAllCheckbox = document.createElement('input');
+          selectAllCheckbox.type = 'checkbox';
+          selectAllCheckbox.id = 'select-all-certifications';
+          selectAllLabel.appendChild(selectAllCheckbox);
+          selectAllLabel.appendChild(document.createTextNode(' 全選'));
+          certOptionsDiv.appendChild(selectAllLabel);
+
+          // 2. 生成證照選項
+          data.forEach(file => {
+            var label = document.createElement('label');
+            var optCheckbox = document.createElement('input');
+            optCheckbox.type = 'checkbox';
+            optCheckbox.className = 'cert-checkbox'; // 標記所有選項
+            optCheckbox.value = file.organization;
+            label.appendChild(optCheckbox);
+            label.appendChild(document.createTextNode(' ' + file.organization));
+            certOptionsDiv.appendChild(label);
+          });
+
+          // 3. 監聽「全選」勾選事件
+          selectAllCheckbox.addEventListener('change', function() {
+            var checkboxes = certOptionsDiv.querySelectorAll('.cert-checkbox');
+            checkboxes.forEach(chk => chk.checked = selectAllCheckbox.checked);
+            updateCertOutput();
+          });
+
+          // 4. 當使用者手動取消某個選項時，自動取消「全選」
+          certOptionsDiv.addEventListener('change', function(event) {
+            if (event.target.classList.contains('cert-checkbox')) {
+              var checkboxes = certOptionsDiv.querySelectorAll('.cert-checkbox');
+              var allChecked = Array.from(checkboxes).every(chk => chk.checked);
+              selectAllCheckbox.checked = allChecked;
+              updateCertOutput();
+            }
+          });
+
+        })
+        .catch(error => console.error('取得證照清單錯誤:', error));
+    } else {
+        certContainer.style.display = 'none';
+        certOptionsDiv.innerHTML = '';
+        certOutputDiv.innerText = '';
+      } 
+  });
+
+  // 更新「選取的證照」輸出內容
+  function updateCertOutput() {
+    var selectedCerts = [];
+    certOptionsDiv.querySelectorAll('.cert-checkbox:checked').forEach(function(chk) {
+      selectedCerts.push(chk.value);
+    });
+    certOutputDiv.innerText = selectedCerts.length > 0 ? '選取的證照：' + selectedCerts.join(', ') : '';
+  }
+});
+
             </script>
             <li class="list-group-item" data-value="language">
               <input type="checkbox" name="options[]" value="language"> 語言能力證明
