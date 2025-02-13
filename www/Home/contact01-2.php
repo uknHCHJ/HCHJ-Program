@@ -24,13 +24,13 @@ $class = $userData['class'];  // 學生班級
 $currentUserId = $userData['id']; // 學生 id
 $permissions1 = explode(',', $userData['Permissions']); // 拆分學生的權限
 $sql = "SELECT * FROM `testemail` WHERE `name`='$studentName'";
-        $result = mysqli_query($link, $sql);
-        if ($result) {
-          $studentemail = "";
-          while ($row = mysqli_fetch_assoc($result)) {
-            $studentemail = $row['email'];
-          }
-        }
+$result = mysqli_query($link, $sql);
+if ($result) {
+  $studentemail = "";
+  while ($row = mysqli_fetch_assoc($result)) {
+    $studentemail = $row['email'];
+  }
+}
 // 查詢資料庫以確認使用者是否存在
 $query = sprintf("SELECT user FROM `user` WHERE user = '%s'", $conn->real_escape_string($userId));
 $result = $conn->query($query);
@@ -93,67 +93,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
     window.location.href = '/~HCHJ/Home/contact01-1.php';
   </script>";
 }
-
+// 頭貼更新後發送郵件給老師
+sendEmailToTeacher($grade, $class, $currentUserId, $name);
 // 發送郵件給老師
 function sendEmailToTeacher($grade, $class, $currentUserId, $studentName)
 {
-  global $conn;
+    global $conn;
+    $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
+    $result = mysqli_query($conn, $sql);
 
-  // 1. 抓取學生對應年級班級的老師
-  $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
-  $result = $conn->query($sql);
-  $teachers = [];
-  if ($result) {
-    while ($row = $result->fetch_assoc()) {
-      $permissions2 = explode(',', $row['Permissions']);
-      if (in_array('2', $permissions2)) {
-        $teachers[] = $row['name'];
-      }
-    }
-  } else {
-    echo "查詢失敗：" . $conn->error;
-  }
-
-  // 2. 確認有老師並獲取老師的郵件
-  if (count($teachers) > 0) {
-    foreach ($teachers as $teacher) {
-      // 查詢老師的郵件
-      $sql = "SELECT * FROM `testemail` WHERE `name` LIKE '%$teacher%'";
-      $result = $conn->query($sql);
-      if ($result) {
-        $teacherEmail = "";
-        while ($row = $result->fetch_assoc()) {
-          $teacherEmail = $row['email'];
+    if ($result) {
+        $teachers = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $permissions2 = explode(',', $row['Permissions']);
+            if (in_array('2', $permissions2)) {
+                $teachers[] = $row['name'];
+            }
         }
-
-        // 3. 發送郵件
-       // $sql = "SELECT * FROM `testemail` WHERE `name`='$studentName'";
-        //$result = mysqli_query($link, $sql);
-       // if ($result) {
-        //  $studentemail = "";
-        //  while ($row = mysqli_fetch_assoc($result)) {
-            //$studentemail = $row['email'];
-        //  }
-       // }
-
-        $subject = "學生資料通知 - $studentName";
-        $message = "<h2>學生資料</h2>
-                    <p><strong>姓名：</strong> $studentName</p>";
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-        $headers .= "From: 109534209@stu.ukn.edu.tw\r\n";  // 發送人的郵件
-
-        if (mail($teacherEmail, $subject, $message, $headers)) {
-          echo "<script>alert('Email 發送成功！'); window.location.href = '/~HCHJ/Home/contact01-1.php';</script>";
-        } else {
-          echo "<script>alert('Email 發送失敗，請檢查設定或聯繫系統管理員。'); window.history.back();</script>";
-        }
-      }
+    } else {
+        echo "查詢失敗：" . mysqli_error($conn);
     }
-  } else {
-    echo "查找老師失敗，未找到符合條件的老師。";
-  }
+
+    if (count($teachers) > 0) {
+        $teachername = $teachers[0]; // 只取第一個老師
+        $sql = "SELECT * FROM `testemail` WHERE `name`='$teachername'";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $teacheremail = "";
+            while ($row = mysqli_fetch_assoc($result)) {
+                $teacheremail = $row['email'];
+            }
+        }
+    }
+
+    // 🔍 **測試 email 是否正確**
+    var_dump($teacheremail);
+    exit;
+
+    $subject = "學生資料通知 - " . $studentName;
+    $message = "<h2>學生資料</h2><p><strong>姓名：</strong> " . $studentName . "</p>";
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    $headers .= "From: 109534209@stu.ukn.edu.tw\r\n";
+
+    if (mail($teacheremail, $subject, $message, $headers)) {
+        echo "<script>alert('Email 發送成功！'); window.location.href = '/~HCHJ/Home/contact01-1.php';</script>";
+    } else {
+        echo "<script>alert('Email 發送失敗，請檢查設定或聯繫系統管理員。'); window.history.back();</script>";
+    }
 }
+
 
 $conn->close();
 ?>
