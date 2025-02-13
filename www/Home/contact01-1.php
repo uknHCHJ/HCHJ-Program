@@ -5,6 +5,7 @@ include 'db.php';
 $userData = $_SESSION['user'];
 // 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
+$name = $userData['name'];
 $image = $userData['image'];
 $query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
@@ -320,10 +321,22 @@ $result = mysqli_query($link, $query);
                 echo "查詢失敗：" . mysqli_error($link);
               }
               if (count($teachers) == 1) {
-                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "</span></p>";
+                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "</span></p></br>";
               } else {
-                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] ."、".$teachers[1] ."</span></p>";
+                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "、" . $teachers[1] . "</span></p></br>";
               }
+              $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+              $result = mysqli_query($link, $sql);
+              if ($result) { 
+            
+                $studentemail = "";
+                while ($row = mysqli_fetch_assoc($result)) {
+                  
+                  $studentemail = $row['email'];
+                  echo "<p><strong>電子信箱：</strong><span>" . $studentemail . "</span></p>";
+                }
+              }
+
               ?>
             </div>
           </div>
