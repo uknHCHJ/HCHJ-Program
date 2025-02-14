@@ -155,7 +155,7 @@ $username = $userData['name'];
               <input type="checkbox" name="options[]" value="internship"> 實習證明
             </li>
             <li class="list-group-item" data-value="certifications">
-  <input type="checkbox" id="certifications-checkbox" name="options[]" value="certifications"> 相關證照
+  <input type="checkbox" id="certifications-checkbox" name="options[]" value="certifications"> 專業證照
   <div id="certifications-container" style="display: none; margin-top: 10px;">
     <div class="certifications-wrapper">
       <button type="button" id="certifications-select-all" class="certifications-button">全選</button>
@@ -173,7 +173,7 @@ $username = $userData['name'];
     var certOutputDiv = document.getElementById('certifications-output');
     var certSelectAllBtn = document.getElementById('certifications-select-all');
 
-    // 當使用者勾選「相關證照」時，載入選項
+    // 當使用者勾選「專業證照」時，載入選項
     certCheckbox.addEventListener('change', function() {
       if (this.checked) {
         certContainer.style.display = 'block';

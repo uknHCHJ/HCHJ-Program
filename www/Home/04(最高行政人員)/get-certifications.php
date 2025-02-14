@@ -21,7 +21,7 @@ $userId = $_SESSION['user']['user'];
 
 if ($type == 'certifications') {
     // 使用 DISTINCT 過濾重複的 organization
-    $sql = "SELECT DISTINCT organization FROM portfolio WHERE student_id = '$userId' AND category = '相關證照'";
+    $sql = "SELECT DISTINCT organization FROM portfolio WHERE student_id = '$userId' AND category = '專業證照'";
     $result = mysqli_query($conn, $sql);
 
     $files = [];

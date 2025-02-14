@@ -105,7 +105,7 @@ if (!empty($_POST['certifications_files'])) {
     $certInCondition = implode(',', $escapedCerts);
     
     if (!empty($certInCondition)) {
-        $queryMap['certifications'] = "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '相關證照' AND organization IN ($certInCondition)";
+        $queryMap['certifications'] = "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '專業證照' AND organization IN ($certInCondition)";
     }
 }
 
