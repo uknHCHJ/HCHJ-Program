@@ -93,6 +93,7 @@ $queryMap = [
     'certifications'=> "",
     'language'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
     'other'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
+    'Proof-of-service'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '服務證明'",
     'read'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
     // 'topic' 選項不需進行資料庫查詢
 ];
@@ -140,6 +141,7 @@ $optionNames = [
     'certifications'=> '相關證照',
     'language'      => '語言能力證明',
     'other'      => '其他資料',
+    'Proof-of-service'      => '服務證明',
     'read'      => '讀書計畫'
 ];
 

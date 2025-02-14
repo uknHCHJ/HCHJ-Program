@@ -264,6 +264,9 @@ $username = $userData['name'];
             <li class="list-group-item" data-value="other">
               <input type="checkbox" name="options[]" value="other"> 其他資料
             </li>
+            <li class="list-group-item" data-value="Proof-of-service">
+              <input type="checkbox" name="options[]" value="Proof-of-service"> 服務證明
+            </li>
             <li class="list-group-item" data-value="read">
               <input type="checkbox" name="options[]" value="read"> 讀書計畫
             </li>
