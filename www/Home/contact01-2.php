@@ -87,6 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
     window.location.href = '/~HCHJ/Home/contact01-1.php';
   </script>";
 }
+/*
 // 🟢 呼叫函式時改成正確的變數名稱
 sendEmailToTeacher($grade, $class, $currentUserId, $studentName);
 require 'vendor/autoload.php';
@@ -126,7 +127,7 @@ function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn)
       }
   }
 }
-
+*/
 
 
 $conn->close();
