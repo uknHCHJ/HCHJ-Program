@@ -80,7 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
         alert('檔案上傳錯誤，錯誤代碼: {$_FILES['image']['error']}'');
         window.location.href = '/~HCHJ/Home/contact01-1.php';
       </script>";
-     
   }
 } else {
   echo "<script>
