@@ -214,15 +214,16 @@ if ($conn->connect_error) {
             <option value="學歷證明">學歷證明</option>
             <option value="競賽證明">競賽證明</option>
             <option value="實習證明">實習證明</option>
-            <option value="相關證照">相關證照</option>
+            <option value="專業證照">專業證照</option>
             <option value="語言能力證明">語言能力證明</option>
             <option value="專題資料">專題資料</option>
             <option value="讀書計畫">讀書計畫</option>
+            <option value="服務證明">服務證明</option>
             <option value="其他資料">其他資料</option>
         </select>
         
         <div id="sub_category_div" style="display: none;">
-            <label for="sub_category">相關證照分類：</label>
+            <label for="sub_category">專業證照分類：</label>
             <select name="sub_category" id="sub_category"></select>
         </div>
         
@@ -255,16 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const certificateNameInput = document.getElementById("certificate_name");
 
     // 定義可選擇的機構 (organization)
-    const subCategories = [
-        "ACM", "Adobe", "Microsoft", "GLAD",
-        "中華民國電腦教育發展協會(MOCC)",
-        "財團法人中華民國電腦技能基金會(TQC)",
-        "美國教育測驗服務社(ETS)", "台灣醫學資訊協會"
-    ];
-
+    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
     // 監聽「類別」選擇變更事件
     categorySelect.addEventListener("change", () => {
-        if (categorySelect.value === "相關證照") {
+        if (categorySelect.value === "專業證照") {
             subCategoryDiv.style.display = "block";
             subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
             certificateDiv.style.display = "none"; // 隱藏證照選擇區塊
@@ -326,10 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses">相關證照</button>
+                    <button type="button" class="portfolio-btn" data-filter=".licenses">專業證照</button>
                     <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
                     <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
+                    <button type="button" class="portfolio-btn" data-filter=".Proof-of-service">服務證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
                 </div>
 
@@ -357,10 +353,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         "學歷證明" => "certificates",
                         "競賽證明" => "competitions",
                         "實習證明" => "internships",
-                        "相關證照" => "licenses",
+                        "專業證照" => "licenses",
                         "語言能力證明" => "language-skills",
                         "專題資料" => "Topics",
                         "讀書計畫" => "reading-plan",
+                        "服務證明" => "Proof-of-service",
                         "其他資料" => "Other-information"
                     ];
 
@@ -371,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class='portfolio-content'>
                                     <h3>{$row['category']}</h3>";
                             
-                            if ($row["category"] === "相關證照") {
+                            if ($row["category"] === "專業證照") {
                                 echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
                                 echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
                             }
