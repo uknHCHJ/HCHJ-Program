@@ -201,52 +201,6 @@ if ($conn->connect_error) {
             </div>
         </section>
 
-        <script>
-            
-        function toggleSubCategory() {
-            var category = document.getElementById("category").value;
-            var subCategoryDiv = document.getElementById("sub_category_div");
-            var certificateDiv = document.getElementById("certificate_div");
-
-            if (category === "相關證照") {
-                subCategoryDiv.style.display = "block";
-            } else {
-                subCategoryDiv.style.display = "none";
-                certificateDiv.style.display = "none";
-            }
-        }
-
-        function loadCertifications() {
-            var category = document.getElementById("sub_category").value;
-            var certificateSelect = document.getElementById("certificate");
-            var certificateDiv = document.getElementById("certificate_div");
-
-            certificateDiv.style.display = "block";
-            certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "GetCertifications.php?category=" + category, true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var certifications = JSON.parse(xhr.responseText);
-                    certifications.forEach(function(cert) {
-                        var option = document.createElement("option");
-                        option.value = cert.id;
-                        option.textContent = cert.name;
-                        certificateSelect.appendChild(option);
-                    });
-                }
-            };
-            xhr.send();
-        }
-
-        document.getElementById("sub_category").addEventListener("change", loadCertifications);
-        document.getElementById("certificate").addEventListener("change", function() {
-            var selectedCertificate = this.options[this.selectedIndex].text;
-            document.getElementById("certificate_name").value = selectedCertificate;
-        });
-    </script>
-    
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
@@ -292,21 +246,73 @@ if ($conn->connect_error) {
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const categorySelect = document.getElementById("category");
-        const certificateDiv = document.getElementById("certificate_div");
-        const certificateSelect = document.getElementById("certificate");
-        const certificateNameInput = document.getElementById("certificate_name");
+document.addEventListener('DOMContentLoaded', () => {
+    const categorySelect = document.getElementById("category");
+    const subCategoryDiv = document.getElementById("sub_category_div");
+    const certificateDiv = document.getElementById("certificate_div");
+    const subCategorySelect = document.getElementById("sub_category");
+    const certificateSelect = document.getElementById("certificate");
+    const certificateNameInput = document.getElementById("certificate_name");
 
-        categorySelect.addEventListener("change", () => {
-            const isLicense = categorySelect.value === "相關證照";
+    // 定義可選擇的機構 (organization)
+    const subCategories = [
+        "ACM", "Adobe", "Microsoft", "GLAD",
+        "中華民國電腦教育發展協會(MOCC)",
+        "財團法人中華民國電腦技能基金會(TQC)",
+        "美國教育測驗服務社(ETS)", "台灣醫學資訊協會"
+    ];
+
+    // 監聽「類別」選擇變更事件
+    categorySelect.addEventListener("change", () => {
+        if (categorySelect.value === "相關證照") {
+            subCategoryDiv.style.display = "block";
+            subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
+            certificateDiv.style.display = "none"; // 隱藏證照選擇區塊
+            certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
+
+            // 填充機構 (organization) 下拉選單
+            subCategories.forEach(org => {
+                let option = document.createElement("option");
+                option.value = org;
+                option.textContent = org;
+                subCategorySelect.appendChild(option);
+            });
+        } else {
+            subCategoryDiv.style.display = "none";
             certificateDiv.style.display = "none";
-        });
-
-        certificateSelect.addEventListener("change", () => {
-            certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
-        });
+        }
     });
+
+    // 監聽「機構」選擇變更事件，載入對應的證照
+    subCategorySelect.addEventListener("change", () => {
+        let selectedOrg = subCategorySelect.value;
+        if (selectedOrg) {
+            certificateDiv.style.display = "block";
+            certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
+
+            // 透過 AJAX 請求從資料庫獲取該機構的證照清單
+            fetch(`GetCertifications.php?organization=${encodeURIComponent(selectedOrg)}`)
+                .then(response => response.json())
+                .then(certifications => {
+                    certifications.forEach(cert => {
+                        let option = document.createElement("option");
+                        option.value = cert.id;
+                        option.textContent = cert.name;
+                        certificateSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching certifications:", error));
+        } else {
+            certificateDiv.style.display = "none";
+        }
+    });
+
+    // 監聽「證照」選擇變更事件，填入隱藏欄位
+    certificateSelect.addEventListener("change", () => {
+        certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
+    });
+});
+
 </script>
 
 <div class="portfolio-section pt-130">
