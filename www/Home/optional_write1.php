@@ -541,7 +541,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             alert("發生錯誤: " + error.message);
                         });
                 }
-
             </script>
 
 

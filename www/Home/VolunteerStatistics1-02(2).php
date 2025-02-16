@@ -294,6 +294,7 @@ $class = $userData['class'];
     </body>
     </html>
 
+    
     <section class="client-logo-section pt-100">
         <div class="container">
             <div class="client-logo-wrapper">
