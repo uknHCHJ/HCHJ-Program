@@ -292,7 +292,6 @@ $class = $userData['class'];
 
         </script>
     </body>
-
     </html>
 
     <section class="client-logo-section pt-100">

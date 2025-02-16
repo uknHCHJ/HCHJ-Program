@@ -502,6 +502,11 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         return;
                     }
 
+                    // 加入確認視窗
+                    if (!confirm("確定要送出志願嗎？")) {
+                        return;
+                    }
+
                     fetch("addPreference.php", {
                         method: "POST",
                         headers: {
@@ -519,10 +524,9 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     })
                         .then((response) => {
                             if (!response.ok) {
-                                // 捕捉非 2xx 狀態碼的回應
                                 throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
                             }
-                            return response.json(); // 解析 JSON 回應
+                            return response.json();
                         })
                         .then((data) => {
                             if (data.success) {
@@ -537,6 +541,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             alert("發生錯誤: " + error.message);
                         });
                 }
+
             </script>
 
 
