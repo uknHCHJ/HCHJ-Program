@@ -196,7 +196,7 @@ $class = $userData['class'];
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 border-radius: 8px;
                 overflow: hidden;
-
+                
                 /* 確保表格均勻分布 */
             }
 
@@ -241,10 +241,7 @@ $class = $userData['class'];
                 </tr>
             </thead>
             <tbody id="data-body">
-                <?php
-                $query_students = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'";
-                $result_students = mysqli_query($link, $query_students);
-                ?>
+
             </tbody>
         </table>
         <script>
@@ -295,10 +292,9 @@ $class = $userData['class'];
 
         </script>
     </body>
-
     </html>
 
-
+    
     <section class="client-logo-section pt-100">
         <div class="container">
             <div class="client-logo-wrapper">

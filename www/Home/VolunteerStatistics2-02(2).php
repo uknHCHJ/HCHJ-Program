@@ -22,8 +22,16 @@ if ($conn->connect_error) {
 
 
 // 抓取資料，修改 SQL 查詢，將每位學生獨立列出
+$sql = "SELECT 
+            u.user AS student_user,
+            u.name AS student_name,
+            p.school_name,
+            p.department_name,
+            p.preference_rank
+        FROM preferences p
+        JOIN user u ON p.student_user = u.user  -- 透過 student_user（學號）關聯到 user 表的 user 欄位
+        ORDER BY u.user, p.preference_rank";  // 根據學生姓名和志願序號排序
 
-$sql = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'";
 $result = $conn->query($sql);
 
 $data = [];
