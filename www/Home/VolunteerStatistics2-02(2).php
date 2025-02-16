@@ -20,18 +20,10 @@ if ($conn->connect_error) {
     exit;
 }
 
-// 抓取資料，修改 SQL 查詢，將每位學生獨立列出
-$sql = "SELECT 
-            u.user AS student_user,
-            u.name AS student_name,
-            p.school_name,
-            p.department_name,
-            p.preference_rank
-        FROM user u
-        LEFT JOIN preferences p ON u.user = p.student_user  -- 使用 LEFT JOIN 確保沒有選志願的學生也會顯示
-        WHERE u.grade = '$grade' AND u.class = '$class' AND u.user != '$userId'  -- 排除當前導師的帳號
-        ORDER BY u.user, p.preference_rank";  // 根據學號和志願序號排序
 
+// 抓取資料，修改 SQL 查詢，將每位學生獨立列出
+
+$sql = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'";
 $result = $conn->query($sql);
 
 $data = [];
