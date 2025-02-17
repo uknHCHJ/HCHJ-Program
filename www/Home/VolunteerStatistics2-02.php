@@ -1,7 +1,7 @@
 <?php
 session_start();
 $userData = $_SESSION['user'];
-$userId = $userData['user'] ?? null; // 檢查 session 是否有效
+$userId = $userData['user'] ?? null;
 $username = $userData['name'] ?? null;
 
 // 資料庫連接設定
@@ -18,14 +18,16 @@ if ($conn->connect_error) {
     exit;
 }
 
-// 抓取資料
+// 調整 SQL 查詢
 $sql = "SELECT 
-        CONCAT(p.school_name, ' - ', p.department_name) AS School_Department, 
-        GROUP_CONCAT(u.name SEPARATOR ', ') AS students  
-    FROM preferences p
-    JOIN user u ON p.student_user = u.user  -- 透過 student_user（學號）關聯到 user 表的 user 欄位
-    GROUP BY school_department  
-    ORDER BY p.school_name, p.department_name";
+            p.school_name AS School, 
+            p.department_name AS Department, 
+            COUNT(u.name) AS StudentCount, 
+            GROUP_CONCAT(u.name SEPARATOR ', ') AS Students  
+        FROM preferences p
+        JOIN user u ON p.student_user = u.user  
+        GROUP BY p.school_name, p.department_name  
+        ORDER BY p.school_name, p.department_name";
 
 $result = $conn->query($sql);
 
@@ -35,7 +37,7 @@ if ($result && $result->num_rows > 0) {
         $data[] = $row;
     }
 } else {
-    $data = []; // 確保回傳空陣列而不是 null
+    $data = [];
 }
 
 // 回傳 JSON

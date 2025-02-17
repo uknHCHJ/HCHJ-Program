@@ -219,7 +219,9 @@ $userId = $userData['user'];
         <table>
             <thead>
                 <tr>
-                    <th>學校與科系</th>
+                    <th>學校</th>
+                    <th>科系</th>
+                    <th>人數</th>
                     <th>選擇的學生</th>
                 </tr>
             </thead>
@@ -229,7 +231,6 @@ $userId = $userData['user'];
         </table>
 
         <script>
-            // 取得資料並顯示
             // 取得資料並顯示
             fetch('VolunteerStatistics2-02.php')
                 .then(response => {
@@ -242,7 +243,7 @@ $userId = $userData['user'];
                     if (!Array.isArray(data)) {
                         console.error('Unexpected data format:', data);
                         const tableBody = document.getElementById('data-body');
-                        tableBody.innerHTML = `<tr><td colspan="2">No data available</td></tr>`;
+                        tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`;
                         return;
                     }
                     const tableBody = document.getElementById('data-body');
@@ -250,9 +251,11 @@ $userId = $userData['user'];
                     data.forEach(row => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                <td>${row.School_Department}</td>
-                <td>${row.students}</td>
-            `;
+                        <td>${row.School}</td>
+                        <td>${row.Department}</td>
+                        <td>${row.StudentCount}</td>
+                        <td>${row.Students || '無'}</td>
+                    `;
                         tableBody.appendChild(tr);
                     });
                 })
@@ -261,6 +264,7 @@ $userId = $userData['user'];
     </body>
 
     </html>
+
 
     </script>
     <section class="client-logo-section pt-100">
