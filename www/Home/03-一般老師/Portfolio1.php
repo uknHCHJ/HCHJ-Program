@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 定義可選擇的機構 (organization)
     const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
     // 監聽「類別」選擇變更事件
-    categorySelect.addEventListener("change", () => {
+        categorySelect.addEventListener("change", () => {
         if (categorySelect.value === "專業證照") {
             subCategoryDiv.style.display = "block";
             subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
@@ -276,6 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
             subCategoryDiv.style.display = "none";
             certificateDiv.style.display = "none";
         }
+    });
+    
+    // **將選擇的機構填入隱藏欄位**
+    subCategorySelect.addEventListener("change", () => {
+        document.getElementById("selectedOrganization").value = subCategorySelect.value;
     });
 
     // 監聽「機構」選擇變更事件，載入對應的證照
@@ -309,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+<input type="hidden" id="selectedOrganization" name="organization">
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">

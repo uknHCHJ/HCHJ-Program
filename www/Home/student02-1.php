@@ -151,32 +151,35 @@ foreach ($grades as $grade) {
   </header>
   <!-- ========================= header end ========================= -->
 
-  <!-- page-banner-section start -->
-  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="banner-content">
-                            <h2 class="text-white">學生備審管理</h2>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
-                                    </ol>
-                                </nav>
-                            </div>
+  <!-- ========================= page-banner-section start ========================= -->
+  <section class="page-banner-section pt-75 pb-75 img-bg"
+        style="background-image: url('assets/img/bg/common-bg.svg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white">學生備審管理</h2>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
+                                </ol>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- page-banner-section end -->
+        </div>
+    </section>
+
+    <head>
+  <!-- page-banner-section end -->
 
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
-  <div class="container-fluid"> <!-- 使用 container-fluid -->
-    <div class="row">
+    <div class="container-fluid"> <!-- 使用 container-fluid -->
+      <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
           <div class="section-title text-center mb-55">
             <h1 class="wow fadeInDown" data-wow-delay=".2s">選擇班級</h1>
@@ -252,8 +255,6 @@ foreach ($grades as $grade) {
                 transform: scale(1.08);
               }
 
-
-
               /* 功能按鈕容器 */
               #menu {
                 display: flex;
@@ -275,7 +276,7 @@ foreach ($grades as $grade) {
               #menu :nth-child(n+7) {
                 flex: 1 1 calc(100% / 5 - 10px);
               }
-            
+
               /* 返回按鈕 */
               #back-button {
                 margin-top: 20px;
@@ -331,23 +332,23 @@ foreach ($grades as $grade) {
 
                     // 取得後端資料
                     fetch("student02-2.php?class=" + selectedClass)
-  .then(response => {
-    if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
-    return response.json();
-  })
-  .then(data => {
-    menuDiv.innerHTML = "";
-    data.forEach(item => {
-      const btn = document.createElement("button");
-      btn.className = "download-button";
-      btn.textContent = item.name;
-      btn.onclick = () => window.location.href = item.url;
-      menuDiv.appendChild(btn);
-    });
-    menuDiv.classList.remove("hidden");
-    backButton.classList.remove("hidden");
-  })
-  .catch(error => console.error("載入功能按鈕時出錯:", error));
+                      .then(response => {
+                        if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
+                        return response.json();
+                      })
+                      .then(data => {
+                        menuDiv.innerHTML = "";
+                        data.forEach(item => {
+                          const btn = document.createElement("button");
+                          btn.className = "download-button";
+                          btn.textContent = item.name;
+                          btn.onclick = () => window.location.href = item.url;
+                          menuDiv.appendChild(btn);
+                        });
+                        menuDiv.classList.remove("hidden");
+                        backButton.classList.remove("hidden");
+                      })
+                      .catch(error => console.error("載入功能按鈕時出錯:", error));
                   });
                 });
 
