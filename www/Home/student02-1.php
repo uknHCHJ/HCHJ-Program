@@ -1,51 +1,21 @@
 <?php
 session_start();
-/** 資料庫連線 */
-$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if ($link) {
-  mysqli_query($link, 'SET NAMES UTF8');
-
-} else {
-  echo "資料庫連接失敗: " . mysqli_connect_error();
-}
-
-if (!isset($_SESSION['user'])) {
-  echo ("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
-  exit();
-}
-
-$userData = $_SESSION['user'];
+include 'db.php';
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
+$userData = $_SESSION['user'];
+// 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
-
-$permissions = explode(",", $userData['Permissions']); // 權限以逗號分隔
-$grades = explode(",", $userData['grade']);  // 年級以逗號分隔
-$classes = explode(",", $userData['class']);  // 班級以逗號分隔
-
-// 將年級和班級組合成唯一的鍵
-$gradeClassPairs = [];
-foreach ($grades as $grade) {
-  foreach ($classes as $class) {
-    $pair = $grade . $class;
-    if (!in_array($pair, $gradeClassPairs)) {
-      $gradeClassPairs[] = $pair;
-    }
-  }
-}
+$image = $userData['image'];
+$query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+$result = mysqli_query($link, $query);
 ?>
-<!doctype html>
+<!Doctype html>
 <html class="no-js" lang="">
 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>查看學生志願序</title>
-  <!-- 確認已正確載入 jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>學生備審管理</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -151,32 +121,25 @@ foreach ($grades as $grade) {
   </header>
   <!-- ========================= header end ========================= -->
 
-  <!-- page-banner-section start -->
-  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="banner-content">
-                            <h2 class="text-white">學生備審管理</h2>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- page-banner-section end -->
+  <!-- ========================= 橫幅(大標題) start ========================= -->
+  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="banner-content">
+            <h2 class="text-white">學生備審管理</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ========================= 橫幅(大標題) end ========================= -->
+
 
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
-  <div class="container-fluid"> <!-- 使用 container-fluid -->
-    <div class="row">
+    <div class="container-fluid"> <!-- 使用 container-fluid -->
+      <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
           <div class="section-title text-center mb-55">
             <h1 class="wow fadeInDown" data-wow-delay=".2s">選擇班級</h1>
@@ -273,7 +236,7 @@ foreach ($grades as $grade) {
               #menu :nth-child(n+7) {
                 flex: 1 1 calc(100% / 5 - 10px);
               }
-            
+
               /* 返回按鈕 */
               #back-button {
                 margin-top: 20px;
@@ -329,23 +292,23 @@ foreach ($grades as $grade) {
 
                     // 取得後端資料
                     fetch("student02-2.php?class=" + selectedClass)
-  .then(response => {
-    if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
-    return response.json();
-  })
-  .then(data => {
-    menuDiv.innerHTML = "";
-    data.forEach(item => {
-      const btn = document.createElement("button");
-      btn.className = "download-button";
-      btn.textContent = item.name;
-      btn.onclick = () => window.location.href = item.url;
-      menuDiv.appendChild(btn);
-    });
-    menuDiv.classList.remove("hidden");
-    backButton.classList.remove("hidden");
-  })
-  .catch(error => console.error("載入功能按鈕時出錯:", error));
+                      .then(response => {
+                        if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
+                        return response.json();
+                      })
+                      .then(data => {
+                        menuDiv.innerHTML = "";
+                        data.forEach(item => {
+                          const btn = document.createElement("button");
+                          btn.className = "download-button";
+                          btn.textContent = item.name;
+                          btn.onclick = () => window.location.href = item.url;
+                          menuDiv.appendChild(btn);
+                        });
+                        menuDiv.classList.remove("hidden");
+                        backButton.classList.remove("hidden");
+                      })
+                      .catch(error => console.error("載入功能按鈕時出錯:", error));
                   });
                 });
 
