@@ -65,8 +65,38 @@ foreach ($grades as $grade) {
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
+<!-- ========================= page-banner-section start ========================= -->
+  <section class="page-banner-section pt-75 pd-75 img-bg"
+  style="background-image: url('assets/img/bg/common-bg.svg'); 
+           height: 200px; 
+           background-size: cover; 
+           background-position: center; 
+           display: flex; 
+           align-items: center; 
+           justify-content: center; 
+           width: 100vw;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                    <h2 class="text-white" style="text-align: left;">學生備審管理</h2>
+                    <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
- <!-- page-banner-section start -->
+    <head>
+  <!--page-banner-section end -->
+ <!-- page-banner-section start
 <section class="page-banner-section img-bg" 
     style="background-image: url('assets/img/bg/common-bg.svg'); 
            height: 200px; 
@@ -77,8 +107,9 @@ foreach ($grades as $grade) {
            justify-content: center; 
            width: 100vw;">
     <h2 class="text-white" style="font-size: 36px; font-weight: bold; margin: 0;">學生備審管理</h2>
+    
 </section>
-<!-- page-banner-section end -->
+page-banner-section end -->
 
 
 
@@ -148,7 +179,7 @@ foreach ($grades as $grade) {
   </header>
   <!-- ========================= header end ========================= -->
 
-  <!-- ========================= page-banner-section start ========================= -->
+  <!-- ========================= page-banner-section start ========================= 
   <section class="page-banner-section pt-75 pd-90 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
         <div class="container">
@@ -171,7 +202,7 @@ foreach ($grades as $grade) {
     </section>
 
     <head>
-  <!-- page-banner-section end -->
+  page-banner-section end -->
 
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
