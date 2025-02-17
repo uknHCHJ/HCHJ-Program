@@ -96,21 +96,7 @@ foreach ($grades as $grade) {
 
     <head>
   <!--page-banner-section end -->
- <!-- page-banner-section start
-<section class="page-banner-section img-bg" 
-    style="background-image: url('assets/img/bg/common-bg.svg'); 
-           height: 200px; 
-           background-size: cover; 
-           background-position: center; 
-           display: flex; 
-           align-items: center; 
-           justify-content: center; 
-           width: 100vw;">
-    <h2 class="text-white" style="font-size: 36px; font-weight: bold; margin: 0;">學生備審管理</h2>
-    
-</section>
-page-banner-section end -->
-
+ 
 
 
   <!-- ========================= header start ========================= -->
