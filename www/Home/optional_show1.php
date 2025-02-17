@@ -295,7 +295,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <div id="loading">
                 <p>正在載入資料...</p>
             </div>
-
             <div class="table-container">
                 <table id="data-table">
                     <thead>
@@ -304,6 +303,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <th>學校名稱</th>
                             <th>學校科系</th>
                             <th>上傳時間</th>
+                            <th>相同志願人數</th>
                             <th id="edit-header" style="display: none;">變更順序</th>
                         </tr>
                     </thead>
@@ -317,28 +317,23 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     var urlParams = new URLSearchParams(window.location.search);
                     var userValue = urlParams.get('user');
 
-                    // 顯示載入動畫
                     document.getElementById('loading').style.display = 'flex';
 
-                    // 發送請求到後端取出資料
                     fetch('optional_show2.php?user=' + encodeURIComponent(userValue))
                         .then(response => response.json())
                         .then(data => {
                             window.studentData = data;
-                            window.isEditing = false; // 初始為非編輯狀態
-                            window.isDataChanged = false; // 用於監測是否變更
+                            window.isEditing = false;
+                            window.isDataChanged = false;
 
                             renderTable(window.studentData);
-
-                            // 隱藏載入動畫
                             document.getElementById('loading').style.display = 'none';
                         })
                         .catch(error => {
                             console.error('錯誤:', error);
-                            // 隱藏載入動畫
                             document.getElementById('loading').style.display = 'none';
-                        });
 
+                        });
                     // 防止未保存變更就離開
                     window.addEventListener('beforeunload', function (event) {
                         if (window.isDataChanged) {
@@ -347,7 +342,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         }
                     });
                 });
-
                 // 啟用編輯模式
                 function enableEditMode(button) {
                     if (window.isEditing) return;
@@ -357,43 +351,37 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     button.disabled = true;
                     document.getElementById('saveChangesButton').style.display = 'inline-block'; // 顯示「保存變更」按鈕
                 }
-
-                // 渲染表格
                 function renderTable(data) {
                     var table = document.getElementById('data-table');
                     var tbody = table.getElementsByTagName('tbody')[0];
 
-                    tbody.innerHTML = ''; // 清空表格內容
+                    tbody.innerHTML = '';
 
                     if (data.length === 0 || data[0] === "查無資料") {
                         var row = tbody.insertRow();
                         var cell = row.insertCell(0);
-                        cell.colSpan = 5;
-                        cell.textContent = '您還未填選志願';  // 顯示未填選志願的訊息
+                        cell.colSpan = 6;
+                        cell.textContent = '您還未填選志願';
                         cell.style.textAlign = 'center';
                         cell.style.color = 'gray';
                         return;
                     }
 
-                    // 顯示資料（有志願的情況）
                     data.forEach(function (item, index) {
                         var row = tbody.insertRow();
 
-                        // 志願序號鎖定
                         var preferenceCell = row.insertCell(0);
-                        preferenceCell.textContent = index + 1;  // 顯示順序號
-                        item.preference_rank = index + 1;  // 更新 preference_rank
+                        preferenceCell.textContent = index + 1;
+                        item.preference_rank = index + 1;
 
-                        // 顯示學校名稱和科系
                         row.insertCell(1).textContent = item.school_name;
                         row.insertCell(2).textContent = item.department_name;
+                        row.insertCell(3).textContent = item.time;
 
-                        // 顯示上傳時間
-                        var uploadTimeCell = row.insertCell(3);
-                        uploadTimeCell.textContent = item.time;
+                        var studentCountCell = row.insertCell(4);
+                        studentCountCell.textContent = item.student_count || '0';
 
-                        // 最後一欄：變更順序，僅在編輯模式顯示
-                        var editCell = row.insertCell(4);
+                        var editCell = row.insertCell(5);
                         if (window.isEditing) {
                             var container = document.createElement('div');
                             container.className = 'action-buttons';

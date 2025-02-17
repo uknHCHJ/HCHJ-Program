@@ -49,13 +49,19 @@ $coverSection->addText(
     ['alignment' => Jc::RIGHT, 'spaceBefore' => 5000]
 );
 
-// --------------------
-// 2. 建立主要內容頁 (封面後第一頁)
-// --------------------
-$mainSection = $phpWord->addSection();
+$section = $phpWord->addSection();
+$footer = $section->addFooter();
+
+// 插入自動更新的頁碼
+$footer->addPreserveText(
+    '{PAGE}',
+    'Times New Roman', // 字體樣式（這裡設為 null）
+    array('alignment' => 'center') // 這裡控制對齊方式
+);
+
 
 // --------------------
-// 3. 資料庫連線及相關設定
+// 2. 資料庫連線及相關設定
 // --------------------
 $servername = "127.0.0.1";
 $username = "HCHJ";
@@ -169,9 +175,6 @@ $optionNames = [
 $autobiographyTextStyle = ['name' => '標楷體', 'size' => 14, 'color' => '000000'];
 $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 
-// 在主頁面添加標題
-$mainSection->addText("備審資料匯出", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-
 // --------------------
 // 判斷是否有選取 'topics' 選項（專題資料）
 // --------------------
@@ -191,7 +194,6 @@ foreach ($options as $option) {
         $section->addText("自傳", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
     } else {
         // 其他資料 -> 加到主頁面
-        $section = $mainSection;
         if (isset($optionNames[$option])) {
             $section->addText($optionNames[$option], ['bold' => true, 'size' => 14, 'color' => '333399'], ['alignment' => Jc::LEFT]);
         }
@@ -300,9 +302,7 @@ if ($topicsSelected) {
     $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
 }
 
-// --------------------
 // 6. 若有選取「相關證照」選項，建立獨立頁面
-// --------------------
 if (in_array('certifications', $options) && !empty($queryMap['certifications'])) {
     $resultCert = $conn->query($queryMap['certifications']);
     $certifications = [];
@@ -311,45 +311,55 @@ if (in_array('certifications', $options) && !empty($queryMap['certifications']))
             $certifications[] = $row;
         }
     }
-    // 只顯示最多 8 筆
-    $certifications = array_slice($certifications, 0, 8);
 
-    // 建立「相關證照」新頁面
-    $certSection = $phpWord->addSection();
-    $certSection->addText("相關證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-    
-    // 建立表格樣式（可自行調整是否要顯示邊框）
-    $tableStyle = [
-        'borderSize'   => 12,
-        'borderColor'  => '000000',
-        'cellMargin'   => 50,
-    ];
-    $phpWord->addTableStyle('CertTable', $tableStyle);
-    $table = $certSection->addTable('CertTable');
+    // 每頁顯示最多 6 筆資料（3 行 x 2 列）
+    $maxPerPage = 6;
+    $totalCerts = count($certifications);
+    $pageIndex = 0;
 
-    // 建立 4 行 × 2 列（總共 8 格）
-    $cellCount = 0;
-    for ($row = 0; $row < 4; $row++) {
-        $table->addRow();
-        for ($col = 0; $col < 2; $col++) {
-            $cell = $table->addCell(4500); // 可自行調整每格寬度
-            if (isset($certifications[$cellCount])) {
-                $cert = $certifications[$cellCount];
-                // 嘗試插入圖片（縮放 100%）
-                try {
-                    
-                    $cell->addImage($cert['file_content'], [
-                        'scaling' => 100,    // 圖片高、寬等比縮放至 50%
-                        'alignment' => Jc::CENTER,
-                    ]);
-                } catch (Exception $e) {
-                    $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
+    // 開始處理證照資料分頁
+    while ($pageIndex * $maxPerPage < $totalCerts) {
+        // 新增一個新頁面
+        $certSection = $phpWord->addSection();
+        $certSection->addText("專業證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+
+
+        // 建立表格樣式
+        $tableStyle = [
+            'borderSize'   => 12,
+            'borderColor'  => '000000',
+            'cellMargin'   => 50,
+        ];
+        $phpWord->addTableStyle('CertTable' . $pageIndex, $tableStyle);
+        $table = $certSection->addTable('CertTable' . $pageIndex);
+
+        // 取得該頁的 6 筆資料
+        $certsInPage = array_slice($certifications, $pageIndex * $maxPerPage, $maxPerPage);
+
+        // 動態建立 3 行 x 2 列的表格（共 6 格）
+        $cellCount = 0;
+        for ($row = 0; $row < 3; $row++) {
+            $table->addRow();
+            for ($col = 0; $col < 2; $col++) {
+                $cell = $table->addCell(4500);
+                if (isset($certsInPage[$cellCount])) {
+                    $cert = $certsInPage[$cellCount];
+                    try {
+                        $cell->addImage($cert['file_content'], [
+                            'width' => 198,  // 約 7cm
+                            'height' => 142, // 約 5cm
+                            'scaling' => 100,
+                            'alignment' => Jc::CENTER,
+                        ]);
+                    } catch (Exception $e) {
+                        $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
+                    }
+                    $cell->addText($cert['certificate_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
                 }
-                // 在圖片下方加入證照名稱（置中顯示）
-                $cell->addText($cert['certificate_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
+                $cellCount++;
             }
-            $cellCount++;
         }
+        $pageIndex++; // 換到下一頁
     }
 }
 
