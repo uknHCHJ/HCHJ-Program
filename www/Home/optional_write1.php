@@ -1,6 +1,10 @@
 <?php
 session_start();
-include 'db.php';
+$userData = $_SESSION['user'];
+$userId = $userData['user'] ?? null; // 檢查 session 是否有效
+$username = $userData['name'] ?? null;
+$grade = $userData['grade']; // 老師的年級
+$class = $userData['class']; // 老師的班級
 
 if (!isset($_SESSION['user'])) {
     echo ("<script>
@@ -11,10 +15,11 @@ if (!isset($_SESSION['user'])) {
 }
 
 $userData = $_SESSION['user'];
+$userId = $userData['user']; // 取得用戶ID
+$grade = $userData['grade']; // 取得年級
 
-// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
-
+// 判斷是否為五年級
+$isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -319,22 +324,27 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <div class="container">
                                 <h1>選擇你的志願</h1>
 
-                                <label for="schoolSelect">選擇學校:</label>
-                                <select id="schoolSelect" onchange="fetchDepartments()">
-                                    <option value="">--請選擇學校--</option>
-                                </select>
+                                <!-- 檢查是否為五年級 -->
+                                <?php if (!$isFifthYear): ?>
+                                    <p>此功能尚未開放</p>
+                                <?php else: ?>
+                                    <label for="schoolSelect">選擇學校:</label>
+                                    <select id="schoolSelect" onchange="fetchDepartments()">
+                                        <option value="">--請選擇學校--</option>
+                                    </select>
 
-                                <label for="departmentSelect">選擇科系:</label>
-                                <select id="departmentSelect">
-                                    <option value="">--請選擇科系--</option>
-                                </select>
+                                    <label for="departmentSelect">選擇科系:</label>
+                                    <select id="departmentSelect">
+                                        <option value="">--請選擇科系--</option>
+                                    </select>
 
-                                <!-- 新增兩個按鈕 -->
-                                <button onclick="add()">添加到清單</button>
+                                    <!-- 新增兩個按鈕 -->
+                                    <button onclick="add()">添加到清單</button>
 
-                                <h2>你的志願序(最多5個)</h2>
-                                <ul id="preferenceList"></ul>
-                                <button onclick="submit()">送出志願</button>
+                                    <h2>你的志願序(最多5個)</h2>
+                                    <ul id="preferenceList"></ul>
+                                    <button onclick="submit()">送出志願</button>
+                                <?php endif; ?>
 
                             </div>
                         </div>
@@ -370,7 +380,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                 /* 刪除按鈕樣式 */
                 .delete-btn {
-
                     color: black;
                     border: none;
                     border-radius: 4px;
@@ -542,20 +551,20 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         });
                 }
             </script>
-
-
-
-            <!-- ========================= footer end ========================= -->
-            <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
-            <link rel="stylesheet" href="assets/css/tiny-slider.css">
-            <script src="assets/js/contact-form.js"></script>
-            <script src="assets/js/count-up.min.js"></script>
-            <script src="assets/js/isotope.min.js"></script>
-            <script src="assets/js/glightbox.min.js"></script>
-            <script src="assets/js/wow.min.js"></script>
-            <script src="assets/js/imagesloaded.min.js"></script>
-            <script src="assets/js/main.js"></script>
         </body>
+
+
+        <!-- ========================= footer end ========================= -->
+        <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
+        <link rel="stylesheet" href="assets/css/tiny-slider.css">
+        <script src="assets/js/contact-form.js"></script>
+        <script src="assets/js/count-up.min.js"></script>
+        <script src="assets/js/isotope.min.js"></script>
+        <script src="assets/js/glightbox.min.js"></script>
+        <script src="assets/js/wow.min.js"></script>
+        <script src="assets/js/imagesloaded.min.js"></script>
+        <script src="assets/js/main.js"></script>
+    </body>
 
 </html>
 
