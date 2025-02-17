@@ -163,7 +163,6 @@ $userId = $userData['user'];
             </div>
         </div>
     </section>
-
     <!DOCTYPE html>
     <html lang="zh">
 
@@ -212,6 +211,11 @@ $userId = $userData['user'];
             tr:hover {
                 background-color: #ddd;
             }
+
+            /* 讓人名欄位靠左對齊 */
+            td.student-name {
+                text-align: left;
+            }
         </style>
     </head>
 
@@ -254,7 +258,7 @@ $userId = $userData['user'];
                         <td>${row.School}</td>
                         <td>${row.Department}</td>
                         <td>${row.StudentCount}</td>
-                        <td>${row.Students || '無'}</td>
+                        <td class="student-name">${row.Students || '無'}</td>
                     `;
                         tableBody.appendChild(tr);
                     });
