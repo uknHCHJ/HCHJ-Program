@@ -16,22 +16,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $conn->set_charset("utf8mb4");
 
+    // 獲取 POST 資料
     $id = isset($_POST['id']) ? intval($_POST['id']) : null;
     $studentId = intval($_POST['student_id']);
+    $category = $conn->real_escape_string($_POST['category']);
     $organization = $conn->real_escape_string($_POST['organization']);
     $certificateName = $conn->real_escape_string($_POST['certificate_name']);
+    $grade = $conn->real_escape_string($_POST['grade']);
+    $class = $conn->real_escape_string($_POST['class']);
 
-    // 檢查同一 organization 下是否有相同名稱的資料
-    $checkSql = "SELECT COUNT(*) FROM portfolio WHERE student_id = ? AND organization = ? AND certificate_name = ?";
+    // 檢查是否已有相同的 category 和 file_name，但不同 student_id 允許
+    $checkSql = "SELECT COUNT(*) FROM portfolio WHERE category = ? AND file_name = ? AND student_id != ?";
     $stmt = $conn->prepare($checkSql);
-    $stmt->bind_param("iss", $studentId, $organization, $certificateName);
+    $stmt->bind_param("ssi", $category, $_FILES['file']['name'], $studentId);
     $stmt->execute();
     $stmt->bind_result($count);
     $stmt->fetch();
     $stmt->close();
 
     if ($count > 0) {
-        echo "已有相同證書名稱的資料，請重新確認！";
+        echo "已有相同類別與檔名的資料，請重新確認！";
         exit;
     }
 
@@ -49,11 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 若為圖片，壓縮後儲存
+        // 若為圖片，依勞動部證照標準調整尺寸
         if ($fileType === 'image/jpeg' || $fileType === 'image/png') {
             list($origWidth, $origHeight) = getimagesize($fileTmpPath);
-            $targetWidth = 200;
-            $targetHeight = 200;
+            
+            // 勞動部標準尺寸 (寬: 高 = 297:210)
+            $targetWidth = 297;
+            $targetHeight = 210;
 
             $sourceImage = ($fileType === 'image/jpeg') ? imagecreatefromjpeg($fileTmpPath) : imagecreatefrompng($fileTmpPath);
             $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
@@ -71,35 +77,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fileContent = file_get_contents($fileTmpPath);
         }
 
-        // 儲存到資料庫
-        $sql = "INSERT INTO portfolio (student_id, category, organization, certificate_name, file_name, file_content, upload_time) VALUES (?, ?, ?, ?, ?, ?, NOW())";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isssss", $studentId, $_POST['category'], $organization, $certificateName, $fileName, $fileContent);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    // 刪除資料庫記錄
-    if ($id) {
-        $sql = "DELETE FROM portfolio WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    // 發送通知郵件
-    function sendEmailToTeacher($studentName, $conn) {
-        $sql = "SELECT email FROM testemail WHERE FIND_IN_SET('2', Permissions)";
-        $result = $conn->query($sql);
-        while ($row = $result->fetch_assoc()) {
-            $teacheremail = $row['email'];
-            if (!empty($teacheremail)) {
-                mail($teacheremail, "學生 $studentName 已上傳證書", "學生 $studentName 上傳了一份新證書", "From: notify@example.com\r\nContent-Type: text/html; charset=UTF-8");
-            }
+        // **如果 id 存在，表示是更新資料**
+        if ($id) {
+            // 更新操作
+            $sql = "UPDATE portfolio SET grade = ?, class = ?, category = ?, organization = ?, certificate_name = ?, file_name = ?, file_size = ?, file_content = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssssisi", $grade, $class, $category, $organization, $certificateName, $fileName, $fileSize, $fileContent, $id);
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            // 新增操作
+            $sql = "INSERT INTO portfolio (student_id, grade, class, category, organization, certificate_name, file_name, file_size, file_content, upload_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("isssssssi", $studentId, $grade, $class, $category, $organization, $certificateName, $fileName, $fileSize, $fileContent);
+            $stmt->execute();
+            $stmt->close();
         }
     }
-    sendEmailToTeacher($_POST['student_name'], $conn);
+
+    // 儲存專業證照分類到資料庫
+    $categorySql = "INSERT INTO certificate_categories (student_id, category) VALUES (?, ?) ON DUPLICATE KEY UPDATE category = VALUES(category)";
+    $stmt = $conn->prepare($categorySql);
+    $stmt->bind_param("is", $studentId, $category);
+    $stmt->execute();
+    $stmt->close();
 
     echo "操作成功！";
     header("Location:Portfolio1.php");
