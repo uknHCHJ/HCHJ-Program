@@ -59,9 +59,11 @@ foreach ($grades as $grade) {
   <link rel="stylesheet" href="assets/css/tiny-slider.css">
   <link rel="stylesheet" href="assets/css/glightbox.min.css">
   <link rel="stylesheet" href="assets/css/main.css">
+  
 </head>
 
 <body>
+  
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
@@ -133,17 +135,25 @@ foreach ($grades as $grade) {
   <!-- ========================= header end ========================= -->
 
   <!-- page-banner-section start -->
-  <section id="page-banner" class="page-banner-section img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); 
-           height: 200px; 
-           background-size: cover; 
-           background-position: center; 
-           display: flex; 
-           align-items: center; 
-           justify-content: flex-start; 
-           width: 100vw; 
-           padding-left: 50px;">
-    <h2 class="text-white" style="font-size: 36px; font-weight: bold; margin: 0;">學生備審管理</h2>
-  </section>
+  <section id="page-banner" class="page-banner-section img-bg" 
+         style="background-image: url('assets/img/bg/common-bg.svg'); 
+                height: 200px; 
+                background-size: cover; 
+                background-position: center; 
+                display: flex; 
+                align-items: center; 
+                justify-content: flex-start; 
+                width: 100vw;  
+                left: 0; 
+                right: 0;">
+  <h2 class="text-white" 
+      style="font-size: 36px; 
+             font-weight: bold; 
+             margin: 0; 
+             padding-left: 10px;">學生備審管理</h2>
+</section>
+
+
   <!-- page-banner-section end -->
 
 
