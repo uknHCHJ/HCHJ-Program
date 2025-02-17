@@ -127,10 +127,6 @@ if (!empty($_POST['autobiography_files'])) {
     }
 }
 
-
-
-
-
 // 定義中文選項標題對應（除了專題輸出部分）
 $optionNames = [
     'competition'   => '競賽證明',

@@ -29,6 +29,7 @@ $class    = $userData['class'];
 $query_role = "SELECT Permissions FROM user WHERE user = '$userId'";
 $result_role = mysqli_query($link, $query_role);
 
+
 if ($result_role) {
     $row_role = mysqli_fetch_assoc($result_role);
     $user_role = $row_role['Permissions'];
