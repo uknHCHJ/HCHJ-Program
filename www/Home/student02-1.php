@@ -252,8 +252,6 @@ foreach ($grades as $grade) {
                 transform: scale(1.08);
               }
 
-
-
               /* 功能按鈕容器 */
               #menu {
                 display: flex;
