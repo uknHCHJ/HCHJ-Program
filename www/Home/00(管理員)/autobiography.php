@@ -202,7 +202,7 @@ if ($result_role) {
                 </thead>
                 <tbody>
                 <?php
-                    $query_students = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade'AND Permissions='1,9'";
+                    $query_students = "SELECT user, name FROM user WHERE class='$class' AND grade='$grade' AND Permissions='1,9' ORDER BY user ASC";
                     $result_students = mysqli_query($link, $query_students);
 
                     if ($result_students) {
