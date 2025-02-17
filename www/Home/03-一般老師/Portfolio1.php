@@ -204,46 +204,45 @@ if ($conn->connect_error) {
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
-    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
-        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
-        
-        <label for="category">選擇資料類型：</label>
-        <select name="category" id="category" required>
-            <option value="成績單">成績單</option>
-            <option value="自傳">自傳</option>
-            <option value="學歷證明">學歷證明</option>
-            <option value="競賽證明">競賽證明</option>
-            <option value="實習證明">實習證明</option>
-            <option value="專業證照">專業證照</option>
-            <option value="語言能力證明">語言能力證明</option>
-            <option value="專題資料">專題資料</option>
-            <option value="讀書計畫">讀書計畫</option>
-            <option value="服務證明">服務證明</option>
-            <option value="其他資料">其他資料</option>
-        </select>
-        
-        <div id="sub_category_div" style="display: none;">
-            <label for="sub_category">專業證照分類：</label>
-            <select name="sub_category" id="sub_category"></select>
-        </div>
-        
-        <div id="certificate_div" style="display: none;">
-            <label for="certificate">選擇證照：</label>
-            <select name="certificate" id="certificate"></select>
-            <input type="hidden" name="certificate_name" id="certificate_name">
-        </div>
-        
-        <label for="file">上傳檔案：</label>
-        <input type="file" name="file" id="file" required>
+    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;"> 
+    <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
 
-        <!-- 添加間距 -->
-        <br><br>
+    <label for="category">選擇資料類型：</label>
+    <select name="category" id="category" required onchange="toggleSubCategory()">
+        <option value="成績單">成績單</option>
+        <option value="自傳">自傳</option>
+        <option value="學歷證明">學歷證明</option>
+        <option value="競賽證明">競賽證明</option>
+        <option value="實習證明">實習證明</option>
+        <option value="專業證照">專業證照</option>
+        <option value="語言能力證明">語言能力證明</option>
+        <option value="專題資料">專題資料</option>
+        <option value="讀書計畫">讀書計畫</option>
+        <option value="服務證明">服務證明</option>
+        <option value="其他資料">其他資料</option>
+    </select>
 
-        <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
-            上傳
-        </button>
+    <div id="sub_category_div" style="display: none;">
+        <label for="sub_category">專業證照分類：</label>
+        <select name="sub_category" id="sub_category" onchange="loadCertificates()"></select>
+    </div>
 
-    </form>
+    <div id="certificate_div" style="display: none;">
+        <label for="certificate">選擇證照：</label>
+        <select name="certificate" id="certificate" onchange="updateCertificateName()"></select>
+        <input type="hidden" name="certificate_name" id="certificate_name">
+    </div>
+
+    <label for="file">上傳檔案：</label>
+    <input type="file" name="file" id="file" required>
+
+    <br><br>
+
+    <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+        上傳
+    </button>
+</form>
+
 </div>
 
 <script>
