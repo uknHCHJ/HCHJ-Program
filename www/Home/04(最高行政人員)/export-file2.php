@@ -312,45 +312,54 @@ if (in_array('certifications', $options) && !empty($queryMap['certifications']))
         }
     }
     // 只顯示最多 8 筆
-    $certifications = array_slice($certifications, 0, 8);
+   // 設定每頁最多 8 筆
+$maxPerPage = 8;
+$totalCerts = count($certifications);
+$pageIndex = 0;
 
-    // 建立「相關證照」新頁面
+while ($pageIndex * $maxPerPage < $totalCerts) {
+    // 新增頁面
     $certSection = $phpWord->addSection();
     $certSection->addText("相關證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-    
-    // 建立表格樣式（可自行調整是否要顯示邊框）
+
+    // 建立表格樣式
     $tableStyle = [
         'borderSize'   => 12,
         'borderColor'  => '000000',
         'cellMargin'   => 50,
     ];
-    $phpWord->addTableStyle('CertTable', $tableStyle);
-    $table = $certSection->addTable('CertTable');
+    $phpWord->addTableStyle('CertTable' . $pageIndex, $tableStyle);
+    $table = $certSection->addTable('CertTable' . $pageIndex);
 
-    // 建立 4 行 × 2 列（總共 8 格）
+    // 取得該頁的 8 筆資料
+    $certsInPage = array_slice($certifications, $pageIndex * $maxPerPage, $maxPerPage);
+
+    // 動態建立 3 行 × 2 列（最多 8 格）
     $cellCount = 0;
-    for ($row = 0; $row < 4; $row++) {
+    for ($row = 0; $row < 3; $row++) {
         $table->addRow();
         for ($col = 0; $col < 2; $col++) {
-            $cell = $table->addCell(4500); // 可自行調整每格寬度
-            if (isset($certifications[$cellCount])) {
-                $cert = $certifications[$cellCount];
-                // 嘗試插入圖片（縮放 100%）
+            $cell = $table->addCell(4500);
+            if (isset($certsInPage[$cellCount])) {
+                $cert = $certsInPage[$cellCount];
                 try {
-                    
                     $cell->addImage($cert['file_content'], [
-                        'scaling' => 100,    // 圖片高、寬等比縮放至 50%
+                        'width' => 198,  // 7cm * 28.35 ≈ 198 pt
+                        'height' => 142, // 5cm * 28.35 ≈ 142 pt
+                        'scaling' => 100,
                         'alignment' => Jc::CENTER,
                     ]);
                 } catch (Exception $e) {
                     $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
                 }
-                // 在圖片下方加入證照名稱（置中顯示）
                 $cell->addText($cert['certificate_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
             }
             $cellCount++;
         }
     }
+
+    $pageIndex++; // 下一頁
+}
 }
 
 $conn->close();
