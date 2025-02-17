@@ -322,12 +322,12 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     <div class="row justify-content-center">
                         <div class="col-lg-6">
                             <div class="container">
-                                <h1>選擇你的志願</h1>
 
                                 <!-- 檢查是否為五年級 -->
                                 <?php if (!$isFifthYear): ?>
-                                    <p>此功能尚未開放</p>
+                                    <h1>此功能尚未開放</h1>
                                 <?php else: ?>
+                                    <h1>選擇你的志願</h1>
                                     <label for="schoolSelect">選擇學校:</label>
                                     <select id="schoolSelect" onchange="fetchDepartments()">
                                         <option value="">--請選擇學校--</option>
@@ -389,7 +389,6 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     transition: background-color 0.3s ease;
                 }
             </style>
-
             <script>
                 const maxPreferences = 5;
                 let preferences = [];
@@ -471,18 +470,25 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
 
                     // 創建刪除按鈕，並將其放置在每個項目的末尾
                     const deleteBtn = document.createElement('button');
-
                     deleteBtn.classList.add('delete-btn');
                     deleteBtn.onclick = () => deletePreference(order - 1);  // 刪除該志願項目
 
                     li.appendChild(deleteBtn);  // 確保刪除按鈕在項目的末尾
                     preferenceList.appendChild(li);
+
+                    // 重置學校和科系下拉選單
+                    schoolSelect.value = '';
+                    departmentSelect.innerHTML = '<option value="">--請選擇科系--</option>';
                 }
 
                 // 刪除志願項目
                 function deletePreference(index) {
                     preferences.splice(index, 1);
-                    renderPreferences();
+                    // 重整序號
+                    preferences.forEach((preference, idx) => {
+                        preference.order = idx + 1;
+                    });
+                    renderPreferences(); // 更新顯示的列表
                 }
 
                 // 渲染志願列表
@@ -496,7 +502,6 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
 
                         // 創建刪除按鈕，並將其放置在每個項目的末尾
                         const deleteBtn = document.createElement('button');
-                        deleteBtn.textContent = '刪除';  // 刪除文字
                         deleteBtn.classList.add('delete-btn');
                         deleteBtn.onclick = () => deletePreference(index);  // 刪除該志願項目
 
@@ -551,6 +556,7 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                         });
                 }
             </script>
+
         </body>
 
 
