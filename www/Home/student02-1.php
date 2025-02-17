@@ -43,7 +43,7 @@ foreach ($grades as $grade) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>查看學生志願序</title>
+  <title>學生備審管理</title>
   <!-- 確認已正確載入 jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <meta name="description" content="">
@@ -59,11 +59,27 @@ foreach ($grades as $grade) {
   <link rel="stylesheet" href="assets/css/tiny-slider.css">
   <link rel="stylesheet" href="assets/css/glightbox.min.css">
   <link rel="stylesheet" href="assets/css/main.css">
-  
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+    }
+
+    #page-banner {
+      padding-left: 0;
+      /* 取消左邊的填充 */
+      margin-left: 0;
+      /* 取消左邊的邊距 */
+      width: 100%;
+      /* 確保寬度佔滿 */
+    }
+  </style>
+</head>
 </head>
 
 <body>
-  
+
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
@@ -135,8 +151,7 @@ foreach ($grades as $grade) {
   <!-- ========================= header end ========================= -->
 
   <!-- page-banner-section start -->
-  <section id="page-banner" class="page-banner-section img-bg" 
-         style="background-image: url('assets/img/bg/common-bg.svg'); 
+  <section id="page-banner" class="page-banner-section img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); 
                 height: 200px; 
                 background-size: cover; 
                 background-position: center; 
@@ -146,12 +161,11 @@ foreach ($grades as $grade) {
                 width: 100vw;  
                 left: 0; 
                 right: 0;">
-  <h2 class="text-white" 
-      style="font-size: 36px; 
+    <h2 class="text-white" style="font-size: 36px; 
              font-weight: bold; 
              margin: 0; 
              padding-left: 10px;">學生備審管理</h2>
-</section>
+  </section>
 
 
   <!-- page-banner-section end -->
