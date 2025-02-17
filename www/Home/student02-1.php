@@ -152,7 +152,7 @@ foreach ($grades as $grade) {
   <!-- ========================= header end ========================= -->
 
   <!-- ========================= page-banner-section start ========================= -->
-  <section class="page-banner-section pt-75 pb-75 img-bg"
+  <section class="page-banner-section pt-75 pd-90 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
         <div class="container">
             <div class="row">
@@ -162,7 +162,7 @@ foreach ($grades as $grade) {
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
                                 </ol>
                             </nav>
@@ -379,7 +379,7 @@ foreach ($grades as $grade) {
       <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-6">
           <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-            <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
           </div>
         </div>
@@ -414,10 +414,8 @@ foreach ($grades as $grade) {
           <div class="col-md-6">
             <div class="footer-social-links">
               <ul class="d-flex">
-                <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a>
-                </li>
-                <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a>
-                </li>
+                <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
+                <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
               </ul>
             </div>
           </div>
@@ -428,7 +426,7 @@ foreach ($grades as $grade) {
   <!-- ========================= footer end ========================= -->
 
 
-  <!-- ========================= scroll-top ========================= -->
+  <!-- ========================= 卷軸 ========================= -->
   <a href="#" class="scroll-top">
     <i class="lni lni-arrow-up"></i>
   </a>
