@@ -100,9 +100,10 @@ $userId = $userData['user'];
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">學生志願序統計</a></li>
                                         <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
                                     </ul>
                                 </li>
