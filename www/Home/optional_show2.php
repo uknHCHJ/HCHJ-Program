@@ -40,7 +40,13 @@ $query = "SELECT DISTINCT
         p.department_id AS department_id, 
         p.created_at AS time,
         s.name AS school_name, 
-        sd.department_name AS department_name
+        sd.department_name AS department_name,
+        (
+            SELECT COUNT(*) 
+            FROM preferences p2 
+            WHERE p2.Secondskill_id = p.Secondskill_id 
+            AND p2.department_id = p.department_id
+        ) AS student_count
     FROM preferences p
     LEFT JOIN Secondskill s ON p.Secondskill_id = s.id
     LEFT JOIN School_Department sd ON p.department_id = sd.department_id
