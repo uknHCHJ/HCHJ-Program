@@ -170,30 +170,34 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     </div>
                 </div>
             </div>
+
             <style>
                 /* 表格樣式設定 */
                 #table-select {
                     width: 100%;
-                    /* 設定下拉式選單寬度為 100% */
                     margin: 20px auto;
-                    /* 讓下拉式選單居中 */
-                    table-layout: auto;
+                    table-layout: fixed;
+                    /* 固定表格寬度，讓欄位自動調整 */
                 }
 
                 .table-container {
-                    display: inline-block;
+                    width: 100%;
+                    /* 使表格容器適應寬度 */
+                    max-width: 1100px;
+                    /* 設定表格最大寬度，防止超出 */
                     margin: 0 auto;
-                    /* 表格居中 */
+                    /* 讓表格容器居中 */
                     padding: 20px;
                     background-color: white;
                     justify-content: center;
-                    /* 水平置中 */
                     align-items: center;
-                    /* 垂直置中 */
                     flex-direction: column;
-                    /* 保持表格內部垂直排列 */
                     border-radius: 10px;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                    margin-top: -50px;
+                    /* 上移表格 */
+                    overflow-x: auto;
+                    /* 讓表格在需要時橫向滾動 */
                 }
 
                 table {
@@ -203,13 +207,19 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                 th,
                 td {
-                    min-width: 250px;
+                    min-width: 150px;
                     /* 設定欄位的最小寬度 */
                     max-width: 250px;
                     /* 設定欄位的最大寬度 */
                     padding: 10px;
                     border: 1px solid #ccc;
                     text-align: center;
+                    overflow: hidden;
+                    /* 防止文字溢出 */
+                    text-overflow: ellipsis;
+                    /* 溢出文字顯示省略號 */
+                    white-space: nowrap;
+                    /* 讓文字不換行 */
                 }
 
                 th {
@@ -238,8 +248,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     animation: fadeIn 1s ease-in-out;
                 }
 
-                /* ... (other styles) */
-
                 #loading {
                     display: none;
                     position: absolute;
@@ -249,7 +257,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     height: 100%;
                     background-color: rgba(0, 0, 0, 0.5);
                     z-index: 10;
-                    /* Place the loading indicator on top of other content */
                     justify-content: center;
                     align-items: center;
                 }
@@ -278,17 +285,14 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 .action-buttons {
                     display: flex;
                     justify-content: center;
-                    /* 水平置中 */
                     gap: 10px;
-                    /* 設定按鈕之間的間距 */
+                    margin-top: 20px;
                 }
 
                 .action-buttons button {
                     padding: 5px 10px;
-                    /* 調整按鈕內部間距 */
                     font-size: 14px;
                     border-radius: 5px;
-                    /* 按鈕圓角 */
                 }
             </style>
 
@@ -304,7 +308,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             <th>學校科系</th>
                             <th>上傳時間</th>
                             <th>相同志願人數</th>
-                            <th id="edit-header" style="display: none;">變更順序</th>
+                            <th id="edit-header" style="display: none;">變更順序</th> <!-- 編輯模式下顯示 -->
                         </tr>
                     </thead>
                     <tbody>
@@ -457,9 +461,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             alert('變更保存失敗，請稍後再試。');
                         });
                 }
+
             </script>
-
-
             <!-- 按鈕區 -->
             <div style="text-align: center; margin-top: 20px;">
                 <button type="button" class="btn btn-secondary" style="background-color:#4CAF50; color: white;"
@@ -475,43 +478,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     保存變更
                 </button>
             </div>
-
-
-            <!-- ========================= page-404-section end ========================= -->
-
-            <!-- ========================= client-logo-section start ========================= -->
-            <section class="client-logo-section pt-100">
-                <div class="container">
-                    <div class="client-logo-wrapper">
-                        <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                            <div class="client-logo">
-                                <img src="schoolimages/uknim.jpg" alt="">
-                            </div>
-                            <div class="client-logo">
-                                <img src="schoolimages/uknbm.jpg" alt="">
-                            </div>
-                            <div class="client-logo">
-                                <img src="schoolimages/uknanime.jpg" alt="">
-                            </div>
-                            <div class="client-logo">
-                                <img src="schoolimages/uknbaby.jpg" alt="">
-                            </div>
-                            <div class="client-logo">
-                                <img src="schoolimages/uknenglish.jpg" alt="">
-                            </div>
-                            <div class="client-logo">
-                                <img src="schoolimages/ukneyes.jpg" alt="">
-                            </div>
-                            <div class="client-logo">
-                                <img src="schoolimages/uknnurse.jpg" alt="">
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- ========================= client-logo-section end ========================= -->
 
             <!-- ========================= footer start ========================= -->
             <footer class="footer pt-100">
