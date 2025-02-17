@@ -17,63 +17,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 連接資料庫
-        $servername = "127.0.0.1";
-        $username = "HCHJ";
-        $password = "xx435kKHq";
-        $dbname = "HCHJ";
-
-        $conn = new mysqli($servername, $username, $password, $dbname);
-        if ($conn->connect_error) {
-            die("資料庫連線失敗：" . $conn->connect_error);
-        }
-        $conn->set_charset("utf8mb4");
-        $userData = $_SESSION['user'];
-$userId = $userData['user'];
-$studentName = $userData['name'];
-$grade = $userData['grade'];  // 學生年級
-$class = $userData['class'];  // 學生班級
-$currentUserId = $userData['id']; // 學生 id
-$permissions1 = explode(',', $userData['Permissions']); // 拆分學生的權限
-$sql = "SELECT * FROM testemail WHERE `name`='$studentName'";
-$result = mysqli_query($conn, $sql);
-
-if ($result) {
-  $studentemail = "";
-  while ($row = mysqli_fetch_assoc($result)) {
-    $studentemail = $row['email'];
-  }
-}
-
-        // 檢查資料庫是否已有相同檔名
-        $checkSql = "SELECT COUNT(*) FROM portfolio WHERE file_name = ?";
-        $stmt = $conn->prepare($checkSql);
-        $stmt->bind_param("s", $fileName);
-        $stmt->execute();
-        $stmt->bind_result($count);
-        $stmt->fetch();
-        $stmt->close();
-
-        if ($count > 0) {
-            echo "<script>alert('檔案名稱已存在，請重新命名或選擇其他檔案！'); window.location.href='Portfolio1.php';</script>";
-            exit;
-        }
-
         // 取得表單資料
-        $studentId = intval($_POST['student_id']);
-        $category = $conn->real_escape_string($_POST['category']);
-        $organization = ($category === "相關證照") ? $conn->real_escape_string($_POST['sub_category']) : null;
-        $certificateName = isset($_POST['certificate_name']) ? $conn->real_escape_string($_POST['certificate_name']) : null;
+        $category = $_POST['category'];
+        $organization = ($category === "專業證照") ? $_POST['sub_category'] : null;
+
+        // 設定圖片大小
+        $resizeWidth = 200;
+        $resizeHeight = 200;
+        if ($category === "專業證照") {
+            $resizeWidth = 800;  // 勞動部證照標準
+            $resizeHeight = 600;
+        }
 
         // 若為圖片，壓縮後再儲存
         if ($fileType === 'image/jpeg' || $fileType === 'image/png') {
             list($origWidth, $origHeight) = getimagesize($fileTmpPath);
-            $targetWidth = 200;
-            $targetHeight = 200;
-
             $sourceImage = ($fileType === 'image/jpeg') ? imagecreatefromjpeg($fileTmpPath) : imagecreatefrompng($fileTmpPath);
-            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
-            imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $origWidth, $origHeight);
+            $resizedImage = imagecreatetruecolor($resizeWidth, $resizeHeight);
+            imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $resizeWidth, $resizeHeight, $origWidth, $origHeight);
 
             $resizedTmpPath = tempnam(sys_get_temp_dir(), 'resized_');
             ($fileType === 'image/jpeg') ? imagejpeg($resizedImage, $resizedTmpPath, 90) : imagepng($resizedImage, $resizedTmpPath);
@@ -87,14 +48,20 @@ if ($result) {
             $fileContent = file_get_contents($fileTmpPath);
         }
 
+        // 連接資料庫
+        $conn = new mysqli("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
+        if ($conn->connect_error) {
+            die("資料庫連線失敗：" . $conn->connect_error);
+        }
+        $conn->set_charset("utf8mb4");
+
         // 儲存到資料庫
-        $sql = "INSERT INTO portfolio (student_id, category, organization, certificate_name, file_name, file_content, upload_time) 
-                VALUES (?, ?, ?, ?, ?, ?, NOW())";
+        $sql = "INSERT INTO portfolio (category, organization, file_name, file_content, upload_time) VALUES (?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             die("SQL 錯誤：" . $conn->error);
         }
-        $stmt->bind_param("isssss", $studentId, $category, $organization, $certificateName, $fileName, $fileContent);
+        $stmt->bind_param("ssss", $category, $organization, $fileName, $fileContent);
 
         if ($stmt->execute()) {
             echo "<script>alert('檔案上傳成功！'); window.location.href='Portfolio1.php';</script>";
@@ -108,40 +75,4 @@ if ($result) {
         echo "<script>alert('檔案上傳錯誤！'); window.location.href='Portfolio1.php';</script>";
     }
 }
-function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn) {
-    // 🔍 查詢所有符合條件的導師
-    $sql = "SELECT email FROM testemail WHERE name IN (
-                SELECT name FROM user WHERE grade LIKE '%$grade%' 
-                AND class LIKE '%$class%' 
-                AND id != $currentUserId 
-                AND FIND_IN_SET('2', Permissions)
-            )";
-  
-    $result = $conn->query($sql);
-  
-    if (!$result || $result->num_rows == 0) {
-        echo "❌ 找不到導師的 email";
-        return;
-    }
-  
-    // 📌 逐一發送郵件給每位導師
-    while ($row = $result->fetch_assoc()) {
-        $teacheremail = $row['email'];
-  
-        if (!empty($teacheremail)) {
-            $subject = "學生 $studentName 已更新頭貼";
-            $message = "<h2>學生 $studentName 已更新頭貼</h2>";
-            $headers = "From: 109534209@stu.ukn.edu.tw\r\n";  
-            $headers .= "Reply-To: 109534209@stu.ukn.edu.tw\r\n"; 
-            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-  
-            if (mail($teacheremail, $subject, $message, $headers)) {
-                echo "✅ 郵件已發送給 $teacheremail！<br>";
-            } else {
-                echo "❌ 郵件發送失敗給 $teacheremail！<br>";
-            }
-        }
-    }
-  }
-  
 ?>
