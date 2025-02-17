@@ -204,45 +204,48 @@ if ($conn->connect_error) {
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審資料管理系統</h1>
-    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;"> 
-    <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
+    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
+        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
+        <!-- 將 organization 的 hidden input 移入 form 內 -->
+        <input type="hidden" id="selectedOrganization" name="organization">
+        
+        <label for="category">選擇資料類型：</label>
+        <select name="category" id="category" required>
+            <option value="成績單">成績單</option>
+            <option value="自傳">自傳</option>
+            <option value="學歷證明">學歷證明</option>
+            <option value="競賽證明">競賽證明</option>
+            <option value="實習證明">實習證明</option>
+            <option value="專業證照">專業證照</option>
+            <option value="語言能力證明">語言能力證明</option>
+            <option value="專題資料">專題資料</option>
+            <option value="讀書計畫">讀書計畫</option>
+            <option value="服務證明">服務證明</option>
+            <option value="其他資料">其他資料</option>
+        </select>
+        
+        <div id="sub_category_div" style="display: none;">
+            <label for="sub_category">專業證照分類：</label>
+            <select name="sub_category" id="sub_category"></select>
+        </div>
+        
+        <div id="certificate_div" style="display: none;">
+            <label for="certificate">選擇證照：</label>
+            <select name="certificate" id="certificate"></select>
+            <input type="hidden" name="certificate_name" id="certificate_name">
+        </div>
+        
+        <label for="file">上傳檔案：</label>
+        <input type="file" name="file" id="file" required>
 
-    <label for="category">選擇資料類型：</label>
-    <select name="category" id="category" required onchange="toggleSubCategory()">
-        <option value="成績單">成績單</option>
-        <option value="自傳">自傳</option>
-        <option value="學歷證明">學歷證明</option>
-        <option value="競賽證明">競賽證明</option>
-        <option value="實習證明">實習證明</option>
-        <option value="專業證照">專業證照</option>
-        <option value="語言能力證明">語言能力證明</option>
-        <option value="專題資料">專題資料</option>
-        <option value="讀書計畫">讀書計畫</option>
-        <option value="服務證明">服務證明</option>
-        <option value="其他資料">其他資料</option>
-    </select>
+        <!-- 添加間距 -->
+        <br><br>
 
-    <div id="sub_category_div" style="display: none;">
-        <label for="sub_category">專業證照分類：</label>
-        <select name="sub_category" id="sub_category" onchange="loadCertificates()"></select>
-    </div>
-
-    <div id="certificate_div" style="display: none;">
-        <label for="certificate">選擇證照：</label>
-        <select name="certificate" id="certificate" onchange="updateCertificateName()"></select>
-        <input type="hidden" name="certificate_name" id="certificate_name">
-    </div>
-
-    <label for="file">上傳檔案：</label>
-    <input type="file" name="file" id="file" required>
-
-    <br><br>
-
-    <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
-        上傳
-    </button>
-</form>
-
+        <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+            上傳
+        </button>
+        <input type="hidden" name="force" id="forceField" value="1">
+    </form>
 </div>
 
 <script>
@@ -256,8 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 定義可選擇的機構 (organization)
     const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
+
     // 監聽「類別」選擇變更事件
-        categorySelect.addEventListener("change", () => {
+    categorySelect.addEventListener("change", () => {
         if (categorySelect.value === "專業證照") {
             subCategoryDiv.style.display = "block";
             subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
@@ -276,8 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
             certificateDiv.style.display = "none";
         }
     });
-    
-    // **將選擇的機構填入隱藏欄位**
+
+    // 將選擇的機構填入隱藏欄位 (請確保 hidden input 已放在 form 內)
     subCategorySelect.addEventListener("change", () => {
         document.getElementById("selectedOrganization").value = subCategorySelect.value;
     });
@@ -311,9 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
     });
 });
-
 </script>
-<input type="hidden" id="selectedOrganization" name="organization">
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
@@ -407,23 +409,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script>
     function confirmUpload() {
-        const fileInput = document.getElementById('file');
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert('請選擇一個檔案來上傳');
-            return false;
-        }
-
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
-        if (!allowedExtensions.includes(fileExtension)) {
-            alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
-            return false;
-        }
-
-        return confirm(`您確定要上傳檔案：${file.name}？`);
+    const fileInput = document.getElementById('file');
+    const file = fileInput.files[0];
+    if (!file) {
+        alert('請選擇一個檔案來上傳');
+        return false;
     }
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
+    if (!allowedExtensions.includes(fileExtension)) {
+        alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
+        return false;
+    }
+    
+    // 這裡可以同步或以 AJAX 方式檢查是否已有相同資料
+    // 以下僅示範用 confirm() 提示（實際上建議用 AJAX 事先檢查）
+    if (confirm("系統偵測到可能有相同資料，是否確認覆蓋上傳？")) {
+        // 加入 force 隱藏欄位
+        let forceField = document.getElementById("forceField");
+        if (!forceField) {
+            forceField = document.createElement("input");
+            forceField.type = "hidden";
+            forceField.name = "force";
+            forceField.id = "forceField";
+            forceField.value = "1";
+            document.getElementById("uploadForm").appendChild(forceField);
+        }
+    } else {
+        return false;
+    }
+    
+    return confirm(`您確定要上傳檔案：${file.name}？`);
+}
 
     document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.portfolio-btn');
