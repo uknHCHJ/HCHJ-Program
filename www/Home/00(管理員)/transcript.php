@@ -22,8 +22,10 @@ $userData = $_SESSION['user'];
 // 從 SESSION 中取得使用者資訊
 $username = $userData['name'];
 $userId   = $userData['user'];
-$grade    = $userData['grade'];
-$class    = $userData['class'];
+$grade    = $_GET['grade'];
+$class    = $_GET['class'];
+
+
 
 // 檢查使用者是否為導師
 $query_role = "SELECT Permissions FROM user WHERE user = '$userId'";

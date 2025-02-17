@@ -148,36 +148,35 @@ foreach ($grades as $grade) {
         </div>
       </div> <!-- row -->
     </div> <!-- container -->
-
   </header>
   <!-- ========================= header end ========================= -->
 
-  <!-- ========================= page-banner-section start ========================= -->
-  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-12">
-          <div class="banner-content">
-            <h2 class="text-white">學生管理</h2>
-            <div class="page-breadcrumb">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">學生管理</li>
-                </ol>
-              </nav>
+  <!-- page-banner-section start -->
+  <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="banner-content">
+                            <h2 class="text-white">學生管理</h2>
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">學生管理</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ========================= page-banner-section end ========================= -->
+        </section>
+        <!-- page-banner-section end -->
 
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
-    <div class="container">
-      <div class="row">
+  <div class="container-fluid"> <!-- 使用 container-fluid -->
+    <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
           <div class="section-title text-center mb-55">
             <h1 class="wow fadeInDown" data-wow-delay=".2s">班級學生管理</h1>
@@ -267,8 +266,6 @@ foreach ($grades as $grade) {
                 /* 容器寬度設為 100% */
               }
 
-              
-
               /* 第一排 6 個按鈕 */
               #menu :nth-child(-n+6) {
                 flex: 1 1 calc(100% / 6 - 10px);
@@ -278,8 +275,7 @@ foreach ($grades as $grade) {
               #menu :nth-child(n+7) {
                 flex: 1 1 calc(100% / 5 - 10px);
               }
-
-             
+            
               /* 返回按鈕 */
               #back-button {
                 margin-top: 20px;
@@ -335,21 +331,23 @@ foreach ($grades as $grade) {
 
                     // 取得後端資料
                     fetch("student02-2.php?class=" + selectedClass)
-                      .then(response => response.json())
-                      .then(data => {
-                        menuDiv.innerHTML = ""; // 清空 menuDiv
-                        data.forEach(item => {
-                          const btn = document.createElement("button");
-                          btn.className = "download-button";
-                          btn.textContent = item.name;
-                          btn.onclick = () => window.location.href = item.url;
-                          menuDiv.appendChild(btn);
-                        });
-
-                        menuDiv.classList.remove("hidden"); // 顯示功能按鈕
-                        backButton.classList.remove("hidden"); // 顯示回上一頁按鈕
-                      })
-                      .catch(error => console.error("載入功能按鈕時出錯:", error));
+  .then(response => {
+    if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
+    return response.json();
+  })
+  .then(data => {
+    menuDiv.innerHTML = "";
+    data.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "download-button";
+      btn.textContent = item.name;
+      btn.onclick = () => window.location.href = item.url;
+      menuDiv.appendChild(btn);
+    });
+    menuDiv.classList.remove("hidden");
+    backButton.classList.remove("hidden");
+  })
+  .catch(error => console.error("載入功能按鈕時出錯:", error));
                   });
                 });
 
@@ -373,41 +371,6 @@ foreach ($grades as $grade) {
     </div>
   </section>
   <!-- ========================= page-404-section end ========================= -->
-
-  <!-- ========================= client-logo-section start ========================= -->
-  <section class="client-logo-section pt-100">
-    <div class="container">
-      <div class="client-logo-wrapper">
-        <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-          <div class="client-logo">
-            <img src="schoolimages/uknim.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknbm.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknanime.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknbaby.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknenglish.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/ukneyes.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknnurse.jpg" alt="">
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ========================= client-logo-section end ========================= -->
-
 
   <!-- ========================= footer start ========================= -->
   <footer class="footer pt-100">

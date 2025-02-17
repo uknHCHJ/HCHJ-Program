@@ -2,40 +2,26 @@
 // 設定回傳格式為 JSON
 header('Content-Type: application/json');
 session_start();
- // 請確保只呼叫一次 session_start()
 
-// 模擬資料：根據使用者 ID 回傳班級資料
-$userClassesData = [
-    'user1' => [
-        ['id' => 1, 'name' => '班級A'],
-        ['id' => 2, 'name' => '班級B']
-    ],
-    'user2' => [
-        ['id' => 3, 'name' => '班級C']
-    ]
-];
+$class = urldecode($_GET['class']);
+$grade = substr($class, 0, -1); // 取出年級
+$realClass = substr($class, -1); // 取出班級
 
-// 你的功能按鈕陣列
+// **動態生成按鈕陣列，包含 grade 和 class**
 $buttons = [
-    ['name' => '成績單', 'url' => 'transcript.php'],
-    ['name' => '自傳', 'url' => 'autobiography.php'],
-    ['name' => '學歷證明', 'url' => 'education_certificate.php'],
-    ['name' => '競賽證明', 'url' => 'competition_certificate.php'],
-    ['name' => '實習證明', 'url' => 'internship_certificate.php'],
-    ['name' => '相關證照', 'url' => 'related_certificates.php'],
-    ['name' => '語言能力證明', 'url' => 'language_proficiency.php'],
-    ['name' => '專題資料', 'url' => 'project_data.php'],
-    ['name' => '其他資料', 'url' => 'other_documents.php'],
-    ['name' => '讀書計畫', 'url' => 'study_plan.php'],
-    ['name' => '志願查看', 'onclick' => 'volunteer_view.php'],
-    //<button type="button" class="btn btn-secondary" ="window.history.back();">返回上一頁</button>
+    ['name' => '自傳', 'url' => "autobiography.php?grade=$grade&class=$realClass"],
+    ['name' => '成績單', 'url' => "transcript.php?grade=$grade&class=$realClass"], 
+    ['name' => '學歷證明', 'url' => "diploma.php?grade=$grade&class=$realClass"],
+    ['name' => '競賽證明', 'url' => "competition.php?grade=$grade&class=$realClass"],
+    ['name' => '實習證明', 'url' => "internship.php?grade=$grade&class=$realClass"],
+    ['name' => '專業證照', 'url' => "certifications.php?grade=$grade&class=$realClass"],
+    ['name' => '語言能力證明', 'url' => "language.php?grade=$grade&class=$realClass"],
+    ['name' => '其他資料', 'url' => "other.php?grade=$grade&class=$realClass"],
+    ['name' => '服務證明', 'url' => "Proof-of-service.php?grade=$grade&class=$realClass"],
+    ['name' => '讀書計畫', 'url' => "read.php?grade=$grade&class=$realClass"]
 ];
 
-// **檢查是否有資料**
-if (empty($buttons)) {
-    echo json_encode(["error" => "No buttons found"]);
-} else {
-    echo json_encode($buttons);
-}
+// **回傳 JSON 給前端**
+echo json_encode($buttons);
 exit();
 ?>
