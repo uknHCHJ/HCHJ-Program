@@ -65,7 +65,7 @@ foreach ($grades as $grade) {
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
- 
+
   <!-- ========================= header start ========================= -->
   <header class="header navbar-area">
     <div class="container">
@@ -133,8 +133,7 @@ foreach ($grades as $grade) {
   <!-- ========================= header end ========================= -->
 
   <!-- page-banner-section start -->
-<section id="page-banner" class="page-banner-section img-bg" 
-    style="background-image: url('assets/img/bg/common-bg.svg'); 
+  <section id="page-banner" class="page-banner-section img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); 
            height: 200px; 
            background-size: cover; 
            background-position: center; 
@@ -144,275 +143,275 @@ foreach ($grades as $grade) {
            width: 100vw; 
            padding-left: 50px;">
     <h2 class="text-white" style="font-size: 36px; font-weight: bold; margin: 0;">學生備審管理</h2>
-</section>
-<!-- page-banner-section end -->
+  </section>
+  <!-- page-banner-section end -->
 
 
-    <!-- ========================= page-404-section end ========================= -->
-    <section class="page-404-section pt-130 pb-130">
-      <div class="container-fluid"> <!-- 使用 container-fluid -->
-        <div class="row">
-          <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
-            <div class="section-title text-center mb-55">
-              <h1 class="wow fadeInDown" data-wow-delay=".2s">選擇班級</h1>
-              <style>
-                body {
-                  font-family: Arial, sans-serif;
-                  text-align: center;
-                  background-color: #f4f4f9;
-                  padding: 20px;
-                }
+  <!-- ========================= page-404-section end ========================= -->
+  <section class="page-404-section pt-130 pb-130">
+    <div class="container-fluid"> <!-- 使用 container-fluid -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
+          <div class="section-title text-center mb-55">
+            <h1 class="wow fadeInDown" data-wow-delay=".2s">選擇班級</h1>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background-color: #f4f4f9;
+                padding: 20px;
+              }
 
-                h2 {
-                  color: #333;
-                }
+              h2 {
+                color: #333;
+              }
 
-                /* 班級按鈕 */
-                .class-button {
-                  background-color: #4CAF50;
-                  color: white;
-                  font-size: 18px;
-                  font-weight: bold;
-                  padding: 12px 24px;
-                  margin: 5px;
-                  border: none;
-                  border-radius: 12px;
-                  cursor: pointer;
-                  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-                  transition: all 0.3s ease;
-                }
+              /* 班級按鈕 */
+              .class-button {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 12px 24px;
+                margin: 5px;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+              }
 
-                /* 班級按鈕 */
-                .class-button {
-                  background-color: #4CAF50;
-                  color: white;
-                  font-size: 18px;
-                  font-weight: bold;
-                  padding: 12px 24px;
-                  margin: 5px;
-                  border: none;
-                  border-radius: 12px;
-                  cursor: pointer;
-                  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-                  transition: all 0.3s ease;
-                }
+              /* 班級按鈕 */
+              .class-button {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 12px 24px;
+                margin: 5px;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+              }
 
-                .class-button:hover {
-                  background-color: #45a049;
-                  transform: scale(1.05);
-                }
+              .class-button:hover {
+                background-color: #45a049;
+                transform: scale(1.05);
+              }
 
-                /* 功能按鈕樣式 */
-                .download-button {
-                  background-color: #007bff;
-                  color: white;
-                  font-size: 18px;
-                  font-weight: bold;
-                  width: 500px;
-                  height: 55px;
-                  padding: 10px;
-                  border: none;
-                  border-radius: 15px;
-                  cursor: pointer;
-                  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
-                  transition: transform 0.2s ease, background-color 0.3s;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  text-align: center;
-                }
+              /* 功能按鈕樣式 */
+              .download-button {
+                background-color: #007bff;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                width: 500px;
+                height: 55px;
+                padding: 10px;
+                border: none;
+                border-radius: 15px;
+                cursor: pointer;
+                box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+                transition: transform 0.2s ease, background-color 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+              }
 
-                .download-button:hover {
-                  background-color: #0056b3;
-                  transform: scale(1.08);
-                }
+              .download-button:hover {
+                background-color: #0056b3;
+                transform: scale(1.08);
+              }
 
-                /* 功能按鈕容器 */
-                #menu {
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: center;
-                  gap: 10px;
-                  /* 每個按鈕之間的間距 */
-                  margin-top: 20px;
-                  width: 100%;
-                  /* 容器寬度設為 100% */
-                }
+              /* 功能按鈕容器 */
+              #menu {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                /* 每個按鈕之間的間距 */
+                margin-top: 20px;
+                width: 100%;
+                /* 容器寬度設為 100% */
+              }
 
-                /* 第一排 6 個按鈕 */
-                #menu :nth-child(-n+6) {
-                  flex: 1 1 calc(100% / 6 - 10px);
-                }
+              /* 第一排 6 個按鈕 */
+              #menu :nth-child(-n+6) {
+                flex: 1 1 calc(100% / 6 - 10px);
+              }
 
-                /* 第二排 5 個按鈕 */
-                #menu :nth-child(n+7) {
-                  flex: 1 1 calc(100% / 5 - 10px);
-                }
+              /* 第二排 5 個按鈕 */
+              #menu :nth-child(n+7) {
+                flex: 1 1 calc(100% / 5 - 10px);
+              }
 
-                /* 返回按鈕 */
-                #back-button {
-                  margin-top: 20px;
-                  background-color: #dc3545;
-                  color: white;
-                  border: none;
-                  padding: 14px 24px;
-                  border-radius: 10px;
-                  font-size: 18px;
-                  font-weight: bold;
-                  cursor: pointer;
-                  transition: all 0.3s ease;
-                }
+              /* 返回按鈕 */
+              #back-button {
+                margin-top: 20px;
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 14px 24px;
+                border-radius: 10px;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+              }
 
-                #back-button:hover {
-                  background-color: #c82333;
-                  transform: scale(1.05);
-                }
+              #back-button:hover {
+                background-color: #c82333;
+                transform: scale(1.05);
+              }
 
-                /* 隱藏元素 */
-                .hidden {
-                  display: none;
-                }
-              </style>
-              <div id="class-buttons">
-                <?php foreach ($gradeClassPairs as $pair): ?>
-                  <button class="class-button" data-class="<?php echo htmlspecialchars($pair); ?>">
-                    <?php echo htmlspecialchars($pair); ?>
-                  </button>
-                <?php endforeach; ?>
-              </div>
+              /* 隱藏元素 */
+              .hidden {
+                display: none;
+              }
+            </style>
+            <div id="class-buttons">
+              <?php foreach ($gradeClassPairs as $pair): ?>
+                <button class="class-button" data-class="<?php echo htmlspecialchars($pair); ?>">
+                  <?php echo htmlspecialchars($pair); ?>
+                </button>
+              <?php endforeach; ?>
+            </div>
 
-              <div id="menu" class="hidden"></div>
-              <button id="back-button" class="hidden" onclick="location.reload();">回上一頁</button>
+            <div id="menu" class="hidden"></div>
+            <button id="back-button" class="hidden" onclick="location.reload();">回上一頁</button>
 
-              <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                  const classButtons = document.querySelectorAll(".class-button");
-                  const menuDiv = document.getElementById("menu");
-                  const backButton = document.getElementById("back-button");
-                  const classButtonsContainer = document.getElementById("class-buttons");
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                const classButtons = document.querySelectorAll(".class-button");
+                const menuDiv = document.getElementById("menu");
+                const backButton = document.getElementById("back-button");
+                const classButtonsContainer = document.getElementById("class-buttons");
 
-                  classButtons.forEach(button => {
-                    button.addEventListener("click", function () {
-                      const selectedClass = this.getAttribute("data-class");
+                classButtons.forEach(button => {
+                  button.addEventListener("click", function () {
+                    const selectedClass = this.getAttribute("data-class");
 
-                      // 隱藏所有班級按鈕
-                      classButtons.forEach(btn => btn.classList.add("hidden"));
+                    // 隱藏所有班級按鈕
+                    classButtons.forEach(btn => btn.classList.add("hidden"));
 
-                      // 只顯示被點擊的班級按鈕
-                      this.classList.remove("hidden");
-                      this.classList.add("selected-class");
+                    // 只顯示被點擊的班級按鈕
+                    this.classList.remove("hidden");
+                    this.classList.add("selected-class");
 
-                      // 取得後端資料
-                      fetch("student02-2.php?class=" + selectedClass)
-                        .then(response => {
-                          if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
-                          return response.json();
-                        })
-                        .then(data => {
-                          menuDiv.innerHTML = "";
-                          data.forEach(item => {
-                            const btn = document.createElement("button");
-                            btn.className = "download-button";
-                            btn.textContent = item.name;
-                            btn.onclick = () => window.location.href = item.url;
-                            menuDiv.appendChild(btn);
-                          });
-                          menuDiv.classList.remove("hidden");
-                          backButton.classList.remove("hidden");
-                        })
-                        .catch(error => console.error("載入功能按鈕時出錯:", error));
-                    });
-                  });
-
-                  // 回上一頁按鈕
-                  backButton.addEventListener("click", function () {
-                    menuDiv.classList.add("hidden");
-                    this.classList.add("hidden");
-
-                    // 顯示所有班級按鈕
-                    classButtons.forEach(btn => {
-                      btn.classList.remove("hidden");
-                      btn.classList.remove("selected-class");
-                    });
+                    // 取得後端資料
+                    fetch("student02-2.php?class=" + selectedClass)
+                      .then(response => {
+                        if (!response.ok) throw new Error("HTTP 錯誤，狀態碼: " + response.status);
+                        return response.json();
+                      })
+                      .then(data => {
+                        menuDiv.innerHTML = "";
+                        data.forEach(item => {
+                          const btn = document.createElement("button");
+                          btn.className = "download-button";
+                          btn.textContent = item.name;
+                          btn.onclick = () => window.location.href = item.url;
+                          menuDiv.appendChild(btn);
+                        });
+                        menuDiv.classList.remove("hidden");
+                        backButton.classList.remove("hidden");
+                      })
+                      .catch(error => console.error("載入功能按鈕時出錯:", error));
                   });
                 });
-              </script>
-            </div>
+
+                // 回上一頁按鈕
+                backButton.addEventListener("click", function () {
+                  menuDiv.classList.add("hidden");
+                  this.classList.add("hidden");
+
+                  // 顯示所有班級按鈕
+                  classButtons.forEach(btn => {
+                    btn.classList.remove("hidden");
+                    btn.classList.remove("selected-class");
+                  });
+                });
+              });
+            </script>
           </div>
         </div>
       </div>
-      </div>
-    </section>
-    <!-- ========================= page-404-section end ========================= -->
+    </div>
+    </div>
+  </section>
+  <!-- ========================= page-404-section end ========================= -->
 
-    <!-- ========================= footer start ========================= -->
-    <footer class="footer pt-100">
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-              <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-              <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
-            </div>
+  <!-- ========================= footer start ========================= -->
+  <footer class="footer pt-100">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
+            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
           </div>
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
 
-              <ul class="footer-contact">
-                <h3>關於我們</h3>
-                <p>(02)2632-1181/0986-212-566</p>
-                <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>
+            <ul class="footer-contact">
+              <h3>關於我們</h3>
+              <p>(02)2632-1181/0986-212-566</p>
+              <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>
+            </ul>
+            <style>
+              .footer .row {
+                display: flex;
+                align-items: center;
+                /* 垂直居中 */
+                justify-content: space-between;
+                /* 讓兩個區塊分居左右 */
+              }
+
+              .footer-widget {
+                text-align: right;
+                /* 讓「關於學校」內容靠右對齊 */
+              }
+            </style>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright-area">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <div class="footer-social-links">
+              <ul class="d-flex">
+                <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
+                <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
               </ul>
-              <style>
-                .footer .row {
-                  display: flex;
-                  align-items: center;
-                  /* 垂直居中 */
-                  justify-content: space-between;
-                  /* 讓兩個區塊分居左右 */
-                }
-
-                .footer-widget {
-                  text-align: right;
-                  /* 讓「關於學校」內容靠右對齊 */
-                }
-              </style>
-            </div>
-          </div>
-        </div>
-
-        <div class="copyright-area">
-          <div class="row align-items-center">
-            <div class="col-md-6">
-              <div class="footer-social-links">
-                <ul class="d-flex">
-                  <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
-                  <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </footer>
-    <!-- ========================= footer end ========================= -->
+    </div>
+  </footer>
+  <!-- ========================= footer end ========================= -->
 
 
-    <!-- ========================= 卷軸 ========================= -->
-    <a href="#" class="scroll-top">
-      <i class="lni lni-arrow-up"></i>
-    </a>
+  <!-- ========================= 卷軸 ========================= -->
+  <a href="#" class="scroll-top">
+    <i class="lni lni-arrow-up"></i>
+  </a>
 
-    <!-- ========================= JS here ========================= -->
-    <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
-    <script src="assets/js/contact-form.js"></script>
-    <script src="assets/js/count-up.min.js"></script>
-    <script src="assets/js/tiny-slider.js"></script>
-    <script src="assets/js/isotope.min.js"></script>
-    <script src="assets/js/glightbox.min.js"></script>
-    <script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/imagesloaded.min.js"></script>
-    <script src="assets/js/main.js"></script>
+  <!-- ========================= JS here ========================= -->
+  <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
+  <script src="assets/js/contact-form.js"></script>
+  <script src="assets/js/count-up.min.js"></script>
+  <script src="assets/js/tiny-slider.js"></script>
+  <script src="assets/js/isotope.min.js"></script>
+  <script src="assets/js/glightbox.min.js"></script>
+  <script src="assets/js/wow.min.js"></script>
+  <script src="assets/js/imagesloaded.min.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 
 </html>
