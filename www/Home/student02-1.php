@@ -66,24 +66,21 @@ foreach ($grades as $grade) {
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-  <!-- ========================= preloader start ========================= -->
-  <div class="preloader">
-    <div class="loader">
-      <div class="ytp-spinner">
-        <div class="ytp-spinner-container">
-          <div class="ytp-spinner-rotator">
-            <div class="ytp-spinner-left">
-              <div class="ytp-spinner-circle"></div>
-            </div>
-            <div class="ytp-spinner-right">
-              <div class="ytp-spinner-circle"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- preloader end -->
+ <!-- page-banner-section start -->
+<section class="page-banner-section img-bg" 
+    style="background-image: url('assets/img/bg/common-bg.svg'); 
+           height: 200px; 
+           background-size: cover; 
+           background-position: center; 
+           display: flex; 
+           align-items: center; 
+           justify-content: center; 
+           width: 100vw;">
+    <h2 class="text-white" style="font-size: 36px; font-weight: bold; margin: 0;">學生備審管理</h2>
+</section>
+<!-- page-banner-section end -->
+
+
 
   <!-- ========================= header start ========================= -->
   <header class="header navbar-area">
