@@ -43,7 +43,7 @@ foreach ($grades as $grade) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>查看學生志願序</title>
+  <title>學生備審管理</title>
   <!-- 確認已正確載入 jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <meta name="description" content="">
@@ -59,45 +59,30 @@ foreach ($grades as $grade) {
   <link rel="stylesheet" href="assets/css/tiny-slider.css">
   <link rel="stylesheet" href="assets/css/glightbox.min.css">
   <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+    }
+
+    #page-banner {
+      padding-left: 0;
+      /* 取消左邊的填充 */
+      margin-left: 0;
+      /* 取消左邊的邊距 */
+      width: 100%;
+      /* 確保寬度佔滿 */
+    }
+  </style>
+</head>
 </head>
 
 <body>
+
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-<!-- ========================= page-banner-section start ========================= -->
-  <section class="page-banner-section pt-75 pd-75 img-bg"
-  style="background-image: url('assets/img/bg/common-bg.svg'); 
-           height: 200px; 
-           background-size: cover; 
-           background-position: center; 
-           display: flex; 
-           align-items: center; 
-           justify-content: center; 
-           width: 100vw;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="banner-content">
-                    <h2 class="text-white" style="text-align: left;">學生備審管理</h2>
-                    <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <head>
-  <!--page-banner-section end -->
- 
-
 
   <!-- ========================= header start ========================= -->
   <header class="header navbar-area">
@@ -165,30 +150,26 @@ foreach ($grades as $grade) {
   </header>
   <!-- ========================= header end ========================= -->
 
-  <!-- ========================= page-banner-section start ========================= 
-  <section class="page-banner-section pt-75 pd-90 img-bg"
-        style="background-image: url('assets/img/bg/common-bg.svg')">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="banner-content">
-                        <h2 class="text-white">學生備審管理</h2>
-                        <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- page-banner-section start -->
+  <section id="page-banner" class="page-banner-section img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); 
+                height: 200px; 
+                background-size: cover; 
+                background-position: center; 
+                display: flex; 
+                align-items: center; 
+                justify-content: flex-start; 
+                width: 100vw;  
+                left: 0; 
+                right: 0;">
+    <h2 class="text-white" style="font-size: 36px; 
+             font-weight: bold; 
+             margin: 0; 
+             padding-left: 10px;">學生備審管理</h2>
+  </section>
 
-    <head>
-  page-banner-section end -->
+
+  <!-- page-banner-section end -->
+
 
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
