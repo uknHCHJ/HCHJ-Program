@@ -157,12 +157,12 @@ foreach ($grades as $grade) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">學生管理</h2>
+                            <h2 class="text-white">學生備審管理</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">學生管理</li>
+                                        <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
                                     </ol>
                                 </nav>
                             </div>
@@ -179,7 +179,7 @@ foreach ($grades as $grade) {
     <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
           <div class="section-title text-center mb-55">
-            <h1 class="wow fadeInDown" data-wow-delay=".2s">班級學生管理</h1>
+            <h1 class="wow fadeInDown" data-wow-delay=".2s">選擇班級</h1>
             <style>
               body {
                 font-family: Arial, sans-serif;
