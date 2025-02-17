@@ -34,7 +34,7 @@ $coverSection->addText(
 );
 $coverSection->addTextBreak(5);
 
-// 顯示使用者姓名
+// 顯示使用者姓名（假設 Session 中有 user['name']）
 $coverSection->addText(
     '姓名：' . htmlspecialchars($_SESSION['user']['name']),
     ['size' => 18],
@@ -80,41 +80,56 @@ if (empty($options)) {
     die("未選擇任何匯出選項！");
 }
 
+// --------------------
+// 若有選取自傳檔案，作為後續處理參考
+// --------------------
 if (isset($_POST['autobiography_file'])) {
     $autobiographyFile = $_POST['autobiography_file'];
-    // 處理自傳檔案的相關邏輯
 } else {
     $autobiographyFile = '';
 }
 
+// --------------------
 // 定義查詢選項對應
+// --------------------
 $queryMap = [
     'competition'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
     'transcript'     => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
     'autobiography'  => "", // 自傳依據使用者選擇的檔案決定
     'diploma'        => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'     => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
-    'certifications' => "",
+    'certifications' => "", // 相關證照之後再處理
     'language'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
     'other'          => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
     'Proof-of-service'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '服務證明'",
     'read'           => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
 ];
 
-// 處理相關證照選項
+// --------------------
+// 處理專業證照選項
+// --------------------
 if (!empty($_POST['certifications_files'])) {
     $selectedCertifications = $_POST['certifications_files'];
+    // 避免 SQL Injection，將字串轉為安全格式
     $escapedCerts = array_map(function($cert) use ($conn) {
         return "'" . $conn->real_escape_string($cert) . "'";
     }, $selectedCertifications);
     $certInCondition = implode(',', $escapedCerts);
     
     if (!empty($certInCondition)) {
-        $queryMap['certifications'] = "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '專業證照' AND organization IN ($certInCondition)";
+        $queryMap['certifications'] = "
+            SELECT file_name, file_content, organization,certificate_name
+            FROM portfolio
+            WHERE student_id = '$userId'
+              AND category = '專業證照'
+              AND organization IN ($certInCondition)
+        ";
     }
 }
 
+// --------------------
 // 處理自傳檔案選項
+// --------------------
 if (!empty($_POST['autobiography_files'])) {
     $selectedAutobiographies = $_POST['autobiography_files'];
     $escapedAutobiographies = array_map(function($file) use ($conn) {
@@ -122,11 +137,19 @@ if (!empty($_POST['autobiography_files'])) {
     }, $selectedAutobiographies);
     $autoInCondition = implode(',', $escapedAutobiographies);
     if (!empty($autoInCondition)) {
-        $queryMap['autobiography'] = "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '自傳' AND file_name IN ($autoInCondition)";
+        $queryMap['autobiography'] = "
+            SELECT file_name, file_content
+            FROM portfolio
+            WHERE student_id = '$userId'
+              AND category = '自傳'
+              AND file_name IN ($autoInCondition)
+        ";
     }
 }
 
+// --------------------
 // 定義中文選項標題
+// --------------------
 $optionNames = [
     'competition'    => '競賽證明',
     'transcript'     => '成績單',
@@ -140,31 +163,34 @@ $optionNames = [
     'read'           => '讀書計畫'
 ];
 
-// 定義自傳專用的文字與段落樣式
+// --------------------
+// 自傳專用的文字與段落樣式
+// --------------------
 $autobiographyTextStyle = ['name' => '標楷體', 'size' => 14, 'color' => '000000'];
 $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 
 // 在主頁面添加標題
 $mainSection->addText("備審資料匯出", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
+// --------------------
 // 判斷是否有選取 'topics' 選項（專題資料）
+// --------------------
 $topicsSelected = in_array('topics', $options);
 
 // --------------------
-// 4. 處理各個選項
+// 4. 處理各個選項 (除了 topics 與 certifications 由後面處理)
 // --------------------
 foreach ($options as $option) {
-    if ($option === 'topics') {
-        // 略過 topics，稍後處理
+    if ($option === 'topics' || $option === 'certifications') {
         continue;
     }
     
+    // 若是自傳 -> 獨立頁面
     if ($option === 'autobiography') {
-        // 自傳：新增獨立頁面
         $section = $phpWord->addSection();
         $section->addText("自傳", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
     } else {
-        // 其他資料：使用主要內容頁
+        // 其他資料 -> 加到主頁面
         $section = $mainSection;
         if (isset($optionNames[$option])) {
             $section->addText($optionNames[$option], ['bold' => true, 'size' => 14, 'color' => '333399'], ['alignment' => Jc::LEFT]);
@@ -176,8 +202,8 @@ foreach ($options as $option) {
     if ($sql == "") {
         continue;
     }
-    $result = $conn->query($sql);
     
+    $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $description = $row['file_name'];
@@ -189,6 +215,7 @@ foreach ($options as $option) {
                 $textStyle = ($option === 'autobiography') ? $autobiographyTextStyle : ['size' => 12];
                 $paragraphStyle = ($option === 'autobiography') ? $autobiographyParagraphStyle : ['alignment' => Jc::BOTH];
                 $section->addText("檔案名稱：$description", $textStyle, $paragraphStyle);
+                
                 if (!empty($fileContent) && strlen($fileContent) > 100) {
                     try {
                         $section->addImage($fileContent, [
@@ -263,10 +290,8 @@ foreach ($options as $option) {
     }
 }
 
-$conn->close();
-
 // --------------------
-// 5. 處理專題資料 (topics) - 如有選取
+// 5. 若有選取專題資料 (topics)
 // --------------------
 if ($topicsSelected) {
     $topicsSection = $phpWord->addSection();
@@ -276,7 +301,62 @@ if ($topicsSelected) {
 }
 
 // --------------------
-// 6. 輸出文件
+// 6. 若有選取「相關證照」選項，建立獨立頁面
+// --------------------
+if (in_array('certifications', $options) && !empty($queryMap['certifications'])) {
+    $resultCert = $conn->query($queryMap['certifications']);
+    $certifications = [];
+    if ($resultCert && $resultCert->num_rows > 0) {
+        while ($row = $resultCert->fetch_assoc()) {
+            $certifications[] = $row;
+        }
+    }
+    // 只顯示最多 8 筆
+    $certifications = array_slice($certifications, 0, 8);
+
+    // 建立「相關證照」新頁面
+    $certSection = $phpWord->addSection();
+    $certSection->addText("相關證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+    
+    // 建立表格樣式（可自行調整是否要顯示邊框）
+    $tableStyle = [
+        'borderSize'   => 12,
+        'borderColor'  => '000000',
+        'cellMargin'   => 50,
+    ];
+    $phpWord->addTableStyle('CertTable', $tableStyle);
+    $table = $certSection->addTable('CertTable');
+
+    // 建立 4 行 × 2 列（總共 8 格）
+    $cellCount = 0;
+    for ($row = 0; $row < 4; $row++) {
+        $table->addRow();
+        for ($col = 0; $col < 2; $col++) {
+            $cell = $table->addCell(4500); // 可自行調整每格寬度
+            if (isset($certifications[$cellCount])) {
+                $cert = $certifications[$cellCount];
+                // 嘗試插入圖片（縮放 100%）
+                try {
+                    
+                    $cell->addImage($cert['file_content'], [
+                        'scaling' => 100,    // 圖片高、寬等比縮放至 50%
+                        'alignment' => Jc::CENTER,
+                    ]);
+                } catch (Exception $e) {
+                    $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
+                }
+                // 在圖片下方加入證照名稱（置中顯示）
+                $cell->addText($cert['certificate_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
+            }
+            $cellCount++;
+        }
+    }
+}
+
+$conn->close();
+
+// --------------------
+// 7. 輸出 Word 文件
 // --------------------
 header("Content-Description: File Transfer");
 header("Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document");
