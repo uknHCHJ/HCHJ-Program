@@ -221,7 +221,7 @@ $userId = $userData['user'];
 
     <body>
         <h1>志願選擇統計</h1>
-        <button onclick="exportToExcel()">匯出 Excel</button>
+
         <table>
             <thead>
                 <tr>
@@ -274,35 +274,79 @@ $userId = $userData['user'];
                 }
 
                 let sheetData = [];
-                let schoolRow = [];
-                let departmentRow = [];
+                let schoolRow = ["學校"]; // 第一列：學校名稱
+                let departmentRow = ["科系"]; // 第二列：科系名稱
+                let maxStudentCount = 0; // 紀錄最多學生數，確保所有學生列數對齊
                 let studentRows = [];
 
                 tableData.forEach((row, index) => {
+                    // 填入學校與科系資料
                     schoolRow.push(row.School);
                     departmentRow.push(row.Department);
+
                     let students = row.Students ? row.Students.split(',') : ['無'];
+                    maxStudentCount = Math.max(maxStudentCount, students.length);
+
                     students.forEach((student, studentIndex) => {
+                        // 確保 `studentRows` 陣列有足夠的列
                         if (!studentRows[studentIndex]) {
-                            studentRows[studentIndex] = [];
+                            studentRows[studentIndex] = Array(tableData.length + 1).fill(''); // 預留空間
                         }
-                        studentRows[studentIndex][index] = student;
+                        // **修正索引**，確保學生姓名對齊學校與科系
+                        studentRows[studentIndex][index + 1] = student;
                     });
                 });
 
-                sheetData.push(schoolRow);
-                sheetData.push(departmentRow);
-                sheetData = sheetData.concat(studentRows);
+                // 組合表格資料
+                sheetData.push(schoolRow); // 第一列：學校
+                sheetData.push(departmentRow); // 第二列：科系
+
+                // 填充學生資料，確保所有學生列數對齊
+                for (let i = 0; i < maxStudentCount; i++) {
+                    sheetData.push(studentRows[i] || Array(tableData.length + 1).fill(''));
+                }
 
                 let ws = XLSX.utils.aoa_to_sheet(sheetData);
                 let wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "志願統計");
                 XLSX.writeFile(wb, "志願選擇統計.xlsx");
             }
-
             fetchData();
         </script>
     </body>
+    <button class="export-btn" onclick="exportToExcel()">📊 匯出 Excel</button>
+
+    <style>
+        .export-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            /* 藍色漸變 */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            /* ✅ 調整底部間距，避免貼著下方區塊 */
+            display: inline-block;
+            /* 讓按鈕不會占滿整行 */
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #004494);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .export-btn:active {
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+    </style>
+
 
     </html>
 
@@ -310,37 +354,6 @@ $userId = $userData['user'];
 
 
     </script>
-    <section class="client-logo-section pt-100">
-        <div class="container">
-            <div class="client-logo-wrapper">
-                <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                    <div class="client-logo">
-                        <img src="schoolimages/uknim.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknbm.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknanime.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknbaby.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknenglish.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/ukneyes.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknnurse.jpg" alt="">
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-    </section>
     <!-- ========================= client-logo-section end ========================= -->
 
 
