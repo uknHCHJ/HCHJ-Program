@@ -2,133 +2,128 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 session_start();
+
 // 資料庫連接參數
 $servername = "127.0.0.1";
-$username = "HCHJ";
-$password = "xx435kKHq";
-$dbname = "HCHJ";
+$username   = "HCHJ";
+$password   = "xx435kKHq";
+$dbname     = "HCHJ";
 
-// 建立資料庫連接
+// 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// 檢查連接
 if ($conn->connect_error) {
   die("連接失敗: " . $conn->connect_error);
 }
 
-// 確保 SESSION 中儲存了唯一識別符 (例如 user_id 或 username)
-$userData = $_SESSION['user'];
-$userId = $userData['user'];
-$studentName = $userData['name'];
-$grade = $userData['grade'];  // 學生年級
-$class = $userData['class'];  // 學生班級
-$currentUserId = $userData['id']; // 學生 id
-$permissions1 = explode(',', $userData['Permissions']); // 拆分學生的權限
+// 從 SESSION 取出使用者資訊
+$userData      = $_SESSION['user'];
+$userId        = $userData['user'];       // 帳號或學號
+$studentName   = $userData['name'];
+$grade         = $userData['grade'];
+$class         = $userData['class'];
+$currentUserId = $userData['id'];          // 學生 id
+$permissions1  = explode(',', $userData['Permissions']);
+
+// 若有需要取得學生 email（例如用於通知）
 $sql = "SELECT * FROM `testemail` WHERE `name`='$studentName'";
 $result = mysqli_query($conn, $sql);
-
 if ($result) {
   $studentemail = "";
   while ($row = mysqli_fetch_assoc($result)) {
     $studentemail = $row['email'];
   }
 }
-// 查詢資料庫以確認使用者是否存在
-$query = sprintf("SELECT user FROM `user` WHERE user = '%s'", $conn->real_escape_string($userId));
-$result = $conn->query($query);
 
+// 確認接收請求且有檔案上傳
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
+
   if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
       $fileData = file_get_contents($_FILES['image']['tmp_name']);
-      $fileExt = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-      $allowed = ['jpg', 'jpeg', 'png'];
+      $fileExt  = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+      $allowed  = ['jpg', 'jpeg', 'png'];
 
-      if (in_array($fileExt, $allowed)) {
-          $sql = "UPDATE user SET image = ? WHERE user = ?";
+      if (!in_array($fileExt, $allowed)) {
+          echo "<script>
+                  alert('不支援此檔案格式！');
+                  window.location.href = '/~HCHJ/Home/contact01-1.php';
+                </script>";
+          exit;
+      }
+
+      // 檢查資料庫中是否已存在該使用者的資料
+      $checkSql = "SELECT user FROM `user` WHERE user = ?";
+      $stmtCheck = $conn->prepare($checkSql);
+      $stmtCheck->bind_param("s", $userId);
+      $stmtCheck->execute();
+      $stmtCheck->store_result();
+      $rowCount = $stmtCheck->num_rows;
+      $stmtCheck->close();
+
+      if ($rowCount > 0) {
+          // 存在，使用 UPDATE
+          $sql = "UPDATE `user` SET image = ? WHERE user = ?";
           $stmt = $conn->prepare($sql);
-
           if ($stmt === false) {
               die("資料庫錯誤：準備查詢語句失敗 - " . $conn->error);
           }
-
-          // **正確綁定參數**
-          $stmt->bind_param("sb", $null, $userId);
-          $stmt->send_long_data(0, $fileData); // 傳送二進制數據
+          // 直接用 "s" 綁定二進位資料（檔案不大時可這麼做）
+          $stmt->bind_param("ss", $fileData, $userId);
 
           if ($stmt->execute()) {
-            echo "<script>
-            alert('圖片上傳並儲存成功！');
-            window.location.href = '/~HCHJ/Home/contact01-1.php';
-          </script>";
-              sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn);
+              $stmt->close();
+              echo "<script>
+                      alert('圖片上傳並儲存成功！');
+                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                    </script>";
+              exit;
           } else {
-            echo "<script>
-            alert('更新失敗！');
-            window.location.href = '/~HCHJ/Home/contact01-1.php';
-          </script>";
+              $stmt->close();
+              echo "<script>
+                      alert('更新失敗！');
+                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                    </script>";
+              exit;
           }
-
-          $stmt->close();
       } else {
-        echo "<script>
-        alert('不支援此檔案格式！');
-        window.location.href = '/~HCHJ/Home/contact01-1.php';
-      </script>";
+          // 不存在，使用 INSERT
+          $sql = "INSERT INTO `user` (user, image) VALUES (?, ?)";
+          $stmt = $conn->prepare($sql);
+          if ($stmt === false) {
+              die("資料庫錯誤：準備查詢語句失敗 - " . $conn->error);
+          }
+          $stmt->bind_param("ss", $userId, $fileData);
+
+          if ($stmt->execute()) {
+              $stmt->close();
+              echo "<script>
+                      alert('圖片上傳並儲存成功！');
+                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                    </script>";
+              exit;
+          } else {
+              $stmt->close();
+              echo "<script>
+                      alert('插入失敗！');
+                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                    </script>";
+              exit;
+          }
       }
   } else {
-    echo "<script>
-        alert('檔案上傳錯誤，錯誤代碼: {$_FILES['image']['error']}'');
-        window.location.href = '/~HCHJ/Home/contact01-1.php';
-      </script>";
+      $errorCode = $_FILES['image']['error'];
+      echo "<script>
+              alert('檔案上傳錯誤，錯誤代碼: $errorCode');
+              window.location.href = '/~HCHJ/Home/contact01-1.php';
+            </script>";
+      exit;
   }
 } else {
-  echo "<script>
-    alert('無法接收到檔案');
-    window.location.href = '/~HCHJ/Home/contact01-1.php';
-  </script>";
+    echo "<script>
+            alert('無法接收到檔案');
+            window.location.href = '/~HCHJ/Home/contact01-1.php';
+          </script>";
+    exit;
 }
-/*
-// 🟢 呼叫函式時改成正確的變數名稱
-sendEmailToTeacher($grade, $class, $currentUserId, $studentName);
-require 'vendor/autoload.php';
-
-function sendEmailToTeacher($grade, $class, $currentUserId, $studentName, $conn) {
-  // 🔍 查詢所有符合條件的導師
-  $sql = "SELECT email FROM testemail WHERE name IN (
-              SELECT name FROM user WHERE grade LIKE '%$grade%' 
-              AND class LIKE '%$class%' 
-              AND id != $currentUserId 
-              AND FIND_IN_SET('2', Permissions)
-          )";
-
-  $result = $conn->query($sql);
-
-  if (!$result || $result->num_rows == 0) {
-      echo "❌ 找不到導師的 email";
-      return;
-  }
-
-  // 📌 逐一發送郵件給每位導師
-  while ($row = $result->fetch_assoc()) {
-      $teacheremail = $row['email'];
-
-      if (!empty($teacheremail)) {
-          $subject = "學生 $studentName 已更新頭貼";
-          $message = "<h2>學生 $studentName 已更新頭貼</h2>";
-          $headers = "From: 109534209@stu.ukn.edu.tw\r\n";  
-          $headers .= "Reply-To: 109534209@stu.ukn.edu.tw\r\n"; 
-          $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-          if (mail($teacheremail, $subject, $message, $headers)) {
-              echo "✅ 郵件已發送給 $teacheremail！<br>";
-          } else {
-              echo "❌ 郵件發送失敗給 $teacheremail！<br>";
-          }
-      }
-  }
-}
-*/
-
 
 $conn->close();
 ?>
