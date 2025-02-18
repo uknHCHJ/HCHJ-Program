@@ -68,17 +68,20 @@ foreach ($grades as $grade) {
       /* 避免橫向滾動 */
     }
 
-    #page-banner {
-      width: 100%;
-      height: 200px;
-      background-image: url('assets/img/bg/common-bg.svg');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      position: relative;
-    }
+ 
+  #page-banner {
+    width: 100vw; /* 使用視窗寬度 */
+    height: 200px;
+    background-image: url('assets/img/bg/common-bg.svg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    left: 0;
+    right: 0;
+  }
 
     #page-banner h2 {
       color: white;
@@ -173,7 +176,7 @@ foreach ($grades as $grade) {
            align-items: center; 
            justify-content: center; 
            width: 100vw;">
-        <div class="container">
+        <div class="container-fluid p-0">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
