@@ -171,25 +171,25 @@ $userId= $userData['user'];
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
                         <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
+                            <img src="" alt="">
                         </div> 
                         <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
+                            <img src="" alt="">
                         </div>
 
                         

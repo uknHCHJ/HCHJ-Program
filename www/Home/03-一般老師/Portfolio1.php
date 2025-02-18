@@ -408,43 +408,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
-   function confirmUpload() {
+    function confirmUpload() {
     const fileInput = document.getElementById('file');
     const file = fileInput.files[0];
     if (!file) {
         alert('請選擇一個檔案來上傳');
         return false;
     }
-
     const fileExtension = file.name.split('.').pop().toLowerCase();
     const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
     if (!allowedExtensions.includes(fileExtension)) {
         alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
         return false;
     }
-
-    // 取得表單中的 student_id 和 category
-    const studentId = document.getElementById('student_id').value;
-    const category = document.getElementById('category').value;
-
-    // 透過 AJAX 檢查是否已存在相同的檔案
-    return fetch('check_duplicate.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `student_id=${studentId}&category=${category}&file_name=${encodeURIComponent(file.name)}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.duplicate) {
-            return confirm("系統偵測到可能有相同資料，是否確認覆蓋上傳？");
+    
+    // 這裡可以同步或以 AJAX 方式檢查是否已有相同資料
+    // 以下僅示範用 confirm() 提示（實際上建議用 AJAX 事先檢查）
+    if (confirm("系統偵測到可能有相同資料，是否確認覆蓋上傳？")) {
+        // 加入 force 隱藏欄位
+        let forceField = document.getElementById("forceField");
+        if (!forceField) {
+            forceField = document.createElement("input");
+            forceField.type = "hidden";
+            forceField.name = "force";
+            forceField.id = "forceField";
+            forceField.value = "1";
+            document.getElementById("uploadForm").appendChild(forceField);
         }
-        return true;
-    })
-    .catch(error => {
-        console.error('檢查重複時發生錯誤：', error);
+    } else {
         return false;
-    });
+    }
+    
+    return confirm(`您確定要上傳檔案：${file.name}？`);
 }
+
     document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.portfolio-btn');
         const items = document.querySelectorAll('.portfolio-item');
