@@ -163,26 +163,34 @@ foreach ($grades as $grade) {
   </header>
   <!-- ========================= header end ========================= -->
 
-  <!-- page-banner-section start -->
-  <section id="page-banner" class="page-banner-section img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); 
-                height: 200px; 
-                background-size: cover; 
-                background-position: center; 
-                display: flex; 
-                align-items: center; 
-                justify-content: flex-start; 
-                width: 100vw;  
-                left: 0; 
-                right: 0;">
-    <div class="container-fluid">
-      <h2 class="text-white" style="font-size: 36px; 
-             font-weight: bold; 
-             margin: 0; 
-             padding-left: 10px;">學生備審管理</h2>
-    </div>
-  </section>
-
-
+ <!-- ========================= page-banner-section start ========================= -->
+ <section class="page-banner-section pt-75 pd-75 img-bg"
+  style="background-image: url('assets/img/bg/common-bg.svg'); 
+           height: 200px; 
+           background-size: cover; 
+           background-position: center; 
+           display: flex; 
+           align-items: center; 
+           justify-content: center; 
+           width: 100vw;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                    <h2 class="text-white" style="text-align: left;">學生備審管理</h2>
+                    <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
   <!-- page-banner-section end -->
 
 
