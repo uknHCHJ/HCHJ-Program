@@ -179,8 +179,9 @@ $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 // --------------------
 foreach ($options as $option) {
 
+    // 依照不同選項建立新頁與設定頁面標題
     if ($option === 'autobiography') {
-        // 自傳：獨立新頁
+        // 自傳：獨立新頁，標題樣式保留原本設定
         $section = $phpWord->addSection();
         $section->addText("自傳", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
     } elseif ($option === 'topics') {
@@ -199,15 +200,12 @@ foreach ($options as $option) {
                 $certifications[] = $row;
             }
         }
-
         $maxPerPage = 6;  // 每頁最多6筆資料（3行x2列）
         $totalCerts = count($certifications);
         $pageIndex = 0;
-
         while ($pageIndex * $maxPerPage < $totalCerts) {
             $certSection = $phpWord->addSection();
             $certSection->addText("專業證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-
             // 建立表格樣式
             $tableStyle = [
                 'borderSize'   => 12,
@@ -216,7 +214,6 @@ foreach ($options as $option) {
             ];
             $phpWord->addTableStyle('CertTable' . $pageIndex, $tableStyle);
             $table = $certSection->addTable('CertTable' . $pageIndex);
-
             $certsInPage = array_slice($certifications, $pageIndex * $maxPerPage, $maxPerPage);
             $cellCount = 0;
             for ($row = 0; $row < 3; $row++) {
@@ -243,20 +240,26 @@ foreach ($options as $option) {
             $pageIndex++;
         }
         continue;
-    } else {
-        // 其他選項：直接於同一頁中新增標題與內容
+    } 
+    // 其他選項：如果是「競賽證明」、「成績單」、「學歷證明」、「實習證明」或「語言能力證明」，採用競賽證明版面樣式
+    elseif (in_array($option, ['competition', 'transcript', 'diploma', 'internship', 'language'])) {
+        $section = $phpWord->addSection();
+        $section->addText($optionNames[$option], ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+    } 
+    // 其他選項則維持原有設定（例如其他資料、服務證明、讀書計畫）
+    else {
+        $section = $phpWord->addSection();
         if (isset($optionNames[$option])) {
             $section->addText($optionNames[$option], ['bold' => true, 'size' => 14, 'color' => '333399'], ['alignment' => Jc::LEFT]);
         }
-        $section->addTextBreak(1);
     }
+    $section->addTextBreak(1);
 
     // 執行該選項對應的查詢（若有設定查詢）
     $sql = $queryMap[$option];
     if ($sql == "") {
         continue;
     }
-
     $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -266,23 +269,35 @@ foreach ($options as $option) {
 
             // 處理圖片檔案
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                $textStyle = ($option === 'autobiography') ? $autobiographyTextStyle : ['size' => 12];
-                $paragraphStyle = ($option === 'autobiography') ? $autobiographyParagraphStyle : ['alignment' => Jc::BOTH];
+                // 若屬於競賽證明、成績單、學歷證明、實習證明、語言能力證明，套用競賽版面樣式
+                if (in_array($option, ['competition', 'transcript', 'diploma', 'internship', 'language'])) {
+                    $textStyle = ['size' => 12];
+                    $paragraphStyle = ['alignment' => Jc::CENTER];
+                } elseif ($option === 'autobiography') {
+                    $textStyle = $autobiographyTextStyle;
+                    $paragraphStyle = $autobiographyParagraphStyle;
+                } else {
+                    $textStyle = ['size' => 12];
+                    $paragraphStyle = ['alignment' => Jc::BOTH];
+                }
+                
+                // 在圖片上方顯示檔案名稱
                 $section->addText("檔案名稱：$description", $textStyle, $paragraphStyle);
-
+            
                 if (!empty($fileContent) && strlen($fileContent) > 100) {
                     try {
                         $section->addImage($fileContent, [
-                            'width' => 300,
-                            'height' => 200,
+                            'width'     => 300,
+                            'height'    => 200,
                             'alignment' => Jc::CENTER,
                         ]);
                     } catch (Exception $e) {
-                        $section->addText("插入圖片失敗：$description", ['italic' => true, 'color' => 'FF0000']);
+                        $section->addText("插入圖片失敗：$description", ['italic' => true, 'color' => 'FF0000'], $paragraphStyle);
                     }
                 } else {
-                    $section->addText("無效的影像資料：$description");
+                    $section->addText("無效的影像資料：$description", $textStyle, $paragraphStyle);
                 }
+                $section->addTextBreak(1);
             }
             // 處理 DOCX 檔案
             else if ($ext === 'docx') {
@@ -315,6 +330,13 @@ foreach ($options as $option) {
 
                             if ($option === 'autobiography') {
                                 $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
+                            } elseif (in_array($option, ['competition', 'transcript', 'diploma', 'internship', 'language'])) {
+                                // 競賽版面樣式：置中輸出 DOCX 內容
+                                $section->addText(
+                                    $content,
+                                    ['name' => 'Times New Roman', 'size' => 12],
+                                    ['alignment' => Jc::CENTER]
+                                );
                             } else {
                                 $section->addText(
                                     $content,
@@ -335,12 +357,12 @@ foreach ($options as $option) {
             }
             // 其他不支援的檔案類型
             else {
-                $section->addText("不支援的檔案類型：$description", ['italic' => true, 'color' => 'FF0000']);
+                $section->addText("不支援的檔案類型：$description", ['italic' => true, 'color' => 'FF0000'], ['alignment' => Jc::CENTER]);
             }
             $section->addTextBreak(1);
         }
     } else {
-        $section->addText("查無資料：{$optionNames[$option]}");
+        $section->addText("查無資料：{$optionNames[$option]}", ['size' => 12], ['alignment' => Jc::CENTER]);
     }
 }
 
