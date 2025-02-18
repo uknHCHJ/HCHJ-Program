@@ -59,7 +59,6 @@ $footer->addPreserveText(
     array('alignment' => 'center') // 這裡控制對齊方式
 );
 
-
 // --------------------
 // 2. 資料庫連線及相關設定
 // --------------------
@@ -124,7 +123,7 @@ if (!empty($_POST['certifications_files'])) {
     
     if (!empty($certInCondition)) {
         $queryMap['certifications'] = "
-            SELECT file_name, file_content, organization,certificate_name
+            SELECT file_name, file_content, organization, certificate_name
             FROM portfolio
             WHERE student_id = '$userId'
               AND category = '專業證照'
@@ -176,48 +175,101 @@ $autobiographyTextStyle = ['name' => '標楷體', 'size' => 14, 'color' => '0000
 $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 
 // --------------------
-// 判斷是否有選取 'topics' 選項（專題資料）
-// --------------------
-$topicsSelected = in_array('topics', $options);
-
-// --------------------
-// 4. 處理各個選項 (除了 topics 與 certifications 由後面處理)
+// 4. 依使用者選取的順序處理各個匯出選項
 // --------------------
 foreach ($options as $option) {
-    if ($option === 'topics' || $option === 'certifications') {
-        continue;
-    }
-    
-    // 若是自傳 -> 獨立頁面
+
     if ($option === 'autobiography') {
+        // 自傳：獨立新頁
         $section = $phpWord->addSection();
         $section->addText("自傳", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+    } elseif ($option === 'topics') {
+        // 專題資料：只需輸出一頁，加入標題與頁尾
+        $section = $phpWord->addSection();
+        $section->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+        $footer = $section->addFooter();
+        $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
+        continue;
+    } elseif ($option === 'certifications') {
+        // 專業證照：依分頁邏輯處理
+        $resultCert = $conn->query($queryMap['certifications']);
+        $certifications = [];
+        if ($resultCert && $resultCert->num_rows > 0) {
+            while ($row = $resultCert->fetch_assoc()) {
+                $certifications[] = $row;
+            }
+        }
+
+        $maxPerPage = 6;  // 每頁最多6筆資料（3行x2列）
+        $totalCerts = count($certifications);
+        $pageIndex = 0;
+
+        while ($pageIndex * $maxPerPage < $totalCerts) {
+            $certSection = $phpWord->addSection();
+            $certSection->addText("專業證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+
+            // 建立表格樣式
+            $tableStyle = [
+                'borderSize'   => 12,
+                'borderColor'  => '000000',
+                'cellMargin'   => 50,
+            ];
+            $phpWord->addTableStyle('CertTable' . $pageIndex, $tableStyle);
+            $table = $certSection->addTable('CertTable' . $pageIndex);
+
+            $certsInPage = array_slice($certifications, $pageIndex * $maxPerPage, $maxPerPage);
+            $cellCount = 0;
+            for ($row = 0; $row < 3; $row++) {
+                $table->addRow();
+                for ($col = 0; $col < 2; $col++) {
+                    $cell = $table->addCell(4500);
+                    if (isset($certsInPage[$cellCount])) {
+                        $cert = $certsInPage[$cellCount];
+                        try {
+                            $cell->addImage($cert['file_content'], [
+                                'width' => 198,  // 約7cm
+                                'height' => 142, // 約5cm
+                                'scaling' => 100,
+                                'alignment' => Jc::CENTER,
+                            ]);
+                        } catch (Exception $e) {
+                            $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
+                        }
+                        $cell->addText($cert['certificate_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
+                    }
+                    $cellCount++;
+                }
+            }
+            $pageIndex++;
+        }
+        continue;
     } else {
-        // 其他資料 -> 加到主頁面
+        // 其他選項：直接於同一頁中新增標題與內容
         if (isset($optionNames[$option])) {
             $section->addText($optionNames[$option], ['bold' => true, 'size' => 14, 'color' => '333399'], ['alignment' => Jc::LEFT]);
         }
         $section->addTextBreak(1);
     }
-    
+
+    // 執行該選項對應的查詢（若有設定查詢）
     $sql = $queryMap[$option];
     if ($sql == "") {
         continue;
     }
-    
+
     $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $description = $row['file_name'];
             $fileContent = $row['file_content'];
             $ext = strtolower(pathinfo($description, PATHINFO_EXTENSION));
-            
+
             // 處理圖片檔案
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
                 $textStyle = ($option === 'autobiography') ? $autobiographyTextStyle : ['size' => 12];
                 $paragraphStyle = ($option === 'autobiography') ? $autobiographyParagraphStyle : ['alignment' => Jc::BOTH];
                 $section->addText("檔案名稱：$description", $textStyle, $paragraphStyle);
-                
+
                 if (!empty($fileContent) && strlen($fileContent) > 100) {
                     try {
                         $section->addImage($fileContent, [
@@ -241,26 +293,26 @@ foreach ($options as $option) {
                             throw new Exception("無法建立臨時檔案");
                         }
                         file_put_contents($tempFilePath, $fileContent);
-                        
+
                         $zip = new ZipArchive();
                         if ($zip->open($tempFilePath) === true) {
                             $xmlContent = $zip->getFromName('word/document.xml');
                             $zip->close();
                             unlink($tempFilePath);
-                            
+
                             if ($xmlContent === false) {
                                 throw new Exception('未能讀取 document.xml 檔案');
                             }
-                            
+
                             $xml = simplexml_load_string($xmlContent);
                             $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
                             $textNodes = $xml->xpath('//w:t');
-                            
+
                             $content = '';
                             foreach ($textNodes as $node) {
                                 $content .= (string)$node . "\n";
                             }
-                            
+
                             if ($option === 'autobiography') {
                                 $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
                             } else {
@@ -289,77 +341,6 @@ foreach ($options as $option) {
         }
     } else {
         $section->addText("查無資料：{$optionNames[$option]}");
-    }
-}
-
-// --------------------
-// 5. 若有選取專題資料 (topics)
-// --------------------
-if ($topicsSelected) {
-    $topicsSection = $phpWord->addSection();
-    $topicsSection->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-    $footer = $topicsSection->addFooter();
-    $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
-}
-
-// 6. 若有選取「相關證照」選項，建立獨立頁面
-if (in_array('certifications', $options) && !empty($queryMap['certifications'])) {
-    $resultCert = $conn->query($queryMap['certifications']);
-    $certifications = [];
-    if ($resultCert && $resultCert->num_rows > 0) {
-        while ($row = $resultCert->fetch_assoc()) {
-            $certifications[] = $row;
-        }
-    }
-
-    // 每頁顯示最多 6 筆資料（3 行 x 2 列）
-    $maxPerPage = 6;
-    $totalCerts = count($certifications);
-    $pageIndex = 0;
-
-    // 開始處理證照資料分頁
-    while ($pageIndex * $maxPerPage < $totalCerts) {
-        // 新增一個新頁面
-        $certSection = $phpWord->addSection();
-        $certSection->addText("專業證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-
-
-        // 建立表格樣式
-        $tableStyle = [
-            'borderSize'   => 12,
-            'borderColor'  => '000000',
-            'cellMargin'   => 50,
-        ];
-        $phpWord->addTableStyle('CertTable' . $pageIndex, $tableStyle);
-        $table = $certSection->addTable('CertTable' . $pageIndex);
-
-        // 取得該頁的 6 筆資料
-        $certsInPage = array_slice($certifications, $pageIndex * $maxPerPage, $maxPerPage);
-
-        // 動態建立 3 行 x 2 列的表格（共 6 格）
-        $cellCount = 0;
-        for ($row = 0; $row < 3; $row++) {
-            $table->addRow();
-            for ($col = 0; $col < 2; $col++) {
-                $cell = $table->addCell(4500);
-                if (isset($certsInPage[$cellCount])) {
-                    $cert = $certsInPage[$cellCount];
-                    try {
-                        $cell->addImage($cert['file_content'], [
-                            'width' => 198,  // 約 7cm
-                            'height' => 142, // 約 5cm
-                            'scaling' => 100,
-                            'alignment' => Jc::CENTER,
-                        ]);
-                    } catch (Exception $e) {
-                        $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
-                    }
-                    $cell->addText($cert['certificate_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
-                }
-                $cellCount++;
-            }
-        }
-        $pageIndex++; // 換到下一頁
     }
 }
 
