@@ -60,30 +60,33 @@ foreach ($grades as $grade) {
   <link rel="stylesheet" href="assets/css/glightbox.min.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <style>
-    body {
-  margin: 0;
-  padding: 0;
-}
+    html,body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      /* 避免橫向滾動 */
+    }
 
-#page-banner {
-  width: 100%;
-  height: 200px;
-  background-image: url('assets/img/bg/common-bg.svg');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: relative;
-}
+    #page-banner {
+      width: 100%;
+      height: 200px;
+      background-image: url('assets/img/bg/common-bg.svg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
 
-#page-banner h2 {
-  color: white;
-  font-size: 36px;
-  font-weight: bold;
-  margin: 0;
-  padding-left: 10px;
-}
+    #page-banner h2 {
+      color: white;
+      font-size: 36px;
+      font-weight: bold;
+      margin: 0;
+      padding-left: 10px;
+    }
   </style>
 </head>
 </head>
@@ -171,10 +174,12 @@ foreach ($grades as $grade) {
                 width: 100vw;  
                 left: 0; 
                 right: 0;">
-    <h2 class="text-white" style="font-size: 36px; 
+    <div class="container-fluid">
+      <h2 class="text-white" style="font-size: 36px; 
              font-weight: bold; 
              margin: 0; 
              padding-left: 10px;">學生備審管理</h2>
+    </div>
   </section>
 
 
