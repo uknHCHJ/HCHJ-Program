@@ -187,7 +187,7 @@ if ($conn->connect_error) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">備審資料管理系統</h2>
+                            <h2 class="text-white">備審素材區</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
@@ -203,7 +203,7 @@ if ($conn->connect_error) {
 
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
-    <h1>備審資料管理系統</h1>
+    <h1>備審素材區</h1>
     <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
         <!-- 將 organization 的 hidden input 移入 form 內 -->
@@ -408,40 +408,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
-    function confirmUpload() {
+   function confirmUpload() {
     const fileInput = document.getElementById('file');
     const file = fileInput.files[0];
     if (!file) {
         alert('請選擇一個檔案來上傳');
         return false;
     }
+
     const fileExtension = file.name.split('.').pop().toLowerCase();
     const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
     if (!allowedExtensions.includes(fileExtension)) {
         alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
         return false;
     }
-    
-    // 這裡可以同步或以 AJAX 方式檢查是否已有相同資料
-    // 以下僅示範用 confirm() 提示（實際上建議用 AJAX 事先檢查）
-    if (confirm("系統偵測到可能有相同資料，是否確認覆蓋上傳？")) {
-        // 加入 force 隱藏欄位
-        let forceField = document.getElementById("forceField");
-        if (!forceField) {
-            forceField = document.createElement("input");
-            forceField.type = "hidden";
-            forceField.name = "force";
-            forceField.id = "forceField";
-            forceField.value = "1";
-            document.getElementById("uploadForm").appendChild(forceField);
-        }
-    } else {
-        return false;
-    }
-    
-    return confirm(`您確定要上傳檔案：${file.name}？`);
-}
 
+    // 取得表單中的 student_id 和 category
+    const studentId = document.getElementById('student_id').value;
+    const category = document.getElementById('category').value;
+
+    // 透過 AJAX 檢查是否已存在相同的檔案
+    return fetch('check_duplicate.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `student_id=${studentId}&category=${category}&file_name=${encodeURIComponent(file.name)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.duplicate) {
+            return confirm("系統偵測到可能有相同資料，是否確認覆蓋上傳？");
+        }
+        return true;
+    })
+    .catch(error => {
+        console.error('檢查重複時發生錯誤：', error);
+        return false;
+    });
+}
     document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.portfolio-btn');
         const items = document.querySelectorAll('.portfolio-item');
