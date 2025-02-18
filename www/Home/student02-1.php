@@ -65,47 +65,27 @@ foreach ($grades as $grade) {
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-<!-- ========================= page-banner-section start ========================= -->
-<section class="page-banner-section pt-75 pd-75 img-bg"
-  style="background-image: url('assets/img/bg/common-bg.svg'); 
-         height: 200px; 
-         background-size: cover; 
-         background-position: center; 
-         display: flex; 
-         align-items: center; 
-         justify-content: center; 
-         width: 100vw;">
-    <div class="container" style="padding: 0;">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="banner-content">
-                    <h2 class="text-white" style="text-align: left;">學生備審管理</h2>
-                    <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+<!-- ========================= preloader start ========================= -->
+<div class="preloader">
+    <div class="loader">
+      <div class="ytp-spinner">
+        <div class="ytp-spinner-container">
+          <div class="ytp-spinner-rotator">
+            <div class="ytp-spinner-left">
+              <div class="ytp-spinner-circle"></div>
             </div>
+            <div class="ytp-spinner-right">
+              <div class="ytp-spinner-circle"></div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</section>
+  </div>
+  <!-- preloader end -->
 
-<style>
-  body, html {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      overflow-x: hidden; /* 防止水平捲動條 */
-  }
-</style>
-
- 
- <!-- ========================= header start ========================= -->
- <header class="header navbar-area">
+  <!-- ========================= header start ========================= -->
+  <header class="header navbar-area">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-12">
@@ -163,6 +143,29 @@ foreach ($grades as $grade) {
   </header>
   <!-- ========================= header end ========================= -->
 
+  <!-- ========================= page-banner-section start ========================= -->
+  <section class="page-banner-section pt-75 pb-75 img-bg"
+    style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="banner-content">
+            <h2 class="text-white">學生備審管理</h2>
+            <div class="page-breadcrumb">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ========================= page-banner-section end ========================= -->
+
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
     <div class="container-fluid"> <!-- 使用 container-fluid -->
@@ -171,16 +174,16 @@ foreach ($grades as $grade) {
           <div class="section-title text-center mb-55">
             <h1 class="wow fadeInDown" data-wow-delay=".2s">選擇班級</h1>
             <style>
-              body {
+              /*body {
                 font-family: Arial, sans-serif;
                 text-align: center;
                 background-color: #f4f4f9;
                 padding: 20px;
-              }
+              }*/
 
-              h2 {
+              /*h2 {
                 color: #333;
-              }
+              }*/
 
               /* 班級按鈕 */
               .class-button {
