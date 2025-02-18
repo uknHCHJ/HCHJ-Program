@@ -250,7 +250,7 @@ foreach ($options as $option) {
     else {
         $section = $phpWord->addSection();
         if (isset($optionNames[$option])) {
-            $section->addText($optionNames[$option], ['bold' => true, 'size' => 14, 'color' => '333399'], ['alignment' => Jc::LEFT]);
+            $section->addText($optionNames[$option], ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
         }
     }
     $section->addTextBreak(1);

@@ -257,10 +257,7 @@ $username = $userData['name'];
 
             <li class="list-group-item" data-value="language">
               <input type="checkbox" name="options[]" value="language"> 語言能力證明
-            </li>
-            <li class="list-group-item" data-value="topics">
-              <input type="checkbox" name="options[]" value="topics"> 專題資料
-            </li>
+            </li>            
             <li class="list-group-item" data-value="other">
               <input type="checkbox" name="options[]" value="other"> 其他資料
             </li>
@@ -269,6 +266,9 @@ $username = $userData['name'];
             </li>
             <li class="list-group-item" data-value="read">
               <input type="checkbox" name="options[]" value="read"> 讀書計畫
+            </li>
+            <li class="list-group-item fixed-item" data-value="topics">
+              <input type="checkbox" name="options[]" value="topics"> 專題資料
             </li>
           </ul>
         </div>
@@ -283,10 +283,13 @@ $username = $userData['name'];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <script>
   var sortable = new Sortable(document.getElementById('sortable-list'), {
-    animation: 150,
-    ghostClass: 'sortable-ghost'
-  });
-
+  animation: 150,
+  ghostClass: 'sortable-ghost',
+  filter: ".fixed-item", // 禁止 .fixed-item 被拖動
+  onMove: function(evt) {
+    return !evt.related.classList.contains('fixed-item'); // 禁止移動「讀書計畫」
+  }
+});
   document.getElementById('export-form').addEventListener('submit', function() {
     var sortedValues = [];
     document.querySelectorAll('#sortable-list li input[type="checkbox"]:checked').forEach(function(checkbox) {
