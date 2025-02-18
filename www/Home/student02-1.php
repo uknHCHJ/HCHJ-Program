@@ -59,33 +59,53 @@ foreach ($grades as $grade) {
   <link rel="stylesheet" href="assets/css/tiny-slider.css">
   <link rel="stylesheet" href="assets/css/glightbox.min.css">
   <link rel="stylesheet" href="assets/css/main.css">
-  <style>
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-    }
-
-    #page-banner {
-      padding-left: 0;
-      /* 取消左邊的填充 */
-      margin-left: 0;
-      /* 取消左邊的邊距 */
-      width: 100%;
-      /* 確保寬度佔滿 */
-    }
-  </style>
-</head>
 </head>
 
 <body>
-
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
+<!-- ========================= page-banner-section start ========================= -->
+<section class="page-banner-section pt-75 pd-75 img-bg"
+  style="background-image: url('assets/img/bg/common-bg.svg'); 
+         height: 200px; 
+         background-size: cover; 
+         background-position: center; 
+         display: flex; 
+         align-items: center; 
+         justify-content: center; 
+         width: 100vw;">
+    <div class="container" style="padding: 0;">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="banner-content">
+                    <h2 class="text-white" style="text-align: left;">學生備審管理</h2>
+                    <div class="page-breadcrumb">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">學生備審管理</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-  <!-- ========================= header start ========================= -->
-  <header class="header navbar-area">
+<style>
+  body, html {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      overflow-x: hidden; /* 防止水平捲動條 */
+  }
+</style>
+
+ 
+ <!-- ========================= header start ========================= -->
+ <header class="header navbar-area">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-12">
@@ -103,73 +123,45 @@ foreach ($grades as $grade) {
             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
               <ul id="nav" class="navbar-nav ml-auto">
                 <li class="nav-item">
-                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">個人資料</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
-                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="student02-1.php">學生管理</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">二技校園網</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                    <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                    <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                  </ul>
+                  <a class="page-scroll" href="contact-02(個人資料).php">個人資料</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-item dd-menu">比賽資訊</a>
                   <ul class="sub-menu">
-                    <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                    <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
-                    <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
+                    <li class="nav-item"><a href="blog-03(競賽).php">比賽資訊</a></li>
+                    <li class="nav-item"><a href="create-03.php">新增</a></li>
+                    <li class="nav-item"><a href="delete-03.php">編輯比賽資訊</a></li>
                   </ul>
                 </li>
-
-
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">二技校園網</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="blog-03(競賽).php">新增校園</a></li>
+                    <li class="nav-item"><a href="create-03.php">編輯詳細資料</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-item dd-menu">學生管理</a>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="Viewreview-02(查看備審).php">查看學生備審</a></li>
+                    <li class="nav-item"><a href="create-03.php">查看學生志願序</a></li>
+                    <li class="nav-item"><a href="delete-03.php">查看學生競賽歷程</a></li>
+                  </ul>
+                </li>
                 <li class="nav-item">
                   <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                 </li>
                 <li class="nav-item">
                   <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                 </li>
-                <li class="nav-item">
-                  <a href="javascript:void(0)" onclick="submitLogout()">登出</a>
-                </li>
             </div> <!-- navbar collapse -->
           </nav> <!-- navbar -->
         </div>
       </div> <!-- row -->
     </div> <!-- container -->
+
   </header>
   <!-- ========================= header end ========================= -->
-
-  <!-- page-banner-section start -->
-  <section id="page-banner" class="page-banner-section img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); 
-                height: 200px; 
-                background-size: cover; 
-                background-position: center; 
-                display: flex; 
-                align-items: center; 
-                justify-content: flex-start; 
-                width: 100vw;  
-                left: 0; 
-                right: 0;">
-    <h2 class="text-white" style="font-size: 36px; 
-             font-weight: bold; 
-             margin: 0; 
-             padding-left: 10px;">學生備審管理</h2>
-  </section>
-
-
-  <!-- page-banner-section end -->
-
 
   <!-- ========================= page-404-section end ========================= -->
   <section class="page-404-section pt-130 pb-130">
