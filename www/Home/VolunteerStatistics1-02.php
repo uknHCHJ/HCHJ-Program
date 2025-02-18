@@ -170,6 +170,7 @@ $userId = $userData['user'];
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>志願選擇統計</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -212,7 +213,6 @@ $userId = $userData['user'];
                 background-color: #ddd;
             }
 
-            /* 讓人名欄位靠左對齊 */
             td.student-name {
                 text-align: left;
             }
@@ -220,6 +220,8 @@ $userId = $userData['user'];
     </head>
 
     <body>
+        <h1>志願選擇統計</h1>
+        <button onclick="exportToExcel()">匯出 Excel</button>
         <table>
             <thead>
                 <tr>
@@ -235,39 +237,76 @@ $userId = $userData['user'];
         </table>
 
         <script>
-            // 取得資料並顯示
-            fetch('VolunteerStatistics2-02.php')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (!Array.isArray(data)) {
-                        console.error('Unexpected data format:', data);
+            let tableData = [];
+
+            function fetchData() {
+                fetch('VolunteerStatistics2-02.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!Array.isArray(data)) {
+                            console.error('Unexpected data format:', data);
+                            document.getElementById('data-body').innerHTML = '<tr><td colspan="4">No data available</td></tr>';
+                            return;
+                        }
+
                         const tableBody = document.getElementById('data-body');
-                        tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`;
-                        return;
-                    }
-                    const tableBody = document.getElementById('data-body');
-                    tableBody.innerHTML = ''; // 清空表格
-                    data.forEach(row => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                        <td>${row.School}</td>
-                        <td>${row.Department}</td>
-                        <td>${row.StudentCount}</td>
-                        <td class="student-name">${row.Students || '無'}</td>
-                    `;
-                        tableBody.appendChild(tr);
+                        tableBody.innerHTML = '';
+                        tableData = data;
+
+                        data.forEach(row => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                            <td>${row.School}</td>
+                            <td>${row.Department}</td>
+                            <td>${row.StudentCount}</td>
+                            <td class="student-name">${row.Students || '無'}</td>
+                        `;
+                            tableBody.appendChild(tr);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            function exportToExcel() {
+                if (tableData.length === 0) {
+                    alert("無資料可匯出");
+                    return;
+                }
+
+                let sheetData = [];
+                let schoolRow = [];
+                let departmentRow = [];
+                let studentRows = [];
+
+                tableData.forEach((row, index) => {
+                    schoolRow.push(row.School);
+                    departmentRow.push(row.Department);
+                    let students = row.Students ? row.Students.split(',') : ['無'];
+                    students.forEach((student, studentIndex) => {
+                        if (!studentRows[studentIndex]) {
+                            studentRows[studentIndex] = [];
+                        }
+                        studentRows[studentIndex][index] = student;
                     });
-                })
-                .catch(error => console.error('Error fetching data:', error));
+                });
+
+                sheetData.push(schoolRow);
+                sheetData.push(departmentRow);
+                sheetData = sheetData.concat(studentRows);
+
+                let ws = XLSX.utils.aoa_to_sheet(sheetData);
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "志願統計");
+                XLSX.writeFile(wb, "志願選擇統計.xlsx");
+            }
+
+            fetchData();
         </script>
     </body>
 
     </html>
+
+
 
 
     </script>
