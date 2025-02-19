@@ -12,19 +12,22 @@ $phpWord = new PhpWord();
 $phpWord->setDefaultFontName('標楷體'); // 全文件預設使用標楷體
 $phpWord->setDefaultFontSize(12);
 
+// 註冊標題樣式供目錄使用（層級1）
+$phpWord->addTitleStyle(1, ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+
 // --------------------
 // 1. 建立封面頁
 // --------------------
 $coverSection = $phpWord->addSection([
-    'marginTop'    => 1000,
-    'marginBottom' => 1000,
-    'marginLeft'   => 1200,
-    'marginRight'  => 1200,
-    'borderBottomSize' => 12,
-    'borderLeftSize'   => 12,
-    'borderRightSize'  => 12,
-    'borderTopSize'    => 12,
-    'borderColor'      => '000000',
+    'marginTop'       => 1000,
+    'marginBottom'    => 1000,
+    'marginLeft'      => 1200,
+    'marginRight'     => 1200,
+    'borderBottomSize'=> 12,
+    'borderLeftSize'  => 12,
+    'borderRightSize' => 12,
+    'borderTopSize'   => 12,
+    'borderColor'     => '000000',
 ]);
 
 // 封面標題
@@ -50,15 +53,18 @@ $coverSection->addText(
     ['alignment' => Jc::RIGHT, 'spaceBefore' => 5000]
 );
 
-$section = $phpWord->addSection();
-$footer = $section->addFooter();
-
-// 插入自動更新的頁碼
-$footer->addPreserveText(
-    '{PAGE}',
-    'Times New Roman', // 字體樣式
-    array('alignment' => 'center')
+// --------------------
+// 1.5 新增目錄頁：在封面之後插入目錄
+// --------------------
+$tocSection = $phpWord->addSection();
+$tocSection->addText(
+    "目錄",
+    ['bold' => true, 'size' => 36, 'color' => '333399'],
+    ['alignment' => Jc::CENTER, 'spaceAfter' => 300]
 );
+$tocSection->addTextBreak(1);
+// 使用 addTOC() 方法產生目錄，目錄將根據之後使用 addTitle() 插入的標題內容生成
+$tocSection->addTOC();
 
 // --------------------
 // 2. 資料庫連線及相關設定
@@ -99,16 +105,16 @@ if (isset($_POST['autobiography_file'])) {
 // 定義查詢選項對應
 // --------------------
 $queryMap = [
-    'competition'    => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
-    'transcript'     => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
-    'autobiography'  => "", // 自傳依據使用者選擇的檔案決定
-    'diploma'        => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
-    'internship'     => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
-    'certifications' => "", // 相關證照之後再處理
-    'language'       => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
-    'other'          => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
+    'competition'     => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
+    'transcript'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
+    'autobiography'   => "", // 自傳依據使用者選擇的檔案決定
+    'diploma'         => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
+    'internship'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
+    'certifications'  => "", // 相關證照之後再處理
+    'language'        => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
+    'other'           => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
     'Proof-of-service'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '服務證明'",
-    'read'           => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
+    'read'            => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
 ];
 
 // --------------------
@@ -157,16 +163,16 @@ if (!empty($_POST['autobiography_files'])) {
 // 定義中文選項標題
 // --------------------
 $optionNames = [
-    'competition'    => '競賽證明',
-    'transcript'     => '成績單',
-    'autobiography'  => '自傳',
-    'diploma'        => '學歷證明',
-    'internship'     => '實習證明',
-    'certifications' => '專業證照',
-    'language'       => '語言能力證明',
-    'other'          => '其他資料',
+    'competition'     => '競賽證明',
+    'transcript'      => '成績單',
+    'autobiography'   => '自傳',
+    'diploma'         => '學歷證明',
+    'internship'      => '實習證明',
+    'certifications'  => '專業證照',
+    'language'        => '語言能力證明',
+    'other'           => '其他資料',
     'Proof-of-service'=> '服務證明',
-    'read'           => '讀書計畫'
+    'read'            => '讀書計畫'
 ];
 
 // --------------------
@@ -195,18 +201,14 @@ foreach ($options as $option) {
             for ($i = 0; $i < $totalRecords; $i += $recordsPerPage) {
                 // 為每一批資料建立新頁
                 $section = $phpWord->addSection();
-                $section->addText(
-                    $optionNames['competition'],
-                    ['bold' => true, 'size' => 25, 'color' => '333399'],
-                    ['alignment' => Jc::CENTER]
-                );
+                $section->addTitle($optionNames['competition'], 1);
                 
                 // 設定表格樣式（1欄），並置中整個表格
                 $tableStyle = [
-                    'borderSize'   => 12,
-                    'borderColor'  => '000000',
-                    'cellMargin'   => 50,
-                    'alignment'    => JcTable::CENTER
+                    'borderSize'  => 12,
+                    'borderColor' => '000000',
+                    'cellMargin'  => 50,
+                    'alignment'   => JcTable::CENTER
                 ];
                 $tableStyleName = 'CompetitionTable' . $i;
                 $phpWord->addTableStyle($tableStyleName, $tableStyle);
@@ -234,23 +236,20 @@ foreach ($options as $option) {
             }
         } else {
             $section = $phpWord->addSection();
-            $section->addText(
-                "查無資料：" . $optionNames['competition'],
-                ['size' => 12],
-                ['alignment' => Jc::CENTER]
-            );
+            $section->addTitle("查無資料：" . $optionNames['competition'], 1);
+            $section->addText("查無資料：" . $optionNames['competition'], ['size' => 12], ['alignment' => Jc::CENTER]);
         }
         continue; // 競賽證明處理完畢，跳到下一個選項
     }
     // 自傳：獨立新頁，標題樣式保留原本設定
     elseif ($option === 'autobiography') {
         $section = $phpWord->addSection();
-        $section->addText("自傳", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+        $section->addTitle("自傳", 1);
     }
     // 專題資料：只需輸出一頁，加入標題與頁尾
     elseif ($option === 'topics') {
         $section = $phpWord->addSection();
-        $section->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+        $section->addTitle("專題資料", 1);
         $footer = $section->addFooter();
         $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
         continue;
@@ -269,12 +268,12 @@ foreach ($options as $option) {
         $pageIndex = 0;
         while ($pageIndex * $maxPerPage < $totalCerts) {
             $certSection = $phpWord->addSection();
-            $certSection->addText("專業證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+            $certSection->addTitle("專業證照", 1);
             // 建立表格樣式
             $tableStyle = [
-                'borderSize'   => 12,
-                'borderColor'  => '000000',
-                'cellMargin'   => 50,
+                'borderSize'  => 12,
+                'borderColor' => '000000',
+                'cellMargin'  => 50,
             ];
             $phpWord->addTableStyle('CertTable' . $pageIndex, $tableStyle);
             $table = $certSection->addTable('CertTable' . $pageIndex);
@@ -288,9 +287,9 @@ foreach ($options as $option) {
                         $cert = $certsInPage[$cellCount];
                         try {
                             $cell->addImage($cert['file_content'], [
-                                'width' => 198,
-                                'height' => 142,
-                                'scaling' => 100,
+                                'width'     => 198,
+                                'height'    => 142,
+                                'scaling'   => 100,
                                 'alignment' => Jc::CENTER,
                             ]);
                         } catch (Exception $e) {
@@ -308,13 +307,13 @@ foreach ($options as $option) {
     // 其他選項：如果是「成績單」、「學歷證明」、「實習證明」或「語言能力證明」，採用競賽證明版面樣式
     elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
         $section = $phpWord->addSection();
-        $section->addText($optionNames[$option], ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+        $section->addTitle($optionNames[$option], 1);
     }
     // 其他選項則維持原有設定（例如其他資料、服務證明、讀書計畫）
     else {
         $section = $phpWord->addSection();
         if (isset($optionNames[$option])) {
-            $section->addText($optionNames[$option], ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+            $section->addTitle($optionNames[$option], 1);
         }
     }
     $section->addTextBreak(1);
