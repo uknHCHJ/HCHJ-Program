@@ -235,12 +235,6 @@ if ($conn->connect_error) {
             <textarea name="autobiography" id="autobiography" rows="5" cols="40"></textarea>
         </div>
 
-        <!-- 上傳檔案區塊 (預設隱藏) -->
-        <div id="file_div" style="display: block;">
-            <label for="file">上傳檔案：</label>
-            <input type="file" name="file" id="file" required>
-        </div>
-
         <!-- 專業證照機構選擇 (預設隱藏) -->
         <div id="sub_category_div" style="display: none;">
             <label for="sub_category">選擇機構：</label>
@@ -255,6 +249,12 @@ if ($conn->connect_error) {
             <select name="certificate" id="certificate">
                 <option value="">請選擇證照</option>
             </select>
+        </div>
+
+        <!-- 上傳檔案區塊 (預設顯示) -->
+        <div id="file_div" style="display: block;">
+            <label for="file">上傳檔案：</label>
+            <input type="file" name="file" id="file" required>
         </div>
 
         <br><br>
@@ -276,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const certificateSelect = document.getElementById("certificate");
     const autobiographyNameDiv = document.getElementById("autobiography_name_div");
     const autobiographyDiv = document.getElementById("autobiography_div");
+    const form = document.getElementById("uploadForm");
 
     // 定義可選擇的機構 (organization)
     const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會", "美國教育測驗服務社(ETS)", "財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
@@ -283,6 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // 監聽「類別」選擇變更事件
     categorySelect.addEventListener("change", () => {
         const selectedValue = categorySelect.value;
+
+        // 根據選擇的類別動態更改表單 action
+        if (selectedValue === "自傳") {
+            form.action = "AutobiographyCreat.php";  // 自傳上傳的後端處理
+        } else if (selectedValue === "專業證照") {
+            form.action = "PortfolioCreat.php";  // 專業證照上傳的後端處理
+        } else {
+            form.action = "PortfolioCreat.php";  // 默認後端處理
+        }
 
         // 處理自傳 (顯示/隱藏)
         if (selectedValue === "自傳") {
@@ -349,6 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+
 
 
 <div class="portfolio-section pt-130">
