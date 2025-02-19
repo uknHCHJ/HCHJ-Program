@@ -109,10 +109,11 @@ $username = $userData['name'];
 
   selectAllBtn.addEventListener('click', function() {
     var checkboxes = document.querySelectorAll('#sortable-list input[type="checkbox"]');
-    var allChecked = Array.from(checkboxes).every(chk => chk.checked);
-    
-    // 反轉勾選狀態
-    checkboxes.forEach(chk => chk.checked = !allChecked);
+    checkboxes.forEach(function(chk) {
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
+        chk.checked = true;
+      }
+    });
   });
 });
   document.addEventListener('DOMContentLoaded', function() {
