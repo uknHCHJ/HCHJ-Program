@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 表格解析</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://unpkg.com/pdf-table-extractor"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>PDF 表格解析</h2>
+    
+    <input type="file" id="uploadPDF" accept="application/pdf">
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>學校名稱</th>
+                <th>科系</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JavaScript 會在這裡填入資料 -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById("uploadPDF").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const typedarray = new Uint8Array(reader.result);
+                    parsePDF(typedarray);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        async function parsePDF(pdfData) {
+            const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+
+            let extractedText = "";
+            let startPage = 0;
+
+            // 🔍 自動尋找「附錄 12」的位置
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(" ");
+
+                if (pageText.includes("附錄十二")) {
+                    startPage = pageNum;
+                    break;
+                }
+            }
+
+            if (startPage === 0) {
+                alert("找不到附錄 12！");
+                return;
+            }
+
+            // 使用 pdf-table-extractor 解析 PDF 表格
+            PDFTExtract.extractTables(pdfData, function(result) {
+                extractTableData(result.pageTables);
+            });
+        }
+
+        function extractTableData(pageTables) {
+            const tableBody = document.querySelector("#data-table tbody");
+            tableBody.innerHTML = ""; // 清空表格
+
+            for (let page of pageTables) {
+                for (let row of page.tables) {
+                    let schoolName = "";
+                    let department = "";
+
+                    // 🎯 遍歷表格中的每一行，篩選「學校名稱」與「科系」
+                    for (let cell of row) {
+                        if (cell.includes("科技大學") || cell.includes("大學")) {
+                            schoolName = cell;
+                        }
+                        if (cell.endsWith("系")) {
+                            department = cell;
+                        }
+                    }
+
+                    // 只加入有學校名稱 & 科系的資料
+                    if (schoolName && department) {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `<td>${schoolName}</td><td>${department}</td>`;
+                        tableBody.appendChild(tr);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
