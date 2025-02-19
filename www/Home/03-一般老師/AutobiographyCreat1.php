@@ -203,278 +203,34 @@ if ($conn->connect_error) {
 
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
-    <h1>備審素材區</h1>
-    <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
-        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
-        <!-- 將 organization 的 hidden input 移入 form 內 -->
-        <input type="hidden" id="selectedOrganization" name="organization">
+    <h1>自傳填寫</h1>
+    <form action="PortfolioCreate.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         
-        <label for="category">選擇資料類型：</label>
-        <select name="category" id="category" required>
-            <option value="成績單">成績單</option>
-            <option value="學歷證明">學歷證明</option>
-            <option value="競賽證明">競賽證明</option>
-            <option value="實習證明">實習證明</option>
-            <option value="專業證照">專業證照</option>
-            <option value="語言能力證明">語言能力證明</option>
-            <option value="專題資料">專題資料</option>
-            <option value="讀書計畫">讀書計畫</option>
-            <option value="服務證明">服務證明</option>
-            <option value="其他資料">其他資料</option>
-        </select>
+        <label for="title">自傳名稱：</label>
+        <input type="text" name="title" id="title" required>
         
-        <div id="sub_category_div" style="display: none;">
-            <label for="sub_category">專業證照分類：</label>
-            <select name="sub_category" id="sub_category"></select>
-        </div>
-        
-        <div id="certificate_div" style="display: none;">
-            <label for="certificate">選擇證照：</label>
-            <select name="certificate" id="certificate"></select>
-            <input type="hidden" name="certificate_name" id="certificate_name">
-        </div>
-        
-        <label for="file">上傳檔案：</label>
-        <input type="file" name="file" id="file" required>
-
-        <!-- 添加間距 -->
         <br><br>
-
+        
+        <label for="content">自傳內容：</label>
+        <textarea name="content" id="content" rows="10" cols="50" required></textarea>
+        
+        <br><br>
+        
         <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
-        <input type="hidden" name="force" id="forceField" value="1">
     </form>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const uploadForm = document.getElementById("uploadForm");
-    const categorySelect = document.getElementById("category");
-    const subCategoryDiv = document.getElementById("sub_category_div");
-    const certificateDiv = document.getElementById("certificate_div");
-    const subCategorySelect = document.getElementById("sub_category");
-    const certificateSelect = document.getElementById("certificate");
-    const certificateNameInput = document.getElementById("certificate_name");
-    const studentIdInput = document.querySelector("input[name='student_id']");
-
-    // 定義可選擇的機構 (organization)
-    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會", "美國教育測驗服務社(ETS)", "財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
-
-    // 監聽「類別」選擇變更事件
-    categorySelect.addEventListener("change", () => {
-        if (categorySelect.value === "專業證照") {
-            subCategoryDiv.style.display = "block";
-            subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
-            certificateDiv.style.display = "none";
-            certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
-
-            // 填充機構 (organization) 下拉選單
-            subCategories.forEach(org => {
-                let option = document.createElement("option");
-                option.value = org;
-                option.textContent = org;
-                subCategorySelect.appendChild(option);
-            });
-        } else {
-            subCategoryDiv.style.display = "none";
-            certificateDiv.style.display = "none";
-        }
-    });
-
-    // 監聽「機構」選擇變更事件，載入對應的證照
-    subCategorySelect.addEventListener("change", () => {
-        let selectedOrg = subCategorySelect.value;
-        if (selectedOrg) {
-            certificateDiv.style.display = "block";
-            certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
-
-            // 透過 AJAX 請求從資料庫獲取該機構的證照清單
-            fetch(`GetCertifications.php?organization=${encodeURIComponent(selectedOrg)}`)
-                .then(response => response.json())
-                .then(certifications => {
-                    certifications.forEach(cert => {
-                        let option = document.createElement("option");
-                        option.value = cert.id;
-                        option.textContent = cert.name;
-                        certificateSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error("Error fetching certifications:", error));
-        } else {
-            certificateDiv.style.display = "none";
-        }
-    });
-
-    // 監聽「證照」選擇變更事件，填入隱藏欄位
-    certificateSelect.addEventListener("change", () => {
-        certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
-    });
-
-    // 監聽表單提交，檢查是否有重複條目
-    uploadForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // 防止表單立即提交
-
-        const studentId = studentIdInput.value;
-        const category = categorySelect.value;
-        let name = document.getElementById("file").files[0]?.name; // 檔案名稱
-
-        if (category === "專業證照") {
-            name = certificateNameInput.value; // 使用證照名稱
-        }
-
-        if (!name) {
-            alert("請選擇檔案或填寫名稱");
-            return;
-        }
-
-        // 發送 AJAX 請求檢查資料庫是否已有相同條目
-        fetch("checkDuplicateEntry.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `student_id=${encodeURIComponent(studentId)}&category=${encodeURIComponent(category)}&name=${encodeURIComponent(name)}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.exists) {
-                alert("此分類下已經有相同的資料，請勿重複上傳！");
-            } else {
-                uploadForm.submit(); // 確保檢查後再提交表單
-            }
-        })
-        .catch(error => console.error("錯誤:", error));
-    });
-});
-</script>
-
-
-<div class="portfolio-section pt-130">
-    <div id="container" class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="portfolio-btn-wrapper">
-                    <button type="button" class="portfolio-btn active" data-filter="*">全部</button>
-                    <button type="button" class="portfolio-btn" data-filter=".transcripts">成績單</button>
-                    <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".licenses">專業證照</button>
-                    <button type="button" class="portfolio-btn" data-filter=".language-skills">語言能力證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
-                    <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Proof-of-service">服務證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
-                </div>
-
-                <div class="row grid">
-                    <?php
-                    $servername = "127.0.0.1";
-                    $username = "HCHJ";
-                    $password = "xx435kKHq";
-                    $dbname = "HCHJ";
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    if ($conn->connect_error) {
-                        die("連線失敗：" . $conn->connect_error);
-                    }
-
-                    $sql = "SELECT * FROM portfolio WHERE student_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $userId);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-
-                    $category_map = [
-                        "成績單" => "transcripts",
-                        "學歷證明" => "certificates",
-                        "競賽證明" => "competitions",
-                        "實習證明" => "internships",
-                        "專業證照" => "licenses",
-                        "語言能力證明" => "language-skills",
-                        "專題資料" => "Topics",
-                        "讀書計畫" => "reading-plan",
-                        "服務證明" => "Proof-of-service",
-                        "其他資料" => "Other-information"
-                    ];
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $category_class = $category_map[$row["category"]] ?? "unknown";
-                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
-                                <div class='portfolio-content'>
-                                    <h3>{$row['category']}</h3>";
-                            
-                            if ($row["category"] === "專業證照") {
-                                echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
-                                echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
-                            }
-                            
-                            echo "<p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
-                                    <p>上傳時間：{$row['upload_time']}</p>
-                                    <form action='PortfolioDelete.php' method='post'>
-                                        <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
-                                        <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
-                                            style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
-                                            刪除
-                                        </button>
-
-                                    </form>
-                                </div>
-                            </div>";
-                        }
-                    } else {
-                        echo "<div class='col-12'><p>尚無資料</p></div>";
-                    }
-
-                    $stmt->close();
-                    $conn->close();
-                    ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<script>
 function confirmUpload() {
-    const fileInput = document.getElementById('file');
-    const file = fileInput.files[0];
-    if (!file) {
-        alert('請選擇一個檔案來上傳');
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
+    if (!title || !content) {
+        alert('請輸入名稱及內容');
         return false;
     }
-    const fileExtension = file.name.split('.').pop().toLowerCase();
-    const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
-    if (!allowedExtensions.includes(fileExtension)) {
-        alert('只允許上傳 PNG, JPG, DOC, DOCX 檔案');
-        return false;
-    }
-
-    // 在這裡可以加上檢查是否有重複的檔案名稱
-    const fileName = file.name;
-    if (checkDuplicateFileName(fileName)) {
-        alert('您已經上傳過相同的檔案。');
-        return false;
-    }
-
-    return confirm(`您確定要上傳檔案：${file.name}？`);
-}
-
-// 假設你會傳遞檔案名稱來檢查重複檔案
-function checkDuplicateFileName(fileName) {
-    // 這裡要進行AJAX檢查
-    let isDuplicate = false;
-    $.ajax({
-        url: 'check_duplicate.php', // 後端API
-        type: 'POST',
-        async: false,  // 這裡設定為同步，因為我們要等結果才能繼續
-        data: { fileName: fileName },
-        success: function(response) {
-            isDuplicate = response === 'true';  // 如果回傳true，表示檔案已經存在
-        }
-    });
-    return isDuplicate;
+    return confirm(`您確定要提交自傳：「${title}」？`);
 }
 </script>
 

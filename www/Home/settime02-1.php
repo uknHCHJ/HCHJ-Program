@@ -23,13 +23,13 @@ $username = $userData['name']; // 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>升學競賽全方位資源網-首頁</title>
+    <title>學生志願序統計</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -100,12 +100,10 @@ $userId = $userData['user'];
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
                                     <ul class="sub-menu">
-                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">學生志願序統計</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
                                         <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
-                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間編輯</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
@@ -144,44 +142,89 @@ $userId = $userData['user'];
     </header>
     <!-- ========================= header end ========================= -->
 
-    <!-- ========================= hero-section start ========================= -->
-    <section id="home" class="hero-section">
+    <!-- ========================= page-banner-section start ========================= -->
+    <section class="page-banner-section pt-75 pb-75 img-bg"
+        style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-5 col-lg-6">
-                    <div class="hero-content-wrapper">
-
-                        <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $username ?>老師 </h2>
-
-                        <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
-
-                        <script>
-                            // JavaScript 函数触发表单提交
-                            function submitLogout() {
-                                document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                            }
-                        </script>
-                        <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                        <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">學生管理</h2>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">志願序開放時間編輯</li>
+                                </ol>
+                            </nav>
+                        </div>
                     </div>
-                </div>
-                <div class="col-xl-7 col-lg-6">
-                    <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                    <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center"
-                        data-wow-delay=".5s">
-                    <!-- </div>
-                        </div>-->
                 </div>
             </div>
         </div>
     </section>
-    <!-- ========================= hero-section end ========================= -->
+    <!DOCTYPE html>
+    <html lang="zh">
 
-    <!-- ========================= client-logo-section start ========================= -->
-    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>志願序開放時間編輯</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+        <!DOCTYPE html>
+        <html>
+
+        <head>
+            <title>設定選填志願時間</title>
+        </head>
+
+    <body>
+        <h1>設定選填志願時間</h1>
+        <form id="timeForm">
+            <label for="startTime">開始時間：</label>
+            <input type="datetime-local" id="startTime" name="startTime"><br><br>
+
+            <label for="endTime">結束時間：</label>
+            <input type="datetime-local" id="endTime" name="endTime"><br><br>
+
+            <button type="submit">保存</button>
+        </form>
+
+        <script>
+            document.getElementById('timeForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+
+                const data = JSON.stringify({
+                    startTime: startTime,
+                    endTime: endTime
+                });
+
+                fetch('settime02-2.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert('設定成功！');
+                        } else {
+                            alert('設定失敗：' + result.message);
+                        }
+                    });
+            });
+        </script>
+    </body>
+
+    </html>
+
     <!-- ========================= client-logo-section end ========================= -->
-
 
 
     <!-- ========================= footer start ========================= -->
@@ -190,7 +233,7 @@ $userId = $userData['user'];
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                         <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                     </div>
                 </div>
@@ -226,9 +269,11 @@ $userId = $userData['user'];
                         <div class="footer-social-links">
                             <ul class="d-flex">
                                 <li><a href="https://www.facebook.com/UKNunversity"><i
-                                            class="lni lni-facebook-filled"></i></a></li>
+                                            class="lni lni-facebook-filled"></i></a>
+                                </li>
                                 <li><a href="https://www.instagram.com/ukn_taipei/"><i
-                                            class="lni lni-instagram-filled"></i></a></li>
+                                            class="lni lni-instagram-filled"></i></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -237,6 +282,7 @@ $userId = $userData['user'];
         </div>
     </footer>
     <!-- ========================= footer end ========================= -->
+
 
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
@@ -253,53 +299,8 @@ $userId = $userData['user'];
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
+</body>
 
-    <script>
-        //========= glightbox
-        GLightbox({
-            'href': '#',
-            'type': 'video',
-            'source': 'youtube', //vimeo, youtube or local
-            'width': 900,
-            'autoplayVideos': true,
-        });
-
-        //========= testimonial 
-        tns({
-            container: '.testimonial-active',
-            items: 1,
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            nav: false,
-            controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-        });
-
-        //============== isotope masonry js with imagesloaded
-        imagesLoaded('#container', function () {
-            var elem = document.querySelector('.grid');
-            var iso = new Isotope(elem, {
-                // options
-                itemSelector: '.grid-item',
-                masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                }
-            });
-
-            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-            filterButtons.forEach(e =>
-                e.addEventListener('click', () => {
-
-                    let filterValue = event.target.getAttribute('data-filter');
-                    iso.arrange({
-                        filter: filterValue
-                    });
-                })
-            );
-        });
-    </script>
 </body>
 
 </html>

@@ -90,6 +90,7 @@ $username = $userData['name'];
           <label class="checkbox-label">
             選擇匯出資料 <span style="color: red;">（可拖曳排序）</span>：
           </label>
+          <button type="button" id="select-all" class="btn btn-secondary">全選(除了自傳、競賽證明)</button>
           <ul id="sortable-list" class="list-group">
             <li class="list-group-item" data-value="transcript">
               <input type="checkbox" name="options[]" value="transcript"> 成績單
@@ -103,6 +104,18 @@ $username = $userData['name'];
 </li>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+  var selectAllBtn = document.getElementById('select-all');
+
+  selectAllBtn.addEventListener('click', function() {
+    var checkboxes = document.querySelectorAll('#sortable-list input[type="checkbox"]');
+    checkboxes.forEach(function(chk) {
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
+        chk.checked = true;
+      }
+    });
+  });
+});
   document.addEventListener('DOMContentLoaded', function() {
     var autoCheckbox = document.getElementById('autobiography-checkbox');
     var autoContainer = document.getElementById('autobiography-container');
