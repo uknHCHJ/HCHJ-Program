@@ -30,7 +30,7 @@ $student_id = isset($userData['user']) ? intval($userData['user']) : 0; // 確�
 // 檢查 student_id 是否有效
 if ($student_id === 0) {
     die("❌ 學生 ID 錯誤，請重新登入！");
-    header("Location:AutobiographyCreat1.php"); 
+    header("Location:Portfolio1.php"); 
 }
 
 // 確保表單有提交
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 檢查資料是否完整
     if (empty($title) || empty($content)) {
         die("❌ 錯誤：標題或內容不得為空！");
-        header("Location:AutobiographyCreat1.php"); 
+        header("Location:Portfolio1.php"); 
     }
 
     // 準備 SQL 語法
@@ -53,16 +53,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("iss", $student_id, $title, $content);
         if ($stmt->execute()) {
             echo('✅ 自傳提交成功！');
-            header("Location:AutobiographyCreat1.php"); 
+            header("Location:Portfolio1.php"); 
 
         } else {
             echo "❌ 提交失敗：" . $stmt->error;
-            header("Location:AutobiographyCreat1.php"); 
+            header("Location:Portfolio1.php"); 
         }
         $stmt->close();
     } else {
         echo "❌ SQL 錯誤：" . $conn->error;
-        header("Location:AutobiographyCreat1.php"); 
+        header("Location:Portfolio1.php"); 
     }
 }
 
