@@ -6,6 +6,7 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\SimpleType\JcTable; // 用於設定表格置中
 use PhpOffice\PhpWord\Style\Section;
+use PhpOffice\PhpWord\Style\TOC; // 用於設定目錄樣式
 
 // 初始化 PhpWord 並設定全局預設字型與大小
 $phpWord = new PhpWord();
@@ -16,7 +17,7 @@ $phpWord->setDefaultFontSize(12);
 $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
 
 // --------------------
-// 1. 建立封面頁
+// 1. 建立封面頁（不加頁碼）
 // --------------------
 $coverSection = $phpWord->addSection([
     'marginTop'       => 1000,
@@ -54,7 +55,7 @@ $coverSection->addText(
 );
 
 // --------------------
-// 1.5 新增目錄頁：在封面之後插入目錄
+// 1.5 新增目錄頁（不加頁碼）
 // --------------------
 $tocSection = $phpWord->addSection();
 $tocSection->addText(
@@ -63,16 +64,19 @@ $tocSection->addText(
     ['alignment' => Jc::CENTER, 'spaceAfter' => 300]
 );
 $tocSection->addTextBreak(1);
-// 使用 addTOC() 方法產生目錄，目錄將根據之後使用 addTitle() 插入的標題內容生成
-$tocSection->addTOC();
+// 利用 addTOC() 產生目錄，設定 tabLeader 與 rightTabStop 以顯示右側頁碼（目錄項目內部的頁碼）
+$tocSection->addTOC([
+    'tabLeader'    => TOC::TAB_LEADER_DOT,
+    'rightTabStop' => 9070
+]);
 
 // --------------------
 // 2. 資料庫連線及相關設定
 // --------------------
 $servername = "127.0.0.1";
-$username = "HCHJ";
-$password = "xx435kKHq";
-$dbname = "HCHJ";
+$username   = "HCHJ";
+$password   = "xx435kKHq";
+$dbname     = "HCHJ";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 ini_set('display_errors', 1);
@@ -84,7 +88,7 @@ if ($conn->connect_error) {
 }
 
 $userData = $_SESSION['user'];
-$userId = $userData['user'];
+$userId   = $userData['user'];
 $username = $userData['name'];
 
 $options = isset($_POST['options']) ? $_POST['options'] : [];
@@ -186,8 +190,7 @@ $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 // --------------------
 foreach ($options as $option) {
 
-    // 若為競賽證明，使用表格方式呈現，每頁放3筆資料，
-    // 每筆資料獨立一列：先顯示圖片，下方顯示檔案名稱（均置中）
+    // 若為競賽證明：以表格方式呈現，每頁放 3 筆資料
     if ($option === 'competition') {
         $sql = $queryMap['competition'];
         $result = $conn->query($sql);
@@ -196,14 +199,18 @@ foreach ($options as $option) {
             while ($row = $result->fetch_assoc()) {
                 $competitionData[] = $row;
             }
-            $recordsPerPage = 3; // 每頁放3筆資料
+            $recordsPerPage = 3; // 每頁放 3 筆資料
             $totalRecords = count($competitionData);
             for ($i = 0; $i < $totalRecords; $i += $recordsPerPage) {
-                // 為每一批資料建立新頁
+                // 為每批資料建立新頁（需加頁碼）
                 $section = $phpWord->addSection();
+                // 加入頁尾頁碼
+                $footer = $section->addFooter();
+                $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+                
                 $section->addTitle($optionNames['competition'], 1);
                 
-                // 設定表格樣式（1欄），並置中整個表格
+                // 設定表格樣式（1 欄），並置中整個表格
                 $tableStyle = [
                     'borderSize'  => 12,
                     'borderColor' => '000000',
@@ -214,13 +221,11 @@ foreach ($options as $option) {
                 $phpWord->addTableStyle($tableStyleName, $tableStyle);
                 $table = $section->addTable($tableStyleName);
                 
-                // 取得本頁資料
+                // 取得本頁資料，逐列顯示
                 $batch = array_slice($competitionData, $i, $recordsPerPage);
-                // 每筆資料各占一列
                 foreach ($batch as $record) {
                     $table->addRow();
                     $cell = $table->addCell(9000);
-                    // 加入圖片（置中對齊）
                     try {
                         $cell->addImage($record['file_content'], [
                             'width'     => 300,
@@ -230,31 +235,40 @@ foreach ($options as $option) {
                     } catch (Exception $e) {
                         $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
                     }
-                    // 在圖片下方顯示檔案名稱
                     $cell->addText("檔案名稱：" . $record['file_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
                 }
             }
         } else {
             $section = $phpWord->addSection();
+            // 加入頁尾頁碼
+            $footer = $section->addFooter();
+            $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+            
             $section->addTitle("查無資料：" . $optionNames['competition'], 1);
             $section->addText("查無資料：" . $optionNames['competition'], ['size' => 12], ['alignment' => Jc::CENTER]);
         }
-        continue; // 競賽證明處理完畢，跳到下一個選項
+        continue; // 競賽證明處理完畢
     }
-    // 自傳：獨立新頁，標題樣式保留原本設定
+    // 自傳：獨立新頁（需加頁碼）
     elseif ($option === 'autobiography') {
         $section = $phpWord->addSection();
+        $footer = $section->addFooter();
+        $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+        
         $section->addTitle("自傳", 1);
     }
-    // 專題資料：只需輸出一頁，加入標題與頁尾
+    // 專題資料：僅輸出一頁，加入標題與頁尾
     elseif ($option === 'topics') {
         $section = $phpWord->addSection();
-        $section->addTitle("專題資料", 1);
         $footer = $section->addFooter();
+        // 這裡先加入專題專用說明，再加入頁碼
         $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
+        $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+        
+        $section->addTitle("專題資料", 1);
         continue;
     }
-    // 專業證照：依分頁邏輯處理
+    // 專業證照：依分頁邏輯處理（每頁需加頁碼）
     elseif ($option === 'certifications') {
         $resultCert = $conn->query($queryMap['certifications']);
         $certifications = [];
@@ -263,13 +277,15 @@ foreach ($options as $option) {
                 $certifications[] = $row;
             }
         }
-        $maxPerPage = 6;  // 每頁最多6筆資料（3行x2列）
+        $maxPerPage = 6;  // 每頁最多 6 筆資料（3 行 x 2 列）
         $totalCerts = count($certifications);
         $pageIndex = 0;
         while ($pageIndex * $maxPerPage < $totalCerts) {
             $certSection = $phpWord->addSection();
+            $footer = $certSection->addFooter();
+            $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+            
             $certSection->addTitle("專業證照", 1);
-            // 建立表格樣式
             $tableStyle = [
                 'borderSize'  => 12,
                 'borderColor' => '000000',
@@ -304,14 +320,20 @@ foreach ($options as $option) {
         }
         continue;
     }
-    // 其他選項：如果是「成績單」、「學歷證明」、「實習證明」或「語言能力證明」，採用競賽證明版面樣式
+    // 其他選項：如「成績單」、「學歷證明」、「實習證明」、「語言能力證明」
     elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
         $section = $phpWord->addSection();
+        $footer = $section->addFooter();
+        $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+        
         $section->addTitle($optionNames[$option], 1);
     }
-    // 其他選項則維持原有設定（例如其他資料、服務證明、讀書計畫）
+    // 其他選項則維持原有設定
     else {
         $section = $phpWord->addSection();
+        $footer = $section->addFooter();
+        $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+        
         if (isset($optionNames[$option])) {
             $section->addTitle($optionNames[$option], 1);
         }
