@@ -171,58 +171,116 @@ $userId = $userData['user'];
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>志願序開放時間編輯</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
         <!DOCTYPE html>
-        <html>
-
-        <head>
-            <title>設定選填志願時間</title>
-        </head>
-
-    <body>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志願序開放時間編輯</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .container {
+            background: #fff;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 22px;
+            color: #333;
+            text-align: center;
+        }
+        
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
         <h1>設定選填志願時間</h1>
         <form id="timeForm">
             <label for="startTime">開始時間：</label>
-            <input type="datetime-local" id="startTime" name="startTime"><br><br>
-
+            <input type="datetime-local" id="startTime" name="startTime" required>
+            
             <label for="endTime">結束時間：</label>
-            <input type="datetime-local" id="endTime" name="endTime"><br><br>
-
+            <input type="datetime-local" id="endTime" name="endTime" required>
+            
             <button type="submit">保存</button>
         </form>
+    </div>
 
-        <script>
-            document.getElementById('timeForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const startTime = document.getElementById('startTime').value;
-                const endTime = document.getElementById('endTime').value;
-
-                const data = JSON.stringify({
-                    startTime: startTime,
-                    endTime: endTime
-                });
-
-                fetch('settime02-2.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: data
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('get_time.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.open_time && data.close_time) {
+                        document.getElementById('startTime').value = data.open_time;
+                        document.getElementById('endTime').value = data.close_time;
+                    }
                 })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.success) {
-                            alert('設定成功！');
-                        } else {
-                            alert('設定失敗：' + result.message);
-                        }
-                    });
-            });
-        </script>
-    </body>
+                .catch(error => console.error('Error fetching time:', error));
+        });
 
-    </html>
+        document.getElementById('timeForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+
+            if (!startTime || !endTime) {
+                alert('請輸入完整的開始與結束時間');
+                return;
+            }
+
+            const data = JSON.stringify({ startTime, endTime });
+
+            fetch('settime02-2.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: data
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
+            })
+            .catch(error => alert('發生錯誤，請稍後再試！'));
+        });
+    </script>
+</body>
+</html>
+
 
     <!-- ========================= client-logo-section end ========================= -->
 
