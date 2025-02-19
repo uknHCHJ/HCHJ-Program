@@ -21,12 +21,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $category = $_POST['category'];
     $organization = $_POST['organization'];
     $certificate_name = $_POST['certificate_name'];
+    
+    // 取得使用者輸入的檔名
+    $customFileName = trim($_POST['customFileName']); // 去除空白
+    $customFileName = !empty($customFileName) ? $customFileName : null; // 確保空字串不被使用
 
     // 處理上傳檔案
     if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
         // 取得檔案資訊
         $file_tmp = $_FILES['file']['tmp_name'];
-        $file_name = $_FILES['file']['name'];
+        $originalFileName = $_FILES['file']['name']; // 原始檔案名稱
         $file_size = $_FILES['file']['size'];
         $file_type = $_FILES['file']['type'];
 
@@ -36,12 +40,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!in_array($file_type, $allowed_types)) {
             die("檔案類型不正確。只能上傳 PNG, JPG, DOC, DOCX 檔案。");
-            header("Location: Portfolio1.php");
         }
 
         if ($file_size > $max_size) {
             die("檔案過大，請上傳小於 5MB 的檔案。");
-            header("Location: Portfolio1.php");
+        }
+
+            // 取得副檔名
+        $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+
+        // 如果使用者有輸入檔名，檢查是否已經包含副檔名
+        if ($customFileName) {
+            // 使用 pathinfo 檢查是否已有副檔名
+            $userInputExtension = pathinfo($customFileName, PATHINFO_EXTENSION);
+
+            if (strtolower($userInputExtension) === strtolower($fileExtension)) {
+                // 使用者輸入的檔名已經有副檔名，直接使用
+                $file_name = $customFileName;
+            } else {
+                // 否則，手動加上副檔名
+                $file_name = $customFileName . '.' . $fileExtension;
+            }
+        } else {
+            // 沒有輸入則使用原始檔名
+            $file_name = $originalFileName;
         }
 
         // 讀取檔案內容並轉換為二進位格式
@@ -62,16 +84,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             echo "檔案上傳成功！";
             header("Location: Portfolio1.php");
+            exit;
         } else {
             echo "檔案上傳失敗。";
             header("Location: Portfolio1.php");
+            exit;
         }
     } else {
         echo "檔案上傳失敗，請檢查檔案。";
         header("Location: Portfolio1.php");
+        exit;
     }
 } else {
     echo "請透過表單提交資料。";
     header("Location: Portfolio1.php");
+    exit;
 }
 ?>
