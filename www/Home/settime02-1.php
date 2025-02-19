@@ -164,79 +164,115 @@ $userId = $userData['user'];
         </div>
     </section>
     <!DOCTYPE html>
-    <html lang="zh">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>志願序開放時間編輯</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-        <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>志願序開放時間編輯</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        .container {
-            background: #fff;
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
+        /* 針對該區塊進行樣式設計 */
+        .time-settings-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #f9f9f9;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
         }
-        
-        h1 {
-            font-size: 22px;
+
+        .time-settings-container h1 {
+            font-size: 26px;
             color: #333;
             text-align: center;
+            margin-bottom: 20px;
         }
-        
-        label {
+
+        .time-settings-container label {
             font-weight: bold;
+            color: #555;
+            margin-top: 15px;
             display: block;
-            margin-top: 10px;
+            font-size: 16px;
         }
-        
-        input {
+
+        .time-settings-container input[type="datetime-local"] {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px;
+            margin-top: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
         }
-        
-        button {
+
+        .time-settings-container input[type="datetime-local"]:focus {
+            border-color: #007bff;
+            background-color: #e6f0ff;
+            outline: none;
+        }
+
+        .time-settings-container button {
             width: 100%;
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
             border: none;
-            padding: 10px;
-            margin-top: 15px;
-            border-radius: 5px;
+            padding: 14px;
+            margin-top: 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
+            font-size: 18px;
+            transition: background 0.3s ease;
         }
-        
-        button:hover {
-            background-color: #0056b3;
+
+        .time-settings-container button:hover {
+            background-color: #218838;
         }
+
+        .time-settings-container .error {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* 響應式設計，適應不同螢幕尺寸 */
+        @media (max-width: 768px) {
+            .time-settings-container {
+                width: 80%;
+                padding: 20px;
+            }
+
+            .time-settings-container h1 {
+                font-size: 22px;
+            }
+
+            .time-settings-container input[type="datetime-local"],
+            .time-settings-container button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
     </style>
 </head>
+
 <body>
-    <div class="container">
+
+    <div class="time-settings-container">
         <h1>設定選填志願時間</h1>
         <form id="timeForm">
             <label for="startTime">開始時間：</label>
-            <input type="datetime-local" id="startTime" name="startTime" required>
-            
+            <input type="datetime-local" id="startTime" name="startTime" required><br><br>
+
             <label for="endTime">結束時間：</label>
-            <input type="datetime-local" id="endTime" name="endTime" required>
-            
+            <input type="datetime-local" id="endTime" name="endTime" required><br><br>
+
             <button type="submit">保存</button>
+            <div id="error" class="error"></div>
         </form>
     </div>
 
@@ -259,8 +295,16 @@ $userId = $userData['user'];
             const startTime = document.getElementById('startTime').value;
             const endTime = document.getElementById('endTime').value;
 
+            const errorElement = document.getElementById('error');
+            errorElement.textContent = ''; // Clear any previous error messages
+
             if (!startTime || !endTime) {
-                alert('請輸入完整的開始與結束時間');
+                errorElement.textContent = '請輸入完整的開始與結束時間';
+                return;
+            }
+
+            if (new Date(endTime) < new Date(startTime)) {
+                errorElement.textContent = '結束時間不能早於開始時間';
                 return;
             }
 
@@ -271,15 +315,18 @@ $userId = $userData['user'];
                 headers: { 'Content-Type': 'application/json' },
                 body: data
             })
-            .then(response => response.json())
-            .then(result => {
-                alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
-            })
-            .catch(error => alert('發生錯誤，請稍後再試！'));
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
+                })
+                .catch(error => alert('發生錯誤，請稍後再試！'));
         });
     </script>
+
 </body>
+
 </html>
+
 
 
     <!-- ========================= client-logo-section end ========================= -->
