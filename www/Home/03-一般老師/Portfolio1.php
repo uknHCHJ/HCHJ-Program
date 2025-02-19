@@ -67,7 +67,7 @@ if (!isset($_SESSION['user'])) {
     /* 設定 select、input 和 textarea 的樣式與大小 */
     select, input[type="text"], textarea, input[type="file"], input[type="date"] {
         width: 100%;
-        max-width: px; /* 設定欄位最大寬度 */
+        max-width: 500px; /* 設定欄位最大寬度 */
         margin-top: 10px;
         padding: 8px;
         font-size: 1em;
@@ -206,12 +206,12 @@ if ($conn->connect_error) {
     <h1>備審素材區</h1>
     <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
+        <!-- 將 organization 的 hidden input 移入 form 內 -->
         <input type="hidden" id="selectedOrganization" name="organization">
         
         <label for="category">選擇資料類型：</label>
         <select name="category" id="category" required>
             <option value="成績單">成績單</option>
-            <option value="自傳">自傳</option>
             <option value="學歷證明">學歷證明</option>
             <option value="競賽證明">競賽證明</option>
             <option value="實習證明">實習證明</option>
@@ -222,41 +222,22 @@ if ($conn->connect_error) {
             <option value="服務證明">服務證明</option>
             <option value="其他資料">其他資料</option>
         </select>
-
-        <!-- 自傳名稱輸入框 (預設隱藏) -->
-        <div id="autobiography_name_div" style="display: none;">
-            <label for="autobiography_name">請輸入自傳名稱：</label>
-            <input type="text" name="autobiography_name" id="autobiography_name">
-        </div>
-
-        <!-- 自傳內容輸入框 (預設隱藏) -->
-        <div id="autobiography_div" style="display: none;">
-            <label for="autobiography">請輸入自傳內容：</label>
-            <textarea name="autobiography" id="autobiography" rows="5" cols="40"></textarea>
-        </div>
-
-        <!-- 專業證照機構選擇 (預設隱藏) -->
+        
         <div id="sub_category_div" style="display: none;">
-            <label for="sub_category">選擇機構：</label>
-            <select name="sub_category" id="sub_category">
-                <option value="">請選擇機構</option>
-            </select>
+            <label for="sub_category">專業證照分類：</label>
+            <select name="sub_category" id="sub_category"></select>
         </div>
-
-        <!-- 證照選擇 (預設隱藏) -->
+        
         <div id="certificate_div" style="display: none;">
             <label for="certificate">選擇證照：</label>
-            <select name="certificate" id="certificate">
-                <option value="">請選擇證照</option>
-            </select>
+            <select name="certificate" id="certificate"></select>
+            <input type="hidden" name="certificate_name" id="certificate_name">
         </div>
+        
+        <label for="file">上傳檔案：</label>
+        <input type="file" name="file" id="file" required>
 
-        <!-- 上傳檔案區塊 (預設顯示) -->
-        <div id="file_div" style="display: block;">
-            <label for="file">上傳檔案：</label>
-            <input type="file" name="file" id="file" required>
-        </div>
-
+        <!-- 添加間距 -->
         <br><br>
 
         <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
@@ -266,48 +247,23 @@ if ($conn->connect_error) {
     </form>
 </div>
 
-<script> 
+<script>
 document.addEventListener('DOMContentLoaded', () => {
     const categorySelect = document.getElementById("category");
     const subCategoryDiv = document.getElementById("sub_category_div");
     const certificateDiv = document.getElementById("certificate_div");
-    const fileDiv = document.getElementById("file_div");
     const subCategorySelect = document.getElementById("sub_category");
     const certificateSelect = document.getElementById("certificate");
-    const autobiographyNameDiv = document.getElementById("autobiography_name_div");
-    const autobiographyDiv = document.getElementById("autobiography_div");
-    const form = document.getElementById("uploadForm");
+    const certificateNameInput = document.getElementById("certificate_name");
 
     // 定義可選擇的機構 (organization)
-    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會", "美國教育測驗服務社(ETS)", "財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
+    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
 
     // 監聽「類別」選擇變更事件
     categorySelect.addEventListener("change", () => {
-        const selectedValue = categorySelect.value;
-
-        // 根據選擇的類別動態更改表單 action
-        if (selectedValue === "自傳") {
-            form.action = "AutobiographyCreat.php";  // 自傳上傳的後端處理
-        } else if (selectedValue === "專業證照") {
-            form.action = "PortfolioCreat.php";  // 專業證照上傳的後端處理
-        } else {
-            form.action = "PortfolioCreat.php";  // 默認後端處理
-        }
-
-        // 處理自傳 (顯示/隱藏)
-        if (selectedValue === "自傳") {
-            autobiographyNameDiv.style.display = "block";
-            autobiographyDiv.style.display = "block";
-            fileDiv.style.display = "none"; // 隱藏上傳檔案區塊
-        } else {
-            autobiographyNameDiv.style.display = "none";
-            autobiographyDiv.style.display = "none";
-            fileDiv.style.display = "block"; // 顯示上傳檔案區塊
-        }
-
-        // 處理專業證照 (顯示/隱藏)
-        if (selectedValue === "專業證照") {
+        if (categorySelect.value === "專業證照") {
             subCategoryDiv.style.display = "block";
+            subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
             certificateDiv.style.display = "none"; // 隱藏證照選擇區塊
             certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
 
@@ -324,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 將選擇的機構填入隱藏欄位
+    // 將選擇的機構填入隱藏欄位 (請確保 hidden input 已放在 form 內)
     subCategorySelect.addEventListener("change", () => {
         document.getElementById("selectedOrganization").value = subCategorySelect.value;
     });
@@ -355,12 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 監聽「證照」選擇變更事件，填入隱藏欄位
     certificateSelect.addEventListener("change", () => {
-        document.getElementById("certificate_name").value = certificateSelect.options[certificateSelect.selectedIndex].text;
+        certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
     });
 });
 </script>
-
-
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
@@ -369,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="portfolio-btn-wrapper">
                     <button type="button" class="portfolio-btn active" data-filter="*">全部</button>
                     <button type="button" class="portfolio-btn" data-filter=".transcripts">成績單</button>
-                    <button type="button" class="portfolio-btn" data-filter=".autobiographies">自傳</button>
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
@@ -401,7 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     $category_map = [
                         "成績單" => "transcripts",
-                        "自傳" => "autobiographies",
                         "學歷證明" => "certificates",
                         "競賽證明" => "competitions",
                         "實習證明" => "internships",
@@ -453,21 +405,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
-   // 存儲已選擇的證照組合（避免單次操作時重複上傳）
-let uploadedCertificates = new Set();
-
-function confirmUpload() {
-    const studentId = document.querySelector("input[name='student_id']").value;
-    const organization = document.getElementById("selectedOrganization").value;
-    const certificateName = document.getElementById("certificate_name").value;
+   function confirmUpload() {
     const fileInput = document.getElementById('file');
     const file = fileInput.files[0];
-
     if (!file) {
         alert('請選擇一個檔案來上傳');
         return false;
     }
-
     const fileExtension = file.name.split('.').pop().toLowerCase();
     const allowedExtensions = ['png', 'jpg', 'jpeg', 'doc', 'docx'];
     if (!allowedExtensions.includes(fileExtension)) {
@@ -475,21 +419,8 @@ function confirmUpload() {
         return false;
     }
 
-    // **組合 key 來判斷是否重複**
-    const certificateKey = `${studentId}-${organization}-${certificateName}`;
-    
-    if (uploadedCertificates.has(certificateKey)) {
-        alert("您已經選擇過相同的機構與證照名稱，請勿重複上傳！");
-        return false;
-    }
-
-    if (confirm(`您確定要上傳檔案：${file.name}？`)) {
-        uploadedCertificates.add(certificateKey); // 記錄已上傳的組合
-        return true;
-    }
-    return false;
+    return confirm(`您確定要上傳檔案：${file.name}？`);
 }
-
 </script>
 
         <!-- ========================= service-section end ========================= -->
