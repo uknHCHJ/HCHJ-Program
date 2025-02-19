@@ -1,28 +1,27 @@
 <?php
-header('Content-Type: application/json');
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
-$host = '127.0.0.1';
-$dbname = 'HCHJ';
-$username = 'HCHJ';
-$password = 'xx435kKHq';
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo json_encode(['error' => '資料庫連線失敗']);
-    exit;
+if ($conn->connect_error) {
+    die(json_encode(["error" => "資料庫連線失敗：" . $conn->connect_error]));
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
-$student_id = $data['student_id'];
-$category = $data['category'];
-$file_name = $data['file_name'];
+$student_id = $_POST["student_id"];
+$category = $_POST["category"];
+$name = $_POST["name"];
 
-$query = "SELECT COUNT(*) FROM portfolio WHERE student_id = ? AND category = ? AND file_name = ?";
-$stmt = $pdo->prepare($query);
-$stmt->execute([$student_id, $category, $file_name]);
-$exists = $stmt->fetchColumn() > 0;
+$sql = "SELECT COUNT(*) as count FROM portfolio WHERE student_id = ? AND category = ? AND (file_name = ? OR certificate_name = ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("isss", $student_id, $category, $name, $name);
+$stmt->execute();
+$result = $stmt->get_result()->fetch_assoc();
 
-echo json_encode(['exists' => $exists]);
+echo json_encode(["exists" => $result["count"] > 0]);
+
+$stmt->close();
+$conn->close();
 ?>

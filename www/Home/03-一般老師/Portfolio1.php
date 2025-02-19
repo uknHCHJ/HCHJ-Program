@@ -248,23 +248,25 @@ if ($conn->connect_error) {
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
+    const uploadForm = document.getElementById("uploadForm");
     const categorySelect = document.getElementById("category");
     const subCategoryDiv = document.getElementById("sub_category_div");
     const certificateDiv = document.getElementById("certificate_div");
     const subCategorySelect = document.getElementById("sub_category");
     const certificateSelect = document.getElementById("certificate");
     const certificateNameInput = document.getElementById("certificate_name");
+    const studentIdInput = document.querySelector("input[name='student_id']");
 
     // 定義可選擇的機構 (organization)
-    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
+    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會", "美國教育測驗服務社(ETS)", "財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
 
     // 監聽「類別」選擇變更事件
     categorySelect.addEventListener("change", () => {
         if (categorySelect.value === "專業證照") {
             subCategoryDiv.style.display = "block";
             subCategorySelect.innerHTML = "<option value=''>請選擇機構</option>";
-            certificateDiv.style.display = "none"; // 隱藏證照選擇區塊
+            certificateDiv.style.display = "none";
             certificateSelect.innerHTML = "<option value=''>請選擇證照</option>";
 
             // 填充機構 (organization) 下拉選單
@@ -278,11 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
             subCategoryDiv.style.display = "none";
             certificateDiv.style.display = "none";
         }
-    });
-
-    // 將選擇的機構填入隱藏欄位 (請確保 hidden input 已放在 form 內)
-    subCategorySelect.addEventListener("change", () => {
-        document.getElementById("selectedOrganization").value = subCategorySelect.value;
     });
 
     // 監聽「機構」選擇變更事件，載入對應的證照
@@ -313,8 +310,43 @@ document.addEventListener('DOMContentLoaded', () => {
     certificateSelect.addEventListener("change", () => {
         certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
     });
+
+    // 監聽表單提交，檢查是否有重複條目
+    uploadForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // 防止表單立即提交
+
+        const studentId = studentIdInput.value;
+        const category = categorySelect.value;
+        let name = document.getElementById("file").files[0]?.name; // 檔案名稱
+
+        if (category === "專業證照") {
+            name = certificateNameInput.value; // 使用證照名稱
+        }
+
+        if (!name) {
+            alert("請選擇檔案或填寫名稱");
+            return;
+        }
+
+        // 發送 AJAX 請求檢查資料庫是否已有相同條目
+        fetch("checkDuplicateEntry.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `student_id=${encodeURIComponent(studentId)}&category=${encodeURIComponent(category)}&name=${encodeURIComponent(name)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists) {
+                alert("此分類下已經有相同的資料，請勿重複上傳！");
+            } else {
+                uploadForm.submit(); // 確保檢查後再提交表單
+            }
+        })
+        .catch(error => console.error("錯誤:", error));
+    });
 });
 </script>
+
 
 <div class="portfolio-section pt-130">
     <div id="container" class="container">
@@ -405,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
-   function confirmUpload() {
+function confirmUpload() {
     const fileInput = document.getElementById('file');
     const file = fileInput.files[0];
     if (!file) {
@@ -419,7 +451,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     }
 
+    // 在這裡可以加上檢查是否有重複的檔案名稱
+    const fileName = file.name;
+    if (checkDuplicateFileName(fileName)) {
+        alert('您已經上傳過相同的檔案。');
+        return false;
+    }
+
     return confirm(`您確定要上傳檔案：${file.name}？`);
+}
+
+// 假設你會傳遞檔案名稱來檢查重複檔案
+function checkDuplicateFileName(fileName) {
+    // 這裡要進行AJAX檢查
+    let isDuplicate = false;
+    $.ajax({
+        url: 'check_duplicate.php', // 後端API
+        type: 'POST',
+        async: false,  // 這裡設定為同步，因為我們要等結果才能繼續
+        data: { fileName: fileName },
+        success: function(response) {
+            isDuplicate = response === 'true';  // 如果回傳true，表示檔案已經存在
+        }
+    });
+    return isDuplicate;
 }
 </script>
 
