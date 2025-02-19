@@ -9,7 +9,7 @@ use PhpOffice\PhpWord\Style\Section;
 
 // 初始化 PhpWord 並設定全局預設字型與大小
 $phpWord = new PhpWord();
-$phpWord->setDefaultFontName('標楷體'); // 全文件預設使用標楷體
+$phpWord->setDefaultFontName('標楷體');
 $phpWord->setDefaultFontSize(12);
 
 // --------------------
@@ -27,7 +27,6 @@ $coverSection = $phpWord->addSection([
     'borderColor'      => '000000',
 ]);
 
-// 封面標題
 $coverSection->addText(
     '備審資料',
     ['bold' => true, 'size' => 36, 'color' => '333399'],
@@ -35,14 +34,12 @@ $coverSection->addText(
 );
 $coverSection->addTextBreak(5);
 
-// 顯示使用者姓名（假設 Session 中有 user['name']）
 $coverSection->addText(
     '姓名：' . htmlspecialchars($_SESSION['user']['name']),
     ['size' => 18],
     ['alignment' => Jc::CENTER, 'spaceBefore' => 200, 'spaceAfter' => 200]
 );
 
-// 生成日期並置於右下角
 $date = date('Y-m-d');
 $coverSection->addText(
     "生成日期：$date",
@@ -52,12 +49,10 @@ $coverSection->addText(
 
 $section = $phpWord->addSection();
 $footer = $section->addFooter();
-
-// 插入自動更新的頁碼
 $footer->addPreserveText(
     '{PAGE}',
-    'Times New Roman', // 字體樣式
-    array('alignment' => 'center')
+    'Times New Roman',
+    ['alignment' => 'center']
 );
 
 // --------------------
@@ -86,9 +81,6 @@ if (empty($options)) {
     die("未選擇任何匯出選項！");
 }
 
-// --------------------
-// 若有選取自傳檔案，作為後續處理參考
-// --------------------
 if (isset($_POST['autobiography_file'])) {
     $autobiographyFile = $_POST['autobiography_file'];
 } else {
@@ -116,7 +108,6 @@ $queryMap = [
 // --------------------
 if (!empty($_POST['certifications_files'])) {
     $selectedCertifications = $_POST['certifications_files'];
-    // 避免 SQL Injection，將字串轉為安全格式
     $escapedCerts = array_map(function($cert) use ($conn) {
         return "'" . $conn->real_escape_string($cert) . "'";
     }, $selectedCertifications);
@@ -169,9 +160,6 @@ $optionNames = [
     'read'           => '讀書計畫'
 ];
 
-// --------------------
-// 自傳專用的文字與段落樣式
-// --------------------
 $autobiographyTextStyle = ['name' => '標楷體', 'size' => 14, 'color' => '000000'];
 $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 
@@ -180,45 +168,39 @@ $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 // --------------------
 foreach ($options as $option) {
 
-    // 若為競賽證明，使用表格方式呈現，每頁放3筆資料，
-    // 每筆資料獨立一列：先顯示圖片，下方顯示檔案名稱（均置中）
-    if ($option === 'competition') {
-        $sql = $queryMap['competition'];
+    // 若為「競賽證明」、「成績單」、「學歷證明」、「實習證明」或「語言能力證明」
+    // 採用競賽證明版面樣式：每頁最多 3 筆資料，每筆資料獨占一列（先顯示圖片，下方顯示檔案名稱，皆置中）
+    if (in_array($option, ['competition', 'transcript', 'diploma', 'internship', 'language'])) {
+        $sql = $queryMap[$option];
         $result = $conn->query($sql);
         if ($result && $result->num_rows > 0) {
-            $competitionData = [];
+            $data = [];
             while ($row = $result->fetch_assoc()) {
-                $competitionData[] = $row;
+                $data[] = $row;
             }
-            $recordsPerPage = 3; // 每頁放3筆資料
-            $totalRecords = count($competitionData);
+            $recordsPerPage = 3;
+            $totalRecords = count($data);
             for ($i = 0; $i < $totalRecords; $i += $recordsPerPage) {
-                // 為每一批資料建立新頁
                 $section = $phpWord->addSection();
                 $section->addText(
-                    $optionNames['competition'],
+                    $optionNames[$option],
                     ['bold' => true, 'size' => 25, 'color' => '333399'],
                     ['alignment' => Jc::CENTER]
                 );
-                
-                // 設定表格樣式（1欄），並置中整個表格
                 $tableStyle = [
                     'borderSize'   => 12,
                     'borderColor'  => '000000',
                     'cellMargin'   => 50,
                     'alignment'    => JcTable::CENTER
                 ];
-                $tableStyleName = 'CompetitionTable' . $i;
+                $tableStyleName = $option . 'Table' . $i;
                 $phpWord->addTableStyle($tableStyleName, $tableStyle);
                 $table = $section->addTable($tableStyleName);
                 
-                // 取得本頁資料
-                $batch = array_slice($competitionData, $i, $recordsPerPage);
-                // 每筆資料各占一列
+                $batch = array_slice($data, $i, $recordsPerPage);
                 foreach ($batch as $record) {
                     $table->addRow();
                     $cell = $table->addCell(9000);
-                    // 加入圖片（置中對齊）
                     try {
                         $cell->addImage($record['file_content'], [
                             'width'     => 300,
@@ -228,34 +210,41 @@ foreach ($options as $option) {
                     } catch (Exception $e) {
                         $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
                     }
-                    // 在圖片下方顯示檔案名稱
                     $cell->addText("檔案名稱：" . $record['file_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
                 }
             }
         } else {
             $section = $phpWord->addSection();
             $section->addText(
-                "查無資料：" . $optionNames['competition'],
+                "查無資料：" . $optionNames[$option],
                 ['size' => 12],
                 ['alignment' => Jc::CENTER]
             );
         }
-        continue; // 競賽證明處理完畢，跳到下一個選項
+        continue;
     }
-    // 自傳：獨立新頁，標題樣式保留原本設定
+    // 自傳：獨立新頁
     elseif ($option === 'autobiography') {
         $section = $phpWord->addSection();
-        $section->addText("自傳", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+        $section->addText(
+            "自傳",
+            ['bold' => true, 'size' => 25, 'color' => '333399'],
+            ['alignment' => Jc::CENTER]
+        );
     }
-    // 專題資料：只需輸出一頁，加入標題與頁尾
+    // 專題資料：一頁輸出
     elseif ($option === 'topics') {
         $section = $phpWord->addSection();
-        $section->addText("專題資料", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+        $section->addText(
+            "專題資料",
+            ['bold' => true, 'size' => 25, 'color' => '333399'],
+            ['alignment' => Jc::CENTER]
+        );
         $footer = $section->addFooter();
         $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
         continue;
     }
-    // 專業證照：依分頁邏輯處理
+    // 專業證照：依原有邏輯處理
     elseif ($option === 'certifications') {
         $resultCert = $conn->query($queryMap['certifications']);
         $certifications = [];
@@ -269,8 +258,11 @@ foreach ($options as $option) {
         $pageIndex = 0;
         while ($pageIndex * $maxPerPage < $totalCerts) {
             $certSection = $phpWord->addSection();
-            $certSection->addText("專業證照", ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-            // 建立表格樣式
+            $certSection->addText(
+                "專業證照",
+                ['bold' => true, 'size' => 25, 'color' => '333399'],
+                ['alignment' => Jc::CENTER]
+            );
             $tableStyle = [
                 'borderSize'   => 12,
                 'borderColor'  => '000000',
@@ -288,9 +280,9 @@ foreach ($options as $option) {
                         $cert = $certsInPage[$cellCount];
                         try {
                             $cell->addImage($cert['file_content'], [
-                                'width' => 198,
-                                'height' => 142,
-                                'scaling' => 100,
+                                'width'     => 198,
+                                'height'    => 142,
+                                'scaling'   => 100,
                                 'alignment' => Jc::CENTER,
                             ]);
                         } catch (Exception $e) {
@@ -305,21 +297,20 @@ foreach ($options as $option) {
         }
         continue;
     }
-    // 其他選項：如果是「成績單」、「學歷證明」、「實習證明」或「語言能力證明」，採用競賽證明版面樣式
-    elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
-        $section = $phpWord->addSection();
-        $section->addText($optionNames[$option], ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
-    }
-    // 其他選項則維持原有設定（例如其他資料、服務證明、讀書計畫）
+    // 其他選項（例如其他資料、服務證明、讀書計畫）依原邏輯處理
     else {
         $section = $phpWord->addSection();
         if (isset($optionNames[$option])) {
-            $section->addText($optionNames[$option], ['bold' => true, 'size' => 25, 'color' => '333399'], ['alignment' => Jc::CENTER]);
+            $section->addText(
+                $optionNames[$option],
+                ['bold' => true, 'size' => 25, 'color' => '333399'],
+                ['alignment' => Jc::CENTER]
+            );
         }
     }
     $section->addTextBreak(1);
 
-    // 執行該選項對應的查詢（若有設定查詢）
+    // 非上面特殊選項，若有對應查詢則進行資料輸出
     $sql = $queryMap[$option];
     if ($sql == "") {
         continue;
@@ -331,7 +322,6 @@ foreach ($options as $option) {
             $fileContent = $row['file_content'];
             $ext = strtolower(pathinfo($description, PATHINFO_EXTENSION));
 
-            // 處理圖片檔案
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
                 if (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
                     $textStyle = ['size' => 12];
@@ -361,7 +351,6 @@ foreach ($options as $option) {
                 }
                 $section->addTextBreak(1);
             }
-            // 處理 DOCX 檔案
             else if ($ext === 'docx') {
                 if (!empty($fileContent)) {
                     try {
@@ -416,13 +405,13 @@ foreach ($options as $option) {
                     $section->addText("無效的 DOCX 檔案資料：$description");
                 }
             }
-            // 其他不支援的檔案類型
             else {
                 $section->addText("不支援的檔案類型：$description", ['italic' => true, 'color' => 'FF0000'], ['alignment' => Jc::CENTER]);
             }
             $section->addTextBreak(1);
         }
-    } else {
+    }
+    else {
         $section->addText("查無資料：{$optionNames[$option]}", ['size' => 12], ['alignment' => Jc::CENTER]);
     }
 }
