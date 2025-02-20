@@ -1,4 +1,6 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 // 資料庫連線設置
 $host = '127.0.0.1'; // 資料庫主機
 $dbname = 'HCHJ'; // 資料庫名稱
@@ -74,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
             // 上傳成功，查找使用者資訊
-            $query = "SELECT department, grade, class, user, Permissions FROM user WHERE id = :student_id";
+            $query = "SELECT department, grade, class, user, Permissions FROM user WHERE id = student_id";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':student_id', $student_id);
             $stmt->execute();
