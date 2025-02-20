@@ -164,168 +164,229 @@ $userId = $userData['user'];
         </div>
     </section>
     <!DOCTYPE html>
-<html lang="zh">
+    <html lang="zh">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>志願序開放時間編輯</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        /* 針對該區塊進行樣式設計 */
-        .time-settings-container {
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            font-family: 'Arial', sans-serif;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>志願序開放時間編輯</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <style>
+            /* 設置時間區塊分開顯示 */
+            .time-block {
+                margin-bottom: 20px;
+            }
 
-        .time-settings-container h1 {
-            font-size: 26px;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+            /* 增加區塊樣式設計 */
+            #current-time,
+            #no-time-set {
+                padding: 15px;
+                background-color: #f1f1f1;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                font-size: 16px;
+            }
 
-        .time-settings-container label {
-            font-weight: bold;
-            color: #555;
-            margin-top: 15px;
-            display: block;
-            font-size: 16px;
-        }
+            #current-time h2,
+            #no-time-set {
+                font-size: 18px;
+                color: #333;
+            }
 
-        .time-settings-container input[type="datetime-local"] {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            background-color: #f9f9f9;
-            transition: all 0.3s ease;
-        }
+            #no-time-set {
+                color: #d9534f;
+                font-weight: bold;
+            }
 
-        .time-settings-container input[type="datetime-local"]:focus {
-            border-color: #007bff;
-            background-color: #e6f0ff;
-            outline: none;
-        }
+            #timeForm {
+                margin-top: 20px;
+            }
 
-        .time-settings-container button {
-            width: 100%;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 14px;
-            margin-top: 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background 0.3s ease;
-        }
-
-        .time-settings-container button:hover {
-            background-color: #218838;
-        }
-
-        .time-settings-container .error {
-            color: red;
-            margin-top: 10px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        /* 響應式設計，適應不同螢幕尺寸 */
-        @media (max-width: 768px) {
             .time-settings-container {
-                width: 80%;
-                padding: 20px;
+                max-width: 500px;
+                margin: 50px auto;
+                padding: 30px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                font-family: 'Arial', sans-serif;
             }
 
             .time-settings-container h1 {
-                font-size: 22px;
+                font-size: 26px;
+                color: #333;
+                text-align: center;
+                margin-bottom: 20px;
             }
 
-            .time-settings-container input[type="datetime-local"],
+            .time-settings-container label {
+                font-weight: bold;
+                color: #555;
+                margin-top: 15px;
+                display: block;
+                font-size: 16px;
+            }
+
+            .time-settings-container input[type="datetime-local"] {
+                width: 100%;
+                padding: 12px;
+                margin-top: 8px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+                background-color: #f9f9f9;
+                transition: all 0.3s ease;
+            }
+
+            .time-settings-container input[type="datetime-local"]:focus {
+                border-color: #007bff;
+                background-color: #e6f0ff;
+                outline: none;
+            }
+
             .time-settings-container button {
+                width: 100%;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 14px;
+                margin-top: 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 18px;
+                transition: background 0.3s ease;
+            }
+
+            .time-settings-container button:hover {
+                background-color: #218838;
+            }
+
+            .time-settings-container .error {
+                color: red;
+                margin-top: 10px;
                 font-size: 14px;
-                padding: 10px;
+                text-align: center;
             }
-        }
 
-    </style>
-</head>
+            /* 響應式設計，適應不同螢幕尺寸 */
+            @media (max-width: 768px) {
+                .time-settings-container {
+                    width: 80%;
+                    padding: 20px;
+                }
 
-<body>
+                .time-settings-container h1 {
+                    font-size: 22px;
+                }
 
-    <div class="time-settings-container">
-        <h1>設定選填志願時間</h1>
-        <form id="timeForm">
-            <label for="startTime">開始時間：</label>
-            <input type="datetime-local" id="startTime" name="startTime" required><br><br>
+                .time-settings-container input[type="datetime-local"],
+                .time-settings-container button {
+                    font-size: 14px;
+                    padding: 10px;
+                }
 
-            <label for="endTime">結束時間：</label>
-            <input type="datetime-local" id="endTime" name="endTime" required><br><br>
+            }
+        </style>
+    </head>
 
-            <button type="submit">保存</button>
-            <div id="error" class="error"></div>
-        </form>
-    </div>
+    <body>
+        <div class="time-settings-container">
+            <h1>設定選填志願時間</h1>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch('get_time.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.open_time && data.close_time) {
-                        document.getElementById('startTime').value = data.open_time;
-                        document.getElementById('endTime').value = data.close_time;
-                    }
+            <!-- 顯示當前設定時間 -->
+            <div id="current-time">
+                <h2>當前設定時間</h2>
+                <p id="current-start-time"></p>
+                <p id="current-end-time"></p>
+                <p id="no-time-set" style="color: red; font-weight: bold;"></p>
+            </div>
+
+            <form id="timeForm">
+                <label for="startTime">開始時間：</label>
+                <input type="datetime-local" id="startTime" name="startTime"><br><br>
+
+                <label for="endTime">結束時間：</label>
+                <input type="datetime-local" id="endTime" name="endTime"><br><br>
+
+                <button type="submit">保存</button>
+                <div id="error" class="error"></div>
+            </form>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                fetch('get_time2-02.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.open_time && data.close_time) {
+                            const currentTime = new Date();
+                            const startTime = new Date(data.open_time);
+                            const endTime = new Date(data.close_time);
+
+                            // 若設定的時間已經結束
+                            if (currentTime > endTime) {
+                                document.getElementById('no-time-set').textContent = '您還未設定時間';
+                                document.getElementById('startTime').value = '';
+                                document.getElementById('endTime').value = '';
+                            } else {
+                                // 顯示當前的設定時間
+                                document.getElementById('current-start-time').textContent = `開始時間: ${data.open_time}`;
+                                document.getElementById('current-end-time').textContent = `結束時間: ${data.close_time}`;
+                                document.getElementById('no-time-set').textContent = '';
+                            }
+                        } else {
+                            // 若沒有設定過時間
+                            document.getElementById('no-time-set').textContent = '您還未設定時間';
+                            document.getElementById('startTime').value = '';
+                            document.getElementById('endTime').value = '';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching time:', error));
+            });
+
+            document.getElementById('timeForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+
+                const errorElement = document.getElementById('error');
+                errorElement.textContent = ''; // 清空之前的錯誤訊息
+
+                if (!startTime || !endTime) {
+                    errorElement.textContent = '請輸入完整的開始與結束時間';
+                    return;
+                }
+
+                if (new Date(endTime) < new Date(startTime)) {
+                    errorElement.textContent = '結束時間不能早於開始時間';
+                    return;
+                }
+
+                const data = JSON.stringify({ startTime, endTime });
+
+                fetch('settime02-2.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: data
                 })
-                .catch(error => console.error('Error fetching time:', error));
-        });
+                    .then(response => response.json())
+                    .then(result => {
+                        alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
+                        if (result.success) {
+                            // 設定成功後刷新顯示當前時間
+                            document.getElementById('current-start-time').textContent = `開始時間: ${startTime}`;
+                            document.getElementById('current-end-time').textContent = `結束時間: ${endTime}`;
+                            document.getElementById('no-time-set').textContent = '';
+                        }
+                    })
+                    .catch(error => alert('發生錯誤，請稍後再試！'));
+            });
+        </script>
 
-        document.getElementById('timeForm').addEventListener('submit', function (event) {
-            event.preventDefault();
+    </body>
 
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-
-            const errorElement = document.getElementById('error');
-            errorElement.textContent = ''; // Clear any previous error messages
-
-            if (!startTime || !endTime) {
-                errorElement.textContent = '請輸入完整的開始與結束時間';
-                return;
-            }
-
-            if (new Date(endTime) < new Date(startTime)) {
-                errorElement.textContent = '結束時間不能早於開始時間';
-                return;
-            }
-
-            const data = JSON.stringify({ startTime, endTime });
-
-            fetch('settime02-2.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: data
-            })
-                .then(response => response.json())
-                .then(result => {
-                    alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
-                })
-                .catch(error => alert('發生錯誤，請稍後再試！'));
-        });
-    </script>
-
-</body>
-
-</html>
+    </html>
 
 
 

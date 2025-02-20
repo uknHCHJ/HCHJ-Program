@@ -307,51 +307,6 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     background-color: #f44336;
                 }
             </style>
-        </head>
-
-        <body>
-            <!-- ========================= header start ========================= -->
-            <header class="header navbar-area">
-                <!-- header code ... -->
-            </header>
-            <!-- ========================= header end ========================= -->
-
-            <!-- ========================= form section start ========================= -->
-            <section class="form-section pt-75 pb-75">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-6">
-                            <div class="container">
-
-                                <!-- 檢查是否為五年級 -->
-                                <?php if (!$isFifthYear): ?>
-                                    <h1>此功能尚未開放</h1>
-                                <?php else: ?>
-                                    <h1>選擇你的志願</h1>
-                                    <label for="schoolSelect">選擇學校:</label>
-                                    <select id="schoolSelect" onchange="fetchDepartments()">
-                                        <option value="">--請選擇學校--</option>
-                                    </select>
-
-                                    <label for="departmentSelect">選擇科系:</label>
-                                    <select id="departmentSelect">
-                                        <option value="">--請選擇科系--</option>
-                                    </select>
-
-                                    <!-- 新增兩個按鈕 -->
-                                    <button onclick="add()">添加到清單</button>
-
-                                    <h2>你的志願序(最多5個)</h2>
-                                    <ul id="preferenceList"></ul>
-                                    <button onclick="submit()">送出志願</button>
-                                <?php endif; ?>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <style>
                 /* 基本樣式 */
                 #preferenceList {
@@ -389,12 +344,94 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     transition: background-color 0.3s ease;
                 }
             </style>
+        </head>
+
+        <body>
+            <!-- ========================= header start ========================= -->
+            <header class="header navbar-area">
+                <!-- header code ... -->
+            </header>
+            <!-- ========================= header end ========================= -->
+
+            <!-- ========================= form section start ========================= -->
+            <section class="form-section pt-75 pb-75">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="container">
+
+                                <!-- 檢查是否為五年級 -->
+                                <?php if (!$isFifthYear): ?>
+                                    <h1 class="text-center text-danger">此功能尚未開放</h1>
+                                <?php else: ?>
+                                    <h1 id="formTitle" class="text-center text-primary">選擇你的志願</h1>
+                                    <div id="timeStatus" class="text-center mb-4"></div> <!-- 顯示時間狀態 -->
+
+                                    <div id="formContent" class="form-content" style="display: none;">
+                                        <div class="mb-3">
+                                            <label for="schoolSelect" class="form-label">選擇學校:</label>
+                                            <select id="schoolSelect" class="form-select" onchange="fetchDepartments()">
+                                                <option value="">--請選擇學校--</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="departmentSelect" class="form-label">選擇科系:</label>
+                                            <select id="departmentSelect" class="form-select">
+                                                <option value="">--請選擇科系--</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- 新增兩個按鈕 -->
+                                        <div class="mb-3">
+                                            <button onclick="add()" class="btn btn-success w-100">添加到清單</button>
+                                        </div>
+
+                                        <h2>你的志願序(最多5個)</h2>
+                                        <ul id="preferenceList" class="list-group mb-3"></ul>
+
+                                        <button onclick="submit()" class="btn btn-primary w-100">送出志願</button>
+                                    </div>
+
+                                <?php endif; ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <script>
                 const maxPreferences = 5;
                 let preferences = [];
 
                 document.addEventListener('DOMContentLoaded', () => {
-                    fetchSchools();
+                    fetch('get_time2-02.php')  // 呼叫後端 API 來取得時間設定
+                        .then(response => response.json())
+                        .then(data => {
+                            const currentTime = new Date();
+                            const openTime = new Date(data.open_time);
+                            const closeTime = new Date(data.close_time);
+                            const timeStatus = document.getElementById('timeStatus');
+                            const formContent = document.getElementById('formContent');
+                            const formTitle = document.getElementById('formTitle');
+
+                            if (currentTime < openTime) {
+                                timeStatus.innerHTML = '填選志願功能尚未開放';
+                                formTitle.style.display = 'none'; // 隱藏標題
+                            } else if (currentTime > closeTime) {
+                                timeStatus.innerHTML = '填選志願時間已過，無法再填寫';
+                                formTitle.style.display = 'none'; // 隱藏標題
+                            } else {
+                                timeStatus.innerHTML = '選擇你的志願';
+                                formContent.style.display = 'block';  // 顯示志願填寫表單
+                                fetchSchools();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching time:', error);
+                            document.getElementById('timeStatus').innerHTML = '無法取得填寫時間設定';
+                        });
                 });
 
                 function fetchSchools() {
@@ -466,11 +503,13 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     // 顯示志願清單並添加序號
                     const preferenceList = document.getElementById('preferenceList');
                     const li = document.createElement('li');
+                    li.classList.add('list-group-item');
                     li.textContent = `${order}. ${preference}`;
 
                     // 創建刪除按鈕，並將其放置在每個項目的末尾
                     const deleteBtn = document.createElement('button');
-                    deleteBtn.classList.add('delete-btn');
+                    deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
+                    deleteBtn.textContent = '刪除';
                     deleteBtn.onclick = () => deletePreference(order - 1);  // 刪除該志願項目
 
                     li.appendChild(deleteBtn);  // 確保刪除按鈕在項目的末尾
@@ -498,11 +537,13 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
 
                     preferences.forEach((preference, index) => {
                         const li = document.createElement('li');
+                        li.classList.add('list-group-item');
                         li.textContent = `${preference.order}. ${preference.preference_rank}`;
 
                         // 創建刪除按鈕，並將其放置在每個項目的末尾
                         const deleteBtn = document.createElement('button');
-                        deleteBtn.classList.add('delete-btn');
+                        deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
+                        deleteBtn.textContent = '刪除';
                         deleteBtn.onclick = () => deletePreference(index);  // 刪除該志願項目
 
                         li.appendChild(deleteBtn);  // 確保刪除按鈕在項目的末尾
