@@ -30,12 +30,18 @@ $endTime = $data['endTime'] ?? null;
 
 // 檢查資料是否完整
 if (empty($startTime) || empty($endTime) || empty($username)) {
-    die(json_encode(['success' => false, 'message' => '請填寫完整的開始、結束時間，並確保已登入'])); 
+    die(json_encode(['success' => false, 'message' => '請填寫完整的開始、結束時間，並確保已登入']));
 }
 
-// 使用預備語句 (Prepared Statement)
+// **新增：先刪除該使用者先前的資料**
+$deleteStmt = $conn->prepare("DELETE FROM set_time WHERE user = ?");
+$deleteStmt->bind_param("s", $username);
+$deleteStmt->execute();
+$deleteStmt->close();
+
+// 插入新資料
 $stmt = $conn->prepare("INSERT INTO set_time (user, open_time, close_time) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $username, $startTime, $endTime); // user 是 string，所以用 "s"
+$stmt->bind_param("sss", $username, $startTime, $endTime);
 
 // 執行 SQL 語句
 if ($stmt->execute()) {
