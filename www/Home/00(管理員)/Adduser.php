@@ -188,7 +188,6 @@ $username=$userData['name'];
                             <option value="9">請選擇...</option>
                             <option value="1">學生</option>
                             <option value="2">班級導師</option>
-                            <option value="3">一般老師</option>
                             <option value="4">最高行政人員</option>
                             <option value="0">管理員</option>
                         </select>
@@ -200,7 +199,6 @@ $username=$userData['name'];
                             <option value="9">請選擇...</option>
                             <option value="1">學生</option>
                             <option value="2">班級導師</option>
-                            <option value="3">一般老師</option>
                             <option value="4">最高行政人員</option>
                             <option value="0">管理員</option>
                         </select>

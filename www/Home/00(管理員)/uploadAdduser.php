@@ -46,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $Permissions = trim($row[5] ?? '');
                 $Permissions2 = trim($row[6] ?? '');
 
+
+                $email = $user . '@stu.ukn.edu.tw';
+
+
                 if (empty($department) || empty($name)) {
                     echo "錯誤：缺少必要欄位 - 系所($department), 姓名($name)<br>";
                     continue;
@@ -63,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $totalPermissions = $Permissions . $Permissions2;
                 }
 
-                $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
-                          VALUES ('$department', '$grade', '$class', '$name', '$user', '$user', '$totalPermissions')";
+                $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions, email) 
+                          VALUES ('$department', '$grade', '$class', '$name', '$user', '$user', '$totalPermissions','$email')";
 
                 if (!mysqli_query($link, $query)) {
                     echo "資料插入失敗: " . mysqli_error($link);
@@ -90,6 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $Permissions = trim($_POST['permissions'] ?? '');
         $Permissions2 = trim($_POST['permissions2'] ?? '');
 
+        $email = $user . '@stu.ukn.edu.tw';
+
         // **如果 `$Permissions2` 為空，則填入 `9`**
         if ($Permissions2 === '') {
             $Permissions2 = '9';
@@ -102,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $totalPermissions = trim("$Permissions$Permissions2", ',');
         }
 
-        $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions) 
-                  VALUES ('$department', '$grade', '$class', '$name', '$user', '$password', '$totalPermissions')";
+        $query = "INSERT INTO user (department, grade, class, name, user, password, Permissions, email) 
+                  VALUES ('$department', '$grade', '$class', '$name', '$user', '$password', '$totalPermissions','$email')";
 
         if (mysqli_query($link, $query)) {
             echo "<script>
