@@ -244,7 +244,9 @@ if ($conn->connect_error) {
         <!-- 添加間距 -->
         <br><br>
 
-        <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+        <button type="submit" onclick="return confirm('確定要上傳此檔案嗎？')" 
+            style="background-color: blue; color: white; border: none; padding: 10px 20px; 
+            font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
         <input type="hidden" name="force" id="forceField" value="1">
@@ -252,6 +254,10 @@ if ($conn->connect_error) {
 </div>
 
 <script>
+
+function confirmUpload() {
+    return confirm("確定要上傳這份資料嗎？");
+}
     document.getElementById("uploadForm").addEventListener("submit", function(event) {
     const fileInput = document.getElementById("file");
     const fileNameInput = document.getElementById("customFileName");
@@ -354,11 +360,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button type="button" class="portfolio-btn" data-filter=".Topics">專題資料</button>
                     <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
                     <button type="button" class="portfolio-btn" data-filter=".Proof-of-service">服務證明</button>
-                    <button type="button" class="portfolio-btn" data-filter=".Other-information">其他資料</button>
+                    <button type="button" class="portfolio-btn" data-filter=".other-information">其他資料</button>
                 </div>
 
                 <div class="row grid">
-                    <?php
+                <?php
                     $servername = "127.0.0.1";
                     $username = "HCHJ";
                     $password = "xx435kKHq";
@@ -383,41 +389,60 @@ document.addEventListener('DOMContentLoaded', () => {
                         "實習證明" => "internships",
                         "專業證照" => "licenses",
                         "語言能力證明" => "language-skills",
-                        "專題資料" => "topics",
+                        "專題資料" => "Topics",
                         "讀書計畫" => "reading-plan",
-                        "服務證明" => "proof-of-service",
+                        "服務證明" => "Proof-of-service",
                         "其他資料" => "other-information"
                     ];
-                    
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $category_class = $category_map[$row["category"]] ?? "unknown";
-                    
-                            echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
-                                <div class='portfolio-content'>
-                                    <h3>{$row['category']}</h3>";
-                    
-                            if ($row["category"] === "專業證照") {
-                                echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
-                                echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
-                            }
-                    
-                            echo "<p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
-                                    <p>上傳時間：{$row['upload_time']}</p>
-                                    <form action='PortfolioDelete.php' method='post'>
-                                        <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
-                                        <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
-                                            style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
-                                            刪除
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>";
+
+                    $category_data_count = array_fill_keys(array_keys($category_map), 0);
+                    $data_exists = false;
+
+                    while ($row = $result->fetch_assoc()) {
+                        $category_name = trim($row["category"]);
+                        $category_class = $category_map[$category_name] ?? "unknown";
+
+                        if (isset($category_map[$category_name])) {
+                            $category_data_count[$category_name]++;
                         }
-                    } else {
-                        echo "<div class='col-12'><p>尚無資料</p></div>";
+
+                        echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
+                            <div class='portfolio-content'>
+                                <h3>{$row['category']}</h3>";
+
+                        if ($row["category"] === "專業證照") {
+                            echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
+                            echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
+                        }
+
+                        echo "<p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
+                                <p>上傳時間：{$row['upload_time']}</p>
+                                <form action='PortfolioDelete.php' method='post'>
+                                    <input type='hidden' name='id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>
+                                    <button type='submit' onclick='return confirm(\"確定要刪除這筆資料嗎？\")' 
+                                        style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
+                                        刪除
+                                    </button>
+                                </form>
+                            </div>
+                        </div>";
+
+                        $data_exists = true;
                     }
-                    
+
+                    // 只有當使用者選擇特定分類時，才顯示「無資料」
+                    foreach ($category_map as $category_name => $category_class) {
+                        if ($category_data_count[$category_name] === 0) {
+                            echo "<div class='col-12 portfolio-item {$category_class}' style='display: none;'>
+                                    <p style='text-align: center; font-size: 18px; color: gray;'>無資料</p>
+                                </div>";
+                        }
+                    }
+
+                    if (!$data_exists) {
+                        echo "<div class='col-12'><p style='text-align: center; font-size: 18px; color: gray;'>尚無任何資料</p></div>";
+                    }
+
                     $stmt->close();
                     $conn->close();
                     ?>
@@ -426,8 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
 </div>
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll(".portfolio-btn");
