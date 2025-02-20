@@ -248,7 +248,7 @@ $result = mysqli_query($link, $query);
                         <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
                     </div>
                     <button type="submit" class="primary-button">確認上傳</button>
-                    <button type="button" class="download-button" onclick="window.location.href='https://depart.moe.edu.tw/ed4500/News_Content.aspx?n=63F5AB3D02A8BBAC&s=E23C5A6CA17DB8E2&sms=1FF9979D10DBF9F3';">下載更新資料</button>                    
+                    <button type="button" class="download-button" onclick="window.location.href='https://depart.moe.edu.tw/ED4500/News.aspx?n=5A930C32CC6C3818&sms=91B3AAE8C6388B96';">更新最新資料</button>                    
                     <button type="button" class="secondary-button" onclick="window.history.back();">返回上一頁</button>
                 </form>
 
