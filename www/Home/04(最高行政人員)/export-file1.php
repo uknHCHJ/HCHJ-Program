@@ -112,7 +112,7 @@ $username = $userData['name'];
     // 判斷除了自傳與競賽證明之外的核取方塊是否全部已勾選
     let allSelected = true;
     checkboxes.forEach(function(chk) {
-      if (chk.value !== 'autobiography' && chk.value !== 'competition') {
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
         if (!chk.checked) {
           allSelected = false;
         }
@@ -121,16 +121,16 @@ $username = $userData['name'];
     
     // 如果全部已選則取消選取，否則全部選取
     checkboxes.forEach(function(chk) {
-      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {  // 修改這裡，排除的應為自傳與競賽證明
         chk.checked = !allSelected;
       }
     });
 
     // 根據操作後的狀態更新按鈕文字
     if (allSelected) {
-      selectAllBtn.innerText = "全選(除了自傳、競賽證明)";
+      selectAllBtn.innerText = "全選(自傳、專業證照除外)";
     } else {
-      selectAllBtn.innerText = "取消全選(除了自傳、競賽證明)";
+      selectAllBtn.innerText = "取消全選(自傳、專業證照除外)";
     }
   });
 });
