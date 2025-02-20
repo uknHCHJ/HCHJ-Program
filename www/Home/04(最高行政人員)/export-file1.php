@@ -104,16 +104,34 @@ $username = $userData['name'];
 </li>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
   var selectAllBtn = document.getElementById('select-all');
 
   selectAllBtn.addEventListener('click', function() {
     var checkboxes = document.querySelectorAll('#sortable-list input[type="checkbox"]');
+    // 判斷除了自傳與競賽證明之外的核取方塊是否全部已勾選
+    let allSelected = true;
     checkboxes.forEach(function(chk) {
-      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
-        chk.checked = true;
+      if (chk.value !== 'autobiography' && chk.value !== 'competition') {
+        if (!chk.checked) {
+          allSelected = false;
+        }
       }
     });
+    
+    // 如果全部已選則取消選取，否則全部選取
+    checkboxes.forEach(function(chk) {
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
+        chk.checked = !allSelected;
+      }
+    });
+
+    // 根據操作後的狀態更新按鈕文字
+    if (allSelected) {
+      selectAllBtn.innerText = "全選(除了自傳、競賽證明)";
+    } else {
+      selectAllBtn.innerText = "取消全選(除了自傳、競賽證明)";
+    }
   });
 });
   document.addEventListener('DOMContentLoaded', function() {
