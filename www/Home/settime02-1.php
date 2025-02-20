@@ -323,6 +323,9 @@ $userId = $userData['user'];
                             const startTime = new Date(data.open_time);
                             const endTime = new Date(data.close_time);
 
+                            // 設定開始時間選擇器的 min 為當前時間
+                            document.getElementById('startTime').min = new Date().toISOString().slice(0, 16);
+
                             // 若設定的時間已經結束
                             if (currentTime > endTime) {
                                 document.getElementById('no-time-set').textContent = '您還未設定時間';
@@ -342,6 +345,11 @@ $userId = $userData['user'];
                         }
                     })
                     .catch(error => console.error('Error fetching time:', error));
+
+                // 當使用者選擇開始時間時，動態設定結束時間的 min
+                document.getElementById('startTime').addEventListener('input', function () {
+                    document.getElementById('endTime').min = this.value;
+                });
             });
 
             document.getElementById('timeForm').addEventListener('submit', function (event) {
