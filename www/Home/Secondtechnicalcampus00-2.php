@@ -34,10 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if (($handle = fopen($filePath, "r")) !== FALSE) {
-
-            // 清除舊資料並重置自動編號
-            $truncateQuery = "TRUNCATE TABLE test";
-            if (!mysqli_query($link, $truncateQuery)) {
+            // **清空舊資料**
+            if (!mysqli_query($link, "TRUNCATE TABLE school") || !mysqli_query($link, "TRUNCATE TABLE Department")) {
                 error_log("清除舊資料失敗：" . mysqli_error($link));
                 echo "<script>alert('無法清除舊資料'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
                 exit;
@@ -45,91 +43,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $headers = fgetcsv($handle);
             if ($headers) {
-                // 移除標題欄位前可能存在的 BOM 與多餘空白
-                $headers[0] = trim($headers[0], "\xEF\xBB\xBF");
+                $headers[0] = trim($headers[0], "\xEF\xBB\xBF"); // 去除 BOM
                 $headers = array_map('trim', $headers);
                 $headers = array_map('strtolower', $headers);
 
-                // 有效欄位對應（匯入資料庫用，不包含篩選欄位）
-                $validMapping = [
+                // **對應 CSV 欄位到資料庫**
+                $columnMapping = [
                     '學校名稱' => 'name',
-                    '科系名稱' => 'department',
-                    '縣市名稱' => 'address',
+                    '科系' => 'department_name'
                 ];
 
-                // 篩選條件欄位（僅用於判斷，不匯入資料庫）
-                $filterFields = [
-                    '日間∕進修別' => 'day_night_type',
-                    '等級別'   => 'level_type',
-                    '體系別'   => 'system_type',
-                ];
-
-                $columnMapping = [];
-                $filterMapping = [];
-
+                // **建立欄位索引對應**
+                $mappedIndexes = [];
                 foreach ($headers as $index => $header) {
-                    if (isset($validMapping[$header])) {
-                        $columnMapping[$index] = $validMapping[$header];
-                    }
-                    if (isset($filterFields[$header])) {
-                        $filterMapping[$index] = $filterFields[$header];
+                    if (isset($columnMapping[$header])) {
+                        $mappedIndexes[$index] = $columnMapping[$header];
                     }
                 }
 
-                if (empty($columnMapping) || !in_array('system_type', $filterMapping)) {
+                // **確認 CSV 欄位完整**
+                if (!isset($mappedIndexes[0]) || !isset($mappedIndexes[1])) { 
                     fclose($handle);
                     exit;
                 }
 
-                $newEntries = [];
-                $successCount = 0;
+                $successSchoolCount = 0;
+                $successDepartmentCount = 0;
+                $importedSchools = [];    // 記錄已匯入的學校名稱
+                $importedDepartments = []; // 記錄已匯入的科系名稱
 
                 while (($row = fgetcsv($handle)) !== FALSE) {
                     $data = [];
-                    $dayNightType = '';
-                    $levelType = '';
-                    $systemType = '';
+                    foreach ($mappedIndexes as $index => $dbColumn) {
+                        $value = trim($row[$index] ?? '');
+                        if ($dbColumn === 'name') {
+                            $schoolName = $value; // **取得學校名稱**
+                        } elseif ($dbColumn === 'department_name') {
+                            $departmentName = $value; // **取得科系名稱**
+                        }
+                        $data["`$dbColumn`"] = "'" . mysqli_real_escape_string($link, $value) . "'";
+                    }
 
-                    // 提取並處理篩選條件欄位的值
-                    foreach ($filterMapping as $index => $filterColumn) {
-                        if (isset($row[$index])) {
-                            $value = trim($row[$index]);
-                            // 移除所有空白，避免因空白字元影響比對
-                            $value = str_replace(' ', '', $value);
-                            if ($filterColumn == 'day_night_type') {
-                                $dayNightType = $value;
-                            }
-                            if ($filterColumn == 'level_type') {
-                                $levelType = $value;
-                            }
-                            if ($filterColumn == 'system_type') {
-                                $systemType = $value;
-                            }
+                    // **學校名稱: 確保不重複**
+                    if (!empty($schoolName) && !in_array($schoolName, $importedSchools)) {
+                        $schoolQuery = "INSERT INTO school (`name`) VALUES ('" . mysqli_real_escape_string($link, $schoolName) . "')";
+                        if (mysqli_query($link, $schoolQuery)) {
+                            $successSchoolCount++;
+                            $importedSchools[] = $schoolName; // **記錄已匯入的學校**
                         }
                     }
 
-                    // 僅允許符合下列條件的資料進入：日間∕進修別為 D日、等級別為 C二技、體系別為 2技職
-                    if ($dayNightType == 'D日' && $levelType == 'C二技' && $systemType == '2技職') {
-                        // 組合需要匯入資料庫的欄位和值
-                        foreach ($columnMapping as $index => $dbColumn) {
-                            if (isset($row[$index])) {
-                                $value = mysqli_real_escape_string($link, trim($row[$index]));
-                                $data["`$dbColumn`"] = "'$value'";
-                            }
-                        }
-
-                        if (!empty($data)) {
-                            $columns = implode(", ", array_keys($data));
-                            $values = implode(", ", array_values($data));
-
-                            $schoolName = trim($data['`name`'], "'");
-
-                            // 直接插入資料，不檢查重複
-                            $query = "INSERT INTO test ($columns) VALUES ($values)";
-                            if (mysqli_query($link, $query)) {
-                                $successCount++;
-                                $newEntries[] = $schoolName;
-                            }
+                    // **科系名稱: 確保不重複**
+                    if (!empty($departmentName) && !in_array($departmentName, $importedDepartments)) {
+                        $departmentQuery = "INSERT INTO Department (`department_name`) VALUES ('" . mysqli_real_escape_string($link, $departmentName) . "')";
+                        if (mysqli_query($link, $departmentQuery)) {
+                            $successDepartmentCount++;
+                            $importedDepartments[] = $departmentName; // **記錄已匯入的科系**
                         }
                     }
                 }
@@ -138,18 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 session_write_close();
                 flush();
 
-                if ($successCount > 0) {
-                    $schoolsList = implode(', ', $newEntries);
-                    echo "<script>
-                        alert('成功匯入');
-                        window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-                    </script>";
-                } else {
-                    echo "<script>
-                        alert('無新資料，已更新');
-                        window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
-                    </script>";
-                }
+                echo "<script>alert('成功匯入 {$successSchoolCount} 所學校、{$successDepartmentCount} 個科系資料'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
                 exit;
             } else {
                 echo "<script>alert('CSV 檔案格式錯誤，標題行缺失'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
