@@ -1,28 +1,165 @@
 <?php
-// 啟用 Session，確保使用者的登入狀態能夠被追蹤
+// 啟用 Session
 session_start();
 
 // 設定資料庫連線資訊
-$servername = "127.0.0.1";  // 資料庫伺服器
-$username = "HCHJ";        // 資料庫使用者名稱
-$password = "xx435kKHq";   // 資料庫密碼
-$dbname = "HCHJ";         // 資料庫名稱
+$servername = "127.0.0.1";  
+$username = "HCHJ";        
+$password = "xx435kKHq";   
+$dbname = "HCHJ";         
 
 // 建立資料庫連線
 $link = mysqli_connect($servername, $username, $password, $dbname);
 if (!$link) {
-    error_log("資料庫連線失敗: " . mysqli_connect_error()); // 記錄錯誤日誌
-    die("系統目前無法處理您的請求，請稍後再試。"); // 顯示錯誤訊息並終止執行
+    error_log("資料庫連線失敗: " . mysqli_connect_error());
+    die("系統目前無法處理您的請求，請稍後再試。");
 }
 
-// 設定資料庫使用 UTF8 編碼
+// 設定使用 UTF8 編碼
 mysqli_query($link, 'SET NAMES UTF8');
 
-// 確保使用者已登入，若未登入則終止執行
+// 確認使用者已登入
 if (!isset($_SESSION['user'])) {
     die("未登入，請先登入後再操作。");
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
+        $filePath = $_FILES['file']['tmp_name'];
+        $fileExtension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+
+        if ($fileExtension !== 'csv') {
+            echo "<script>alert('請上傳 CSV 檔案！'); window.location.href = 'school1.php';</script>";
+            exit;
+        }
+
+        if (($handle = fopen($filePath, "r")) !== FALSE) {
+            $headers = fgetcsv($handle);
+            if ($headers) {
+                // 移除標題欄位前可能存在的 BOM 與多餘空白（視情況調整）
+                $headers[0] = trim($headers[0], "\xEF\xBB\xBF");
+                $headers = array_map('trim', $headers);
+                // 若 CSV 為中文，這邊 strtolower 其實不會有太大影響，可保留
+                $headers = array_map('strtolower', $headers);
+
+                // 有效欄位對應（不會匯入篩選條件欄位）
+                $validMapping = [
+                    '學校名稱' => 'name',
+                    '科系名稱' => 'department',
+                    '縣市名稱' => 'address',
+                ];
+
+                // 篩選條件欄位（不加入資料庫）
+                $filterFields = [
+                    '日間∕進修別' => 'day_night_type',
+                    '等級別'   => 'level_type',
+                    '體系別'   => 'system_type',
+                ];
+
+                $columnMapping = [];
+                $filterMapping = [];
+
+                foreach ($headers as $index => $header) {
+                    // 因為 CSV 為中文，tolower 不影響，所以直接比對
+                    if (isset($validMapping[$header])) {
+                        $columnMapping[$index] = $validMapping[$header];
+                    }
+                    if (isset($filterFields[$header])) {
+                        $filterMapping[$index] = $filterFields[$header];
+                    }
+                }
+
+                // 檢查必備欄位是否存在
+                if (empty($columnMapping) || !in_array('system_type', $filterMapping)) {
+                    fclose($handle);
+                    exit;
+                }
+
+                $newEntries = [];
+                $successCount = 0;
+
+                while (($row = fgetcsv($handle)) !== FALSE) {
+                    $data = [];
+                    $dayNightType = '';
+                    $levelType = '';
+                    $systemType = '';
+
+                    // 提取篩選條件值，並移除所有空白（避免 "D 日" 與 "D日" 之間的差異）
+                    foreach ($filterMapping as $index => $filterColumn) {
+                        if (isset($row[$index])) {
+                            $value = trim($row[$index]);
+                            // 移除所有空白字元
+                            $value = str_replace(' ', '', $value);
+                            if ($filterColumn == 'day_night_type') {
+                                $dayNightType = $value;
+                            }
+                            if ($filterColumn == 'level_type') {
+                                $levelType = $value;
+                            }
+                            if ($filterColumn == 'system_type') {
+                                $systemType = $value;
+                            }
+                        }
+                    }
+
+                    // 判斷條件：只允許符合篩選條件的資料進入
+                    if ($dayNightType == 'D日' && $levelType == 'C二技' && $systemType == '2技職') {
+                        // 建立要匯入的資料（只包含有效欄位）
+                        foreach ($columnMapping as $index => $dbColumn) {
+                            if (isset($row[$index])) {
+                                $value = mysqli_real_escape_string($link, trim($row[$index]));
+                                $data["`$dbColumn`"] = "'$value'";
+                            }
+                        }
+
+                        if (!empty($data)) {
+                            $columns = implode(", ", array_keys($data));
+                            $values = implode(", ", array_values($data));
+
+                            $schoolName = trim($data['`name`'], "'");
+
+                            // 不做重複檢查，直接插入
+                            $query = "INSERT INTO test ($columns) VALUES ($values)";
+                            if (mysqli_query($link, $query)) {
+                                $successCount++;
+                                $newEntries[] = $schoolName;
+                            }
+                        }
+                    }
+                }
+                fclose($handle);
+
+                session_write_close();
+                flush();
+
+                if ($successCount > 0) {
+                    $schoolsList = implode(', ', $newEntries);
+                    echo "<script>
+                        alert('成功匯入 $successCount 筆新資料，請新增此校園科系：$schoolsList');
+                        window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
+                    </script>";
+                } else {
+                    echo "<script>
+                        alert('無新資料，已更新');
+                        window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';
+                    </script>";
+                }
+                exit;
+            } else {
+                echo "<script>alert('CSV 檔案格式錯誤，標題行缺失'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
+            }
+        } else {
+            echo "<script>alert('無法開啟 CSV 檔案。'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
+        }
+    } else {
+        echo "<script>alert('檔案不可為空白'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
+    }
+}
+
+mysqli_close($link);
+
+
+/*
 // 檢查請求是否為 POST 方法
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 確保上傳的檔案存在且沒有錯誤
@@ -152,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<script>alert('檔案不可為空白'); window.location.href = '/~HCHJ/Home/Secondtechnicalcampus00-1.php';</script>";
     }
 }
-
+*/
 // 關閉資料庫連線
 mysqli_close($link);
 ?>
