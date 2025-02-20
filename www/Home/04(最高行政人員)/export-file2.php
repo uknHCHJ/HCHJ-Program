@@ -64,7 +64,6 @@ $tocSection->addText(
     ['alignment' => Jc::CENTER, 'spaceAfter' => 300]
 );
 $tocSection->addTextBreak(1);
-// 利用 addTOC() 產生目錄，設定 tabLeader 與 rightTabStop 以顯示右側頁碼（目錄項目內部的頁碼）
 $tocSection->addTOC([
     'tabLeader'    => TOC::TAB_LEADER_DOT,
     'rightTabStop' => 9070
@@ -96,9 +95,7 @@ if (empty($options)) {
     die("未選擇任何匯出選項！");
 }
 
-// --------------------
-// 若有選取自傳檔案，作為後續處理參考
-// --------------------
+// 若有選取自傳檔案，作為後續處理參考（此處保留供其他用途）
 if (isset($_POST['autobiography_file'])) {
     $autobiographyFile = $_POST['autobiography_file'];
 } else {
@@ -111,14 +108,16 @@ if (isset($_POST['autobiography_file'])) {
 $queryMap = [
     'competition'     => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '競賽證明'",
     'transcript'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '成績單'",
-    'autobiography'   => "", // 自傳依據使用者選擇的檔案決定
+    // 自傳：依據使用者選取的自傳檔案決定（通常存放文字自傳內容在 autobiography_content 欄位）
+    'autobiography'   => "",
     'diploma'         => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '學歷證明'",
     'internship'      => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '實習證明'",
     'certifications'  => "", // 相關證照之後再處理
     'language'        => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
     'other'           => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
     'Proof-of-service'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '服務證明'",
-    'read'            => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
+    // 讀書計畫：同時抓取 read_content 欄位，供前端輸入文字使用
+    'read'            => "SELECT file_name, file_content, read_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
 ];
 
 // --------------------
@@ -144,7 +143,7 @@ if (!empty($_POST['certifications_files'])) {
 }
 
 // --------------------
-// 處理自傳檔案選項
+// 處理自傳檔案選項：使用者可由前端選取上傳或從資料庫中選取（此處選取的自傳皆來自資料庫）
 // --------------------
 if (!empty($_POST['autobiography_files'])) {
     $selectedAutobiographies = $_POST['autobiography_files'];
@@ -154,7 +153,7 @@ if (!empty($_POST['autobiography_files'])) {
     $autoInCondition = implode(',', $escapedAutobiographies);
     if (!empty($autoInCondition)) {
         $queryMap['autobiography'] = "
-            SELECT file_name, file_content
+            SELECT file_name, file_content, autobiography_content
             FROM portfolio
             WHERE student_id = '$userId'
               AND category = '自傳'
@@ -180,7 +179,7 @@ $optionNames = [
 ];
 
 // --------------------
-// 自傳專用的文字與段落樣式
+// 自傳專用的文字與段落樣式（讀書計畫也採用相同樣式）
 // --------------------
 $autobiographyTextStyle = ['name' => '標楷體', 'size' => 14, 'color' => '000000'];
 $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
@@ -190,7 +189,7 @@ $autobiographyParagraphStyle = ['alignment' => Jc::BOTH, 'spaceAfter' => 100];
 // --------------------
 foreach ($options as $option) {
 
-    // 若為競賽證明：以表格方式呈現，每頁放 3 筆資料
+    // 競賽證明：以表格方式呈現，每頁放 3 筆資料
     if ($option === 'competition') {
         $sql = $queryMap['competition'];
         $result = $conn->query($sql);
@@ -202,15 +201,11 @@ foreach ($options as $option) {
             $recordsPerPage = 3; // 每頁放 3 筆資料
             $totalRecords = count($competitionData);
             for ($i = 0; $i < $totalRecords; $i += $recordsPerPage) {
-                // 為每批資料建立新頁（需加頁碼）
                 $section = $phpWord->addSection();
-                // 加入頁尾頁碼
                 $footer = $section->addFooter();
                 $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-                
                 $section->addTitle($optionNames['competition'], 1);
                 
-                // 設定表格樣式（1 欄），並置中整個表格
                 $tableStyle = [
                     'borderSize'  => 12,
                     'borderColor' => '000000',
@@ -221,7 +216,6 @@ foreach ($options as $option) {
                 $phpWord->addTableStyle($tableStyleName, $tableStyle);
                 $table = $section->addTable($tableStyleName);
                 
-                // 取得本頁資料，逐列顯示
                 $batch = array_slice($competitionData, $i, $recordsPerPage);
                 foreach ($batch as $record) {
                     $table->addRow();
@@ -240,35 +234,137 @@ foreach ($options as $option) {
             }
         } else {
             $section = $phpWord->addSection();
-            // 加入頁尾頁碼
             $footer = $section->addFooter();
             $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-            
             $section->addTitle("查無資料：" . $optionNames['competition'], 1);
             $section->addText("查無資料：" . $optionNames['competition'], ['size' => 12], ['alignment' => Jc::CENTER]);
         }
-        continue; // 競賽證明處理完畢
+        continue;
     }
-    // 自傳：獨立新頁（需加頁碼）
+    // 自傳：獨立新頁（需加頁碼），依據檔案名稱判斷是否為 .docx
     elseif ($option === 'autobiography') {
         $section = $phpWord->addSection();
         $footer = $section->addFooter();
         $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-        
         $section->addTitle("自傳", 1);
+        
+        $sql = $queryMap['autobiography'];
+        $result = $conn->query($sql);
+        if ($result && $result->num_rows > 0) {
+            // 假設自傳只會有一筆記錄，若有多筆依需求處理
+            while ($row = $result->fetch_assoc()) {
+                $autobiographyFileName = $row['file_name'];
+                $fileContent = $row['file_content'];
+                $autobiography_content = $row['autobiography_content'];
+                $ext = strtolower(pathinfo($autobiographyFileName, PATHINFO_EXTENSION));
+                
+                if ($ext === 'docx') {
+                    try {
+                        $tempFilePath = tempnam(sys_get_temp_dir(), 'docx_');
+                        if ($tempFilePath === false) {
+                            throw new Exception("無法建立臨時檔案");
+                        }
+                        file_put_contents($tempFilePath, $fileContent);
+                        $zip = new ZipArchive();
+                        if ($zip->open($tempFilePath) === true) {
+                            $xmlContent = $zip->getFromName('word/document.xml');
+                            $zip->close();
+                            unlink($tempFilePath);
+                            if ($xmlContent === false) {
+                                throw new Exception('未能讀取 document.xml 檔案');
+                            }
+                            $xml = simplexml_load_string($xmlContent);
+                            $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+                            $textNodes = $xml->xpath('//w:t');
+                            $content = '';
+                            foreach ($textNodes as $node) {
+                                $content .= (string)$node . "\n";
+                            }
+                            $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
+                        } else {
+                            unlink($tempFilePath);
+                            throw new Exception('無法開啟 .docx 文件');
+                        }
+                    } catch (Exception $e) {
+                        $section->addText("讀取 DOCX 自傳檔案失敗： " . $e->getMessage(), ['italic' => true, 'color' => 'FF0000'], $autobiographyParagraphStyle);
+                    }
+                } else {
+                    // 非 .docx 檔案，代表使用者透過前端上傳的文字自傳
+                    $section->addText($autobiography_content, $autobiographyTextStyle, $autobiographyParagraphStyle);
+                }
+            }
+        } else {
+            $section->addText("未提供自傳內容", $autobiographyTextStyle, $autobiographyParagraphStyle);
+        }
+        continue;
+    }
+    // 讀書計畫：版面樣式與自傳相同，依據檔案名稱判斷是否為 .docx
+    elseif ($option === 'read') {
+        $section = $phpWord->addSection();
+        $footer = $section->addFooter();
+        $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+        $section->addTitle("讀書計畫", 1);
+        
+        $sql = $queryMap['read'];
+        $result = $conn->query($sql);
+        if ($result && $result->num_rows > 0) {
+            // 假設讀書計畫只會有一筆記錄，若有多筆依需求處理
+            while ($row = $result->fetch_assoc()) {
+                $readFileName = $row['file_name'];
+                $fileContent = $row['file_content'];
+                $read_content = $row['read_content'];
+                $ext = strtolower(pathinfo($readFileName, PATHINFO_EXTENSION));
+                
+                if ($ext === 'docx') {
+                    try {
+                        $tempFilePath = tempnam(sys_get_temp_dir(), 'docx_');
+                        if ($tempFilePath === false) {
+                            throw new Exception("無法建立臨時檔案");
+                        }
+                        file_put_contents($tempFilePath, $fileContent);
+                        $zip = new ZipArchive();
+                        if ($zip->open($tempFilePath) === true) {
+                            $xmlContent = $zip->getFromName('word/document.xml');
+                            $zip->close();
+                            unlink($tempFilePath);
+                            if ($xmlContent === false) {
+                                throw new Exception('未能讀取 document.xml 檔案');
+                            }
+                            $xml = simplexml_load_string($xmlContent);
+                            $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+                            $textNodes = $xml->xpath('//w:t');
+                            $content = '';
+                            foreach ($textNodes as $node) {
+                                $content .= (string)$node . "\n";
+                            }
+                            $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
+                        } else {
+                            unlink($tempFilePath);
+                            throw new Exception('無法開啟 .docx 文件');
+                        }
+                    } catch (Exception $e) {
+                        $section->addText("讀取 DOCX 讀書計畫檔案失敗： " . $e->getMessage(), ['italic' => true, 'color' => 'FF0000'], $autobiographyParagraphStyle);
+                    }
+                } else {
+                    // 非 .docx 檔案，直接輸出前端輸入的文字內容
+                    $section->addText($read_content, $autobiographyTextStyle, $autobiographyParagraphStyle);
+                }
+            }
+        } else {
+            $section->addText("未提供讀書計畫內容", $autobiographyTextStyle, $autobiographyParagraphStyle);
+        }
+        continue;
     }
     // 專題資料：僅輸出一頁，加入標題與頁尾
     elseif ($option === 'topics') {
         $section = $phpWord->addSection();
         $footer = $section->addFooter();
-        // 這裡先加入專題專用說明，再加入頁碼
         $footer->addText("此頁面僅供展示專題資料之用途。", ['size' => 14], ['alignment' => Jc::CENTER]);
         $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-        
         $section->addTitle("專題資料", 1);
         continue;
     }
-    // 專業證照：依分頁邏輯處理（每頁需加頁碼）
+    // 專業證照：依分頁邏輯處理（每頁最多 6 筆資料，3 行 x 2 列）
     elseif ($option === 'certifications') {
         $resultCert = $conn->query($queryMap['certifications']);
         $certifications = [];
@@ -277,7 +373,7 @@ foreach ($options as $option) {
                 $certifications[] = $row;
             }
         }
-        $maxPerPage = 6;  // 每頁最多 6 筆資料（3 行 x 2 列）
+        $maxPerPage = 6;
         $totalCerts = count($certifications);
         $pageIndex = 0;
         while ($pageIndex * $maxPerPage < $totalCerts) {
@@ -320,20 +416,18 @@ foreach ($options as $option) {
         }
         continue;
     }
-    // 其他選項：如「成績單」、「學歷證明」、「實習證明」、「語言能力證明」
+    // 其他選項：如成績單、學歷證明、實習證明、語言能力證明
     elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
         $section = $phpWord->addSection();
         $footer = $section->addFooter();
         $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-        
         $section->addTitle($optionNames[$option], 1);
     }
-    // 其他選項則維持原有設定
+    // 其他未特別處理的選項
     else {
         $section = $phpWord->addSection();
         $footer = $section->addFooter();
         $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-        
         if (isset($optionNames[$option])) {
             $section->addTitle($optionNames[$option], 1);
         }
@@ -351,8 +445,6 @@ foreach ($options as $option) {
             $description = $row['file_name'];
             $fileContent = $row['file_content'];
             $ext = strtolower(pathinfo($description, PATHINFO_EXTENSION));
-
-            // 處理圖片檔案
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
                 if (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
                     $textStyle = ['size' => 12];
@@ -364,9 +456,7 @@ foreach ($options as $option) {
                     $textStyle = ['size' => 12];
                     $paragraphStyle = ['alignment' => Jc::BOTH];
                 }
-                
                 $section->addText("檔案名稱：$description", $textStyle, $paragraphStyle);
-            
                 if (!empty($fileContent) && strlen($fileContent) > 100) {
                     try {
                         $section->addImage($fileContent, [
@@ -382,7 +472,6 @@ foreach ($options as $option) {
                 }
                 $section->addTextBreak(1);
             }
-            // 處理 DOCX 檔案
             else if ($ext === 'docx') {
                 if (!empty($fileContent)) {
                     try {
@@ -391,26 +480,21 @@ foreach ($options as $option) {
                             throw new Exception("無法建立臨時檔案");
                         }
                         file_put_contents($tempFilePath, $fileContent);
-
                         $zip = new ZipArchive();
                         if ($zip->open($tempFilePath) === true) {
                             $xmlContent = $zip->getFromName('word/document.xml');
                             $zip->close();
                             unlink($tempFilePath);
-
                             if ($xmlContent === false) {
                                 throw new Exception('未能讀取 document.xml 檔案');
                             }
-
                             $xml = simplexml_load_string($xmlContent);
                             $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
                             $textNodes = $xml->xpath('//w:t');
-
                             $content = '';
                             foreach ($textNodes as $node) {
                                 $content .= (string)$node . "\n";
                             }
-
                             if ($option === 'autobiography') {
                                 $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
                             } elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
@@ -437,7 +521,6 @@ foreach ($options as $option) {
                     $section->addText("無效的 DOCX 檔案資料：$description");
                 }
             }
-            // 其他不支援的檔案類型
             else {
                 $section->addText("不支援的檔案類型：$description", ['italic' => true, 'color' => 'FF0000'], ['alignment' => Jc::CENTER]);
             }
@@ -450,9 +533,6 @@ foreach ($options as $option) {
 
 $conn->close();
 
-// --------------------
-// 7. 輸出 Word 文件
-// --------------------
 header("Content-Description: File Transfer");
 header("Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 header("Content-Disposition: attachment; filename=\"$userId.docx\"");
