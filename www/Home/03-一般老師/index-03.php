@@ -93,7 +93,7 @@ $userId= $userData['user'];
                                         <a class="nav-item dd-menu">備審管理區</a>           
                                         <ul class="sub-menu">
                                         <li class="nav-item"><a href="Portfolio1.php">備審素材區</a></li>
-                                        <li class="nav-item"><a href="AutobiographyCreat1.php">自傳/讀書心得-填寫</a></li>
+                                        <li class="nav-item"><a href="AutobiographyCreat1.php">自傳/讀書心得 填寫</a></li>
                                         </ul>
                                     </li>     
                                     <li class="nav-item">

@@ -236,7 +236,9 @@ if ($conn->connect_error) {
         
         <br><br>
         
-        <button type="submit" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+        <button type="submit" onclick="return confirm('確定要上傳此檔案嗎？')" 
+            style="background-color: blue; color: white; border: none; padding: 10px 20px; 
+            font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
     </form>
