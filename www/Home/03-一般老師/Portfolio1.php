@@ -212,6 +212,7 @@ if ($conn->connect_error) {
         <label for="category">選擇資料類型：</label>
         <select name="category" id="category" required>
             <option value="成績單">成績單</option>
+            <option value="自傳">自傳</option>
             <option value="學歷證明">學歷證明</option>
             <option value="競賽證明">競賽證明</option>
             <option value="實習證明">實習證明</option>
@@ -278,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const certificateNameInput = document.getElementById("certificate_name");
 
     // 定義可選擇的機構 (organization)
-    const subCategories = ["ACM", "Adobe", "GLAD", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
+    const subCategories = ["ACM", "Adobe", "全球學習與測評發展中心(GLAD)", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
 
     // 監聽「類別」選擇變更事件
     categorySelect.addEventListener("change", () => {
@@ -344,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="portfolio-btn-wrapper">
                     <button type="button" class="portfolio-btn active" data-filter="*">全部</button>
                     <button type="button" class="portfolio-btn" data-filter=".transcripts">成績單</button>
+                    <button type="button" class="portfolio-btn" data-filter=".autobiography">自傳</button>
                     <button type="button" class="portfolio-btn" data-filter=".certificates">學歷證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".competitions">競賽證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".internships">實習證明</button>
@@ -375,29 +377,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     $category_map = [
                         "成績單" => "transcripts",
+                        "自傳" => "autobiography",
                         "學歷證明" => "certificates",
                         "競賽證明" => "competitions",
                         "實習證明" => "internships",
                         "專業證照" => "licenses",
                         "語言能力證明" => "language-skills",
-                        "專題資料" => "Topics",
+                        "專題資料" => "topics",
                         "讀書計畫" => "reading-plan",
-                        "服務證明" => "Proof-of-service",
-                        "其他資料" => "Other-information"
+                        "服務證明" => "proof-of-service",
+                        "其他資料" => "other-information"
                     ];
-
+                    
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $category_class = $category_map[$row["category"]] ?? "unknown";
+                    
                             echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
                                 <div class='portfolio-content'>
                                     <h3>{$row['category']}</h3>";
-                            
+                    
                             if ($row["category"] === "專業證照") {
                                 echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
                                 echo "<p><strong>證照名稱：</strong> " . htmlspecialchars($row["certificate_name"], ENT_QUOTES, 'UTF-8') . "</p>";
                             }
-                            
+                    
                             echo "<p><a href='PortfolioDownload.php?id=" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>{$row['file_name']}</a></p>
                                     <p>上傳時間：{$row['upload_time']}</p>
                                     <form action='PortfolioDelete.php' method='post'>
@@ -406,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                             style='background-color: red; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 5px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);'>
                                             刪除
                                         </button>
-
                                     </form>
                                 </div>
                             </div>";
@@ -414,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         echo "<div class='col-12'><p>尚無資料</p></div>";
                     }
-
+                    
                     $stmt->close();
                     $conn->close();
                     ?>
@@ -426,6 +429,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".portfolio-btn");
+    const items = document.querySelectorAll(".portfolio-item");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function () {
+            // 移除所有按钮的 active 类
+            buttons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            const filter = this.getAttribute("data-filter");
+
+            items.forEach(item => {
+                if (filter === "*" || item.classList.contains(filter.substring(1))) {
+                    item.style.display = "block"; // 顯示符合條件的項目
+                } else {
+                    item.style.display = "none"; // 隱藏不符合的項目
+                }
+            });
+        });
+    });
+});
+
    function confirmUpload() {
     const studentId = document.querySelector('input[name="student_id"]').value;
     const category = document.getElementById("category").value;

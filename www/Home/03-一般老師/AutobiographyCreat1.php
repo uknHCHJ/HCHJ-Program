@@ -203,16 +203,36 @@ if ($conn->connect_error) {
 
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
-    <h1>自傳填寫</h1>
-    <form action="PortfolioCreate.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
+    <h1>備審填寫</h1>
+    <form action="AutobiographyCreat2.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         
-        <label for="title">自傳名稱：</label>
-        <input type="text" name="title" id="title" required>
+        <label for="category">選擇類別：</label>
+        <select id="category" name="category" onchange="toggleFields()">
+            <option value="autobiography">自傳</option>
+            <option value="studyPlan">讀書計畫</option>
+        </select>
         
         <br><br>
         
-        <label for="content">自傳內容：</label>
-        <textarea name="content" id="content" rows="10" cols="50" required></textarea>
+        <div id="autobiographyFields">
+            <label for="title">自傳名稱：</label>
+            <input type="text" name="title" id="title">
+            
+            <br><br>
+            
+            <label for="content">自傳內容：</label>
+            <textarea name="content" id="content" rows="10" cols="50"></textarea>
+        </div>
+        
+        <div id="studyPlanFields" style="display: none;">
+            <label for="planTitle">讀書計畫名稱：</label>
+            <input type="text" name="planTitle" id="planTitle">
+            
+            <br><br>
+            
+            <label for="planContent">讀書計畫內容：</label>
+            <textarea name="planContent" id="planContent" rows="10" cols="50"></textarea>
+        </div>
         
         <br><br>
         
@@ -222,18 +242,34 @@ if ($conn->connect_error) {
     </form>
 </div>
 
+<!-- 前端 JavaScript -->
 <script>
+function toggleFields() {
+    const category = document.getElementById('category').value;
+    document.getElementById('autobiographyFields').style.display = category === 'autobiography' ? 'block' : 'none';
+    document.getElementById('studyPlanFields').style.display = category === 'studyPlan' ? 'block' : 'none';
+}
+
 function confirmUpload() {
-    const title = document.getElementById('title').value.trim();
-    const content = document.getElementById('content').value.trim();
+    const category = document.getElementById('category').value;
+    let title, content;
+    
+    if (category === 'autobiography') {
+        title = document.getElementById('title').value.trim();
+        content = document.getElementById('content').value.trim();
+    } else {
+        title = document.getElementById('planTitle').value.trim();
+        content = document.getElementById('planContent').value.trim();
+    }
+    
     if (!title || !content) {
         alert('請輸入名稱及內容');
         return false;
     }
-    return confirm(`您確定要提交自傳：「${title}」？`);
+    
+    return confirm(`您確定要提交${category === 'autobiography' ? '自傳' : '讀書計畫'}：「${title}」？`);
 }
 </script>
-
         <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">

@@ -40,10 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!in_array($file_type, $allowed_types)) {
             die("檔案類型不正確。只能上傳 PNG, JPG, DOC, DOCX 檔案。");
+            header("Location: Portfolio1.php");
         }
 
         if ($file_size > $max_size) {
             die("檔案過大，請上傳小於 5MB 的檔案。");
+            header("Location: Portfolio1.php");
         }
 
             // 取得副檔名
