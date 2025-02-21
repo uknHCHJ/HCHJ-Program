@@ -1,3 +1,19 @@
+import sys
+import subprocess
+
+# 自動安裝缺少的套件
+def install_package(package):
+    try:
+        __import__(package)
+    except ImportError:
+        print(f"正在安裝 {package} ...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# 確保 `requests` 和 `beautifulsoup4` 已安裝
+install_package("requests")
+install_package("beautifulsoup4")
+
+# 安裝完成後再匯入
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -95,24 +111,22 @@ def save_to_csv(data):
         writer.writerows(data)
 
     print(f"CSV 檔案已成功儲存: {filename}")
-all_data = []
+
 def main():
+    all_data = []
     # 1. 抓取所有學校代碼 (psrid)
     psrid_list = get_psrid_list()
     print("找到的學校代碼 (psrid)：", psrid_list)
 
-    
-    
     # 2. 爬取每間學校的資料
     for psrid in psrid_list:
         print(f"正在處理學校 psrid = {psrid} ...")
         school_data = scrape_school_data(psrid)
         all_data.extend(school_data)
-    
+
     # 3. 顯示爬取結果
     print("\n最終結果：")
     for item in all_data:
-        print("學校代碼:",{psrid})
         print("學校名稱:", item[0])
         print("科系:", item[1])
         print("地址:", item[2])
