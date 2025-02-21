@@ -125,7 +125,6 @@ $username=$userData['name'];
                             <select id="new-permission" name="new_permission" class="form-select">
                                 <option value="9">請選擇...</option>
                                 <option value="2">班導</option>
-                                <option value="3">一般老師</option>
                                 <option value="4">最高行政人員</option>
                                 <option value="0">管理員</option>
                                 
@@ -136,7 +135,6 @@ $username=$userData['name'];
                             <select id="new-permission2" name="new_permission2" class="form-select">
                                 <option value="9">請選擇...</option>
                                 <option value="2">班導</option>
-                                <option value="3">一般老師</option>
                                 <option value="4">最高行政人員</option>
                                 <option value="0">管理員</option>                               
                             </select>
@@ -218,20 +216,46 @@ $username=$userData['name'];
         <script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // 解析 URL 中的參數
-                var urlParams = new URLSearchParams(window.location.search);
-                var username = urlParams.get('username');
-                var currentPermission = urlParams.get('permission');
+document.addEventListener('DOMContentLoaded', function() {
+    // 解析 URL 中的參數
+    var urlParams = new URLSearchParams(window.location.search);
+    var username = urlParams.get('username');
+    var currentPermission = urlParams.get('permission');
 
-                // 將參數填入表單
-                if (username) {
-                    document.getElementById('user').value = username;
-                }
-                if (currentPermission) {
-                    document.getElementById('current-permission').value = currentPermission;
-                }
-            });
-        </script>
+    // 權限對應表
+    var permissionMap = {
+        '0': "管理員",
+        '2': "班導",
+        '3': "一般老師",
+        '4': "最高行政人員"
+    };
+
+    // 轉換數字權限為文字
+    var permissionText = "";
+    if (currentPermission) {
+        var permissionArray = currentPermission.split(','); // 分割逗號
+
+        // 過濾掉 9
+        var filteredArray = permissionArray.filter(function(num) {
+            return num !== '9'; // 過濾掉 "9"
+        });
+
+        // 轉換權限名稱
+        var convertedPermissions = filteredArray.map(function(num) {
+            return permissionMap[num] || num; // 找不到對應名稱則顯示數字
+        });
+
+        permissionText = convertedPermissions.join('，'); // 重新組合
+    }
+
+    // 填入表單
+    if (username) {
+        document.getElementById('user').value = username;
+    }
+    document.getElementById('current-permission').value = permissionText;
+});
+</script>
+
+
     </body>
 </html>
