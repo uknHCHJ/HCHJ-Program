@@ -169,7 +169,7 @@ if ($conn->connect_error) {
 $school_id = isset($_GET['school_id']) ? intval($_GET['school_id']) : 0;
 
 // 抓取對應學校的科系
-$sql = "SELECT department_name FROM School_Department WHERE school_id = ?";
+$sql = "SELECT department_id,department FROM test WHERE school_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $school_id);
 $stmt->execute();
@@ -185,7 +185,7 @@ if ($result->num_rows > 0) {
 $stmt->close();
 
 // 抓取學校名稱 (改為從 Secondskill 表查詢)
-$sql_school = "SELECT name FROM Secondskill WHERE id = ?";
+$sql_school = "SELECT department FROM test WHERE department_id = ?";
 $stmt_school = $conn->prepare($sql_school);
 $stmt_school->bind_param("s", $school_id);
 $stmt_school->execute();
@@ -210,7 +210,7 @@ $conn->close();
             <?php foreach ($departments as $department) : ?>
                 <tr>
                     <td><?= $index++ ?></td>
-                    <td><?= htmlspecialchars($department['department_name']) ?></td>
+                    <td><?= htmlspecialchars($department['department']) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
