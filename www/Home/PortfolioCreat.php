@@ -40,20 +40,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!in_array($file_type, $allowed_types)) {
             die("檔案類型不正確。只能上傳 PNG, JPG, DOC, DOCX 檔案。");
+            header("Location: Portfolio1.php");
         }
 
         if ($file_size > $max_size) {
             die("檔案過大，請上傳小於 5MB 的檔案。");
+            header("Location: Portfolio1.php");
         }
 
-        // 取得副檔名
+            // 取得副檔名
         $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
 
         // 如果使用者有輸入檔名，檢查是否已經包含副檔名
         if ($customFileName) {
+            // 使用 pathinfo 檢查是否已有副檔名
             $userInputExtension = pathinfo($customFileName, PATHINFO_EXTENSION);
-            $file_name = (strtolower($userInputExtension) === strtolower($fileExtension)) ? $customFileName : $customFileName . '.' . $fileExtension;
+
+            if (strtolower($userInputExtension) === strtolower($fileExtension)) {
+                // 使用者輸入的檔名已經有副檔名，直接使用
+                $file_name = $customFileName;
+            } else {
+                // 否則，手動加上副檔名
+                $file_name = $customFileName . '.' . $fileExtension;
+            }
         } else {
+            // 沒有輸入則使用原始檔名
             $file_name = $originalFileName;
         }
 
@@ -73,45 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':certificate_name', $certificate_name);
 
         if ($stmt->execute()) {
-            // 上傳成功，查找使用者資訊
-            $query = "SELECT department, grade, class, user, Permissions FROM user WHERE id = :student_id";
-            $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':student_id', $student_id);
-            $stmt->execute();
-            $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user_data) {
-                $department = $user_data['department'];
-                $grade = $user_data['grade'];
-                $class = $user_data['class'];
-                $user_email = $user_data['user'] . "@stu.ukn.edu.tw";
-                $permissions = $user_data['Permissions'];
-
-                // 發送通知
-                if ($permissions == 1) { // 學生
-                    $subject = "檔案上傳通知";
-                    $message = "您的檔案已成功上傳。\n\n科系：$department\n年級：$grade\n班別：$class";
-                    $headers = "From: noreply@ukn.edu.tw";
-
-                    mail($user_email, $subject, $message, $headers);
-                } elseif ($permissions == 2) { // 老師
-                    // 查找所有老師
-                    $query = "SELECT user FROM user WHERE Permissions = 2";
-                    $stmt = $pdo->query($query);
-                    $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                    foreach ($teachers as $teacher) {
-                        $teacher_email = $teacher['user'] . "@ukn.edu.tw";
-                        $subject = "學生檔案上傳通知";
-                        $message = "學生 ID：$student_id\n科系：$department\n年級：$grade\n班別：$class\n已上傳檔案。";
-                        $headers = "From: noreply@ukn.edu.tw";
-
-                        mail($teacher_email, $subject, $message, $headers);
-                    }
-                }
-            }
-
-            echo "檔案上傳成功，通知已發送！";
+            echo "檔案上傳成功！";
             header("Location: Portfolio1.php");
             exit;
         } else {
