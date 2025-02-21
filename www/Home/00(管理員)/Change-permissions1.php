@@ -124,6 +124,7 @@ $username=$userData['name'];
                             <label for="new-permission">選擇主要權限：</label>
                             <select id="new-permission" name="new_permission" class="form-select">
                                 <option value="9">請選擇...</option>
+                                <option value="1">學生</option>
                                 <option value="2">班導</option>
                                 <option value="4">最高行政人員</option>
                                 <option value="0">管理員</option>
@@ -134,6 +135,7 @@ $username=$userData['name'];
                             <label for="new-permission2">選擇第二權限(無需使用可不選)：</label>
                             <select id="new-permission2" name="new_permission2" class="form-select">
                                 <option value="9">請選擇...</option>
+                                <option value="1">學生</option>
                                 <option value="2">班導</option>
                                 <option value="4">最高行政人員</option>
                                 <option value="0">管理員</option>                               
@@ -225,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 權限對應表
     var permissionMap = {
         '0': "管理員",
+        '1': "學生",
         '2': "班導",
         '3': "一般老師",
         '4': "最高行政人員"
