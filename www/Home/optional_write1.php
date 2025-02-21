@@ -552,50 +552,54 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                 }
 
                 function submit() {
-                    if (preferences.length === 0) {
-                        alert("請先添加至少一個志願");
-                        return;
-                    }
+    if (preferences.length === 0) {
+        alert("請先添加至少一個志願");
+        return;
+    }
 
-                    // 加入確認視窗
-                    if (!confirm("確定要送出志願嗎？")) {
-                        return;
-                    }
+    // 確認是否送出
+    if (!confirm("確定要送出志願嗎？")) {
+        return;
+    }
 
-                    fetch("addPreference.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            preferences: preferences.map((pref, index) => ({
-                                serial_number: index + 1,
-                                Secondskill_id: pref.Secondskill_id,
-                                department_id: pref.departmentId,
-                                school_name: pref.school_name,
-                                department_name: pref.department_name
-                            })),
-                        }),
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            if (data.success) {
-                                alert("志願序送出成功");
-                                window.location.href = "optional_show1.php";
-                            } else {
-                                alert("儲存失敗: " + data.message);
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error:", error);
-                            alert("發生錯誤: " + error.message);
-                        });
-                }
+    // 準備 JSON 資料
+    const requestData = {
+        preferences: preferences.map(pref => ({
+            school_name: pref.school_name, // 學校名稱
+            department_name: pref.department_name // 科系名稱
+        })),
+    };
+
+    // 確保 JSON 正確
+    console.log("送出 JSON:", JSON.stringify(requestData));
+
+    fetch("addPreference.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert("志願序送出成功");
+            window.location.href = "optional_show1.php"; // 送出成功後跳轉
+        } else {
+            alert("儲存失敗: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("發生錯誤: " + error.message);
+    });
+}
+
             </script>
 
         </body>
