@@ -224,6 +224,7 @@ function getRegion($address) {
         echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
         echo "</div>";
     }
+    
     ?>
 </div>
 </section>

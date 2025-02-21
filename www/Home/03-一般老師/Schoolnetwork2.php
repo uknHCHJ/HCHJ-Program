@@ -157,6 +157,7 @@ $username = "HCHJ"; // 資料庫帳號
 $password = "xx435kKHq"; // 資料庫密碼
 $dbname = "HCHJ"; // 資料庫名稱
 
+
 // 建立連線
 $conn = new mysqli($servername, $username, $password, $dbname);
 
