@@ -1,94 +1,80 @@
 <?php
+// 開啟 session
 session_start();
-header('Content-Type: application/json; charset=utf-8');
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
 
-$servername = "127.0.0.1";
-$username = "HCHJ";
-$password = "xx435kKHq";
-$dbname = "HCHJ";
-
-// 檢查 Session 是否有效
-if (!isset($_SESSION['user'])) {
-    echo json_encode(['success' => false, 'message' => '未登入或會話過期']);
-    exit();
-}
-
-$userData = $_SESSION['user'];
-$userId = $userData['user'];
+// 資料庫連線設定
+$servername = "127.0.0.1"; // 伺服器 IP 或 localhost
+$username   = "HCHJ";       // 資料庫帳號
+$password   = "xx435kKHq";  // 密碼
+$dbname     = "HCHJ";       // 資料庫名稱
 
 // 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查資料庫連線是否成功
 if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'message' => '資料庫連線失敗: ' . $conn->connect_error]);
-    exit();
+    die(json_encode(["success" => false, "message" => "資料庫連線失敗: " . $conn->connect_error]));
 }
 
-// 獲取前端傳送的資料
+// 檢查是否從前端傳來資料
 $data = json_decode(file_get_contents("php://input"), true);
-if ($data === null || !isset($data['Preferences'])) {
-    echo json_encode(['success' => false, 'message' => '無法解析輸入的 JSON 或缺少 Preferences']);
-    exit();
+
+// 檢查 JSON 格式
+if (!isset($data["preferences"]) || !is_array($data["preferences"])) {
+    echo json_encode(["success" => false, "message" => "缺少 Preferences"]);
+    exit;
 }
 
-// **日誌記錄** (可選) - 檢查收到的 JSON 是否正確
-file_put_contents("debug.log", print_r($data, true), FILE_APPEND);
-
-// **刪除使用者現有的志願資料**
-$sqldel = "DELETE FROM Preferences WHERE student_user = ?";
-$delStmt = $conn->prepare($sqldel);
-if ($delStmt === false) {
-    echo json_encode(['success' => false, 'message' => '準備刪除語句失敗: ' . $conn->error]);
-    exit();
-}
-$delStmt->bind_param("s", $userId);
-$delStmt->execute();
-$delStmt->close();
-
-// **插入新的志願資料**
-$sql = "INSERT INTO Preferences (student_user, school_name, department_name, preference_rank, created_at) 
-        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    echo json_encode(['success' => false, 'message' => '準備插入語句失敗: ' . $conn->error]);
-    exit();
+// 檢查用戶是否已登入並從 session 獲取 student_user
+if (!isset($_SESSION['user'])) {
+    echo json_encode(["success" => false, "message" => "學生未登入或未提供有效的 user_id"]);
+    exit;
 }
 
-$success = true;
-$response = [];
+// 假設 'user' 是一個陣列，並且 'user_id' 是其中的某個鍵
+$studentUser = $_SESSION['user']['user'] ?? null;  // 假設 session 中包含 'user' 這個欄位，並且 'user_id' 在其中
 
-foreach ($data['Preferences'] as $preference) {
-    // **確保必要字段存在且非空**
-    if (!isset($preference['school_name']) || empty(trim($preference['school_name'])) ||
-        !isset($preference['department_name']) || empty(trim($preference['department_name'])) ||
-        !isset($preference['serial_number'])) {
-        $success = false;
-        $response['message'] = '缺少必要的字段或有空值';
-        break;
+// 檢查是否獲取到有效的 student_user
+if (!$studentUser) {
+    echo json_encode(["success" => false, "message" => "學生未登入或 user_id 無效"]);
+    exit;
+}
+
+// 準備 SQL 插入語句，包含學校名稱、科系名稱和學生的 ID (student_user)
+$stmt = $conn->prepare("INSERT INTO Preferences (school_name, department_name, student_user) VALUES (?, ?, ?)");
+
+if (!$stmt) {
+    echo json_encode(["success" => false, "message" => "SQL 查詢準備失敗: " . $conn->error]);
+    exit;
+}
+
+// 循環處理每一個志願資料並插入到資料庫
+foreach ($data["preferences"] as $pref) {
+    if (!isset($pref["school_name"]) || !isset($pref["department_name"])) {
+        echo json_encode(["success" => false, "message" => "缺少 school_name 或 department_name"]);
+        exit;
     }
 
-    // **清理輸入數據**
-    $school_name = trim($preference['school_name']);
-    $department_name = trim($preference['department_name']);
-    $preference_rank = intval($preference['serial_number']);
+    // 綁定學校名稱、科系名稱和學生 ID
+    $stmt->bind_param("sss", $pref["school_name"], $pref["department_name"], $studentUser);
 
-    // **執行 SQL 插入**
-    $stmt->bind_param("sssi", $userId, $school_name, $department_name, $preference_rank);
+    // 執行 SQL 插入操作
     if (!$stmt->execute()) {
-        $success = false;
-        $response['message'] = '插入資料失敗: ' . $stmt->error;
-        break;
+        echo json_encode(["success" => false, "message" => "SQL 執行錯誤: " . $stmt->error]);
+        exit;
     }
 }
 
-$stmt->close();
-$conn->close();
-
-$response['success'] = $success;
-if ($success) {
-    $response['message'] = '所有資料已成功儲存';
+// 確保有成功影響資料庫
+if ($stmt->affected_rows > 0) {
+    echo json_encode(["success" => true, "message" => "資料已成功存入"]);
+} else {
+    echo json_encode(["success" => false, "message" => "SQL 執行失敗"]);
 }
-echo json_encode($response);
+
+// 關閉語句
+$stmt->close();
+
+// 關閉資料庫連線
+$conn->close();
 ?>

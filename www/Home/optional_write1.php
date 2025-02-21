@@ -1,25 +1,30 @@
 <?php
+// 開啟 session
 session_start();
-$userData = $_SESSION['user'];
-$userId = $userData['user'] ?? null; // 檢查 session 是否有效
-$username = $userData['name'] ?? null;
-$grade = $userData['grade']; // 老師的年級
-$class = $userData['class']; // 老師的班級
 
+// 檢查是否存在用戶資料
 if (!isset($_SESSION['user'])) {
+    // 如果 session 中沒有 'user' 資料，則彈出提示並重定向到登入頁面
     echo ("<script>
-                    alert('請先登入！！');
-                    window.location.href = '/~HCHJ/index.html'; 
-                  </script>");
-    exit();
+            alert('請先登入！！');
+            window.location.href = '/~HCHJ/index.html'; 
+          </script>");
+    exit();  // 停止後續執行
 }
 
+// 取得 session 中的用戶資料
 $userData = $_SESSION['user'];
-$userId = $userData['user']; // 取得用戶ID
-$grade = $userData['grade']; // 取得年級
+
+// 從 session 資料中提取用戶ID、姓名、年級和班級等資訊
+$userId = $userData['user'] ?? null; // 用戶 ID
+$username = $userData['name'] ?? null; // 用戶姓名
+$grade = $userData['grade'] ?? null; // 用戶年級
+$class = $userData['class'] ?? null; // 用戶班級
 
 // 判斷是否為五年級
 $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
+
+// 你可以在這裡使用這些變數來控制後端邏輯，例如判斷是否需要顯示某些內容
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -489,17 +494,14 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                         return;
                     }
 
-                    // 添加序號和選擇的志願資訊
-                    const order = preferences.length + 1;
-                    preferences.push({
-                        order: order,
-                        Secondskill_id: schoolSelect.value,
-                        school_name: schoolSelect.options[schoolSelect.selectedIndex].text,
-                        departmentId: departmentSelect.value,
-                        department_name: departmentSelect.options[departmentSelect.selectedIndex].text,
-                        preference_rank: preference
-                    });
-
+                   // 添加序號和選擇的志願資訊
+                        const order = preferences.length + 1;
+                        preferences.push({
+                            order: order,
+                            school_name: schoolSelect.options[schoolSelect.selectedIndex].text, // 將學校名稱放入 school_name
+                            department_name: departmentSelect.options[departmentSelect.selectedIndex].text, // 將科系名稱放入 department_name
+                            preference_rank: preference // 使用 preference_rank 來表示志願序排名
+                        });
                     // 顯示志願清單並添加序號
                     const preferenceList = document.getElementById('preferenceList');
                     const li = document.createElement('li');
@@ -551,6 +553,7 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     });
                 }
 
+
                 function submit() {
     if (preferences.length === 0) {
         alert("請先添加至少一個志願");
@@ -562,17 +565,18 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
         return;
     }
 
-    // 準備 JSON 資料
+    // 準備 JSON 資料，將學校名稱和科系名稱發送給後端
     const requestData = {
         preferences: preferences.map(pref => ({
-            school_name: pref.school_name, // 學校名稱
-            department_name: pref.department_name // 科系名稱
-        })),
+            school_name: pref.school_name,  // 傳送學校名稱
+            department_name: pref.department_name  // 傳送科系名稱
+        }))
     };
 
     // 確保 JSON 正確
     console.log("送出 JSON:", JSON.stringify(requestData));
 
+    // 使用 POST 方式傳送資料
     fetch("addPreference.php", {
         method: "POST",
         headers: {
@@ -599,7 +603,6 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
         alert("發生錯誤: " + error.message);
     });
 }
-
             </script>
 
         </body>
