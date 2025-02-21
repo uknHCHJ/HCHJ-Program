@@ -165,7 +165,7 @@ if ($conn->connect_error) {
 }
 
 // 讀取 Secondskill 表資料
-$sql = "SELECT id, name, public_private, address, website FROM Secondskill";
+$sql = "SELECT MIN(id) AS id, school_name, school_id, address, official_site FROM test GROUP BY school_name";
 $result = $conn->query($sql);
 
 // 存放學校資料
@@ -217,12 +217,11 @@ function getRegion($address) {
     <?php
     foreach ($schools as $school) {
         $location = getRegion($school["address"]);
-        echo "<div class='grid-item $location' data-name='" . htmlspecialchars($school["name"]) . "'>";
-        echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["name"]) . "</h3>";
-        echo "    <p><strong>公/私立:</strong> " . htmlspecialchars($school["public_private"]) . "</p>";
+        echo "<div class='grid-item $location' data-name='" . htmlspecialchars($school["school_name"]) . "'>";
+        echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["school_name"]) . "</h3>";
         echo "    <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
-        echo "    <a href='" . htmlspecialchars($school["website"]) . "'  class='btn btn-info' >查看詳細資料</a>";
-        echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['id']) . "' class='btn btn-info'>二技科系</a>";
+        echo "    <a href='" . htmlspecialchars($school["official_site"]) . "'  class='btn btn-info' >查看詳細資料</a>";
+        echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
         echo "</div>";
     }
     ?>

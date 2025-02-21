@@ -32,11 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 檢查是否更新成功
         if (mysqli_stmt_affected_rows($stmt) > 0) {
+            echo  "<script>alert('更新權限成功！'); </script>";
             // 重定向回權限管理頁面
             header('Location: Access-Control1.php');
             exit();
         } else {
-            echo  "<script>alert('更新失敗或沒有改變任何資料'); </script>";
+            echo  "<script>alert('更新失敗，請在試一次'); </script>";
             header('Location: Access-Control1.php');
         }
         mysqli_stmt_close($stmt);

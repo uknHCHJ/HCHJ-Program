@@ -207,8 +207,8 @@ foreach ($options as $option) {
                 $section->addTitle($optionNames['competition'], 1);
                 
                 $tableStyle = [
-                    'borderSize'  => 12,
-                    'borderColor' => '000000',
+                    'borderSize'  => 4,
+                    'borderColor' => 'CCCCCC',
                     'cellMargin'  => 50,
                     'alignment'   => JcTable::CENTER
                 ];
@@ -416,14 +416,101 @@ foreach ($options as $option) {
         }
         continue;
     }
-    // 其他選項：如成績單、學歷證明、實習證明、語言能力證明
-    elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
-        $section = $phpWord->addSection();
-        $footer = $section->addFooter();
-        $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
-        $section->addTitle($optionNames[$option], 1);
+    // 其他欄位（包含：成績單、學歷證明、實習證明、語言能力證明、其他資料、服務證明、讀書計畫）
+    // 採用與競賽證明相同的表格版面風格，每頁顯示 3 筆資料
+    elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language', 'other', 'Proof-of-service', 'read'])) {
+        $sql = $queryMap[$option];
+        $result = $conn->query($sql);
+        if ($result && $result->num_rows > 0) {
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            $recordsPerPage = 3; 
+            $totalRecords = count($data);
+            for ($i = 0; $i < $totalRecords; $i += $recordsPerPage) {
+                $section = $phpWord->addSection();
+                $footer = $section->addFooter();
+                $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+                $section->addTitle($optionNames[$option], 1);
+                
+                $tableStyle = [
+                'borderSize'  => 4,
+                'borderColor' => 'CCCCCC',
+                'cellMargin'  => 50,
+                'alignment'   => JcTable::CENTER
+                ];
+                $tableStyleName = $option . 'Table' . $i;
+                $phpWord->addTableStyle($tableStyleName, $tableStyle);
+                $table = $section->addTable($tableStyleName);
+                
+                $batch = array_slice($data, $i, $recordsPerPage);
+                foreach ($batch as $record) {
+                    $table->addRow();
+                    $cell = $table->addCell(9000);
+                    $description = $record['file_name'];
+                    $fileContent = $record['file_content'];
+                    $ext = strtolower(pathinfo($description, PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                        try {
+                            $cell->addImage($fileContent, [
+                                'width'     => 300,
+                                'height'    => 200,
+                                'alignment' => Jc::CENTER,
+                            ]);
+                        } catch (Exception $e) {
+                            $cell->addText("圖片無法載入", ['color' => 'FF0000'], ['alignment' => Jc::CENTER]);
+                        }
+                        $cell->addText("檔案名稱：" . $description, ['size' => 12], ['alignment' => Jc::CENTER]);
+                    } else if ($ext === 'docx') {
+                        if (!empty($fileContent)) {
+                            try {
+                                $tempFilePath = tempnam(sys_get_temp_dir(), 'docx_');
+                                if ($tempFilePath === false) {
+                                    throw new Exception("無法建立臨時檔案");
+                                }
+                                file_put_contents($tempFilePath, $fileContent);
+                                $zip = new ZipArchive();
+                                if ($zip->open($tempFilePath) === true) {
+                                    $xmlContent = $zip->getFromName('word/document.xml');
+                                    $zip->close();
+                                    unlink($tempFilePath);
+                                    if ($xmlContent === false) {
+                                        throw new Exception('未能讀取 document.xml 檔案');
+                                    }
+                                    $xml = simplexml_load_string($xmlContent);
+                                    $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+                                    $textNodes = $xml->xpath('//w:t');
+                                    $content = '';
+                                    foreach ($textNodes as $node) {
+                                        $content .= (string)$node . "\n";
+                                    }
+                                    $cell->addText($content, ['size' => 12], ['alignment' => Jc::CENTER]);
+                                } else {
+                                    unlink($tempFilePath);
+                                    throw new Exception('無法開啟 .docx 文件');
+                                }
+                            } catch (Exception $e) {
+                                $cell->addText("讀取 DOCX 檔案失敗：$description - " . $e->getMessage(), ['italic' => true, 'color' => 'FF0000']);
+                            }
+                        } else {
+                            $cell->addText("無效的 DOCX 檔案資料：$description", ['italic' => true, 'color' => 'FF0000']);
+                        }
+                    } else {
+                        $cell->addText("不支援的檔案類型：$description", ['italic' => true, 'color' => 'FF0000'], ['alignment' => Jc::CENTER]);
+                    }
+                }
+            }
+        } else {
+            $section = $phpWord->addSection();
+            $footer = $section->addFooter();
+            $footer->addPreserveText('{PAGE}', null, ['alignment' => Jc::CENTER]);
+            //$section->addTitle("查無資料：" . $optionNames[$option], 1);
+            $section->addText("查無資料：" . $optionNames[$option], ['size' => 12], ['alignment' => Jc::CENTER]);
+        }
+        continue;
     }
-    // 其他未特別處理的選項
+    // 若遇到未特別處理的選項，採用原有簡單處理方式
     else {
         $section = $phpWord->addSection();
         $footer = $section->addFooter();
@@ -431,107 +518,24 @@ foreach ($options as $option) {
         if (isset($optionNames[$option])) {
             $section->addTitle($optionNames[$option], 1);
         }
-    }
-    $section->addTextBreak(1);
-
-    // 執行該選項對應的查詢（若有設定查詢）
-    $sql = $queryMap[$option];
-    if ($sql == "") {
-        continue;
-    }
-    $result = $conn->query($sql);
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $description = $row['file_name'];
-            $fileContent = $row['file_content'];
-            $ext = strtolower(pathinfo($description, PATHINFO_EXTENSION));
-            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                if (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
-                    $textStyle = ['size' => 12];
-                    $paragraphStyle = ['alignment' => Jc::CENTER];
-                } elseif ($option === 'autobiography') {
-                    $textStyle = $autobiographyTextStyle;
-                    $paragraphStyle = $autobiographyParagraphStyle;
-                } else {
-                    $textStyle = ['size' => 12];
-                    $paragraphStyle = ['alignment' => Jc::BOTH];
-                }
-                $section->addText("檔案名稱：$description", $textStyle, $paragraphStyle);
-                if (!empty($fileContent) && strlen($fileContent) > 100) {
-                    try {
-                        $section->addImage($fileContent, [
-                            'width'     => 300,
-                            'height'    => 200,
-                            'alignment' => Jc::CENTER,
-                        ]);
-                    } catch (Exception $e) {
-                        $section->addText("插入圖片失敗：$description", ['italic' => true, 'color' => 'FF0000'], $paragraphStyle);
-                    }
-                } else {
-                    $section->addText("無效的影像資料：$description", $textStyle, $paragraphStyle);
-                }
-                $section->addTextBreak(1);
-            }
-            else if ($ext === 'docx') {
-                if (!empty($fileContent)) {
-                    try {
-                        $tempFilePath = tempnam(sys_get_temp_dir(), 'docx_');
-                        if ($tempFilePath === false) {
-                            throw new Exception("無法建立臨時檔案");
-                        }
-                        file_put_contents($tempFilePath, $fileContent);
-                        $zip = new ZipArchive();
-                        if ($zip->open($tempFilePath) === true) {
-                            $xmlContent = $zip->getFromName('word/document.xml');
-                            $zip->close();
-                            unlink($tempFilePath);
-                            if ($xmlContent === false) {
-                                throw new Exception('未能讀取 document.xml 檔案');
-                            }
-                            $xml = simplexml_load_string($xmlContent);
-                            $xml->registerXPathNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
-                            $textNodes = $xml->xpath('//w:t');
-                            $content = '';
-                            foreach ($textNodes as $node) {
-                                $content .= (string)$node . "\n";
-                            }
-                            if ($option === 'autobiography') {
-                                $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
-                            } elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language'])) {
-                                $section->addText(
-                                    $content,
-                                    ['name' => 'Times New Roman', 'size' => 12],
-                                    ['alignment' => Jc::CENTER]
-                                );
-                            } else {
-                                $section->addText(
-                                    $content,
-                                    ['name' => 'Times New Roman', 'size' => 12],
-                                    ['alignment' => Jc::BOTH]
-                                );
-                            }
-                        } else {
-                            unlink($tempFilePath);
-                            throw new Exception('無法開啟 .docx 文件');
-                        }
-                    } catch (Exception $e) {
-                        $section->addText("讀取 DOCX 檔案失敗：$description - " . $e->getMessage(), ['italic' => true, 'color' => 'FF0000']);
-                    }
-                } else {
-                    $section->addText("無效的 DOCX 檔案資料：$description");
-                }
-            }
-            else {
-                $section->addText("不支援的檔案類型：$description", ['italic' => true, 'color' => 'FF0000'], ['alignment' => Jc::CENTER]);
-            }
-            $section->addTextBreak(1);
+        $section->addTextBreak(1);
+        $sql = $queryMap[$option];
+        if ($sql == "") {
+            continue;
         }
-    } else {
-        $section->addText("查無資料：{$optionNames[$option]}", ['size' => 12], ['alignment' => Jc::CENTER]);
+        $result = $conn->query($sql);
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $section->addText("檔案名稱：" . $row['file_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
+            }
+        } else {
+            $section->addText("查無資料：{$optionNames[$option]}", ['size' => 12], ['alignment' => Jc::CENTER]);
+        }
     }
 }
 
 $conn->close();
+
 
 header("Content-Description: File Transfer");
 header("Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document");
