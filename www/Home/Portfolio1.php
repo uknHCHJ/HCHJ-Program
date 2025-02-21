@@ -204,6 +204,7 @@ if ($conn->connect_error) {
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審素材區</h1>
+    <p>(注意!上傳檔案後會通知該班導查看)</p>
     <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
         <!-- 將 organization 的 hidden input 移入 form 內 -->
