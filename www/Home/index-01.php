@@ -107,7 +107,7 @@ $result = mysqli_query($link, $query2);
                                 <ul class="sub-menu">
                                     <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
                                     </li>
-
+                                    Preparation
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -115,6 +115,9 @@ $result = mysqli_query($link, $query2);
                             </li>
                             <li class="nav-item">
                             <a href="/~HCHJ/Home/Secondtechnicalcampus00-1.php">管理員</a>
+                            </li>
+                            <li class="nav-item">
+                            <a href="/~HCHJ/Home/Preparation.php">備審</a>
                             </li>
                             <li class="nav-item">
                                 <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
