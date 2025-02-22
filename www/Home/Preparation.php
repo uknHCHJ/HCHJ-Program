@@ -8,20 +8,27 @@ session_start();
 if (!isset($_SESSION['user'])) {
     die("未登入，請先登入後再操作。");
 }
- // 上傳表單
- echo '<form action="" method="post" enctype="multipart/form-data">';
- echo '選擇 PDF 檔案：<input type="file" name="pdf_file" required>';
- echo '<input type="submit" value="上傳並掃描">';
- echo '</form>';
+
+// 上傳表單
+echo '<form action="" method="post" enctype="multipart/form-data">';
+echo '選擇 PDF 檔案：<input type="file" name="pdf_file" required>';
+echo '<input type="submit" value="上傳並掃描">';
+echo '</form>';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
-    // 上傳檔案（注意：此處內部仍使用暫存目錄處理，結果不會將路徑資訊顯示給使用者）
     $uploadDir = 'uploads/';
+
+    // 如果目錄不存在，則創建它
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
     $fileName = basename($_FILES['pdf_file']['name']);
     $uploadFile = $uploadDir . $fileName;
 
-    // 檢查暫存檔案是否存在
-    if (!is_uploaded_file($_FILES['pdf_file']['tmp_name'])) {
-        die("暫存檔案不存在！");
+    // 檢查是否有上傳錯誤
+    if ($_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
+        die("檔案上傳失敗，錯誤碼：" . $_FILES['pdf_file']['error']);
     }
 
     // 嘗試移動檔案
@@ -29,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
         error_log("檔案移動失敗：來源 " . $_FILES['pdf_file']['tmp_name'] . "，目標 " . $uploadFile);
         die("檔案上傳失敗！");
     }
-
 
     // 解析 PDF 檔案
     $parser = new Parser();
@@ -52,8 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
         $extractedText = substr($text, $startPos, $endPos - $startPos);
     }
 
+    // 切割文字為行
+    $lines = explode("\n", $extractedText);
+    $data = [];
 
-    // 此正則假設各欄位以至少兩個空白分隔（依實際格式調整）
+    // 解析欄位
     foreach ($lines as $line) {
         if (preg_match('/^\s*(\S+.*?)\s{2,}(\S+.*?)\s{2,}(\S+.*?)\s{2,}(\S+.*?)\s*$/u', $line, $matches)) {
             $data[] = [
@@ -82,5 +91,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
     } else {
         echo "沒有找到符合的資料。";
     }
-} 
+}
 ?>
