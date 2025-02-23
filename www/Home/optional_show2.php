@@ -34,30 +34,25 @@ if (!isset($_SESSION['user'])) {
 }
 
 $query = "SELECT DISTINCT
-        p.student_user AS user, 
-        p.preference_rank AS serial_number, 
-        p.Secondskill_id AS school_id, 
-        p.department_id AS department_id, 
-        p.created_at AS time,
-        s.name AS school_name, 
-        sd.department_name AS department_name,
-        (
-            SELECT COUNT(*) 
-            FROM preferences p2 
-            WHERE p2.Secondskill_id = p.Secondskill_id 
-            AND p2.department_id = p.department_id
-        ) AS student_count
-    FROM preferences p
-    LEFT JOIN Secondskill s ON p.Secondskill_id = s.id
-    LEFT JOIN School_Department sd ON p.department_id = sd.department_id
-    WHERE p.student_user = '$userId'
-    AND (p.student_user, p.created_at) IN (
-        SELECT student_user, MAX(created_at) 
-        FROM preferences 
+            school_name AS school_name, 
+            department_name AS department_name,
+            preference_rank AS serial_number,
+            created_at AS time,
+            (
+                SELECT COUNT(*) 
+                FROM Preferences p2 
+                WHERE p2.school_name = p.school_name 
+                AND p2.department_name = p.department_name
+            ) AS student_count
+        FROM Preferences p
         WHERE student_user = '$userId'
-        GROUP BY student_user
-    )
-    ORDER BY p.preference_rank ASC";
+        AND (student_user, created_at) IN (
+            SELECT student_user, MAX(created_at) 
+            FROM Preferences 
+            WHERE student_user = '$userId'
+            GROUP BY student_user
+        )
+        ORDER BY preference_rank ASC";
 
 $result = mysqli_query($link, $query);
 
@@ -69,7 +64,7 @@ if (!$result) {
 
 $competitions = array();
 while ($row = mysqli_fetch_assoc($result)) {
-    $key = $row['serial_number'] . '-' . $row['school_id'] . '-' . $row['department_id'];
+    $key = $row['serial_number'] . '-' . $row['school_name'] . '-' . $row['department_name'];
     if (!isset($competitions[$key])) {
         $competitions[$key] = $row;
     }

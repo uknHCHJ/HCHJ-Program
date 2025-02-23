@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 // 資料庫連線設定
 $servername = "127.0.0.1"; // 伺服器 IP 或 localhost
 $username = "HCHJ";       // 資料庫帳號
