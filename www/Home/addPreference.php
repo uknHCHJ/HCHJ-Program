@@ -1,12 +1,11 @@
 <?php
-// 開啟 session
 session_start();
 
 // 資料庫連線設定
 $servername = "127.0.0.1"; // 伺服器 IP 或 localhost
 $username = "HCHJ";       // 資料庫帳號
 $password = "xx435kKHq";  // 密碼
-$dbname = "HCHJ";       // 資料庫名稱
+$dbname = "HCHJ";         // 資料庫名稱
 
 // 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -40,8 +39,22 @@ if (!$studentUser) {
     exit;
 }
 
-// 準備 SQL 插入語句，包含學校名稱、科系名稱和學生的 ID (student_user)
-$stmt = $conn->prepare("INSERT INTO Preferences (school_name, department_name, student_user,preference_rank) VALUES (?, ?,?,?)");
+// 先刪除該學生的舊資料
+$deleteStmt = $conn->prepare("DELETE FROM Preferences WHERE student_user = ?");
+if (!$deleteStmt) {
+    echo json_encode(["success" => false, "message" => "SQL 查詢準備失敗: " . $conn->error]);
+    exit;
+}
+
+// 綁定學生帳號並執行刪除
+$deleteStmt->bind_param("s", $studentUser);
+if (!$deleteStmt->execute()) {
+    echo json_encode(["success" => false, "message" => "刪除舊資料失敗: " . $deleteStmt->error]);
+    exit;
+}
+
+// 刪除舊資料成功，開始插入新的資料
+$stmt = $conn->prepare("INSERT INTO Preferences (school_name, department_name, student_user, preference_rank) VALUES (?, ?, ?, ?)");
 
 if (!$stmt) {
     echo json_encode(["success" => false, "message" => "SQL 查詢準備失敗: " . $conn->error]);
@@ -65,7 +78,6 @@ foreach ($data["preferences"] as $pref) {
     }
 }
 
-
 // 確保有成功影響資料庫
 if ($stmt->affected_rows > 0) {
     echo json_encode(["success" => true, "message" => "資料已成功存入"]);
@@ -75,6 +87,7 @@ if ($stmt->affected_rows > 0) {
 
 // 關閉語句
 $stmt->close();
+$deleteStmt->close();
 
 // 關閉資料庫連線
 $conn->close();
