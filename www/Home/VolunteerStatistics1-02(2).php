@@ -169,65 +169,67 @@ $class = $userData['class'];
     </section>
 
     <!DOCTYPE html>
-    <html lang="zh">
+<html lang="zh">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>學生選校科系志願表</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f8f9fa;
-                text-align: center;
-                margin: 20px;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學生選校科系志願表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+            margin: 20px;
+        }
 
-            h1 {
-                color: #333;
-            }
+        h1 {
+            color: #333;
+        }
 
-            table {
-                width: 95%;
-                /* 原本是 80%，改成 95% 或 100% 讓表格更寬 */
-                margin: 20px auto;
-                border-collapse: collapse;
-                background: #fff;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                overflow: hidden;
-                
-                /* 確保表格均勻分布 */
-            }
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* 加上橫向滾動條 */
+            margin: 20px auto;
+        }
 
-            th,
-            td {
-                padding: 12px;
-                border: 1px solid #ddd;
-                text-align: center;
-                white-space: nowrap;
-                /* 防止文字換行 */
-                min-width: 120px;
-                /* 設定最小寬度，避免字太擠 */
-            }
+        table {
+            width: 100%;
+            margin: 0;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-            th {
-                background-color: #007bff;
-                color: white;
-            }
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            white-space: nowrap;
+            min-width: 120px;
+        }
 
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
 
-            tr:hover {
-                background-color: #ddd;
-            }
-        </style>
-    </head>
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-    <body>
-        <h1>學生選校科系志願表</h1>
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>學生選校科系志願表</h1>
+    <div class="table-container">
         <table>
             <thead>
                 <tr>
@@ -244,55 +246,58 @@ $class = $userData['class'];
 
             </tbody>
         </table>
-        <script>
-            fetch('VolunteerStatistics2-02(2).php')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+    </div>
+    <script>
+        fetch('VolunteerStatistics2-02(2).php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.getElementById('data-body');
+                tableBody.innerHTML = ''; // 清空表格
+
+                const students = {};
+
+                // 分組每位學生的選擇
+                data.forEach(item => {
+                    const { student_user, student_name, school_name, department_name, preference_rank } = item;
+
+                    if (!students[student_name]) {
+                        students[student_name] = {
+                            student_user: student_user, // 存學號
+                            preferences: []
+                        };
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    const tableBody = document.getElementById('data-body');
-                    tableBody.innerHTML = ''; // 清空表格
+                    students[student_name].preferences[preference_rank - 1] = `${school_name} - ${department_name}`;
+                });
 
-                    const students = {};
+                // 顯示每位學生的選擇
+                for (const studentName in students) {
+                    const { student_user, preferences } = students[studentName];
 
-                    // 分組每位學生的選擇
-                    data.forEach(item => {
-                        const { student_user, student_name, school_name, department_name, preference_rank } = item;
+                    const row = tableBody.insertRow();
+                    const studentIdCell = row.insertCell(); // 學號欄位
+                    studentIdCell.textContent = student_user;
 
-                        if (!students[student_name]) {
-                            students[student_name] = {
-                                student_user: student_user, // 存學號
-                                preferences: []
-                            };
-                        }
-                        students[student_name].preferences[preference_rank - 1] = `${school_name} - ${department_name}`;
-                    });
+                    const nameCell = row.insertCell(); // 姓名欄位
+                    nameCell.textContent = studentName;
 
-                    // 顯示每位學生的選擇
-                    for (const studentName in students) {
-                        const { student_user, preferences } = students[studentName];
-
-                        const row = tableBody.insertRow();
-                        const studentIdCell = row.insertCell(); // 學號欄位
-                        studentIdCell.textContent = student_user;
-
-                        const nameCell = row.insertCell(); // 姓名欄位
-                        nameCell.textContent = studentName;
-
-                        for (let i = 0; i < 5; i++) {
-                            const cell = row.insertCell();
-                            cell.textContent = preferences[i] || '';  // 若未選擇則顯示空白
-                        }
+                    for (let i = 0; i < 5; i++) {
+                        const cell = row.insertCell();
+                        cell.textContent = preferences[i] || '';  // 若未選擇則顯示空白
                     }
-                })
-                .catch(error => console.error('Error fetching data:', error));
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
 
-        </script>
-    </body>
-    </html>
+    </script>
+</body>
+
+</html>
+
     <!-- ========================= client-logo-section end ========================= -->
 
 
