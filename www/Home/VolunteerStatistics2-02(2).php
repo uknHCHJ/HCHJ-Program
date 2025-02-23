@@ -28,7 +28,7 @@ $sql = "SELECT
         p.department_name,
         p.preference_rank
     FROM user u
-    LEFT JOIN preferences p ON u.user = p.student_user -- 如果沒有志願資料，也會顯示出來
+    LEFT JOIN Preferences p ON u.user = p.student_user -- 如果沒有志願資料，也會顯示出來
     WHERE u.class = ? AND u.grade = ? AND (u.Permissions = 1 OR u.Permissions = 9) -- 過濾年級、班級與權限
     ORDER BY u.user, p.preference_rank
 ";

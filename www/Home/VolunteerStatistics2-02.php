@@ -26,7 +26,7 @@ $sql = "SELECT
         p.department_name AS Department, 
         COUNT(u.name) AS StudentCount, 
         GROUP_CONCAT(u.name SEPARATOR ', ') AS Students  
-    FROM preferences p
+    FROM Preferences p
     JOIN user u ON p.student_user = u.user  
     WHERE u.class = ? AND u.grade = ? AND (u.Permissions = 1 OR u.Permissions = 9) -- 過濾班級和年級
     GROUP BY p.school_name, p.department_name  
