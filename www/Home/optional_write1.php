@@ -416,7 +416,11 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                             const formContent = document.getElementById('formContent');
                             const formTitle = document.getElementById('formTitle');
 
-                            if (currentTime < openTime) {
+                            // 檢查是否有設定時間
+                            if (!data.open_time || !data.close_time) {
+                                timeStatus.innerHTML = '此功能尚未開放';
+                                formTitle.style.display = 'none'; // 隱藏標題
+                            } else if (currentTime < openTime) {
                                 timeStatus.innerHTML = '填選志願功能尚未開放';
                                 formTitle.style.display = 'none'; // 隱藏標題
                             } else if (currentTime > closeTime) {
