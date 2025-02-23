@@ -4,9 +4,9 @@ session_start();
 
 // 資料庫連線設定
 $servername = "127.0.0.1"; // 伺服器 IP 或 localhost
-$username   = "HCHJ";       // 資料庫帳號
-$password   = "xx435kKHq";  // 密碼
-$dbname     = "HCHJ";       // 資料庫名稱
+$username = "HCHJ";       // 資料庫帳號
+$password = "xx435kKHq";  // 密碼
+$dbname = "HCHJ";       // 資料庫名稱
 
 // 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -41,7 +41,7 @@ if (!$studentUser) {
 }
 
 // 準備 SQL 插入語句，包含學校名稱、科系名稱和學生的 ID (student_user)
-$stmt = $conn->prepare("INSERT INTO Preferences (school_name, department_name, student_user) VALUES (?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO Preferences (school_name, department_name, student_user,preference_rank) VALUES (?, ?,?,?)");
 
 if (!$stmt) {
     echo json_encode(["success" => false, "message" => "SQL 查詢準備失敗: " . $conn->error]);
@@ -50,13 +50,13 @@ if (!$stmt) {
 
 // 循環處理每一個志願資料並插入到資料庫
 foreach ($data["preferences"] as $pref) {
-    if (!isset($pref["school_name"]) || !isset($pref["department_name"])) {
-        echo json_encode(["success" => false, "message" => "缺少 school_name 或 department_name"]);
+    if (!isset($pref["school_name"]) || !isset($pref["department_name"]) || !isset($pref["preference_rank"])) {
+        echo json_encode(["success" => false, "message" => "缺少 school_name、department_name 或 preference_rank"]);
         exit;
     }
 
-    // 綁定學校名稱、科系名稱和學生 ID
-    $stmt->bind_param("sss", $pref["school_name"], $pref["department_name"], $studentUser);
+    // 綁定學校名稱、科系名稱、學生 ID 和志願序號
+    $stmt->bind_param("ssss", $pref["school_name"], $pref["department_name"], $studentUser, $pref["preference_rank"]);
 
     // 執行 SQL 插入操作
     if (!$stmt->execute()) {
@@ -64,6 +64,7 @@ foreach ($data["preferences"] as $pref) {
         exit;
     }
 }
+
 
 // 確保有成功影響資料庫
 if ($stmt->affected_rows > 0) {

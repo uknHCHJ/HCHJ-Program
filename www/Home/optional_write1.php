@@ -1,30 +1,25 @@
 <?php
-// 開啟 session
 session_start();
+$userData = $_SESSION['user'];
+$userId = $userData['user'] ?? null; // 檢查 session 是否有效
+$username = $userData['name'] ?? null;
+$grade = $userData['grade']; // 老師的年級
+$class = $userData['class']; // 老師的班級
 
-// 檢查是否存在用戶資料
 if (!isset($_SESSION['user'])) {
-    // 如果 session 中沒有 'user' 資料，則彈出提示並重定向到登入頁面
     echo ("<script>
-            alert('請先登入！！');
-            window.location.href = '/~HCHJ/index.html'; 
-          </script>");
-    exit();  // 停止後續執行
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
 }
 
-// 取得 session 中的用戶資料
 $userData = $_SESSION['user'];
-
-// 從 session 資料中提取用戶ID、姓名、年級和班級等資訊
-$userId = $userData['user'] ?? null; // 用戶 ID
-$username = $userData['name'] ?? null; // 用戶姓名
-$grade = $userData['grade'] ?? null; // 用戶年級
-$class = $userData['class'] ?? null; // 用戶班級
+$userId = $userData['user']; // 取得用戶ID
+$grade = $userData['grade']; // 取得年級
 
 // 判斷是否為五年級
 $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
-
-// 你可以在這裡使用這些變數來控制後端邏輯，例如判斷是否需要顯示某些內容
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -494,14 +489,17 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                         return;
                     }
 
-                   // 添加序號和選擇的志願資訊
-                        const order = preferences.length + 1;
-                        preferences.push({
-                            order: order,
-                            school_name: schoolSelect.options[schoolSelect.selectedIndex].text, // 將學校名稱放入 school_name
-                            department_name: departmentSelect.options[departmentSelect.selectedIndex].text, // 將科系名稱放入 department_name
-                            preference_rank: preference // 使用 preference_rank 來表示志願序排名
-                        });
+                    // 添加序號和選擇的志願資訊
+                    const order = preferences.length + 1;
+                    preferences.push({
+                        order: order,
+                        Secondskill_id: schoolSelect.value,
+                        school_name: schoolSelect.options[schoolSelect.selectedIndex].text,
+                        departmentId: departmentSelect.value,
+                        department_name: departmentSelect.options[departmentSelect.selectedIndex].text,
+                        preference_rank: preference
+                    });
+
                     // 顯示志願清單並添加序號
                     const preferenceList = document.getElementById('preferenceList');
                     const li = document.createElement('li');
@@ -553,56 +551,52 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                     });
                 }
 
-
                 function submit() {
-    if (preferences.length === 0) {
-        alert("請先添加至少一個志願");
-        return;
-    }
+                    if (preferences.length === 0) {
+                        alert("請先添加至少一個志願");
+                        return;
+                    }
 
-    // 確認是否送出
-    if (!confirm("確定要送出志願嗎？")) {
-        return;
-    }
+                    // 加入確認視窗
+                    if (!confirm("確定要送出志願嗎？")) {
+                        return;
+                    }
 
-    // 準備 JSON 資料，將學校名稱和科系名稱發送給後端
-    const requestData = {
-        preferences: preferences.map(pref => ({
-            school_name: pref.school_name,  // 傳送學校名稱
-            department_name: pref.department_name  // 傳送科系名稱
-        }))
-    };
+                    fetch("addPreference.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            preferences: preferences.map((pref, index) => ({
+                                preference_rank: index + 1,  // 這裡把 serial_number 改為 preference_rank
+                                Secondskill_id: pref.Secondskill_id,
+                                department_id: pref.departmentId,
+                                school_name: pref.school_name,
+                                department_name: pref.department_name
+                            })),
+                        }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (data.success) {
+                                alert("志願序送出成功");
+                                window.location.href = "optional_show1.php";
+                            } else {
+                                alert("儲存失敗: " + data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert("發生錯誤: " + error.message);
+                        });
 
-    // 確保 JSON 正確
-    console.log("送出 JSON:", JSON.stringify(requestData));
-
-    // 使用 POST 方式傳送資料
-    fetch("addPreference.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`伺服器回應錯誤，狀態碼: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            alert("志願序送出成功");
-            window.location.href = "optional_show1.php"; // 送出成功後跳轉
-        } else {
-            alert("儲存失敗: " + data.message);
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("發生錯誤: " + error.message);
-    });
-}
+                }
             </script>
 
         </body>
