@@ -87,8 +87,8 @@ if ($result_role) {
         </div>
         <!-- preloader end -->
 
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+       <!-- ========================= header start ========================= -->
+       <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -226,7 +226,7 @@ if ($result_students) {
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='teacher-download.php?id={$student_id}&category=服務證明'>📂 下載</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='teacher-download-04.php?id={$student_id}&category=服務證明'>📂 下載</a>" : "";
 
 
         echo "<tr>
