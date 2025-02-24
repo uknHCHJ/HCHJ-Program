@@ -30,7 +30,7 @@ if (!isset($_SESSION['user'])) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>編輯</title>
+        <title>新增比賽資訊</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,7 +44,60 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
 		<link rel="stylesheet" href="assets/css/main.css">
+        <style>
+    /* 設定容器和表單樣式 */
+    .form-container {
+        text-align: center;
+        width: 100%;
+        max-width: 500px; /* 設定最大寬度 */
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* 調整標籤樣式 */
+    label {
+        display: block;
+        text-align: left;
+        font-weight: bold;
+        font-size: 1.2em; /* 增加字型大小 */
+        margin-top: 10px;
+    }
+
+    /* 設定 select、input 和 textarea 的樣式與大小 */
+    select, input[type="text"], textarea, input[type="file"], input[type="date"] {
+        width: 100%;
+        max-width: 500px; /* 設定欄位最大寬度 */
+        margin-top: 10px;
+        padding: 8px;
+        font-size: 1em;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    /* 設定按鈕樣式 */
+    button {
+        font-size: 1.2em; /* 增加按鈕字型大小 */
+        padding: 10px 20px;
+    }
+</style>
+
     </head>
+    <?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
+
+
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+?>
+
     <body>
 
         <!-- ========================= preloader start ========================= -->
@@ -65,7 +118,6 @@ if (!isset($_SESSION['user'])) {
                 </div>
             </div>
         <!-- preloader end -->
-
         <!-- ========================= header start ========================= -->
         <header class="header navbar-area">
         <div class="container">
@@ -106,7 +158,7 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="Schoolnetwork1.php">二技校園網</a>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -142,96 +194,34 @@ if (!isset($_SESSION['user'])) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">二技科系</h2>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
-                                    </ol>
-                                </nav>
-                            </div>
+                            <h2 class="text-white">新增</h2>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
-
-        <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-//建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-//確認連線成功或失敗
-if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
-}
-//echo "連線成功";
-
-// 接收school_id參數
-$school_id = $_GET['school_id'];
-$department_id = $_GET['department_id'];
-$ID = isset($_POST["school_id"]) ? $_POST["school_id"] : NULL;
-
-// 抓取對應學校的科系
-$sql = "SELECT department_id ,department_name FROM Department WHERE school_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $school_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// 準備科系資料陣列
-$departments = array();
-
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $departments[] = $row;
-    }
-    mysqli_free_result($result);
-}
-
-// 抓取學校名稱
-$sql_school = "SELECT school_name FROM School WHERE school_id = ?";
-$stmt_school = $conn->prepare($sql_school);
-$stmt_school->bind_param("i", $school_id);
-$stmt_school->execute();
-$result_school = $stmt_school->get_result();
-$school_name = $result_school->fetch_assoc()['school_name'];
-
-?>
-      <!-- ========================= service-section start ========================= -->
-      <body>
-      <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
-    <h2 class="text-center" style="font-size: 3em; line-height: 1.2;"><?= $school_name ?></h2><br>
-    <table class="table table-hover text-center" style="width: 50%; font-size: 1.4em; line-height: 1.5;">
-        <thead>
-            <tr>
-                <th>序號</th>
-                <th>科系名稱</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $index = 1; ?>
-            <?php foreach ($departments as $department) : ?>
-                <tr>
-                    <td><?= $index++ ?></td>
-                    <td><?= htmlspecialchars($department['department_name']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <a href="Schoolnetwork1.php" class="btn btn-secondary">返回上一頁</a>
+        
+        <section class="service-section pt-20 pb-10">
+    <div class="form-container">
+        <h2>比賽資訊</h2>
+        <form action="AddContest2.php" method="post" enctype="multipart/form-data"><br>
+            <label for="name">比賽名稱：</label>
+            <input type="text" id="name" name="name" required><br>
+            
+            <label for="link">報名連結：</label>
+            <input type="text" id="link" name="link" required><br><br>
+            
+            <button class="btn btn-success" onclick="return confirm('確定要新增該比賽嗎？')">送出</button>
+        </form>
+    </div>
 </section>
-</body>
+    </div>
+    </div>
+    </div>
+    </div>
 <!-- ========================= service-section end ========================= -->
-
-
-
 
         <!-- ========================= client-logo-section start ========================= -->
         <section class="client-logo-section pt-100">
@@ -273,8 +263,8 @@ $school_name = $result_school->fetch_assoc()['school_name'];
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                            <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

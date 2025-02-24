@@ -108,7 +108,7 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="Schoolnetwork1.php">二技校園網</a>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -236,7 +236,7 @@ if (!isset($_SESSION['user'])) {
                     echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["school_name"]) . "</h3>";
                     echo "    <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
                     echo "    <a href='" . htmlspecialchars($school["official_site"]) . "'  class='btn btn-info' >查看詳細資料</a>";
-                    echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
+                    echo "    <a href='Schoolnetwork2-02.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
                     echo "</div>";
                 }
 
