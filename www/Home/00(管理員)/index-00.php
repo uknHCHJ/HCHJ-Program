@@ -101,9 +101,8 @@ $userId= $userData['user'];
                                     <li class="nav-item">
                                         <a class="page-scroll dd-menu" href="javascript:void(0)">二技校園網</a>
                                         <ul class="sub-menu">
-                                            <li class="nav-item"><a href="Schoolnetwork1.php">首頁</a></li>
-                                            <li class="nav-item"><a href="Secondtechnicalcampus00-1.php">新增校園</a></li>
-                                            <li class="nav-item"><a href="Schoolnetwork2.php">新增科系</a></li>
+                                            <li class="nav-item"><a href="Schoolnetwork1-00.php">首頁</a></li>
+                                            <li class="nav-item"><a href="Secondtechnicalcampus00-1.php">新增校園科系</a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -200,7 +199,7 @@ $userId= $userData['user'];
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
                             <a href="index-00.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

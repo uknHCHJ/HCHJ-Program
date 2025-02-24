@@ -13,7 +13,6 @@ $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
 $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
-
 $query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
 
@@ -24,7 +23,6 @@ if (!isset($_SESSION['user'])) {
                   </script>");
     exit();
 }
-
 ?>
 
 <!doctype html>
@@ -120,8 +118,8 @@ if ($conn->connect_error) {
                 </div>
             </div>
         <!-- preloader end -->
-         <!-- ========================= header start ========================= -->
-         <header class="header navbar-area">
+        <!-- ========================= header start ========================= -->
+        <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -144,7 +142,7 @@ if ($conn->connect_error) {
                                     <li class="nav-item">
                                         <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
                                         <ul class="sub-menu">
-                                            <li class="nav-item"><a href="contact-04.php">查看個人資料</a></li>
+                                            <li class="nav-item"><a href="contact1-04.php">查看個人資料</a></li>
                                             <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>
                                         </ul>
                                     </li>
@@ -190,10 +188,6 @@ if ($conn->connect_error) {
                             <h2 class="text-white">新增</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a href="blog-03(競賽).php"></a></li>
-                                    </ol>
                                 </nav>
                             </div>
                         </div>
@@ -210,17 +204,8 @@ if ($conn->connect_error) {
             <label for="name">比賽名稱：</label>
             <input type="text" id="name" name="name" required><br>
             
-            <label for="inform">比賽資訊：</label>
-            <textarea id="inform" name="inform" rows="3" required></textarea><br>
-            
             <label for="link">報名連結：</label>
             <input type="text" id="link" name="link" required><br><br>
-            
-            <label for="display_end_time">顯示截止日期：</label>
-            <input type="date" id="display_end_time" name="display_end_time" required><br><br>
-            
-            <label for="image">選擇圖片：</label>
-            <input type="file" id="image" name="image" required><br><br>
             
             <button class="btn btn-success" onclick="return confirm('確定要新增該比賽嗎？')">送出</button>
         </form>
@@ -273,7 +258,7 @@ if ($conn->connect_error) {
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
                             <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

@@ -30,7 +30,7 @@ if (!isset($_SESSION['user'])) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>修改比賽資訊</title>
+        <title>二技校園網首頁</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -66,13 +66,13 @@ if (!isset($_SESSION['user'])) {
             </div>
         <!-- preloader end -->
 
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+       <!-- ========================= header start ========================= -->
+       <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="index-04.php">
+                            <a class="navbar-brand" href="index-00.php">
                                 <img src="schoolimages/uknlogo.png" alt="Logo">
                             </a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -82,32 +82,31 @@ if (!isset($_SESSION['user'])) {
                                 <span class="toggler-icon"></span>
                                 <span class="toggler-icon"></span>
                             </button>
+
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                        <a href="index-04.php">首頁</a>
+                                    <li class="nav-item">
+                                        <a href="index-00.php">首頁</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
-                                        <ul class="sub-menu">
-                                            <li class="nav-item"><a href="contact1-04.php">查看個人資料</a></li>
-                                            <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>
-                                        </ul>
+                                        <a href="contact-00.php">個人資料</a>
                                     </li>
                                     <li class="nav-item">
-                                    <a href="student04-1.php">班級管理</a>
-                                    </li>
-                                    <li class="nav-item">
-                                    <a href="Schoolnetwork1-04.php">二技校園網</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-item dd-menu" >比賽資訊</a>           
-                                        <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog1-04.php">首頁</a></li>
-                                            <li class="nav-item"><a href="AddContest1-04.php">新增</a></li>
-                                            <li class="nav-item"><a href="ContestEdin1-04.php">編輯</a></li>
-                                        </ul>
+                                        <a href="../changepassword.html">修改密碼</a>
                                     </li>  
+                                    <li class="nav-item">
+                                        <a href="Adduser.php">新增人員</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">二技校園網</a>
+                                        <ul class="sub-menu">
+                                            <li class="nav-item"><a href="Schoolnetwork1-00.php">首頁</a></li>
+                                            <li class="nav-item"><a href="Secondtechnicalcampus00-1.php">新增校園科系</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="Access-Control1.php">權限管理</a>                                
+                                    </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
                                     </li>
@@ -116,14 +115,13 @@ if (!isset($_SESSION['user'])) {
                                     </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="../logout.php" >登出</a>
-                                    </li>                           
-                                </ul>
+                                    </li>                          
+                                </ul>                                    
                             </div> <!-- navbar collapse -->
                         </nav> <!-- navbar -->
                     </div>
                 </div> <!-- row -->
             </div> <!-- container -->
-        
         </header>
         <!-- ========================= header end ========================= -->
 
@@ -133,7 +131,7 @@ if (!isset($_SESSION['user'])) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">比賽資訊修改</h2>
+                            <h2 class="text-white">二技校園網介紹</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                 </nav>
@@ -144,126 +142,208 @@ if (!isset($_SESSION['user'])) {
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
+        <?php 
+// 資料庫連線設定
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
-        <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-//建立連線
+// 建立連線
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-//確認連線成功或失敗
+// 檢查連線
 if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
+    die("連接資料庫失敗: " . $conn->connect_error);
 }
-//echo "連線成功";
 
-$adm_pk=$_GET['ID'];
-//echo $adm_pk;
-// 設置一個空陣列來放資料
-$datas = array();
+// 讀取 Secondskill 表資料
+$sql = "SELECT MIN(id) AS id, school_name, school_id, address, official_site FROM test GROUP BY school_name";
+$result = $conn->query($sql);
 
-$sql = "SELECT * FROM information WHERE ID='".$adm_pk."'"; // sql語法存在變數中
-$result = mysqli_query($conn, $sql); // 用mysqli_query方法執行(sql語法)將結果存在變數中
+// 存放學校資料
+$schools = [];
 
-// 如果有資料
-if ($result) {
-    // mysqli_num_rows方法可以回傳我們結果總共有幾筆資料
-    if (mysqli_num_rows($result) > 0) {
-        // 取得大於0代表有資料
-        // while迴圈會根據資料數量，決定跑的次數
-        // mysqli_fetch_assoc方法可取得一筆值
-        while ($row = mysqli_fetch_assoc($result)) {
-            // 每跑一次迴圈就抓一筆值，最後放進data陣列中
-            $datas[] = $row;
-        }
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $schools[] = $row;
     }
-    // 釋放資料庫查到的記憶體
-    mysqli_free_result($result);
-} else {
-    echo "{$sql} 語法執行失敗，錯誤訊息: " . mysqli_error($link);
 }
-// 處理完後印出資料
-if (!empty($result)) {
-    // 如果結果不為空，就利用print_r方法印出資料
-    // print_r($datas);
-    //echo($datas[0]['adm_name']);
-} else {
-    // 為空表示沒資料
-    echo "查無資料";
+
+// 判斷學校區域的函式
+function getRegion($address) {
+    $north = ['臺北市', '新北市', '基隆市', '桃園市', '新竹市', '新竹縣', '宜蘭縣'];
+    $central = ['臺中市', '苗栗縣', '彰化縣', '南投縣', '雲林縣'];
+    $south = ['高雄市', '臺南市', '屏東縣', '嘉義市', '嘉義縣', '澎湖縣'];
+    $east = ['花蓮縣', '臺東縣', '金門縣', '連江縣'];
+
+    foreach ($north as $region) {
+        if (strpos($address, $region) !== false) return 'north';
+    }
+    foreach ($central as $region) {
+        if (strpos($address, $region) !== false) return 'central';
+    }
+    foreach ($south as $region) {
+        if (strpos($address, $region) !== false) return 'south';
+    }
+    foreach ($east as $region) {
+        if (strpos($address, $region) !== false) return 'east';
+    }
+    return 'unknown';
 }
-echo "<br><br>";
-//echo $datas[0]['sf_name']; // 印出第0筆資料中的sf_name欄位值
-
-//使用表格排版用while印出
-$datas_len = count($datas); //目前資料筆數
-
 ?>
-      <!-- ========================= service-section start ========================= -->
-      <body>        
-    <div style="text-align:center;width:100%;height:50px;">
-        <div style="width:30%;height:20px;margin:0 auto;">
-            <h2 class="margin_top50">比賽資訊</h2><br>
-            <form method="post" action="Contestupdate2-04.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
-                比賽名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['name'] ?>" name="name"><br>
-                比賽連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
-                <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該比賽資訊嗎？')" value="修改">
-                <br><br>
-                <a href="ContestEdin1-04.php" class="btn btn-secondary">返回上一頁</a>
-            </form>
-        </div>
+
+<body>
+<section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
+    <input type="text" id="searchBox" onkeyup="searchSchools()" placeholder="搜尋學校..." class="form-control mb-3" style="max-width: 400px;">
+
+    <div class="text-center mb-4">
+        <button type="button" class="portfolio-btn active" onclick="filterSchools('*')" data-filter="*">全部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('north')" data-filter="north">北部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('central')" data-filter="central">中部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('south')" data-filter="south">南部</button>
+        <button type="button" class="portfolio-btn" onclick="filterSchools('east')" data-filter="east">東部</button>
     </div>
-</body>
-        </div>
-    </div>
+
+    <div class="grid-container">
+    <div class="no-results" style="display: none;">無搜尋結果</div>
+    <?php
+    foreach ($schools as $school) {
+        $location = getRegion($school["address"]);
+        echo "<div class='grid-item $location' data-name='" . htmlspecialchars($school["school_name"]) . "'>";
+        echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["school_name"]) . "</h3>";
+        echo "    <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
+        echo "    <a href='" . htmlspecialchars($school["official_site"]) . "'  class='btn btn-info' >查看詳細資料</a>";
+        echo "    <a href='Schoolnetwork2-00.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
+        echo "</div>";
+    }
+    
+    ?>
+</div>
 </section>
+
+<script>
+function filterSchools(region) {
+    let items = document.querySelectorAll('.grid-item');
+    items.forEach(item => {
+        if (region === '*' || item.classList.contains(region)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function searchSchools() {
+    let input = document.getElementById("searchBox").value.toLowerCase();
+    let items = document.querySelectorAll(".grid-item");
+    let noResultsMessage = document.querySelector('.no-results');
+    let hasVisibleItems = false;  // 檢查是否有顯示的項目
+
+    items.forEach(item => {
+        let schoolName = item.getAttribute("data-name").toLowerCase();
+        if (schoolName.includes(input)) {
+            item.style.display = "block";
+            hasVisibleItems = true;  // 只要有項目顯示，就改為 true
+        } else {
+            item.style.display = "none";
+        }
+    });
+
+    // 如果沒有搜尋結果，顯示"無結果"訊息
+    if (!hasVisibleItems && noResultsMessage) {
+        noResultsMessage.style.display = "block";
+    } else if (noResultsMessage) {
+        noResultsMessage.style.display = "none";
+    }
+}
+</script>
+</body>
+<style>
+    /* 北中南東部分類按鈕框線淡顏色 */
+    .portfolio-btn {
+        background-color: white;
+        color: black;
+        padding: 10px 20px;
+        border: 1px solid #BDC3C7; /* 淡灰色框線 */
+        border-radius: 5px;
+        font-size: 1em;
+        margin: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* 當按鈕被選中時顯示藍色背景 */
+    .portfolio-btn.active {
+        background-color: #3498DB;
+        color: white;
+    }
+
+    /* 按鈕懸停變色 */
+    .portfolio-btn:hover {
+        background-color: #3498DB;
+        color: white;
+    }
+
+   /* 查看詳細資料和二技科系按鈕樣式 */
+.theme-btn {
+    background-color: white; /* 底色為白色 */
+    color: black; /* 文字顏色為黑色 */
+    padding: 10px 20px;
+    text-decoration: none;
+    border: 1px solid #BDC3C7; /* 淡灰色邊框 */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 按鈕按下時，底色變為藍色 */
+.theme-btn:active {
+    background-color: #3498DB; /* 藍色 */
+    color: white; /* 文字顏色變為白色 */
+}
+
+/* 按鈕懸停時變色 */
+.theme-btn:hover {
+    background-color: #3498DB; /* 藍色 */
+    color: white; /* 文字顏色變為白色 */
+}
+
+/* 調整 grid-item 的顯示，保持一致的大小與布局 */
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.grid-item {
+    width: 30%;
+    margin: 15px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    color: black;
+    transition: all 0.3s ease;  /* 添加過渡效果 */
+}
+
+/* 如果只剩下一個項目，讓它居中顯示並調整大小 */
+.grid-item:only-child {
+    width: 50% !important;  /* 讓單一項目不會顯得過大 */
+    margin: 20px auto !important;
+    text-align: center;
+}
+
+/* 當搜尋結果為空時，顯示提示訊息 */
+.no-results {
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+    color: #999;
+    margin-top: 20px;
+}
+
+</style>
 <!-- ========================= service-section end ========================= -->
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br>
-<br>
-
-        <!-- ========================= client-logo-section start ========================= -->
-        <section class="client-logo-section pt-100">
-            <div class="container">
-                <div class="client-logo-wrapper">
-                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div> 
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
         <!-- ========================= client-logo-section end ========================= -->
 
         <!-- ========================= footer start ========================= -->
@@ -272,7 +352,7 @@ $datas_len = count($datas); //目前資料筆數
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <a href="index-00.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>

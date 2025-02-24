@@ -31,7 +31,7 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>編輯</title>
+    <title>二技校園網介紹</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -146,7 +146,6 @@ if (!isset($_SESSION['user'])) {
                 <div class="col-xl-12">
                     <div class="banner-content">
                         <h2 class="text-white">二技校園網介紹</h2>
-                        
                     </div>
                 </div>
             </div>

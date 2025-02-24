@@ -31,7 +31,7 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>查看科系</title>
+    <title>編輯</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -74,7 +74,7 @@ if (!isset($_SESSION['user'])) {
                 <div class="row align-items-center">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="index-04.php">
+                            <a class="navbar-brand" href="index-00.php">
                                 <img src="schoolimages/uknlogo.png" alt="Logo">
                             </a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -84,32 +84,31 @@ if (!isset($_SESSION['user'])) {
                                 <span class="toggler-icon"></span>
                                 <span class="toggler-icon"></span>
                             </button>
+
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                        <a href="index-04.php">首頁</a>
+                                    <li class="nav-item">
+                                        <a href="index-00.php">首頁</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
-                                        <ul class="sub-menu">
-                                            <li class="nav-item"><a href="contact1-04.php">查看個人資料</a></li>
-                                            <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>
-                                        </ul>
+                                        <a href="contact-00.php">個人資料</a>
                                     </li>
                                     <li class="nav-item">
-                                    <a href="student04-1.php">班級管理</a>
-                                    </li>
-                                    <li class="nav-item">
-                                    <a href="Schoolnetwork1-04.php">二技校園網</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-item dd-menu" >比賽資訊</a>           
-                                        <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog1-04.php">首頁</a></li>
-                                            <li class="nav-item"><a href="AddContest1-04.php">新增</a></li>
-                                            <li class="nav-item"><a href="ContestEdin1-04.php">編輯</a></li>
-                                        </ul>
+                                        <a href="../changepassword.html">修改密碼</a>
                                     </li>  
+                                    <li class="nav-item">
+                                        <a href="Adduser.php">新增人員</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">二技校園網</a>
+                                        <ul class="sub-menu">
+                                            <li class="nav-item"><a href="Schoolnetwork1-00.php">首頁</a></li>
+                                            <li class="nav-item"><a href="Secondtechnicalcampus00-1.php">新增校園科系</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="Access-Control1.php">權限管理</a>                                
+                                    </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
                                     </li>
@@ -118,14 +117,13 @@ if (!isset($_SESSION['user'])) {
                                     </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="../logout.php" >登出</a>
-                                    </li>                           
-                                </ul>
+                                    </li>                          
+                                </ul>                                    
                             </div> <!-- navbar collapse -->
                         </nav> <!-- navbar -->
                     </div>
                 </div> <!-- row -->
             </div> <!-- container -->
-        
         </header>
         <!-- ========================= header end ========================= -->
 
@@ -139,11 +137,6 @@ if (!isset($_SESSION['user'])) {
                         <h2 class="text-white">二技科系</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a
-                                        href="portfolio-03(二技校園網介紹).php"></a></li>
-                                </ol>
                             </nav>
                         </div>
                     </div>
@@ -251,7 +244,7 @@ if (!isset($_SESSION['user'])) {
 
                     </div>
                     <div class="client-logo">
-                        
+
                     </div>
 
 
@@ -267,7 +260,7 @@ if (!isset($_SESSION['user'])) {
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <a href="index-00.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                         <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                     </div>
                 </div>

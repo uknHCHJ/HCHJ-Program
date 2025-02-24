@@ -235,7 +235,7 @@ $result = mysqli_query($link, $query);
                       ?>
 
                       <!-- 頭像區域 -->
-                      <form enctype="multipart/form-data" action="/~HCHJ/Home/contact01-2.php" method="POST"
+                      <form enctype="multipart/form-data" action="/~HCHJ/Home/contact2-00.php" method="POST"
                         class="text-center">
                         <input type="file" id="file-input" name="image" accept=".jpg,.jpeg,.png" style="display: none;"
                           onchange="previewAndConfirm(event)">
@@ -415,7 +415,7 @@ $result = mysqli_query($link, $query);
       <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-6">
           <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+            <a href="index-00.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
             <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
           </div>
         </div>
