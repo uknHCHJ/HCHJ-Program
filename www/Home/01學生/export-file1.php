@@ -19,7 +19,7 @@ $username = $userData['name'];
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>匯出檔案</title>
+  <title>匯出備審資料</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
   <link rel="stylesheet" href="assets/css/bootstrap-5.0.0-alpha.min.css">
@@ -32,27 +32,85 @@ $username = $userData['name'];
 <header class="header navbar-area">
   <div class="container">
     <nav class="navbar navbar-expand-lg">
-      <a class="navbar-brand" href="index-00.php">
-        <img src="schoolimages/uknlogo.png" alt="Logo">
-      </a>
+      
       <button class="navbar-toggler" type="button" data-toggle="collapse"
         data-target="#navbarSupportedContent">
         <span class="toggler-icon"></span>
         <span class="toggler-icon"></span>
         <span class="toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-        <ul id="nav" class="navbar-nav ml-auto">
-          <li class="nav-item"><a href="index-00.php">首頁</a></li>
-          <li class="nav-item"><a href="contact-00.php">個人資料</a></li>
-          <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>  
-          <li class="nav-item"><a href="Adduser.php">新增人員</a></li>        
-          <li class="nav-item"><a href="Access-Control1.php">權限管理</a></li>
-          <li class="nav-item"><a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a></li>
-          <li class="nav-item"><a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a></li>
-          <li class="nav-item"><a class="page-scroll" href="../logout.php">登出</a></li>                          
-        </ul>                                    
-      </div>
+        <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand" href="index-01.php">
+                            <img src="schoolimages/uknlogo.png" alt="Logo">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                            <ul id="nav" class="navbar-nav ml-auto">
+                               
+                            
+                            <li class="nav-item">
+                            <a class="page-scroll" href="index-01.php" >首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審管理區</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                            </li>
+                            </ul>
+                        </div> <!-- navbar collapse -->
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+
+    </header>
+    <!-- ========================= header end ========================= -->
     </nav>
   </div>
 </header>
@@ -390,8 +448,8 @@ $username = $userData['name'];
     <div class="row">
       <div class="col-xl-3 col-lg-4 col-md-6">
         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-          <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-          <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+          <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+          <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
         </div>
       </div>
       <div class="col-xl-3 col-lg-4 col-md-6">

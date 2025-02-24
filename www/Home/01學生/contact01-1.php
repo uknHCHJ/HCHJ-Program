@@ -22,7 +22,7 @@ $result = mysqli_query($link, $query);
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>個人資料</title>
+  <title>查看個人資料</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -62,63 +62,78 @@ $result = mysqli_query($link, $query);
   </div>
   <!-- preloader end -->
 
-  <!-- ========================= header start ========================= -->
-  <header class="header navbar-area">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-12">
-          <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="index-01.php">
-              <img src="schoolimages/uknlogo.png" alt="Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-            </button>
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand" href="index-01.php">
+                            <img src="schoolimages/uknlogo.png" alt="Logo">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                        </button>
 
-            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-              <ul id="nav" class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">查看個人資料</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item active"><a href="/~HCHJ/changepassword-01.html">修改密碼</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">備審資料</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item active"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a></li>
-                    <li class="nav-item"><a href="/~HCHJ/Home/messageboard-01(留言板).php ">導師留言板</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="/~HCHJ/Home/blog-01(比賽資訊).php">比賽資訊</a>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">志願序</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item active"><a href="/~HCHJ/Home/optional(填選志願1)-01.php">選填志願</a></li>
-                    <li class="nav-item active"><a href="/~HCHJ/Home/optional(志願顯示).php">編輯</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                </li>
+                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                            <ul id="nav" class="navbar-nav ml-auto">
+                               
+                            
+                            <li class="nav-item">
+                            <a class="page-scroll" href="index-01.php" >首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審管理區</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                            </li>
+                            </ul>
+                        </div> <!-- navbar collapse -->
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
-              </ul>
-            </div> <!-- navbar collapse -->
-          </nav> <!-- navbar -->
-        </div>
-      </div> <!-- row -->
-    </div> <!-- container -->
-
-  </header>
-  <!-- ========================= header end ========================= -->
+    </header>
+    <!-- ========================= header end ========================= -->
 
 
 
@@ -382,25 +397,18 @@ $result = mysqli_query($link, $query);
       <div class="client-logo-wrapper">
         <div class="client-logo-carousel d-flex align-items-center justify-content-between">
           <div class="client-logo">
-            <img src="schoolimages/uknim.jpg" alt="">
           </div>
           <div class="client-logo">
-            <img src="schoolimages/uknbm.jpg" alt="">
           </div>
           <div class="client-logo">
-            <img src="schoolimages/uknanime.jpg" alt="">
           </div>
           <div class="client-logo">
-            <img src="schoolimages/uknbaby.jpg" alt="">
           </div>
           <div class="client-logo">
-            <img src="schoolimages/uknenglish.jpg" alt="">
           </div>
           <div class="client-logo">
-            <img src="schoolimages/ukneyes.jpg" alt="">
           </div>
           <div class="client-logo">
-            <img src="schoolimages/uknnurse.jpg" alt="">
           </div>
 
 
@@ -418,8 +426,8 @@ $result = mysqli_query($link, $query);
       <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-6">
           <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-            <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+            <a href="index-01.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
           </div>
         </div>
         <div class="col-xl-3 col-lg-4 col-md-6">

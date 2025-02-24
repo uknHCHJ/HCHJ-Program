@@ -30,7 +30,7 @@ if (!isset($_SESSION['user'])) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>二技校園網介紹科系</title>
+        <title>比賽資訊</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,9 +43,98 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/animate.css">
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
-		<link rel="stylesheet" href="assets/css/main.css">
-    </head>
+        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet" />
+       
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.js"></script>
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+    
+        <link rel="stylesheet" href="assets/css/main.css">
+        <link rel="stylesheet" href="styles.css">
+        <style>
+    table {
+        width: 80%; /* 表格占容器的80%宽度 */
+        max-width: 900px;
+        margin: 20px auto; /* 自动水平居中 */
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    td a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mb-4 {
+        margin-bottom: 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 水平居中 */
+    }
+
+    .row {
+        width: 100%;
+        justify-content: center;
+    }
+</style>
+
+
+</head>
+<?php
+// 連接到 MySQL 資料庫
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ"; // 請換成您的資料庫名稱
+
+// 創建連接
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查連接是否成功
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// 查詢資料庫中的比賽資料（不檢查結束時間）
+$sql = "SELECT name, link FROM information";
+$result = $conn->query($sql);
+
+?>
     <body>
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
 
         <!-- ========================= preloader start ========================= -->
             <div class="preloader">
@@ -139,16 +228,16 @@ if (!isset($_SESSION['user'])) {
     </header>
     <!-- ========================= header end ========================= -->
 
+
         <!-- ========================= page-banner-section start ========================= -->
         <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">二技科系</h2>
+                            <h2 class="text-white">比賽資訊</h2>
                             <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    
+                                <nav aria-label="breadcrumb">                                    
                                 </nav>
                             </div>
                         </div>
@@ -157,108 +246,48 @@ if (!isset($_SESSION['user'])) {
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
+       
+        <!-- ========================= blog-section end ========================= -->
+        <section class="blog-section pt-130">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2>資管科比賽資訊</h2>
+            </div>
 
-        <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-//建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-//確認連線成功或失敗
-if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
-}
-//echo "連線成功";
-
-// 接收school_id參數
-$school_id = $_GET['school_id'];
-$department_id = $_GET['department_id'];
-$ID = isset($_POST["school_id"]) ? $_POST["school_id"] : NULL;
-
-// 抓取對應學校的科系
-$sql = "SELECT department_id ,department_name FROM Department WHERE school_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $school_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// 準備科系資料陣列
-$departments = array();
-
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $departments[] = $row;
-    }
-    mysqli_free_result($result);
-}
-
-// 抓取學校名稱
-$sql_school = "SELECT school_name FROM School WHERE school_id = ?";
-$stmt_school = $conn->prepare($sql_school);
-$stmt_school->bind_param("i", $school_id);
-$stmt_school->execute();
-$result_school = $stmt_school->get_result();
-$school_name = $result_school->fetch_assoc()['school_name'];
-
-?>
-      <!-- ========================= service-section start ========================= -->
-      <body>
-      <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
-    <h2 class="text-center" style="font-size: 3em; line-height: 1.2;"><?= $school_name ?></h2><br>
-    <table class="table table-hover text-center" style="width: 50%; font-size: 1.4em; line-height: 1.5;">
-        <thead>
-            <tr>
-                <th>序號</th>
-                <th>科系名稱</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $index = 1; ?>
-            <?php foreach ($departments as $department) : ?>
-                <tr>
-                    <td><?= $index++ ?></td>
-                    <td><?= htmlspecialchars($department['department_name']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <a href="Schoolnetwork1.php" class="btn btn-secondary">返回上一頁</a>
+            <?php if ($result->num_rows > 0): ?>
+                <div style="display: flex; justify-content: center; width: 100%; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>比賽名稱</th>
+                                <th>連結</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['name']); ?></td>
+                                    <td><a href="<?= htmlspecialchars($row['link']); ?>" target="_blank">點擊參賽</a></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="text-center">目前沒有任何比賽資訊。</p>
+            <?php endif; ?>
+        </div>
+    </div>
 </section>
-</body>
-<!-- ========================= service-section end ========================= -->
+        <!-- ========================= blog-section end ========================= -->
 
-
-
-
-       <!-- ========================= client-logo-section start ========================= -->
-<section class="client-logo-section pt-100">
+        <!-- ========================= client-logo-section start ========================= -->
+        <section class="client-logo-section pt-100">
             <div class="container">
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div> 
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
+                        
 
                         
                     </div>
@@ -273,8 +302,8 @@ $school_name = $result_school->fetch_assoc()['school_name'];
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-01.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

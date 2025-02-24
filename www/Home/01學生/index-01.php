@@ -70,8 +70,8 @@ $result = mysqli_query($link, $query2);
     </div>
     <!-- preloader end -->
 
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+     <!-- ========================= header start ========================= -->
+     <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -103,24 +103,7 @@ $result = mysqli_query($link, $query2);
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-item dd-menu">備審資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
-                                    </li>
-                                    Preparation
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                            </li>
-                            <li class="nav-item">
-                            <a href="/~HCHJ/Home/Secondtechnicalcampus00-1.php">管理員</a>
-                            </li>
-                            <li class="nav-item">
-                            <a href="/~HCHJ/Home/Preparation.php">備審</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
@@ -132,7 +115,18 @@ $result = mysqli_query($link, $query2);
                                     </a>
                                 </ul>
                             </li>
-                            
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審管理區</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
                             <li class="nav-item">
                                 <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                             </li>
@@ -158,7 +152,7 @@ $result = mysqli_query($link, $query2);
                     <div class="hero-content-wrapper">
                         <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎</h2>
                         <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s"><?php echo "歡迎使用者 " . $username; ?> </h1>
-                        <a href="/~HCHJ/Home/Schoolnetwork-01.php" class="theme-btn">二技校園網介紹</a>
+                        <a href="/~HCHJ/Home/Schoolnetwork1.php" class="theme-btn">二技校園網介紹</a>
                         <a href="/~HCHJ/logout.php" class="theme-btn">登出</a>
                     </div>
                 </div>
@@ -170,40 +164,39 @@ $result = mysqli_query($link, $query2);
     </section>
     <!-- ========================= hero-section end ========================= -->
 
-    <!-- ========================= client-logo-section start ========================= -->
-    <section class="client-logo-section pt-100">
-        <div class="container">
-            <div class="client-logo-wrapper">
-                <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                    <div class="client-logo">
-                        <img src="schoolimages/uknim.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknbm.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknanime.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknbaby.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknenglish.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/ukneyes.jpg" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="schoolimages/uknnurse.jpg" alt="">
-                    </div>
+   <!-- ========================= client-logo-section start ========================= -->
+<section class="client-logo-section pt-100">
+            <div class="container">
+                <div class="client-logo-wrapper">
+                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                        <div class="client-logo">
 
+                        </div>
+                        <div class="client-logo">
 
+                        </div> 
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+
+                        
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- ========================= client-logo-section end ========================= -->
-
+        </section>
+        <!-- ========================= client-logo-section end ========================= -->
 
 
     <!-- ========================= footer start ========================= -->
@@ -212,8 +205,8 @@ $result = mysqli_query($link, $query2);
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        <a href="index-01.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">
