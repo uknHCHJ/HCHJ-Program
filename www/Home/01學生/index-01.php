@@ -69,9 +69,8 @@ $result = mysqli_query($link, $query2);
         </div>
     </div>
     <!-- preloader end -->
-
-     <!-- ========================= header start ========================= -->
-     <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -128,6 +127,9 @@ $result = mysqli_query($link, $query2);
                                 </ul>
                             </li>
                             <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Schoolnetwork1-01.php">二技校園介紹網</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                             </li>
                             <li class="nav-item">
@@ -142,6 +144,7 @@ $result = mysqli_query($link, $query2);
 
     </header>
     <!-- ========================= header end ========================= -->
+
 
 
     <!-- ========================= hero-section start ========================= -->

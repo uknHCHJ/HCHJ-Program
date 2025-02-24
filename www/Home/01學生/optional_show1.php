@@ -59,9 +59,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
         </div>
     </div>
     <!-- preloader end -->
-
-      <!-- ========================= header start ========================= -->
-      <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -118,6 +117,9 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                                 </ul>
                             </li>
                             <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Schoolnetwork1-01.php">二技校園介紹網</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                             </li>
                             <li class="nav-item">
@@ -132,6 +134,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
     </header>
     <!-- ========================= header end ========================= -->
+
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
