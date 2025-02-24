@@ -111,7 +111,7 @@ if (!isset($_SESSION['user'])) {
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="Contestblog-02.php">頁首</a></li>
                                         <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
@@ -212,7 +212,7 @@ $datas_len = count($datas); //目前資料筆數
     <div style="text-align:center;width:100%;height:50px;">
         <div style="width:30%;height:20px;margin:0 auto;">
             <h2 class="margin_top50">比賽資訊</h2><br>
-            <form method="post" action="Contestupdate2.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
+            <form method="post" action="Contestupdate2-02.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
                 比賽名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['name'] ?>" name="name"><br>
                 比賽連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
                 <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該比賽資訊嗎？')" value="修改">

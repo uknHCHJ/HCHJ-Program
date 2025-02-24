@@ -1,8 +1,8 @@
-<?php 
-$servername = "127.0.0.1";  
-$username = "HCHJ";  
-$password = "xx435kKHq";  
-$dbname = "HCHJ";  
+<?php
+$servername = "127.0.0.1";
+$username = "HCHJ";
+$password = "xx435kKHq";
+$dbname = "HCHJ";
 
 // 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -32,7 +32,7 @@ if (isset($_GET['ID']) && !empty($_GET['ID'])) {
                 // 執行更新操作
                 if ($stmt->execute()) {
                     echo "比賽資訊更新成功!";
-                    header("location:Contestupdate1.php?ID=" . $id);
+                    header("location:Contestupdate1-02.php?ID=" . $id);
                     exit; // 停止腳本執行
                 } else {
                     die("比賽資訊更新失敗：" . $stmt->error);

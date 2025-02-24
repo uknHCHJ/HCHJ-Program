@@ -51,70 +51,70 @@ if (!isset($_SESSION['user'])) {
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.js"></script>
         <link rel="stylesheet" href="assets/css/main.css">
         <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Inline CSS for simplicity */
-        .portfolio-section {
-            padding-top: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        <style>
+    /* Inline CSS for simplicity */
+    .portfolio-section {
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-        .portfolio-item-wrapper {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-            max-width: 600px;  /* 控制卡片寬度 */
-            margin: 10px auto; /* 讓卡片居中，每個卡片之間有間距 */
-        }
+    .portfolio-item-wrapper {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+        padding: 10px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+        max-width: 600px;  /* 控制卡片寬度 */
+        margin: 10px auto; /* 讓卡片置中，每個卡片之間有間距 */
+    }
 
-        .portfolio-item-wrapper:hover {
-            transform: translateY(-3px);
-        }
+    .portfolio-item-wrapper:hover {
+        transform: translateY(-3px);
+    }
 
-        .portfolio-img img {
-            width: 100%;  /* 縮小圖片寬度 */
-            height: auto;
-            border-radius: 4px;
-        }
+    .portfolio-img img {
+        width: 100%;  /* 縮小圖片寬度 */
+        height: auto;
+        border-radius: 4px;
+    }
 
-        .portfolio-content {
-            text-align: left;
-            margin-top: 10px;
-        }
+    .portfolio-content {
+        text-align: left;
+        margin-top: 10px;
+    }
 
-        .portfolio-content h5 {
-            font-size: 1.2rem;  /* 調小標題字體大小 */
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+    .portfolio-content h5 {
+        font-size: 1.2rem;  /* 調小標題字體大小 */
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
 
-        .portfolio-content .small-text {
-            font-size: 0.9rem;  /* 調小描述文字大小 */
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
+    .portfolio-content .small-text {
+        font-size: 0.9rem;  /* 調小描述文字大小 */
+        color: #555;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
 
-        .theme-btn {
-            font-size: 0.85rem;  /* 按鈕字體變小 */
-            padding: 6px 12px;   /* 調整按鈕的內邊距 */
-            color: #fff;
-            background-color: #007bff;
-            border-radius: 4px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
+    .theme-btn {
+        font-size: 0.85rem;  /* 按鈕字體變小 */
+        padding: 6px 12px;   /* 調整按鈕的內邊距 */
+        color: #fff;
+        background-color: #007bff;
+        border-radius: 4px;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+    }
 
-        .theme-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    .theme-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
 </head>
     <?php
 // 資料庫連接設置
@@ -138,25 +138,6 @@ if (isset($_GET['keyword'])) {
     echo "請返回並輸入關鍵字來搜尋。";
     exit;
 }
-
-date_default_timezone_set('Asia/Taipei');
-
-// 取得當前月份和年份
-$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-$month = isset($_GET['month']) ? $_GET['month'] : date('m');
-
-// 計算這個月的第一天是星期幾
-$firstDayOfMonth = strtotime("$year-$month-01");
-$firstDayOfWeek = date('w', $firstDayOfMonth); // 0 (星期天) 到 6 (星期六)
-
-// 計算當月的總天數
-$totalDaysInMonth = date('t', $firstDayOfMonth);
-
-// 計算上一個月和下一個月
-$prevMonth = date('m', strtotime("-1 month", strtotime("$year-$month-01")));
-$prevYear = date('Y', strtotime("-1 month", strtotime("$year-$month-01")));
-$nextMonth = date('m', strtotime("+1 month", strtotime("$year-$month-01")));
-$nextYear = date('Y', strtotime("+1 month", strtotime("$year-$month-01")));
 
 $conn->close();
 ?>
@@ -207,6 +188,7 @@ $conn->close();
                                 <li class="nav-item">
                                 <li class="nav-item"><a href="index-02.php">首頁</a></li>
                                 </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -215,20 +197,21 @@ $conn->close();
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <ul class="sub-menu">
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
+                                    </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="Contestblog-02.php">頁首</a></li>
                                         <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
@@ -245,8 +228,10 @@ $conn->close();
                                     <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
-
-
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
     </header>
         <!-- ========================= header end ========================= -->
@@ -272,118 +257,37 @@ $conn->close();
         <!-- ========================= blog-section end ========================= -->
         <section class="blog-section pt-130">
     <div class="container">
-        <div class="row">
-            <!-- Blog Content -->
+        <!-- 使用 Bootstrap 的 row 及 justify-content-center 讓整個區塊置中 -->
+        <div class="row justify-content-center">
+            <!-- 將內容限制在中間的欄位 -->
             <div class="col-xl-8 col-lg-7">
                 <div class="left-side-wrapper">
                     <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".1s">
-                            <section class="portfolio-section pt-130">
-                                <div class="container">
-                                    <div class="row">
+                        <section class="portfolio-section pt-130">
+                            <div class="container">
+                                <!-- 再次使用 row 與 justify-content-center 置中內容 -->
+                                <div class="row justify-content-center">
                                     <h1>搜尋結果</h1><br>
-
-            <?php if ($result->num_rows > 0): ?>
-                <?php while($row = $result->fetch_assoc()): ?>
-                    <div style="border:1px solid #ddd; padding: 10px; margin: 10px 0;">
-                        <h3><?= htmlspecialchars($row['name']) ?></h3><br>
-                        <p><?= htmlspecialchars($row['inform']) ?></p><br>
-                        <div>
-                            <img src="data:image/jpeg;base64,<?= base64_encode($row['image']) ?>" alt="<?= htmlspecialchars($row['name']) ?>" style="width:200px; height:auto;">
-                        </div><br>
-                        <a href="<?= htmlspecialchars($row['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>找不到相關結果。</p>
-            <?php endif; ?>
-
-            <!-- 返回搜尋頁面的按鈕 -->
-            <div style="margin-top: 20px;">
-                <a href="Contestblog-02.php"><button style="padding: 10px 15px; font-size: 16px;" class="btn btn-secondary" >返回搜尋頁面</button></a>
-            </div>
-                                                </div>
+                                    <?php if ($result->num_rows > 0): ?>
+                                        <?php while($row = $result->fetch_assoc()): ?>
+                                            <!-- 改用預先定義好的 .portfolio-item-wrapper 讓每筆資料置中顯示 -->
+                                            <div class="portfolio-item-wrapper">
+                                                <h3><?= htmlspecialchars($row['name']) ?></h3><br>
+                                                <a href="<?= htmlspecialchars($row['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
                                             </div>
-                                        </section>
+                                        <?php endwhile; ?>
+                                    <?php else: ?>
+                                        <p>找不到相關結果。</p>
+                                    <?php endif; ?>
+                                    <!-- 返回搜尋頁面的按鈕區塊置中 -->
+                                    <div style="margin-top: 20px; text-align: center;">
+                                        <a href="Contestblog1.php">
+                                            <button style="padding: 10px 15px; font-size: 16px;" class="btn btn-secondary">返回搜尋頁面</button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                        
-
-                        <!-- Sidebar -->
-                        <div class="col-xl-4 col-lg-5">
-                    <!-- 最近公告 -->
-                    <div class="sidebar-box recent-blog-box mb-30">
-                        <h4>新公告</h4>
-                        <!-- 月份導航 -->
-                        <a href="?year=<?= $prevYear ?>&month=<?= $prevMonth ?>">上一月</a> |
-                        <span><?= $year ?>年 <?= $month ?>月</span> |
-                        <a href="?year=<?= $nextYear ?>&month=<?= $nextMonth ?>">下一月</a>
-                        
-                        <div class="recent-blog-items">
-                            <div class="recent-blog mb-30">
-                                <!-- 在這裡嵌入小月曆 -->
-                                <style>
-                                    table {
-                                        width: 100%;
-                                        border-collapse: collapse;
-                                    }
-                                    th, td {
-                                        padding: 10px;
-                                        text-align: center;
-                                        border: 1px solid #ddd;
-                                    }
-                                    th {
-                                        background-color: #f2f2f2;
-                                    }
-                                    .month-nav {
-                                        text-align: center;
-                                        margin-bottom: 20px;
-                                    }
-                                </style>
-
-                                <!-- 顯示日曆表格 -->
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>日</th>
-                                            <th>一</th>
-                                            <th>二</th>
-                                            <th>三</th>
-                                            <th>四</th>
-                                            <th>五</th>
-                                            <th>六</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        // 設置當前顯示的日期為1
-                                        $currentDay = 1;
-                                        // 循環顯示最多6行（如果有6行，則表示本月有6周）
-                                        for ($row = 0; $row < 6; $row++) {
-                                            echo "<tr>";  // 每行開頭
-                                            
-                                            // 顯示一週中的七天
-                                            for ($col = 0; $col < 7; $col++) {
-                                                // 當前行是否為該月的第一行且日期還沒到第一個日曆日期
-                                                // 或當前日期大於當月總天數
-                                                if (($row == 0 && $col < $firstDayOfWeek) || $currentDay > $totalDaysInMonth) {
-                                                    echo "<td></td>";  // 空白格子（這些格子不顯示日期）
-                                                } else {
-                                                    // 顯示當前的日期
-                                                    echo "<td>" . $currentDay . "</td>";
-                                                    // 增加日期
-                                                    $currentDay++;
-                                                }
-                                            }
-                                            echo "</tr>";  // 每行結束
-                                            // 當天數超過總天數時停止顯示
-                                            if ($currentDay > $totalDaysInMonth) break;
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -393,37 +297,7 @@ $conn->close();
         <!-- ========================= blog-section end ========================= -->
 
         <!-- ========================= client-logo-section start ========================= -->
-        <section class="client-logo-section pt-100">
-            <div class="container">
-                <div class="client-logo-wrapper">
-                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
-                        </div> 
-                        <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
+       
         <!-- ========================= client-logo-section end ========================= -->
 
         <!-- ========================= footer start ========================= -->
@@ -432,8 +306,8 @@ $conn->close();
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

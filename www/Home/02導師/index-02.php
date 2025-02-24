@@ -114,7 +114,7 @@ $userId = $userData['user'];
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="Contestblog-02.php">首頁</a></li>
                                         <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>

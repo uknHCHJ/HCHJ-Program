@@ -163,7 +163,7 @@ if ($conn->connect_error) {
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="Contestblog-02.php">頁首</a></li>
                                         <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
@@ -206,7 +206,7 @@ if ($conn->connect_error) {
         <section class="service-section pt-20 pb-10">
     <div class="form-container">
         <h2>比賽資訊</h2>
-        <form action="AddContest2.php" method="post" enctype="multipart/form-data"><br>
+        <form action="AddContest2-02.php" method="post" enctype="multipart/form-data"><br>
             <label for="name">比賽名稱：</label>
             <input type="text" id="name" name="name" required><br>
             

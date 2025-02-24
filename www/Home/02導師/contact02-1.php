@@ -107,7 +107,7 @@ $result = mysqli_query($link, $query);
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="Contestblog-02.php">頁首</a></li>
                                         <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
@@ -333,7 +333,7 @@ $result = mysqli_query($link, $query);
                 echo "查詢失敗：" . mysqli_error($link);
               }
               
-              $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+              $sql = "SELECT * FROM `user` WHERE `name`='$name'";
               $result = mysqli_query($link, $sql);
               if ($result) { 
             
