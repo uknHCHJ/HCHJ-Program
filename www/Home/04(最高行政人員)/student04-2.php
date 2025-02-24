@@ -11,16 +11,16 @@ $realClass = substr($class, -1); // 取出班級
 
 // **動態生成按鈕陣列，包含 grade 和 class**
 $buttons = [
-    ['name' => '自傳', 'url' => "autobiography.php?grade=$grade&class=$realClass"],
-    ['name' => '成績單', 'url' => "transcript.php?grade=$grade&class=$realClass"], 
-    ['name' => '學歷證明', 'url' => "diploma.php?grade=$grade&class=$realClass"],
-    ['name' => '競賽證明', 'url' => "competition.php?grade=$grade&class=$realClass"],
-    ['name' => '實習證明', 'url' => "internship.php?grade=$grade&class=$realClass"],
-    ['name' => '專業證照', 'url' => "certifications.php?grade=$grade&class=$realClass"],
-    ['name' => '語言能力證明', 'url' => "language.php?grade=$grade&class=$realClass"],
-    ['name' => '其他資料', 'url' => "other.php?grade=$grade&class=$realClass"],
-    ['name' => '服務證明', 'url' => "Proof-of-service.php?grade=$grade&class=$realClass"],
-    ['name' => '讀書計畫', 'url' => "read.php?grade=$grade&class=$realClass"]
+    ['name' => '自傳', 'url' => "autobiography-04.php?grade=$grade&class=$realClass"],
+    ['name' => '成績單', 'url' => "transcript-04.php?grade=$grade&class=$realClass"], 
+    ['name' => '學歷證明', 'url' => "diploma-04.php?grade=$grade&class=$realClass"],
+    ['name' => '競賽證明', 'url' => "competition-04.php?grade=$grade&class=$realClass"],
+    ['name' => '實習證明', 'url' => "internship-04.php?grade=$grade&class=$realClass"],
+    ['name' => '專業證照', 'url' => "certifications-04.php?grade=$grade&class=$realClass"],
+    ['name' => '語言能力證明', 'url' => "language-04.php?grade=$grade&class=$realClass"],
+    ['name' => '其他資料', 'url' => "other-04.php?grade=$grade&class=$realClass"],
+    ['name' => '服務證明', 'url' => "Proof-of-service-04.php?grade=$grade&class=$realClass"],
+    ['name' => '讀書計畫', 'url' => "read-04.php?grade=$grade&class=$realClass"]
 ];
 
 // **回傳 JSON 給前端**

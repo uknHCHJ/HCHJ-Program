@@ -219,7 +219,7 @@ if ($result_students) {
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='teacher-download.php?id={$student_id}&category=專題資料'>📂 下載</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='teacher-download-04.php?id={$student_id}&category=專題資料'>📂 下載</a>" : "";
 
 
         echo "<tr>
