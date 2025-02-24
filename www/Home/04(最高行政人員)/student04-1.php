@@ -97,64 +97,66 @@ if (in_array("4", $permissions)) {
   </div>
   <!-- preloader end -->
 
-  <!-- ========================= header start ========================= -->
-  <header class="header navbar-area">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-12">
-          <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="index-02.php">
-              <img src="schoolimages/uknlogo.png" alt="Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-              <span class="toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-              <ul id="nav" class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="page-scroll" href="contact-02(個人資料).php">個人資料</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">比賽資訊</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="blog-03(競賽).php">比賽資訊</a></li>
-                    <li class="nav-item"><a href="create-03.php">新增</a></li>
-                    <li class="nav-item"><a href="delete-03.php">編輯比賽資訊</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">二技校園網</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="blog-03(競賽).php">新增校園</a></li>
-                    <li class="nav-item"><a href="create-03.php">編輯詳細資料</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-item dd-menu">學生管理</a>
-                  <ul class="sub-menu">
-                    <li class="nav-item"><a href="Viewreview-02(查看備審).php">查看學生備審</a></li>
-                    <li class="nav-item"><a href="create-03.php">查看學生志願序</a></li>
-                    <li class="nav-item"><a href="delete-03.php">查看學生競賽歷程</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                </li>
-                <li class="nav-item">
-                  <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
-                </li>
-            </div> <!-- navbar collapse -->
-          </nav> <!-- navbar -->
-        </div>
-      </div> <!-- row -->
-    </div> <!-- container -->
-
-  </header>
-  <!-- ========================= header end ========================= -->
+ <!-- ========================= header start ========================= -->
+ <header class="header navbar-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="index-04.php">
+                                <img src="schoolimages/uknlogo.png" alt="Logo">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                        <a href="index-04.php">首頁</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
+                                        <ul class="sub-menu">
+                                            <li class="nav-item"><a href="contact1-04.php">查看個人資料</a></li>
+                                            <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a href="student04-1.php">班級管理</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a href="Schoolnetwork1-04.php">二技校園網</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-item dd-menu" >比賽資訊</a>           
+                                        <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog1-04.php">首頁</a></li>
+                                            <li class="nav-item"><a href="AddContest1-04.php">新增</a></li>
+                                            <li class="nav-item"><a href="ContestEdin1-04.php">編輯</a></li>
+                                        </ul>
+                                    </li>  
+                                    <li class="nav-item">
+                                        <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="../logout.php" >登出</a>
+                                    </li>                           
+                                </ul>
+                            </div> <!-- navbar collapse -->
+                        </nav> <!-- navbar -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        
+        </header>
+        <!-- ========================= header end ========================= -->
 
   <!-- ========================= page-banner-section start ========================= -->
   <section class="page-banner-section pt-75 pb-75 img-bg"
