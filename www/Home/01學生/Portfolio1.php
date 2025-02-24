@@ -118,8 +118,8 @@ if ($conn->connect_error) {
                 </div>
             </div>
         <!-- preloader end -->
-        <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+     <!-- ========================= header start ========================= -->
+     <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -151,7 +151,7 @@ if ($conn->connect_error) {
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>

@@ -103,7 +103,7 @@ $result = mysqli_query($link, $query2);
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
@@ -152,7 +152,7 @@ $result = mysqli_query($link, $query2);
                     <div class="hero-content-wrapper">
                         <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎</h2>
                         <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s"><?php echo "歡迎使用者 " . $username; ?> </h1>
-                        <a href="/~HCHJ/Home/Schoolnetwork1.php" class="theme-btn">二技校園網介紹</a>
+                        <a href="/~HCHJ/Home/Schoolnetwork1-01.php" class="theme-btn">二技校園網介紹</a>
                         <a href="/~HCHJ/logout.php" class="theme-btn">登出</a>
                     </div>
                 </div>

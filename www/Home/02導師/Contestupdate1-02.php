@@ -30,7 +30,7 @@ if (!isset($_SESSION['user'])) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>新增比賽資訊</title>
+        <title>修改資料</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,60 +44,7 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/tiny-slider.css">
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
 		<link rel="stylesheet" href="assets/css/main.css">
-        <style>
-    /* 設定容器和表單樣式 */
-    .form-container {
-        text-align: center;
-        width: 100%;
-        max-width: 500px; /* 設定最大寬度 */
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    /* 調整標籤樣式 */
-    label {
-        display: block;
-        text-align: left;
-        font-weight: bold;
-        font-size: 1.2em; /* 增加字型大小 */
-        margin-top: 10px;
-    }
-
-    /* 設定 select、input 和 textarea 的樣式與大小 */
-    select, input[type="text"], textarea, input[type="file"], input[type="date"] {
-        width: 100%;
-        max-width: 500px; /* 設定欄位最大寬度 */
-        margin-top: 10px;
-        padding: 8px;
-        font-size: 1em;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-    }
-
-    /* 設定按鈕樣式 */
-    button {
-        font-size: 1.2em; /* 增加按鈕字型大小 */
-        padding: 10px 20px;
-    }
-</style>
-
     </head>
-    <?php
-$servername = "127.0.0.1"; //伺服器ip或本地端localhost
-$username = "HCHJ"; //登入帳號
-$password = "xx435kKHq"; //密碼
-$dbname = "HCHJ"; //資料表名稱
-
-
-//建立連線
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-//確認連線成功或失敗
-if ($conn->connect_error) {
-    die("連線失敗" . $conn->connect_error);
-}
-?>
-
     <body>
 
         <!-- ========================= preloader start ========================= -->
@@ -118,6 +65,7 @@ if ($conn->connect_error) {
                 </div>
             </div>
         <!-- preloader end -->
+
         <!-- ========================= header start ========================= -->
         <header class="header navbar-area">
         <div class="container">
@@ -158,7 +106,7 @@ if ($conn->connect_error) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="Schoolnetwork1.php">二技校園網</a>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -194,7 +142,7 @@ if ($conn->connect_error) {
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="banner-content">
-                            <h2 class="text-white">新增</h2>
+                            <h2 class="text-white">修改</h2>
                             
                         </div>
                     </div>
@@ -202,59 +150,96 @@ if ($conn->connect_error) {
             </div>
         </section>
         <!-- ========================= page-banner-section end ========================= -->
-        
-        <section class="service-section pt-20 pb-10">
-    <div class="form-container">
-        <h2>比賽資訊</h2>
-        <form action="AddContest2.php" method="post" enctype="multipart/form-data"><br>
-            <label for="name">比賽名稱：</label>
-            <input type="text" id="name" name="name" required><br>
-            
-            <label for="link">報名連結：</label>
-            <input type="text" id="link" name="link" required><br><br>
-            
-            <button class="btn btn-success" onclick="return confirm('確定要新增該比賽嗎？')">送出</button>
-        </form>
+
+        <?php
+$servername = "127.0.0.1"; //伺服器ip或本地端localhost
+$username = "HCHJ"; //登入帳號
+$password = "xx435kKHq"; //密碼
+$dbname = "HCHJ"; //資料表名稱
+
+//建立連線
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+//確認連線成功或失敗
+if ($conn->connect_error) {
+    die("連線失敗" . $conn->connect_error);
+}
+//echo "連線成功";
+
+$adm_pk=$_GET['ID'];
+//echo $adm_pk;
+// 設置一個空陣列來放資料
+$datas = array();
+
+$sql = "SELECT * FROM information WHERE ID='".$adm_pk."'"; // sql語法存在變數中
+$result = mysqli_query($conn, $sql); // 用mysqli_query方法執行(sql語法)將結果存在變數中
+
+// 如果有資料
+if ($result) {
+    // mysqli_num_rows方法可以回傳我們結果總共有幾筆資料
+    if (mysqli_num_rows($result) > 0) {
+        // 取得大於0代表有資料
+        // while迴圈會根據資料數量，決定跑的次數
+        // mysqli_fetch_assoc方法可取得一筆值
+        while ($row = mysqli_fetch_assoc($result)) {
+            // 每跑一次迴圈就抓一筆值，最後放進data陣列中
+            $datas[] = $row;
+        }
+    }
+    // 釋放資料庫查到的記憶體
+    mysqli_free_result($result);
+} else {
+    echo "{$sql} 語法執行失敗，錯誤訊息: " . mysqli_error($link);
+}
+// 處理完後印出資料
+if (!empty($result)) {
+    // 如果結果不為空，就利用print_r方法印出資料
+    // print_r($datas);
+    //echo($datas[0]['adm_name']);
+} else {
+    // 為空表示沒資料
+    echo "查無資料";
+}
+echo "<br><br>";
+//echo $datas[0]['sf_name']; // 印出第0筆資料中的sf_name欄位值
+
+//使用表格排版用while印出
+$datas_len = count($datas); //目前資料筆數
+
+?>
+      <!-- ========================= service-section start ========================= -->
+      <body>        
+    <div style="text-align:center;width:100%;height:50px;">
+        <div style="width:30%;height:20px;margin:0 auto;">
+            <h2 class="margin_top50">比賽資訊</h2><br>
+            <form method="post" action="Contestupdate2.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
+                比賽名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['name'] ?>" name="name"><br>
+                比賽連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
+                <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該比賽資訊嗎？')" value="修改">
+                <br><br>
+                <a href="ContestEdin1-02.php" class="btn btn-secondary">返回上一頁</a>
+            </form>
+        </div>
+    </div>
+</body>
+        </div>
     </div>
 </section>
-    </div>
-    </div>
-    </div>
-    </div>
 <!-- ========================= service-section end ========================= -->
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br>
+<br>
 
         <!-- ========================= client-logo-section start ========================= -->
-        <section class="client-logo-section pt-100">
-            <div class="container">
-                <div class="client-logo-wrapper">
-                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
-                        </div> 
-                        <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
+       
         <!-- ========================= client-logo-section end ========================= -->
 
         <!-- ========================= footer start ========================= -->
@@ -263,7 +248,7 @@ if ($conn->connect_error) {
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                             <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>

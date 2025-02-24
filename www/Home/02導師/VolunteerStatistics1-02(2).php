@@ -19,8 +19,12 @@ if (!isset($_SESSION['user'])) {
 
 $userData = $_SESSION['user'];
 // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-$username = $userData['name']; // 例如從 SESSION 中獲取 user_id
+
+// 從 SESSION 中取得使用者資訊
+$username = $userData['name'];
 $userId = $userData['user'];
+$grade = $userData['grade'];
+$class = $userData['class'];
 ?>
 
 <!doctype html>
@@ -109,7 +113,7 @@ $userId = $userData['user'];
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="Schoolnetwork1.php">二技校園網</a>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -146,203 +150,144 @@ $userId = $userData['user'];
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序總覽</h2>
+                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">學生志願序排行</h2>
                         
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <!DOCTYPE html>
-    <html lang="zh">
+<html lang="zh">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f8f9fa;
-                text-align: center;
-                margin: 20px;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學生選校科系志願表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+            margin: 20px;
+        }
 
-            h1 {
-                color: #333;
-            }
+        h1 {
+            color: #333;
+        }
 
-            table {
-                width: 80%;
-                margin: 20px auto;
-                border-collapse: collapse;
-                background: #fff;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                overflow: hidden;
-            }
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* 加上橫向滾動條 */
+            margin: 20px auto;
+        }
 
-            th,
-            td {
-                padding: 12px;
-                border: 1px solid #ddd;
-                text-align: center;
-            }
+        table {
+            width: 100%;
+            margin: 0;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-            th {
-                background-color: #007bff;
-                color: white;
-            }
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            white-space: nowrap;
+            min-width: 120px;
+        }
 
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
 
-            tr:hover {
-                background-color: #ddd;
-            }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-            td.student-name {
-                text-align: left;
-            }
-        </style>
-    </head>
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
 
-    <body>
-     
-
+<body>
+    
+    <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th>學校</th>
-                    <th>科系</th>
-                    <th>人數</th>
-                    <th>選擇的學生</th>
+                    <th>學號</th>
+                    <th>姓名</th>
+                    <th>第一志願</th>
+                    <th>第二志願</th>
+                    <th>第三志願</th>
+                    <th>第四志願</th>
+                    <th>第五志願</th>
                 </tr>
             </thead>
             <tbody id="data-body">
-                <!-- 資料將由 JavaScript 動態插入 -->
+
             </tbody>
         </table>
-
-        <script>
-            let tableData = [];
-
-            function fetchData() {
-                fetch('VolunteerStatistics2-02.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!Array.isArray(data)) {
-                            console.error('Unexpected data format:', data);
-                            document.getElementById('data-body').innerHTML = '<tr><td colspan="4">No data available</td></tr>';
-                            return;
-                        }
-
-                        const tableBody = document.getElementById('data-body');
-                        tableBody.innerHTML = '';
-                        tableData = data;
-
-                        data.forEach(row => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                            <td>${row.School}</td>
-                            <td>${row.Department}</td>
-                            <td>${row.StudentCount}</td>
-                            <td class="student-name">${row.Students || '無'}</td>
-                        `;
-                            tableBody.appendChild(tr);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            }
-
-            function exportToExcel() {
-                if (tableData.length === 0) {
-                    alert("無資料可匯出");
-                    return;
+    </div>
+    <script>
+        fetch('VolunteerStatistics2-02(2).php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.getElementById('data-body');
+                tableBody.innerHTML = ''; // 清空表格
 
-                let sheetData = [];
-                let schoolRow = ["學校"]; // 第一列：學校名稱
-                let departmentRow = ["科系"]; // 第二列：科系名稱
-                let maxStudentCount = 0; // 紀錄最多學生數，確保所有學生列數對齊
-                let studentRows = [];
+                const students = {};
 
-                tableData.forEach((row, index) => {
-                    // 填入學校與科系資料
-                    schoolRow.push(row.School);
-                    departmentRow.push(row.Department);
+                // 分組每位學生的選擇
+                data.forEach(item => {
+                    const { student_user, student_name, school_name, department_name, preference_rank } = item;
 
-                    let students = row.Students ? row.Students.split(',') : ['無'];
-                    maxStudentCount = Math.max(maxStudentCount, students.length);
-
-                    students.forEach((student, studentIndex) => {
-                        // 確保 `studentRows` 陣列有足夠的列
-                        if (!studentRows[studentIndex]) {
-                            studentRows[studentIndex] = Array(tableData.length + 1).fill(''); // 預留空間
-                        }
-                        // **修正索引**，確保學生姓名對齊學校與科系
-                        studentRows[studentIndex][index + 1] = student;
-                    });
+                    if (!students[student_name]) {
+                        students[student_name] = {
+                            student_user: student_user, // 存學號
+                            preferences: []
+                        };
+                    }
+                    students[student_name].preferences[preference_rank - 1] = `${school_name} - ${department_name}`;
                 });
 
-                // 組合表格資料
-                sheetData.push(schoolRow); // 第一列：學校
-                sheetData.push(departmentRow); // 第二列：科系
+                // 顯示每位學生的選擇
+                for (const studentName in students) {
+                    const { student_user, preferences } = students[studentName];
 
-                // 填充學生資料，確保所有學生列數對齊
-                for (let i = 0; i < maxStudentCount; i++) {
-                    sheetData.push(studentRows[i] || Array(tableData.length + 1).fill(''));
+                    const row = tableBody.insertRow();
+                    const studentIdCell = row.insertCell(); // 學號欄位
+                    studentIdCell.textContent = student_user;
+
+                    const nameCell = row.insertCell(); // 姓名欄位
+                    nameCell.textContent = studentName;
+
+                    for (let i = 0; i < 5; i++) {
+                        const cell = row.insertCell();
+                        cell.textContent = preferences[i] || '';  // 若未選擇則顯示空白
+                    }
                 }
-
-                let ws = XLSX.utils.aoa_to_sheet(sheetData);
-                let wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "志願統計");
-                XLSX.writeFile(wb, "志願選擇統計.xlsx");
-            }
-            fetchData();
-        </script>
-    </body>
-    <button class="export-btn" onclick="exportToExcel()">📊 匯出 Excel</button>
-
-    <style>
-        .export-btn {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            /* 藍色漸變 */
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-            /* ✅ 調整底部間距，避免貼著下方區塊 */
-            display: inline-block;
-            /* 讓按鈕不會占滿整行 */
-        }
-
-        .export-btn:hover {
-            background: linear-gradient(135deg, #0056b3, #004494);
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-            transform: scale(1.05);
-        }
-
-        .export-btn:active {
-            transform: scale(0.95);
-            box-shadow: none;
-        }
-    </style>
-
-
-    </html>
-
-
-
+            })
+            .catch(error => console.error('Error fetching data:', error));
 
     </script>
+</body>
+
+</html>
+
     <!-- ========================= client-logo-section end ========================= -->
 
 

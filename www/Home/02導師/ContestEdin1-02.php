@@ -106,7 +106,7 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="Schoolnetwork1.php">二技校園網</a>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -256,37 +256,7 @@ $total_pages = ceil($total_records / $records_per_page);//假設總記錄數是 
 </section>
         <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
-        <section class="client-logo-section pt-100">
-            <div class="container">
-                <div class="client-logo-wrapper">
-                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
-                        </div> 
-                        <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
+        
         <!-- ========================= client-logo-section end ========================= -->
 
         <!-- ========================= footer start ========================= -->
