@@ -125,10 +125,6 @@ $username=$userData['name'];
                             <h2 class="text-white">權限管理</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-00.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">權限管理</li>
-                                    </ol>
                                 </nav>
                             </div>
                         </div>
