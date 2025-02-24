@@ -369,8 +369,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     $username = "HCHJ";
                     $password = "xx435kKHq";
                     $dbname = "HCHJ";
-                    $conn = new mysqli($servername, $username, $password, $dbname);
 
+                    $conn = new mysqli($servername, $username, $password, $dbname);
                     if ($conn->connect_error) {
                         die("連線失敗：" . $conn->connect_error);
                     }
@@ -398,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     $category_data_count = array_fill_keys(array_keys($category_map), 0);
                     $data_exists = false;
 
+                    // 讀取資料並計算各類別數量
                     while ($row = $result->fetch_assoc()) {
                         $category_name = trim($row["category"]);
                         $category_class = $category_map[$category_name] ?? "unknown";
@@ -407,8 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                         echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
-                            <div class='portfolio-content'>
-                                <h3>{$row['category']}</h3>";
+                                <div class='portfolio-content'>
+                                    <h3>{$row['category']}</h3>";
 
                         if ($row["category"] === "專業證照") {
                             echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
@@ -430,17 +431,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         $data_exists = true;
                     }
 
-                    // 只有當使用者選擇特定分類時，才顯示「無資料」
-                    foreach ($category_map as $category_name => $category_class) {
-                        if ($category_data_count[$category_name] === 0) {
-                            echo "<div class='col-12 portfolio-item {$category_class}' style='display: none;'>
-                                    <p style='text-align: center; font-size: 18px; color: gray;'>無資料</p>
-                                </div>";
-                        }
-                    }
+                    $show_no_data_message = true; // 確保「尚無任何資料」只顯示一次
 
+                    // 檢查是否有資料，如果沒有則顯示「無資料」訊息
                     if (!$data_exists) {
-                        echo "<div class='col-12'><p style='text-align: center; font-size: 18px; color: gray;'>尚無任何資料</p></div>";
+                        echo "<div class='col-12'>
+                                <p style='text-align: center; font-size: 18px; color: gray;'>尚無任何資料</p>
+                            </div>";
+                    } else {
+                        foreach ($category_map as $category_name => $category_class) {
+                            if ($category_data_count[$category_name] === 0) {
+                                echo "<div class='col-12 portfolio-item {$category_class}' style='display: none;'>
+                                        <p style='text-align: center; font-size: 18px; color: gray;'>無資料</p>
+                                    </div>";
+                            }
+                        }
                     }
 
                     $stmt->close();
