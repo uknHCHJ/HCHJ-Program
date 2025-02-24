@@ -54,82 +54,119 @@ if (!isset($_SESSION['user'])) {
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-    
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+    </script>
         <link rel="stylesheet" href="assets/css/main.css">
         <link rel="stylesheet" href="styles.css">
         <style>
-    table {
-        width: 80%; /* 表格占容器的80%宽度 */
-        max-width: 900px;
-        margin: 20px auto; /* 自动水平居中 */
-        border-collapse: collapse;
+    /* Inline CSS for simplicity */
+    .portfolio-section {
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    th, td {
-        padding: 12px;
-        text-align: left;
+    .portfolio-item-wrapper {
         border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+        padding: 10px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+        max-width: 600px;  /* 控制卡片寬度 */
+        margin: 10px auto; /* 讓卡片置中，每個卡片之間有間距 */
     }
 
-    th {
-        background-color: #f2f2f2;
-        font-weight: bold;
+    .portfolio-item-wrapper:hover {
+        transform: translateY(-3px);
     }
 
-    tr:hover {
-        background-color: #f1f1f1;
+    .portfolio-img img {
+        width: 100%;  /* 縮小圖片寬度 */
+        height: auto;
+        border-radius: 4px;
     }
 
-    td a {
-        color: #007bff;
+    .portfolio-content {
+        text-align: center;  /* 調整內容置中 */
+        margin-top: 10px;
+    }
+
+    .portfolio-content h5 {
+        font-size: 1.2rem;  /* 調小標題字體大小 */
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .portfolio-content .small-text {
+        font-size: 0.9rem;  /* 調小描述文字大小 */
+        color: #555;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+
+    .theme-btn {
+        font-size: 0.85rem;  /* 按鈕字體變小 */
+        padding: 6px 12px;   /* 調整按鈕的內邊距 */
+        color: #fff;
+        background-color: #007bff;
+        border-radius: 4px;
+        display: inline-block;
+        transition: background-color 0.3s ease;
         text-decoration: none;
     }
 
-    td a:hover {
-        text-decoration: underline;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .mb-4 {
-        margin-bottom: 16px;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* 水平居中 */
-    }
-
-    .row {
-        width: 100%;
-        justify-content: center;
+    .theme-btn:hover {
+        background-color: #0056b3;
     }
 </style>
 
 
 </head>
 <?php
-// 連接到 MySQL 資料庫
+// 資料庫連接設置
 $servername = "127.0.0.1";
 $username = "HCHJ";
 $password = "xx435kKHq";
-$dbname = "HCHJ"; // 請換成您的資料庫名稱
+$dbname = "HCHJ";
 
-// 創建連接
+// 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// 檢查連接是否成功
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("連線失敗: " . $conn->connect_error);
 }
 
-// 查詢資料庫中的比賽資料（不檢查結束時間）
-$sql = "SELECT name, link FROM information";
-$result = $conn->query($sql);
+// 設定時區
+date_default_timezone_set('Asia/Taipei');
+$currentDate = date('Y-m-d');  // 獲取當前日期
+// 查詢未過期的比賽資訊
+$sql = "SELECT name, inform, link, image FROM information WHERE display_end_time >= ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $currentDate);
+$stmt->execute();
+$result = $stmt->get_result();
 
+// 檢查是否有資料
+$competitions = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $competitions[] = $row;
+    }
+} else {
+    echo "目前沒有未過期的比賽資訊。";
+}
+$conn->close();
 ?>
     <body>
         <!--[if lte IE 9]>
@@ -239,33 +276,43 @@ $result = $conn->query($sql);
         <!-- ========================= blog-section end ========================= -->
         <section class="blog-section pt-130">
     <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-4">
-                <h2>資管科比賽資訊</h2>
+        <div class="row justify-content-center">
+            <!-- 左側主要內容區 -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="left-side-wrapper">
+                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".2s">
+                        
+                        <!-- 將搜尋表單放在資料上方 -->
+                        <div class="text-center mb-4">
+                            <form action="Contestsearch1.php" method="GET" class="search-form d-inline-block">
+                                <input type="text" placeholder="Search..." name="keyword" required>
+                                <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
+                            </form>
+                        </div>
+
+                        <section class="portfolio-section pt-130">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <!-- 這裡是 PHP 迴圈呈現 competitions 資料 -->
+                                    <?php foreach ($competitions as $competition): ?>
+                                        <div class="col-12 mb-4">
+                                            <div class="portfolio-item-wrapper">
+                                                <div class="portfolio-content mt-2">
+                                                    <h5><?= htmlspecialchars($competition['name']) ?></h5>
+                                                    <a href="<?= htmlspecialchars($competition['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
             </div>
 
-            <?php if ($result->num_rows > 0): ?>
-                <div style="display: flex; justify-content: center; width: 100%; overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>比賽名稱</th>
-                                <th>連結</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while($row = $result->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($row['name']); ?></td>
-                                    <td><a href="<?= htmlspecialchars($row['link']); ?>" target="_blank">點擊參賽</a></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <p class="text-center">目前沒有任何比賽資訊。</p>
-            <?php endif; ?>
+           
         </div>
     </div>
 </section>

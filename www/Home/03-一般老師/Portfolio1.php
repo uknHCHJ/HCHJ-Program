@@ -235,7 +235,7 @@ if ($conn->connect_error) {
             <input type="hidden" name="certificate_name" id="certificate_name">
         </div>
         
-        <label for="file">上傳檔案：</label>
+        <label for="file">上傳檔案：(只能上傳 PNG, JPG, DOC, DOCX 檔案)</label>
         <input type="file" name="file" id="file" required>
 
         <!-- 新增輸入框，讓使用者自行修改檔案名稱 -->
@@ -249,6 +249,7 @@ if ($conn->connect_error) {
             font-size: 16px; border-radius: 5px; cursor: pointer;">
             上傳
         </button>
+        <p>(注意!上傳檔案後會通知該班導查看)</p>
         <input type="hidden" name="force" id="forceField" value="1">
     </form>
 </div>
