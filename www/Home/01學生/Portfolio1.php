@@ -118,7 +118,7 @@ if ($conn->connect_error) {
                 </div>
             </div>
         <!-- preloader end -->
-       <!-- ========================= header start ========================= -->
+          <!-- ========================= header start ========================= -->
        <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
@@ -194,7 +194,6 @@ if ($conn->connect_error) {
     </header>
     <!-- ========================= header end ========================= -->
 
-
         <!-- ========================= page-banner-section start ========================= -->
         <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
@@ -204,7 +203,9 @@ if ($conn->connect_error) {
                             <h2 class="text-white">備審素材區</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
-                                    
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
+                                      </ol>
                                 </nav>
                             </div>
                         </div>
@@ -216,7 +217,6 @@ if ($conn->connect_error) {
         <!-- ========================= page-banner-section end ========================= -->
         <div style="text-align: center; margin: auto;">
     <h1>備審素材區</h1>
-    
     <form action="PortfolioCreat.php" method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return confirmUpload()" style="display: inline-block; text-align: center;">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>">
         <!-- 將 organization 的 hidden input 移入 form 內 -->
@@ -248,7 +248,7 @@ if ($conn->connect_error) {
             <input type="hidden" name="certificate_name" id="certificate_name">
         </div>
         
-        <label for="file">上傳檔案：</label>
+        <label for="file">上傳檔案：(只能上傳 PNG, JPG, DOC, DOCX 檔案)</label>
         <input type="file" name="file" id="file" required>
 
         <!-- 新增輸入框，讓使用者自行修改檔案名稱 -->
@@ -383,8 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     $username = "HCHJ";
                     $password = "xx435kKHq";
                     $dbname = "HCHJ";
-                    $conn = new mysqli($servername, $username, $password, $dbname);
 
+                    $conn = new mysqli($servername, $username, $password, $dbname);
                     if ($conn->connect_error) {
                         die("連線失敗：" . $conn->connect_error);
                     }
@@ -412,6 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     $category_data_count = array_fill_keys(array_keys($category_map), 0);
                     $data_exists = false;
 
+                    // 讀取資料並計算各類別數量
                     while ($row = $result->fetch_assoc()) {
                         $category_name = trim($row["category"]);
                         $category_class = $category_map[$category_name] ?? "unknown";
@@ -421,8 +422,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                         echo "<div class='col-lg-4 col-md-6 portfolio-item {$category_class}'>
-                            <div class='portfolio-content'>
-                                <h3>{$row['category']}</h3>";
+                                <div class='portfolio-content'>
+                                    <h3>{$row['category']}</h3>";
 
                         if ($row["category"] === "專業證照") {
                             echo "<p><strong>機構：</strong> " . htmlspecialchars($row["organization"], ENT_QUOTES, 'UTF-8') . "</p>";
@@ -444,17 +445,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         $data_exists = true;
                     }
 
-                    // 只有當使用者選擇特定分類時，才顯示「無資料」
-                    foreach ($category_map as $category_name => $category_class) {
-                        if ($category_data_count[$category_name] === 0) {
-                            echo "<div class='col-12 portfolio-item {$category_class}' style='display: none;'>
-                                    <p style='text-align: center; font-size: 18px; color: gray;'>無資料</p>
-                                </div>";
-                        }
-                    }
+                    $show_no_data_message = true; // 確保「尚無任何資料」只顯示一次
 
+                    // 檢查是否有資料，如果沒有則顯示「無資料」訊息
                     if (!$data_exists) {
-                        echo "<div class='col-12'><p style='text-align: center; font-size: 18px; color: gray;'>尚無任何資料</p></div>";
+                        echo "<div class='col-12'>
+                                <p style='text-align: center; font-size: 18px; color: gray;'>尚無任何資料</p>
+                            </div>";
+                    } else {
+                        foreach ($category_map as $category_name => $category_class) {
+                            if ($category_data_count[$category_name] === 0) {
+                                echo "<div class='col-12 portfolio-item {$category_class}' style='display: none;'>
+                                        <p style='text-align: center; font-size: 18px; color: gray;'>無資料</p>
+                                    </div>";
+                            }
+                        }
                     }
 
                     $stmt->close();
@@ -526,33 +531,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- ========================= service-section end ========================= -->
         <!-- ========================= client-logo-section start ========================= -->
-<section class="client-logo-section pt-100">
+        <section class="client-logo-section pt-100">
             <div class="container">
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
                         <div class="client-logo">
-
+                            <img src="schoolimages/uknim.jpg" alt="">
                         </div>
                         <div class="client-logo">
-
+                            <img src="schoolimages/uknbm.jpg" alt="">
                         </div> 
                         <div class="client-logo">
-
+                            <img src="schoolimages/uknanime.jpg" alt="">
                         </div>
                         <div class="client-logo">
-
+                            <img src="schoolimages/uknbaby.jpg" alt="">
                         </div>
                         <div class="client-logo">
-
+                            <img src="schoolimages/uknenglish.jpg" alt="">
                         </div>
                         <div class="client-logo">
-
+                            <img src="schoolimages/ukneyes.jpg" alt="">
                         </div>
                         <div class="client-logo">
-
+                            <img src="schoolimages/uknnurse.jpg" alt="">
                         </div>
-
-                        
                     </div>
                 </div>
             </div>
@@ -565,8 +568,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">
