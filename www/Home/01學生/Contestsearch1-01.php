@@ -24,7 +24,6 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 ?>
-
 <!doctype html>
 <html class="no-js" lang="">
     <head>
@@ -45,26 +44,11 @@ if (!isset($_SESSION['user'])) {
 		<link rel="stylesheet" href="assets/css/glightbox.min.css">
         <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet" />
-       
+
+        <!-- 引入 FullCalendar 的 JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.js"></script>
-        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
-        calendar.render();
-      });
-
-    </script>
         <link rel="stylesheet" href="assets/css/main.css">
         <link rel="stylesheet" href="styles.css">
         <style>
@@ -99,7 +83,7 @@ if (!isset($_SESSION['user'])) {
     }
 
     .portfolio-content {
-        text-align: center;  /* 調整內容置中 */
+        text-align: left;
         margin-top: 10px;
     }
 
@@ -131,10 +115,8 @@ if (!isset($_SESSION['user'])) {
         background-color: #0056b3;
     }
 </style>
-
-
 </head>
-<?php
+    <?php
 // 資料庫連接設置
 $servername = "127.0.0.1";
 $username = "HCHJ";
@@ -147,27 +129,19 @@ if ($conn->connect_error) {
     die("連線失敗: " . $conn->connect_error);
 }
 
-// 設定時區
-date_default_timezone_set('Asia/Taipei');
-$currentDate = date('Y-m-d');  // 獲取當前日期
-// 查詢未過期的比賽資訊
-$sql = "SELECT name, inform, link, image FROM information WHERE display_end_time >= ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $currentDate);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// 檢查是否有資料
-$competitions = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $competitions[] = $row;
-    }
+// 查詢比賽資訊
+if (isset($_GET['keyword'])) {
+    $keyword = mysqli_real_escape_string($conn, $_GET['keyword']);
+    $sql = "SELECT * FROM information WHERE name LIKE '%$keyword%' OR inform LIKE '%$keyword%'";
+    $result = $conn->query($sql);
 } else {
-    echo "目前沒有未過期的比賽資訊。";
+    echo "請返回並輸入關鍵字來搜尋。";
+    exit;
 }
+
 $conn->close();
 ?>
+
     <body>
         <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -192,8 +166,8 @@ $conn->close();
             </div>
         <!-- preloader end -->
 
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+       <!-- ========================= header start ========================= -->
+       <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -268,6 +242,7 @@ $conn->close();
     </header>
     <!-- ========================= header end ========================= -->
 
+
         <!-- ========================= page-banner-section start ========================= -->
         <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg')">
             <div class="container">
@@ -289,43 +264,40 @@ $conn->close();
         <!-- ========================= blog-section end ========================= -->
         <section class="blog-section pt-130">
     <div class="container">
+        <!-- 使用 Bootstrap 的 row 及 justify-content-center 讓整個區塊置中 -->
         <div class="row justify-content-center">
-            <!-- 左側主要內容區 -->
+            <!-- 將內容限制在中間的欄位 -->
             <div class="col-xl-8 col-lg-7">
                 <div class="left-side-wrapper">
-                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".2s">
-                        
-                        <!-- 將搜尋表單放在資料上方 -->
-                        <div class="text-center mb-4">
-                            <form action="Contestsearch1-01.php" method="GET" class="search-form d-inline-block">
-                                <input type="text" placeholder="Search..." name="keyword" required>
-                                <button type="submit"><i class="lni lni-search-alt"></i>搜尋</button>
-                            </form>
-                        </div>
-
+                    <div class="single-blog blog-style-2 mb-60 wow fadeInUp" data-wow-delay=".1s">
                         <section class="portfolio-section pt-130">
                             <div class="container">
+                                <!-- 再次使用 row 與 justify-content-center 置中內容 -->
                                 <div class="row justify-content-center">
-                                    <!-- 這裡是 PHP 迴圈呈現 competitions 資料 -->
-                                    <?php foreach ($competitions as $competition): ?>
-                                        <div class="col-12 mb-4">
+                                    <h1>搜尋結果</h1><br>
+                                    <?php if ($result->num_rows > 0): ?>
+                                        <?php while($row = $result->fetch_assoc()): ?>
+                                            <!-- 改用預先定義好的 .portfolio-item-wrapper 讓每筆資料置中顯示 -->
                                             <div class="portfolio-item-wrapper">
-                                                <div class="portfolio-content mt-2">
-                                                    <h5><?= htmlspecialchars($competition['name']) ?></h5>
-                                                    <a href="<?= htmlspecialchars($competition['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
-                                                </div>
+                                                <h3><?= htmlspecialchars($row['name']) ?></h3><br>
+                                                <a href="<?= htmlspecialchars($row['link']) ?>" class="theme-btn border-btn" target="_blank">查看詳細資料</a>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endwhile; ?>
+                                    <?php else: ?>
+                                        <p>找不到相關結果。</p>
+                                    <?php endif; ?>
+                                    <!-- 返回搜尋頁面的按鈕區塊置中 -->
+                                    <div style="margin-top: 20px; text-align: center;">
+                                        <a href="Contestblog1-01.php">
+                                            <button style="padding: 10px 15px; font-size: 16px;" class="btn btn-secondary">返回搜尋頁面</button>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </section>
-
                     </div>
                 </div>
             </div>
-
-           
         </div>
     </div>
 </section>
@@ -337,8 +309,10 @@ $conn->close();
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
                         <div class="client-logo">
+                          
                         </div>
                         <div class="client-logo">
+                     
                         </div> 
                         <div class="client-logo">
                         </div>

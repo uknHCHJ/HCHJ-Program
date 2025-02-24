@@ -343,7 +343,7 @@ $result = mysqli_query($link, $query);
               } else {
                 echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "、" . $teachers[1] . "</span></p></br>";
               }
-              $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+              $sql = "SELECT * FROM `user` WHERE `name`='$name'";
               $result = mysqli_query($link, $sql);
               if ($result) { 
             
