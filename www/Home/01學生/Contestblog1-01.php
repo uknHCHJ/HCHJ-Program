@@ -296,69 +296,76 @@ $result = $conn->query($sql);
         </section>
         <!-- ========================= client-logo-section end ========================= -->
 
-        <!-- ========================= footer start ========================= -->
-        <footer class="footer pt-100">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-3 col-lg-4 col-md-6">
-                        <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6">
-                        <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
-                            
-                            <ul class="footer-contact"> 
-                                <h3>關於我們</h3>                                                        
-                                <p>(02)2632-1181/0986-212-566</p>                                
-                                    <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>                             
-                            </ul>
-                            <style>
-                                .footer .row {
-                                display: flex;
-                                align-items: center; /* 垂直居中 */
-                                justify-content: space-between; /* 讓兩個區塊分居左右 */
-                                }
-                                .footer-widget {                                   
-                                text-align: right; /* 讓「關於學校」內容靠右對齊 */
-                                }
-                            </style>
-                        </div>
-                    </div>
+       <!-- ========================= footer start ========================= -->
+<footer class="footer pt-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
+                    <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                    <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                 </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="footer-widget mb-1 wow fadeInLeft" data-wow-delay=".8s">
 
-                <div class="copyright-area">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="footer-social-links">
-                                <ul class="d-flex">
-                                    <li><a href="https://www.facebook.com/UKNunversity"><i class="lni lni-facebook-filled"></i></a></li>
-                                    <li><a href="https://www.instagram.com/ukn_taipei/"><i class="lni lni-instagram-filled"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
+                    <ul class="footer-contact">
+                        <h3>關於我們</h3>
+                        <p>(02)2632-1181/0986-212-566</p>
+                        <p>台北校區：114 臺北市內湖區康寧路三段75巷137號</p>
+                    </ul>
+                    <style>
+                        .footer .row {
+                            display: flex;
+                            align-items: center;
+                            /* 垂直居中 */
+                            justify-content: space-between;
+                            /* 讓兩個區塊分居左右 */
+                        }
+
+                        .footer-widget {
+                            text-align: right;
+                            /* 讓「關於學校」內容靠右對齊 */
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright-area">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="footer-social-links">
+                        <ul class="d-flex">
+                            <li><a href="https://www.facebook.com/UKNunversity"><i
+                                        class="lni lni-facebook-filled"></i></a></li>
+                            <li><a href="https://www.instagram.com/ukn_taipei/"><i
+                                        class="lni lni-instagram-filled"></i></a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- ========================= footer end ========================= -->
+        </div>
+    </div>
+</footer>
+<!-- ========================= footer end ========================= -->
 
 
-        <!-- ========================= scroll-top ========================= -->
-        <a href="#" class="scroll-top">
-            <i class="lni lni-arrow-up"></i>
-        </a>
-        
-		<!-- ========================= JS here ========================= -->
-		<script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
-		<script src="assets/js/contact-form.js"></script>
-        <script src="assets/js/count-up.min.js"></script>
-        <script src="assets/js/tiny-slider.js"></script>
-        <script src="assets/js/isotope.min.js"></script>
-        <script src="assets/js/glightbox.min.js"></script>
-        <script src="assets/js/wow.min.js"></script>
-		<script src="assets/js/imagesloaded.min.js"></script>
-		<script src="assets/js/main.js"></script>
-    </body>
+<!-- ========================= scroll-top ========================= -->
+<a href="#" class="scroll-top">
+    <i class="lni lni-arrow-up"></i>
+</a>
+
+<!-- ========================= JS here ========================= -->
+<script src="assets/js/bootstrap.bundle-5.0.0.alpha-min.js"></script>
+<script src="assets/js/contact-form.js"></script>
+<script src="assets/js/count-up.min.js"></script>
+<script src="assets/js/tiny-slider.js"></script>
+<script src="assets/js/isotope.min.js"></script>
+<script src="assets/js/glightbox.min.js"></script>
+<script src="assets/js/wow.min.js"></script>
+<script src="assets/js/imagesloaded.min.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+
 </html>

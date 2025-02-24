@@ -31,7 +31,7 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>二技校園網介紹首頁</title>
+    <title>編輯</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -68,13 +68,13 @@ if (!isset($_SESSION['user'])) {
     </div>
     <!-- preloader end -->
 
-     <!-- ========================= header start ========================= -->
-     <header class="header navbar-area">
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-01.php">
+                        <a class="navbar-brand" href="index-02.php">
                             <img src="schoolimages/uknlogo.png" alt="Logo">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -87,51 +87,48 @@ if (!isset($_SESSION['user'])) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                               
-                            
-                            <li class="nav-item">
-                            <a class="page-scroll" href="index-01.php" >首頁</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">個人資料</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">志願序</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                    </li>
-                                    </a>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-item dd-menu">備審管理區</a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
-                                    </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
-                                    </li>
-                                    </a>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-                            </li>
-                            </ul>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">個人資料</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <ul class="sub-menu">
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">比賽資訊</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="nav-item">
+                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
                 </div>
@@ -149,11 +146,7 @@ if (!isset($_SESSION['user'])) {
                 <div class="col-xl-12">
                     <div class="banner-content">
                         <h2 class="text-white">二技校園網介紹</h2>
-                        <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                               
-                            </nav>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -243,7 +236,7 @@ if (!isset($_SESSION['user'])) {
                     echo "    <h3 style='font-size: 1.8em; color: #16A085;'>" . htmlspecialchars($school["school_name"]) . "</h3>";
                     echo "    <p><strong>地址:</strong> " . htmlspecialchars($school["address"]) . "</p>";
                     echo "    <a href='" . htmlspecialchars($school["official_site"]) . "'  class='btn btn-info' >查看詳細資料</a>";
-                    echo "    <a href='Schoolnetwork2.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
+                    echo "    <a href='Schoolnetwork2-02.php?school_id=" . htmlspecialchars($school['school_id']) . "' class='btn btn-info'>二技科系</a>";
                     echo "</div>";
                 }
 
@@ -427,39 +420,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     </style>
     <!-- ========================= service-section end ========================= -->
-   <!-- ========================= client-logo-section start ========================= -->
-<section class="client-logo-section pt-100">
-            <div class="container">
-                <div class="client-logo-wrapper">
-                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div> 
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-                        <div class="client-logo">
-
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- ========================= client-logo-section end ========================= -->
+    <!-- ========================= client-logo-section end ========================= -->
 
     <!-- ========================= footer start ========================= -->
     <footer class="footer pt-100">
@@ -467,8 +428,8 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                        <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">

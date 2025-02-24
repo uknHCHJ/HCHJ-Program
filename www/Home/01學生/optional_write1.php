@@ -78,7 +78,7 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
