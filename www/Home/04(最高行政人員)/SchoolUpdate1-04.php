@@ -289,7 +289,7 @@ $datas_len = count($datas); //目前資料筆數
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
                             <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">
