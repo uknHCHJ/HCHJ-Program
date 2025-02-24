@@ -29,7 +29,7 @@ $userId = $userData['user'];
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>學生志願序統計</title>
+    <title>志願序開放時間編輯</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 

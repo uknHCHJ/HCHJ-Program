@@ -33,7 +33,7 @@ $class = $userData['class'];
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>學生志願序統計</title>
+    <title>繳交志願序</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
