@@ -64,7 +64,14 @@ $username=$userData['name'];
                                     </li>  
                                     <li class="nav-item">
                                         <a href="Adduser.php">新增人員</a>
-                                    </li>        
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">二技校園網</a>
+                                        <ul class="sub-menu">
+                                            <li class="nav-item"><a href="Schoolnetwork1-00.php">首頁</a></li>
+                                            <li class="nav-item"><a href="Secondtechnicalcampus00-1.php">新增校園科系</a></li>
+                                        </ul>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="Access-Control1.php">權限管理</a>                                
                                     </li>
