@@ -316,7 +316,7 @@ $result = mysqli_query($link, $query);
               } else {
                 echo "查詢失敗：" . mysqli_error($link);
               }
-              $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+              $sql = "SELECT * FROM `user` WHERE `name`='$name'";
               $result = mysqli_query($link, $sql);
               if ($result) { 
             

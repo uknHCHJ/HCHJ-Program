@@ -279,7 +279,7 @@ $result = mysqli_query($link, $query);
                         }
                       </script>
 
-                      <h3 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 同學</h3>
+                      <h3 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 主任</h3>
                     </div>
                   </div>
                 </div>
@@ -323,12 +323,8 @@ $result = mysqli_query($link, $query);
               } else {
                 echo "查詢失敗：" . mysqli_error($link);
               }
-              if (count($teachers) == 1) {
-                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "</span></p></br>";
-              } else {
-                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "、" . $teachers[1] . "</span></p></br>";
-              }
-              $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+             
+              $sql = "SELECT * FROM `user` WHERE `name`='$name'";
               $result = mysqli_query($link, $sql);
               if ($result) { 
             
