@@ -85,9 +85,10 @@ if (!isset($_SESSION['user'])) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -96,21 +97,22 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <ul class="sub-menu">
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
+                                    </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
+                                    <a href="Schoolnetwork1.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
                                     <ul class="sub-menu">
                                         <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddCompetition1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
                                         <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
                                     </ul>
                                 </li>
@@ -122,8 +124,14 @@ if (!isset($_SESSION['user'])) {
                                 <li class="nav-item">
                                     <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                </li>
                         </div> <!-- navbar collapse -->
-                   
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
     </header>
         <!-- ========================= header end ========================= -->
@@ -138,7 +146,7 @@ if (!isset($_SESSION['user'])) {
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
+                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">二技校園網介紹</li><a href="portfolio-03(二技校園網介紹).php"></a></li>
                                     </ol>
                                 </nav>
@@ -217,7 +225,7 @@ $school_name = $result_school->fetch_assoc()['school_name'];
             <?php endforeach; ?>
         </tbody>
     </table>
-    <a href="Schoolnetwork1-02.php" class="btn btn-secondary">返回上一頁</a>
+    <a href="Schoolnetwork1.php" class="btn btn-secondary">返回上一頁</a>
 </section>
 </body>
 <!-- ========================= service-section end ========================= -->

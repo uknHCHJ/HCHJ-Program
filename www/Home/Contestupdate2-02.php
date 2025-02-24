@@ -1,4 +1,4 @@
-<?php
+<?php 
 $servername = "127.0.0.1";  
 $username = "HCHJ";  
 $password = "xx435kKHq";  
@@ -13,51 +13,42 @@ if ($conn->connect_error) {
 }
 
 // 確認是否有傳入比賽ID
-if (isset($_GET['ID'])) {
-  $id = $_GET['ID'];
+if (isset($_GET['ID']) && !empty($_GET['ID'])) {
+    $id = intval($_GET['ID']); // 確保ID是整數
 
-  // 檢查表單是否已提交
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-     $ID=$_GET['ID'];
-      $name = $_POST['name'];
-      $inform = $_POST['inform'];
-      $link = $_POST['link'];
-      $image = $_FILES['image'];
+    // 檢查表單是否已提交
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!empty($_POST['name']) && !empty($_POST['link'])) {
+            $name = trim($_POST['name']);
+            $link = trim($_POST['link']);
 
-      // 檢查是否有上傳新圖片
-      if ($image['error'] === 0) {
-          // 取得圖片的二進制數據
-          $imageData = file_get_contents($image['tmp_name']);
-      } else {
-          // 圖片上傳失敗，顯示錯誤信息
-          echo "圖片上傳失敗";
-          exit;
-      }
+            // 準備更新資料庫的SQL語句
+            $sql = "UPDATE information SET name = ?, link = ? WHERE ID = ?";
 
-      // 準備更新資料庫的SQL語句
-      $sql = "UPDATE information SET name = ?, inform = ?, link = ?, image = ? WHERE ID = ?";
+            // 使用預備語句來避免SQL注入
+            if ($stmt = $conn->prepare($sql)) {
+                $stmt->bind_param("ssi", $name, $link, $id);
 
-      // 使用預備語句來避免SQL注入
-      if ($stmt = $conn->prepare($sql)) {
-          $stmt->bind_param("ssssi", $name, $inform, $link, $imageData, $id);
+                // 執行更新操作
+                if ($stmt->execute()) {
+                    echo "比賽資訊更新成功!";
+                    header("location:Contestupdate1.php?ID=" . $id);
+                    exit; // 停止腳本執行
+                } else {
+                    die("比賽資訊更新失敗：" . $stmt->error);
+                }
 
-          // 執行更新操作
-          if ($stmt->execute()) {
-            echo "比賽資訊更新成功!";
-            header("location:Contestupdate1-02.php?ID=".$ID);
-          } else {
-              echo "比賽資訊更新失敗：" . $stmt->error;
-              header("location:Contestupdate1-02.php?ID=".$ID);
-          }
-
-          // 釋放語句
-          $stmt->close();
-      } else {
-          echo "準備語句失敗：" . $conn->error;
-      }
-  }
+                // 釋放語句
+                $stmt->close();
+            } else {
+                die("準備語句失敗：" . $conn->error);
+            }
+        } else {
+            die("請填寫完整的比賽資訊。");
+        }
+    }
 } else {
-  echo "未指定比賽ID";
+    die("未指定比賽ID");
 }
 
 // 關閉資料庫連線

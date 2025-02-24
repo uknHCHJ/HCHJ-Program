@@ -5,11 +5,18 @@ include 'db.php';
 $userData = $_SESSION['user'];
 // 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
+$name = $userData['name'];
 $image = $userData['image'];
 $query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
+//if (mysqli_num_rows($result) > 0) {
+// $userDetails = mysqli_fetch_assoc($result);  
+//} else {
+// echo "找不到使用者的詳細資料";
+//}
 ?>
 <!Doctype html>
+
 <html class="no-js" lang="">
 
 <head>
@@ -86,19 +93,16 @@ $result = mysqli_query($link, $query);
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
+                                    <a href="Schoolnetwork1.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -147,14 +151,36 @@ $result = mysqli_query($link, $query);
   <!-- ========================= 橫幅(大標題) end ========================= -->
   <style>
     /* 按鈕樣式 */
+    /* 讓圖片變成圓形 */
     .button-image {
-      width: 300px;
-      /* 設定按鈕大小 */
-      height: 200px;
+      width: 150px;
+      /* 設定圖片的寬度 */
+      height: 150px;
+      /* 設定圖片的高度，確保是正方形 */
+      border-radius: 50%;
+      /* 讓圖片變圓 */
+      object-fit: cover;
+      /* 確保圖片填滿圓形範圍，不變形 */
+      border: 2px solid #000;
+      /* 可選的邊框 */
+    }
+
+    .button-image {
+      width: 150px;
+      /* 設定按鈕大小，確保寬高相等 */
+      height: 150px;
       cursor: pointer;
       /* 滑鼠移上去變成點擊樣式 */
       border: none;
       outline: none;
+      border-radius: 50%;
+      /* 讓按鈕變成圓形 */
+      overflow: hidden;
+      /* 防止圖片超出圓形邊界 */
+      display: flex;
+      /* 讓內部圖片置中 */
+      justify-content: center;
+      align-items: center;
     }
 
     /* 懸停效果 */
@@ -164,40 +190,54 @@ $result = mysqli_query($link, $query);
       transform: scale(1.05);
       /* 稍微放大 */
     }
+
+    .button-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* 確保圖片不會變形，且填滿整個按鈕 */
+      border-radius: 50%;
+      /* 讓圖片本身也是圓形 */
+    }
+
+    strong {
+      font-weight: 700;
+      /* 粗體 */
+      font-size: 18px;
+      /* 設定大小 */
+    }
   </style>
-  <!-- ========================= 資料旁三個方框 start ========================= -->
+
+  <!-- ========================= 個人資料區塊 Start ========================= -->
   <section class="contact-section pt-130">
     <div class="container">
       <div class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="col-xl-8">
-          <div class="contact-form-wrapper">
+          <div class="contact-form-wrapper p-5 bg-white shadow-lg rounded-3">
             <div class="row">
               <div class="col-xl-10 col-lg-8 mx-auto">
-                <div class="section-title text-center mb-50">
+                <div class="section-title text-center mb-4">
                   <div class="header-section">
-                    <div class="continer">
+                    <div class="container">
+
                       <?php
                       session_start();
-                      // 資料庫連接參數
                       $servername = "127.0.0.1";
                       $username = "HCHJ";
                       $password = "xx435kKHq";
                       $dbname = "HCHJ";
 
-                      // 建立資料庫連接
                       $conn = new mysqli($servername, $username, $password, $dbname);
                       if ($conn->connect_error) {
                         die("連接失敗: " . $conn->connect_error);
                       }
 
-                      // 確保 SESSION 中有儲存唯一識別符
                       if (isset($_SESSION['user'])) {
                         $userId = $_SESSION['user']['user'];
                       } else {
                         die("未登入，無法顯示圖片。");
                       }
 
-                      // 從資料庫中提取用戶圖片
                       $imageData = null;
                       $sql = "SELECT `image` FROM `user` WHERE `user` = ?";
                       $stmt = $conn->prepare($sql);
@@ -206,25 +246,22 @@ $result = mysqli_query($link, $query);
                       $stmt->bind_result($imageData);
                       $stmt->fetch();
                       $stmt->close();
-
                       $conn->close();
                       ?>
 
-                      <!-- HTML 和 JavaScript -->
+                      <!-- 頭像區域 -->
                       <form enctype="multipart/form-data" action="/~HCHJ/Home/contact02-2.php" method="POST"
-                        style="height: 200px; max-width: 1000px; margin: auto">
-                        <!-- 隱藏的檔案選擇框 -->
+                        class="text-center">
                         <input type="file" id="file-input" name="image" accept=".jpg,.jpeg,.png" style="display: none;"
                           onchange="previewAndConfirm(event)">
 
-                        <!-- 點擊圖片選擇檔案 -->
-                        <button type="button" id="button-image"
-                          onclick="document.getElementById('file-input').click();">
+                        <button type="button" id="button-image" onclick="document.getElementById('file-input').click();"
+                          class="profile-pic-container">
                           <img src="data:image/jpeg;base64,<?= base64_encode($imageData) ?>" alt="button-image"
-                            style="cursor: pointer; width: 150px; height: 150px;">
+                            class="profile-pic">
                         </button>
-                        <p  style="font-size: 16px;" class="wow fadeInUp" data-wow-delay=".2s">點擊圖片更換頭貼</p>
-                        <!-- 隱藏的提交按鈕 -->
+
+                        <p class="text-muted mt-2">點擊圖片更換頭貼</p>
                         <input type="submit" value="上傳圖片" style="display:none;" id="submit-button">
                       </form>
 
@@ -232,128 +269,123 @@ $result = mysqli_query($link, $query);
                         function previewAndConfirm(event) {
                           var file = event.target.files[0];
                           if (file) {
-                            // 顯示確認視窗
                             var confirmChange = confirm("是否更換新頭貼？");
 
                             if (confirmChange) {
-                              // 顯示選擇的圖片作為預覽
                               var reader = new FileReader();
                               reader.onload = function (e) {
-                                var img = document.getElementById('button-image').getElementsByTagName('img')[0];
-                                img.src = e.target.result; // 更新圖片源為選擇的圖片
+                                document.querySelector('.profile-pic').src = e.target.result;
                               }
                               reader.readAsDataURL(file);
 
-                              // 提交表單
                               setTimeout(function () {
                                 document.forms[0].submit();
-                              }, 500); // 延遲提交，以確保預覽完成
+                              }, 500);
                             } else {
-                              // 如果用戶取消，清除選擇的檔案
                               document.getElementById('file-input').value = "";
                             }
                           }
                         }
                       </script>
 
-
+                      <h3 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 導師</h3>
                     </div>
                   </div>
-                  <h2 class="wow fadeInUp" data-wow-delay=".4s"><?php echo $userData['name']; ?>老師
-                    
-                  </h2>
-
                 </div>
               </div>
             </div>
-            <form action="assets/php/mail.php" class="contact-form">
-              <div class="row">
-                <div class="col-md-6">
 
-                  <p class="wow fadeInUp" data-wow-delay=".2s">
-                    科系：<?php echo $userData['department']; ?></p>
-                </div>
-                <div class="col-md-6">
-                  <p class="wow fadeInUp" data-wow-delay=".2s">
-                    <?php
-                    session_start();
-                    include 'db.php';
-                    // 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
-                    $userData = $_SESSION['user'];
-                    // 例如從 SESSION 中獲取 user_id
-                    $username = $userData['name'];
-                    $user = $userData['user'];
-                    $sql = "SELECT * FROM `user` WHERE `name` ='$username' AND `user`='$user'";
-                    $result = mysqli_query($link, $sql);
-                    if($result){
-                      $grade=[];
-                      $calss = [];  // 用於儲存符合條件的班導名字
-                      if($row = mysqli_fetch_assoc($result)){
-                        $grade = explode(',', $row['grade']);
-                        $class = explode(',', $row['class']);
-                      }
-                      if (count($grade) < 2) {
-                        $grade[] = '無';  // 若符合條件的班導少於兩位，新增 "無" 作為占位
-                        
-                    }
-                    }
-                    ?>
-                    代班班級：<?php echo $grade[0], $class[0]; ?>
-                  </p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <p class="wow fadeInUp" data-wow-delay=".2s">
-                    第二代班班級：<?php echo $grade[1], $class[1]; ?>
-                </div>
-                <div class="col-md-6">
-                  <p class="wow fadeInUp" data-wow-delay=".2s">帳號名稱：<?php echo $userData['user']; ?>
-                  </p>
-                </div>
-              </div>
-            </form>
+            <!-- 個人資料卡 -->
+            <div class="bg-light p-4 rounded shadow-sm text-center">
+              <p><strong>帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p></br>
+              <p><strong>科系：</strong> <?php echo $_SESSION['user']['department']; ?></p></br>
+              <p><strong>班級：</strong> <?php echo $_SESSION['user']['grade'], $_SESSION['user']['class']; ?></p></br>
+
+
+              <!-- 班導資訊 -->
+              <?php
+              $link = mysqli_connect($servername, $username, $password, $dbname);
+              if ($link) {
+                mysqli_query($link, 'SET NAMES UTF8');
+              } else {
+                echo "無法連接資料庫：" . mysqli_connect_error();
+                exit();
+              }
+
+              $userData = $_SESSION['user'];
+              $grade = $userData['grade'];
+              $class = $userData['class'];
+              $currentUserId = $userData['id'];
+              $permissions1 = explode(',', $userData['Permissions']);
+
+              $sql = "SELECT * FROM `user` WHERE `grade` LIKE '%$grade%' AND `class` LIKE '%$class%' AND `id` != $currentUserId";
+              $result = mysqli_query($link, $sql);
+
+              if ($result) {
+                $teachers = [];
+                while ($row = mysqli_fetch_assoc($result)) {
+                  $permissions2 = explode(',', $row['Permissions']);
+                  if (in_array('2', $permissions2)) {
+                    $teachers[] = $row['name'];
+                  }
+                }
+              } else {
+                echo "查詢失敗：" . mysqli_error($link);
+              }
+              
+              $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
+              $result = mysqli_query($link, $sql);
+              if ($result) { 
+            
+                $studentemail = "";
+                while ($row = mysqli_fetch_assoc($result)) {
+                  
+                  $studentemail = $row['email'];
+                  echo "<p><strong>電子信箱：</strong><span>" . $studentemail . "</span></p>";
+                }
+              }
+
+              ?>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  <!-- ========================= 個人資料區塊 End ========================= -->
 
-  <!-- ========================= 資料旁三個方框 end ========================= -->
+  <style>
+    .profile-pic-container {
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #ddd;
+      object-fit: cover;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-pic-container:hover {
+      transform: scale(1.05);
+    }
+
+    .contact-form-wrapper {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 
 
   <!-- ========================= client-logo-section start ========================= -->
-  <section class="client-logo-section pt-100">
-    <div class="container">
-      <div class="client-logo-wrapper">
-        <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-          <div class="client-logo">
-            <img src="schoolimages/uknim.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknbm.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknanime.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknbaby.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknenglish.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/ukneyes.jpg" alt="">
-          </div>
-          <div class="client-logo">
-            <img src="schoolimages/uknnurse.jpg" alt="">
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-  </section>
+  
   <!-- ========================= client-logo-section end ========================= -->
 
 
@@ -365,7 +397,7 @@ $result = mysqli_query($link, $query);
         <div class="col-xl-3 col-lg-4 col-md-6">
           <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
             <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
           </div>
         </div>
         <div class="col-xl-3 col-lg-4 col-md-6">

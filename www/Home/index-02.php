@@ -103,18 +103,13 @@ $userId = $userData['user'];
                                     <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
                                     <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">學生志願序統計</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
-                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間編輯</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
+                                    <a href="Schoolnetwork1.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -191,7 +186,7 @@ $userId = $userData['user'];
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
                         <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">

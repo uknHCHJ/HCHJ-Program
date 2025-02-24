@@ -85,9 +85,10 @@ if (!isset($_SESSION['user'])) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -96,7 +97,13 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <ul class="sub-menu">
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">學生志願序統計</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間編輯</a></li>
+                                    </ul>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">二技校園網</a>
@@ -115,6 +122,7 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
 
+
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
@@ -125,7 +133,10 @@ if (!isset($_SESSION['user'])) {
                                     <a class="page-scroll" href="../logout.php">登出</a>
                                 </li>
                         </div> <!-- navbar collapse -->
-                   
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
 
     </header>
         <!-- ========================= header end ========================= -->

@@ -44,8 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 關閉語句
     $stmt->close();
-}
-
 // 關閉資料庫連線
 $conn->close();
+}
 ?>

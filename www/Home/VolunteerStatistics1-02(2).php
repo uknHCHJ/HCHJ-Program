@@ -104,19 +104,16 @@ $class = $userData['class'];
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序統計</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
+                                    <a href="Schoolnetwork1.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -153,15 +150,8 @@ $class = $userData['class'];
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">學生管理</h2>
-                        <div class="page-breadcrumb">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">學生志願統計</li>
-                                </ol>
-                            </nav>
-                        </div>
+                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">學生志願序排行</h2>
+                        
                     </div>
                 </div>
             </div>
@@ -228,7 +218,7 @@ $class = $userData['class'];
 </head>
 
 <body>
-    <h1>學生選校科系志願表</h1>
+    
     <div class="table-container">
         <table>
             <thead>
@@ -308,7 +298,7 @@ $class = $userData['class'];
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
                         <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                        <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">

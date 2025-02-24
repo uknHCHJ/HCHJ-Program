@@ -20,38 +20,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $link = $_POST["link"];
     $displayEndDate = $_POST['display_end_time']; // 從表單取得顯示截止日期
     
-    // 驗證連結格式
-    if (!filter_var($link, FILTER_VALIDATE_URL)) {
+    // 驗證連結格式 验证字符串是否是合法的 URL
+    if (!filter_var($link, FILTER_VALIDATE_URL)) { 
         echo "<script>alert('請輸入有效的網址。');</script>";
-        header("Location:AddContest1-02.php");
-        exit;
-    }
-
-    // 取得圖片
-    $imageData = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
-        $imageTmpName = $_FILES['image']['tmp_name'];
-        $imageData = file_get_contents($imageTmpName);
-    } else {
-        echo "<script>alert('請選擇一個有效的圖片檔案。');</script>";
-        header("Location:AddContest1-02.php");
+        header("Location: AddContest1.php");
         exit;
     }
 
     // 插入比賽資訊到資料庫
-    $sql = "INSERT INTO information (name, inform, link, image, display_end_time) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO information (name, link, display_end_time) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssss", $name, $inform, $link, $imageData, $displayEndDate);
+    $stmt->bind_param("sss", $name, $link, $displayEndDate);
 
     if ($stmt->execute()) {
         echo "<script>alert('比賽資訊新增成功！');</script>";
-        header("Location:Contestblog-02.php");
+        header("Location:Contestblog1.php");
         exit;
     } else {
         echo "<script>alert('新增失敗，請檢查資料格式。');</script>";
-        header("Location:Contestblog-02.php");
+        header("Location:AddContest1.php");
         exit;
     }
+
+    // 關閉語句
+    $stmt->close();
 }
 
 // 關閉資料庫連線

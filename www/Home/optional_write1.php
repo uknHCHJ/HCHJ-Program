@@ -51,7 +51,7 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-01.php">
+                        <a class="navbar-brand" href="index-02.php">
                             <img src="schoolimages/uknlogo.png" alt="Logo">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -64,49 +64,53 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-
-
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="index-01.php">首頁</a>
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
                                 </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                        </li>
+                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
                                         <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">備審資料</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/recordforreview01-1.php">備審紀錄</a>
-                                        </li>
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">學生志願序統計</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間編輯</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">二技校園網</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
+                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
+                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">比賽資訊</a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
+                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
+                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
+                                    </ul>
+                                </li>
 
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog-01.php">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contest-history(學生).php">競賽紀錄</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">志願序</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                        </li>
-                                    </ul>
-                                </li>
+
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
                                 </li>
-                            </ul>
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="../logout.php">登出</a>
+                                </li>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
                 </div>

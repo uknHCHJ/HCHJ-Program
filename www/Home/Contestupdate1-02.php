@@ -85,9 +85,10 @@ if (!isset($_SESSION['user'])) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                    <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                    </li>
+                                <li class="nav-item">
+                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
+                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
@@ -96,15 +97,16 @@ if (!isset($_SESSION['user'])) {
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="student02-1.php">學生管理</a>
+                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <ul class="sub-menu">
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
+                                    </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
-                                    </ul>
+                                    <a href="Schoolnetwork1.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -141,14 +143,7 @@ if (!isset($_SESSION['user'])) {
                     <div class="col-xl-12">
                         <div class="banner-content">
                             <h2 class="text-white">修改</h2>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-02.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">比賽資訊</li><a href="blog-03(競賽).php"></a></li>
-                                    </ol>
-                                </nav>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -217,13 +212,12 @@ $datas_len = count($datas); //目前資料筆數
     <div style="text-align:center;width:100%;height:50px;">
         <div style="width:30%;height:20px;margin:0 auto;">
             <h2 class="margin_top50">比賽資訊</h2><br>
-            <form method="post" action="Contestupdate2-02.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
+            <form method="post" action="Contestupdate2.php?ID=<?php echo $datas[0]['ID']?>" enctype="multipart/form-data">
                 比賽名稱：<input type="text" class="form-control" value="<?php echo $datas[0]['name'] ?>" name="name"><br>
-                比賽資訊： <textarea class="form-control" name="inform" rows="5"><?php echo $datas[0]['inform'] ?></textarea><br>
                 比賽連結：<input type="text" class="form-control" value="<?php echo $datas[0]['link'] ?>" name="link"><br>
-                <label for="image">圖片：</label>
-                <input type="file" id="image" name="image" required><br><br>
                 <input type="submit" class="form-control btn btn-primary" onclick="return confirm('確定要修改該比賽資訊嗎？')" value="修改">
+                <br><br>
+                <a href="ContestEdin1-02.php" class="btn btn-secondary">返回上一頁</a>
             </form>
         </div>
     </div>
@@ -284,8 +278,8 @@ $datas_len = count($datas); //目前資料筆數
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                            <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">
