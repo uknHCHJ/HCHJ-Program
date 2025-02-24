@@ -200,7 +200,7 @@ if ($conn->connect_error) {
         <section class="service-section pt-20 pb-10">
     <div class="form-container">
         <h2>比賽資訊</h2>
-        <form action="AddContest2.php" method="post" enctype="multipart/form-data"><br>
+        <form action="AddContest2-04.php" method="post" enctype="multipart/form-data"><br>
             <label for="name">比賽名稱：</label>
             <input type="text" id="name" name="name" required><br>
             

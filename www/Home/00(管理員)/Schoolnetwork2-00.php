@@ -1,31 +1,37 @@
 <?php
 session_start();
-$link = mysqli_connect("127.0.0.1", "HCHJ", "xx435kKHq", "HCHJ");
-if ($link) {
-    mysqli_query($link, 'SET NAMES UTF8');
-} else {
-    die("資料庫連接失敗: " . mysqli_connect_error());
+include 'db.php';
+
+if (!isset($_SESSION['user'])) {
+    echo "未登入";
+    header("Location:/~HCHJ/index.html");
+    exit();
 }
-// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+
 $userData = $_SESSION['user'];
-// 例如從 SESSION 中獲取 user_id
-$userId = $userData['user'];
-$username = $userData['name'];
-$query = sprintf("SELECT user FROM `user` WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
+
+// 確保你在 SESSION 中儲存了唯一識別符（例如 user_id 或 username）
+$userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
+
+$query = sprintf("SELECT * FROM user WHERE user = '%d'", mysqli_real_escape_string($link, $userId));
 $result = mysqli_query($link, $query);
-//if (mysqli_num_rows($result) > 0) {
-// $userDetails = mysqli_fetch_assoc($result);  
-//} else {
-// echo "找不到使用者的詳細資料";
-//}
+
+if (!isset($_SESSION['user'])) {
+    echo ("<script>
+                    alert('請先登入！！');
+                    window.location.href = '/~HCHJ/index.html'; 
+                  </script>");
+    exit();
+}
 ?>
-<!Doctype html>
+
+<!doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>上傳二技校園</title>
+    <title>編輯</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -42,9 +48,6 @@ $result = mysqli_query($link, $query);
 </head>
 
 <body>
-    <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
 
     <!-- ========================= preloader start ========================= -->
     <div class="preloader">
@@ -64,8 +67,9 @@ $result = mysqli_query($link, $query);
         </div>
     </div>
     <!-- preloader end -->
-     <!-- ========================= header start ========================= -->
-     <header class="header navbar-area">
+
+    <!-- ========================= header start ========================= -->
+    <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -123,8 +127,6 @@ $result = mysqli_query($link, $query);
         </header>
         <!-- ========================= header end ========================= -->
 
-
-
     <!-- ========================= page-banner-section start ========================= -->
     <section class="page-banner-section pt-75 pb-75 img-bg"
         style="background-image: url('assets/img/bg/common-bg.svg')">
@@ -132,7 +134,7 @@ $result = mysqli_query($link, $query);
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">請上傳二技校園</h2>
+                        <h2 class="text-white">二技科系</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
                             </nav>
@@ -142,116 +144,82 @@ $result = mysqli_query($link, $query);
             </div>
         </div>
     </section>
-
     <!-- ========================= page-banner-section end ========================= -->
 
-    <!-- ========================= feature-section start ========================= -->
-    <!-- 表單區塊 -->
-    <section id="service" class="service-section pt-130 pb-100">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
-                    <div class="section-title text-center mb-55">
-                        <span class="wow fadeInDown" data-wow-delay=".2s">新增二技校園</span>
-                    </div>
-                    <style>
-              /* 按鈕樣式 */
-              .download-button {
-                background-color: #4CAF50;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
-
-              .download-button:hover {
-                background-color: #45a049;
-                transform: scale(1.05);
-              }
-
-              .download-button:active {
-                animation: click-animation 0.5s forwards;
-              }
-              /*確認*/
-              .primary-button {
-                background-color:rgb(76, 120, 175);
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
-
-              .primary-button:hover {
-                background-color:rgb(76, 120, 175);
-                transform: scale(1.05);
-              }
-
-              .primary-button:active {
-                animation: click-animation 0.5s forwards;
-              }
-              /*上一頁*/
-              .secondary-button {
-                background-color:rgba(25, 19, 19, 0.21);
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px 20px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                transition: background-color 0.3s ease, transform 0.2s ease;
-              }
-
-              .secondary-button:hover {
-                background-color:rgba(25, 19, 19, 0.21);
-                transform: scale(1.05);
-              }
-
-              .secondary-button:active {
-                animation: click-animation 0.5s forwards;
-              }
-              </style>
-                </div>
-            </div>
-            <div class="table-container">
-                <form id="permission-form" action="Secondtechnicalcampus00-2.php" method="POST" enctype="multipart/form-data">
-                    <div class="form-group mb-3">
-                        <label for="imageUpload">上傳檔案(.csv)：</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".csv">
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="user">帳號：</label>
-                        <input type="text" id="user" name="user" class="form-control" value=<?php echo $userId; ?> readonly>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="username">姓名：</label>
-                        <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
-                    </div>
-                    <button type="submit" class="primary-button">確認上傳</button>
-                    <button type="button" class="download-button" onclick="window.location.href='https://depart.moe.edu.tw/ED4500/News.aspx?n=5A930C32CC6C3818&sms=91B3AAE8C6388B96';">更新最新資料</button>                    
-                    <button type="button" class="secondary-button" onclick="window.history.back();">返回上一頁</button>
-                </form>
-
-            </div>
-    </section>
+    <?php
+    $servername = "127.0.0.1"; // 伺服器 IP 或 localhost
+    $username = "HCHJ"; // 資料庫帳號
+    $password = "xx435kKHq"; // 資料庫密碼
+    $dbname = "HCHJ"; // 資料庫名稱
     
 
-    <!-- ========================= feature-section end ========================= -->
+    // 建立連線
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // 確認連線成功
+    if ($conn->connect_error) {
+        die("連線失敗: " . $conn->connect_error);
+    }
+
+    // 接收 school_id 參數
+    $school_id = isset($_GET['school_id']) ? intval($_GET['school_id']) : 0;
+
+    // 抓取對應學校的科系
+    $sql = "SELECT department_id,department FROM test WHERE school_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $school_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // 準備科系資料陣列
+    $departments = array();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $departments[] = $row;
+        }
+    }
+    $stmt->close();
+
+    // 抓取學校名稱 (改為從 Secondskill 表查詢)
+    $sql_school = "SELECT department FROM test WHERE department_id = ?";
+    $stmt_school = $conn->prepare($sql_school);
+    $stmt_school->bind_param("s", $school_id);
+    $stmt_school->execute();
+    $result_school = $stmt_school->get_result();
+    $school_name = ($result_school->num_rows > 0) ? $result_school->fetch_assoc()['name'] : "未知學校";
+    $stmt_school->close();
+    $conn->close();
+    ?>
+    <!-- ========================= service-section start ========================= -->
+
+    <body>
+        <section class="container mt-5 d-flex justify-content-center align-items-center flex-column">
+            <h2 class="text-center" style="font-size: 3em; line-height: 1.2;"><?= $school_name ?></h2><br>
+            <table class="table table-hover text-center" style="width: 50%; font-size: 1.4em; line-height: 1.5;">
+                <thead>
+                    <tr>
+                        <th>序號</th>
+                        <th>科系名稱</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $index = 1; ?>
+                    <?php foreach ($departments as $department): ?>
+                        <tr>
+                            <td><?= $index++ ?></td>
+                            <td><?= htmlspecialchars($department['department']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <a href="Schoolnetwork1-04.php" class="btn btn-secondary">返回上一頁</a>
+        </section>
+    </body>
+    <!-- ========================= service-section end ========================= -->
+
+
+
+
     <!-- ========================= client-logo-section start ========================= -->
     <section class="client-logo-section pt-100">
         <div class="container">
@@ -285,8 +253,6 @@ $result = mysqli_query($link, $query);
         </div>
     </section>
     <!-- ========================= client-logo-section end ========================= -->
-
-
 
     <!-- ========================= footer start ========================= -->
     <footer class="footer pt-100">
@@ -341,6 +307,7 @@ $result = mysqli_query($link, $query);
         </div>
     </footer>
     <!-- ========================= footer end ========================= -->
+
 
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">

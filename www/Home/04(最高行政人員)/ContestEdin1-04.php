@@ -216,8 +216,8 @@ $total_pages = ceil($total_records / $records_per_page);//假設總記錄數是 
                                 <td><?= $index + 1 ?></td>
                                 <td><?= $data['name'] ?></td>
                                 <td>
-                                    <a href="Contestupdate1.php?ID=<?= $data['ID'] ?>" class="btn btn-success">修改</a>
-                                    <a href="ContestDelete2.php?pk=<?= $data['ID'] ?>" onclick="return confirm('確定要刪除該比賽資訊嗎？')" class="btn btn-danger">刪除</a>
+                                    <a href="Contestupdate1-04.php?ID=<?= $data['ID'] ?>" class="btn btn-success">修改</a>
+                                    <a href="ContestDelete2-04.php?pk=<?= $data['ID'] ?>" onclick="return confirm('確定要刪除該比賽資訊嗎？')" class="btn btn-danger">刪除</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
