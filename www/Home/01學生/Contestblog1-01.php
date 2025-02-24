@@ -155,8 +155,8 @@ $result = $conn->query($sql);
             </div>
         <!-- preloader end -->
 
-         <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+       <!-- ========================= header start ========================= -->
+     <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -188,7 +188,7 @@ $result = $conn->query($sql);
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1.php">比賽資訊</a>
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
@@ -303,7 +303,7 @@ $result = $conn->query($sql);
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
                         <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

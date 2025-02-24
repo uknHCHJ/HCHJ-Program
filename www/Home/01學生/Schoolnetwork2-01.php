@@ -225,7 +225,7 @@ $school_name = $result_school->fetch_assoc()['school_name'];
             <?php endforeach; ?>
         </tbody>
     </table>
-    <a href="Schoolnetwork1.php" class="btn btn-secondary">返回上一頁</a>
+    <a href="Schoolnetwork1-01.php" class="btn btn-secondary">返回上一頁</a>
 </section>
 </body>
 <!-- ========================= service-section end ========================= -->
