@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 
 if (isset($_GET['keyword'])) {
     $keyword = mysqli_real_escape_string($conn, $_GET['keyword']);
-    $sql = "SELECT * FROM information WHERE name LIKE '%$keyword%' OR inform LIKE '%$keyword%'";
+    $sql = "SELECT * FROM information WHERE name LIKE '%$keyword%' LIKE '%$keyword%'";
     $result = $conn->query($sql);
 } else {
     echo "請返回並輸入關鍵字來搜尋。";
@@ -35,10 +35,6 @@ $conn->close();
         <?php while($row = $result->fetch_assoc()): ?>
             <div style="border:1px solid #ddd; padding: 10px; margin: 10px 0;">
                 <h3><?= htmlspecialchars($row['name']) ?></h3>
-                <p><?= htmlspecialchars($row['inform']) ?></p>
-                <div>
-                    <img src="data:image/jpeg;base64,<?= base64_encode($row['image']) ?>" alt="<?= htmlspecialchars($row['name']) ?>" style="width:200px; height:auto;">
-                </div>
                 <a href="<?= htmlspecialchars($row['link']) ?>" target="_blank">查看詳細資料</a>
             </div>
         <?php endwhile; ?>
