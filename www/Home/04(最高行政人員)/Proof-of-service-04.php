@@ -157,10 +157,6 @@ if ($result_role) {
                             <h2 class="text-white">學生檔案上傳狀態</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-04.php">首頁</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">學生檔案上傳狀態</li>
-                                    </ol>
                                 </nav>
                             </div>
                         </div>
