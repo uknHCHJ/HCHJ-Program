@@ -36,7 +36,7 @@ $username=$userData['name'];
 <body>
 
      <!-- ========================= header start ========================= -->
-     <header class="header navbar-area">
+ <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -66,6 +66,9 @@ $username=$userData['name'];
                                     <li class="nav-item">
                                         <a href="Adduser.php">新增人員</a>
                                     </li>        
+                                    <li class="nav-item">
+                                        <a href="Secondtechnicalcampus00-1.php">新增校園科系</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="Access-Control1.php">權限管理</a>                                
                                     </li>

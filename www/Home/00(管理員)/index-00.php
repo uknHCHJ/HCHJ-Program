@@ -99,10 +99,10 @@ $userId= $userData['user'];
                                         <a href="Adduser.php">新增人員</a>
                                     </li>        
                                     <li class="nav-item">
-                                        <a href="Access-Control1.php">權限管理</a>                                
+                                        <a href="Secondtechnicalcampus00-1.php">新增校園科系</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="transcript.php">繳交紀錄</a>                                
+                                        <a href="Access-Control1.php">權限管理</a>                                
                                     </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
@@ -233,7 +233,7 @@ $userId= $userData['user'];
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer>   
         <!-- ========================= footer end ========================= -->
 
         
