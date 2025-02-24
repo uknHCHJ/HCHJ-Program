@@ -381,28 +381,26 @@ $conn->close();
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
                         <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
+
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
+
                         </div> 
                         <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
-                        </div>
-                        <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
-                        </div>
 
-                        
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>                       
                     </div>
                 </div>
             </div>

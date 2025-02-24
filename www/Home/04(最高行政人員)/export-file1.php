@@ -351,7 +351,39 @@ $username = $userData['name'];
     cursor: pointer;
   }
 </style>
+<!-- ========================= client-logo-section start ========================= -->
+<section class="client-logo-section pt-100">
+            <div class="container">
+                <div class="client-logo-wrapper">
+                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                        <div class="client-logo">
 
+                        </div>
+                        <div class="client-logo">
+
+                        </div> 
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ========================= client-logo-section end ========================= -->
 <!-- ========================= footer start ========================= -->
 <footer class="footer pt-100">
   <div class="container">
