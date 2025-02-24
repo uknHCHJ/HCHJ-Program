@@ -273,7 +273,7 @@ $result = mysqli_query($link, $query);
                         }
                       </script>
 
-                      <h3 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 同學</h3>
+                      <h3 class="mt-4 fw-bold text-dark"><?php echo $_SESSION['user']['name']; ?> 管理員</h3>
                     </div>
                   </div>
                 </div>
@@ -284,7 +284,6 @@ $result = mysqli_query($link, $query);
             <div class="bg-light p-4 rounded shadow-sm text-center">
               <p><strong>帳號名稱：</strong> <?php echo $_SESSION['user']['user']; ?></p></br>
               <p><strong>科系：</strong> <?php echo $_SESSION['user']['department']; ?></p></br>
-              <p><strong>班級：</strong> <?php echo $_SESSION['user']['grade'], $_SESSION['user']['class']; ?></p></br>
 
 
               <!-- 班導資訊 -->
@@ -316,11 +315,6 @@ $result = mysqli_query($link, $query);
                 }
               } else {
                 echo "查詢失敗：" . mysqli_error($link);
-              }
-              if (count($teachers) == 1) {
-                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "</span></p></br>";
-              } else {
-                echo "<p><strong>班級導師：</strong><span>" . $teachers[0] . "、" . $teachers[1] . "</span></p></br>";
               }
               $sql = "SELECT * FROM `testemail` WHERE `name`='$name'";
               $result = mysqli_query($link, $sql);
