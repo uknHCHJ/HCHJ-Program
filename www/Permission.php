@@ -103,8 +103,7 @@ $username=$userData['name'];
         const roleNames = {
             "0": "管理員",
             "1":"學生",
-            "2": "導師",
-            "3": "一般老師",    
+            "2": "導師", 
             "4": "最高行政人員",
             // 可添加更多權限對應
         };
@@ -159,9 +158,6 @@ $username=$userData['name'];
                         break;
                     case "2":
                         redirectUrl = "/~HCHJ/Home/index-02.php"; // 導師頁面
-                        break;
-                    case "3":
-                        redirectUrl = "/~HCHJ/Home/index-03.php"; // 老師頁面
                         break;
                     case "4":
                         redirectUrl = "/~HCHJ/Home/index-04.php"; // 最高行政人員頁面
