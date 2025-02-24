@@ -23,13 +23,13 @@ $username = $userData['name']; // 例如從 SESSION 中獲取 user_id
 $userId = $userData['user'];
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>升學競賽全方位資源網-首頁</title>
+    <title>學生志願序統計</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -109,7 +109,7 @@ $userId = $userData['user'];
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="Schoolnetwork1.php">二技校園網</a>
+                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">比賽資訊</a>
@@ -139,44 +139,211 @@ $userId = $userData['user'];
     </header>
     <!-- ========================= header end ========================= -->
 
-    <!-- ========================= hero-section start ========================= -->
-    <section id="home" class="hero-section">
+    <!-- ========================= page-banner-section start ========================= -->
+    <section class="page-banner-section pt-75 pb-75 img-bg"
+        style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-5 col-lg-6">
-                    <div class="hero-content-wrapper">
-
-                        <h2 class="mb-25 wow fadeInDown" data-wow-delay=".2s">您好　<?php echo $username ?>老師 </h2>
-
-                        <h1 class="mb-25 wow fadeInDown" data-wow-delay=".2s">歡迎光臨本系統</h1>
-
-                        <script>
-                            // JavaScript 函数触发表单提交
-                            function submitLogout() {
-                                document.getElementById('logoutForm').submit();  // 提交隐藏的表单
-                            }
-                        </script>
-                        <a href="javascript:void(0)" type="button" class="theme-btn" onclick="submitLogout()">登出</a>
-                        <form id="logoutForm" action="../logout.php" method="POST" style="display:none;">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="banner-content">
+                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序總覽</h2>
+                        
                     </div>
-                </div>
-                <div class="col-xl-7 col-lg-6">
-                    <!--<div class="hero-img">
-                            <div class="d-inline-block hero-img-right">-->
-                    <img src="schoolimages/imlogo.png" alt="" class="wow fadeInRight" text-align="text-center"
-                        data-wow-delay=".5s">
-                    <!-- </div>
-                        </div>-->
                 </div>
             </div>
         </div>
     </section>
-    <!-- ========================= hero-section end ========================= -->
+    <!DOCTYPE html>
+    <html lang="zh">
 
-    <!-- ========================= client-logo-section start ========================= -->
-    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                text-align: center;
+                margin: 20px;
+            }
+
+            h1 {
+                color: #333;
+            }
+
+            table {
+                width: 80%;
+                margin: 20px auto;
+                border-collapse: collapse;
+                background: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            th,
+            td {
+                padding: 12px;
+                border: 1px solid #ddd;
+                text-align: center;
+            }
+
+            th {
+                background-color: #007bff;
+                color: white;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            tr:hover {
+                background-color: #ddd;
+            }
+
+            td.student-name {
+                text-align: left;
+            }
+        </style>
+    </head>
+
+    <body>
+     
+
+        <table>
+            <thead>
+                <tr>
+                    <th>學校</th>
+                    <th>科系</th>
+                    <th>人數</th>
+                    <th>選擇的學生</th>
+                </tr>
+            </thead>
+            <tbody id="data-body">
+                <!-- 資料將由 JavaScript 動態插入 -->
+            </tbody>
+        </table>
+
+        <script>
+            let tableData = [];
+
+            function fetchData() {
+                fetch('VolunteerStatistics2-02.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!Array.isArray(data)) {
+                            console.error('Unexpected data format:', data);
+                            document.getElementById('data-body').innerHTML = '<tr><td colspan="4">No data available</td></tr>';
+                            return;
+                        }
+
+                        const tableBody = document.getElementById('data-body');
+                        tableBody.innerHTML = '';
+                        tableData = data;
+
+                        data.forEach(row => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                            <td>${row.School}</td>
+                            <td>${row.Department}</td>
+                            <td>${row.StudentCount}</td>
+                            <td class="student-name">${row.Students || '無'}</td>
+                        `;
+                            tableBody.appendChild(tr);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            function exportToExcel() {
+                if (tableData.length === 0) {
+                    alert("無資料可匯出");
+                    return;
+                }
+
+                let sheetData = [];
+                let schoolRow = ["學校"]; // 第一列：學校名稱
+                let departmentRow = ["科系"]; // 第二列：科系名稱
+                let maxStudentCount = 0; // 紀錄最多學生數，確保所有學生列數對齊
+                let studentRows = [];
+
+                tableData.forEach((row, index) => {
+                    // 填入學校與科系資料
+                    schoolRow.push(row.School);
+                    departmentRow.push(row.Department);
+
+                    let students = row.Students ? row.Students.split(',') : ['無'];
+                    maxStudentCount = Math.max(maxStudentCount, students.length);
+
+                    students.forEach((student, studentIndex) => {
+                        // 確保 `studentRows` 陣列有足夠的列
+                        if (!studentRows[studentIndex]) {
+                            studentRows[studentIndex] = Array(tableData.length + 1).fill(''); // 預留空間
+                        }
+                        // **修正索引**，確保學生姓名對齊學校與科系
+                        studentRows[studentIndex][index + 1] = student;
+                    });
+                });
+
+                // 組合表格資料
+                sheetData.push(schoolRow); // 第一列：學校
+                sheetData.push(departmentRow); // 第二列：科系
+
+                // 填充學生資料，確保所有學生列數對齊
+                for (let i = 0; i < maxStudentCount; i++) {
+                    sheetData.push(studentRows[i] || Array(tableData.length + 1).fill(''));
+                }
+
+                let ws = XLSX.utils.aoa_to_sheet(sheetData);
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "志願統計");
+                XLSX.writeFile(wb, "志願選擇統計.xlsx");
+            }
+            fetchData();
+        </script>
+    </body>
+    <button class="export-btn" onclick="exportToExcel()">📊 匯出 Excel</button>
+
+    <style>
+        .export-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            /* 藍色漸變 */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            /* ✅ 調整底部間距，避免貼著下方區塊 */
+            display: inline-block;
+            /* 讓按鈕不會占滿整行 */
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #004494);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .export-btn:active {
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+    </style>
+
+
+    </html>
+
+
+
+
+    </script>
     <!-- ========================= client-logo-section end ========================= -->
-
 
 
     <!-- ========================= footer start ========================= -->
@@ -185,7 +352,7 @@ $userId = $userData['user'];
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-02.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                        <a href="index-04.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
                         <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                     </div>
                 </div>
@@ -221,9 +388,11 @@ $userId = $userData['user'];
                         <div class="footer-social-links">
                             <ul class="d-flex">
                                 <li><a href="https://www.facebook.com/UKNunversity"><i
-                                            class="lni lni-facebook-filled"></i></a></li>
+                                            class="lni lni-facebook-filled"></i></a>
+                                </li>
                                 <li><a href="https://www.instagram.com/ukn_taipei/"><i
-                                            class="lni lni-instagram-filled"></i></a></li>
+                                            class="lni lni-instagram-filled"></i></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -232,6 +401,7 @@ $userId = $userData['user'];
         </div>
     </footer>
     <!-- ========================= footer end ========================= -->
+
 
     <!-- ========================= scroll-top ========================= -->
     <a href="#" class="scroll-top">
@@ -248,53 +418,8 @@ $userId = $userData['user'];
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/imagesloaded.min.js"></script>
     <script src="assets/js/main.js"></script>
+</body>
 
-    <script>
-        //========= glightbox
-        GLightbox({
-            'href': '#',
-            'type': 'video',
-            'source': 'youtube', //vimeo, youtube or local
-            'width': 900,
-            'autoplayVideos': true,
-        });
-
-        //========= testimonial 
-        tns({
-            container: '.testimonial-active',
-            items: 1,
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            nav: false,
-            controlsText: ['<i class="lni lni-arrow-left"></i>', '<i class="lni lni-arrow-right"></i>'],
-        });
-
-        //============== isotope masonry js with imagesloaded
-        imagesLoaded('#container', function () {
-            var elem = document.querySelector('.grid');
-            var iso = new Isotope(elem, {
-                // options
-                itemSelector: '.grid-item',
-                masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                }
-            });
-
-            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-            filterButtons.forEach(e =>
-                e.addEventListener('click', () => {
-
-                    let filterValue = event.target.getAttribute('data-filter');
-                    iso.arrange({
-                        filter: filterValue
-                    });
-                })
-            );
-        });
-    </script>
 </body>
 
 </html>
