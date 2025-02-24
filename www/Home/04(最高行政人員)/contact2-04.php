@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
       if (!in_array($fileExt, $allowed)) {
           echo "<script>
                   alert('不支援此檔案格式！');
-                  window.location.href = '/~HCHJ/Home/contact01-1.php';
+                  window.location.href = '/~HCHJ/Home/contact1-04.php.php';
                 </script>";
           exit;
       }
@@ -73,14 +73,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
               $stmt->close();
               echo "<script>
                       alert('圖片上傳並儲存成功！');
-                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                      window.location.href = '/~HCHJ/Home/contact1-04.php';
                     </script>";
               exit;
           } else {
               $stmt->close();
               echo "<script>
                       alert('更新失敗！');
-                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                      window.location.href = '/~HCHJ/Home/contact1-04.php';
                     </script>";
               exit;
           }
@@ -97,14 +97,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
               $stmt->close();
               echo "<script>
                       alert('圖片上傳並儲存成功！');
-                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                      window.location.href = '/~HCHJ/Home/contact1-04.php';
                     </script>";
               exit;
           } else {
               $stmt->close();
               echo "<script>
                       alert('插入失敗！');
-                      window.location.href = '/~HCHJ/Home/contact01-1.php';
+                      window.location.href = '/~HCHJ/Home/contact1-04.php';
                     </script>";
               exit;
           }
@@ -113,14 +113,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
       $errorCode = $_FILES['image']['error'];
       echo "<script>
               alert('檔案上傳錯誤，錯誤代碼: $errorCode');
-              window.location.href = '/~HCHJ/Home/contact01-1.php';
+              window.location.href = '/~HCHJ/Home/contact1-04.php';
             </script>";
       exit;
   }
 } else {
     echo "<script>
             alert('無法接收到檔案');
-            window.location.href = '/~HCHJ/Home/contact01-1.php';
+            window.location.href = '/~HCHJ/Home/contact1-04.php';
           </script>";
     exit;
 }

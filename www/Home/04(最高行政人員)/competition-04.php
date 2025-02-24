@@ -54,7 +54,7 @@ if ($result_role) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>學生上傳狀態(讀書計畫)</title>
+        <title>學生上傳狀態(競賽證明)</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
@@ -86,75 +86,66 @@ if ($result_role) {
         </div>
         <!-- preloader end -->
 
-        <!-- header start -->
-        <header class="header navbar-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-02.php">
-                            <img src="schoolimages/uknlogo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                            <ul id="nav" class="navbar-nav ml-auto">
+       <!-- ========================= header start ========================= -->
+       <header class="header navbar-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="index-04.php">
+                                <img src="schoolimages/uknlogo.png" alt="Logo">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
-                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">學生管理</a>
-                                    <ul class="sub-menu">
-                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
-                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="Schoolnetwork1-02.php">二技校園網</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">比賽資訊</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
-                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
-                                    </ul>
-                                </li>
-
-
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="../logout.php">登出</a>
-                                </li>
-                        </div> <!-- navbar collapse -->
-                    </nav> <!-- navbar -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-
-    </header>
-        <!-- header end -->
+                                        <a href="index-04.php">首頁</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll dd-menu" href="javascript:void(0)">個人資料</a>
+                                        <ul class="sub-menu">
+                                            <li class="nav-item"><a href="contact1-04.php">查看個人資料</a></li>
+                                            <li class="nav-item"><a href="../changepassword.html">修改密碼</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a href="student04-1.php">班級管理</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a href="Schoolnetwork1-04.php">二技校園網</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-item dd-menu" >比賽資訊</a>           
+                                        <ul class="sub-menu">
+                                        <li class="nav-item"><a href="Contestblog1-04.php">首頁</a></li>
+                                            <li class="nav-item"><a href="AddContest1-04.php">新增</a></li>
+                                            <li class="nav-item"><a href="ContestEdin1-04.php">編輯</a></li>
+                                        </ul>
+                                    </li>  
+                                    <li class="nav-item">
+                                        <a class="page-scroll" >目前登入使用者：<?php echo $userId; ?></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="../logout.php" >登出</a>
+                                    </li>                           
+                                </ul>
+                            </div> <!-- navbar collapse -->
+                        </nav> <!-- navbar -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        
+        </header>
+        <!-- ========================= header end ========================= -->
 
         <!-- page-banner-section start -->
         <section class="page-banner-section pt-75 pb-75 img-bg" style="background-image: url('assets/img/bg/common-bg.svg'); height: 250px; background-size: cover; background-position: center;">
@@ -163,7 +154,10 @@ if ($result_role) {
                     <div class="col-xl-12">
                         <div class="banner-content">
                             <h2 class="text-white">學生檔案上傳狀態</h2>
-                            
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -173,7 +167,7 @@ if ($result_role) {
 
         <section class="container mt-5">
             <div class="table-header">
-                <h2>檔案上傳狀態（讀書計畫）</h2>
+                <h2>檔案上傳狀態（競賽證明）</h2>
                 <form id="searchForm" class="search-form">
                 <input type="text" name="query" id="query" placeholder="輸入學號搜尋..." oninput="searchStudents()">
                     <button type="submit">
@@ -204,8 +198,8 @@ if ($result_role) {
                         <th>姓名</th>
                         <th>最後上傳時間</th>
                         <th class='text-center'>是否上傳</th>
-                        <th class='text-center'>上傳筆數</th>    
-                        <th class='text-center'>檔案下載</th>              
+                        <th class='text-center'>上傳筆數</th>  
+                        <th class='text-center'>檔案下載</th>                 
                     </tr>
                 </thead>
                 <tbody>
@@ -220,14 +214,14 @@ if ($result_students) {
 
         $query = "SELECT MAX(upload_time) AS latest_upload, COUNT(*) AS upload_count 
                   FROM portfolio 
-                  WHERE student_id='$student_id' AND category='讀書計畫'";
+                  WHERE student_id='$student_id' AND category='競賽證明'";
         $result = mysqli_query($link, $query);
         $row = mysqli_fetch_assoc($result);
         
         $upload_count = $row['upload_count'] ?? 0;
         $latest_upload = $row['latest_upload'] ?? '無紀錄';
         $status = ($upload_count > 0) ? "✔️" : "❌";
-        $download_link = ($upload_count > 0) ? "<a href='teacher-download-02.php?id={$student_id}&category=讀書計畫'>📂 下載</a>" : "";
+        $download_link = ($upload_count > 0) ? "<a href='teacher-download.php?id={$student_id}&category=競賽證明'>📂 下載</a>" : "";
 
 
         echo "<tr>
@@ -250,6 +244,37 @@ if ($result_students) {
             </div>
         </section>
 
+        <!-- client-logo-section start -->
+        <section class="client-logo-section pt-100">
+            <div class="container">
+                <div class="client-logo-wrapper">
+                    <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div> 
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                        <div class="client-logo">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- client-logo-section end -->
 
         <!-- footer start -->
         <footer class="footer pt-100">
