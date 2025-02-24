@@ -120,8 +120,8 @@ if ($conn->connect_error) {
                 </div>
             </div>
         <!-- preloader end -->
-        <!-- ========================= header start ========================= -->
-        <header class="header navbar-area">
+         <!-- ========================= header start ========================= -->
+         <header class="header navbar-area">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -149,25 +149,15 @@ if ($conn->connect_error) {
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="page-scroll dd-menu" href="javascript:void(0)">班級管理</a>
-                                        <ul class="sub-menu">
-                                            <li class="nav-item"><a href="Preparation1-04.php">查看學生備審資料</a></li>
-                                            <li class="nav-item"><a href="order1.php">查看志願序</a></li>
-                                            <li class="nav-item"><a href="Contest-history1.php">查看競賽歷程</a></li>
-                                        </ul>
+                                    <a href="student04-1.php">班級管理</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-item dd-menu">二技校園網</a>           
-                                        <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-04.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-04.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-04.php">編輯資訊</a></li>                                        
-                                        </ul>
-                                    </li> 
+                                    <a href="Schoolnetwork1-04.php">二技校園網</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-item dd-menu" >比賽資訊</a>           
                                         <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog1-04.php">查看</a></li>
+                                        <li class="nav-item"><a href="Contestblog1-04.php">首頁</a></li>
                                             <li class="nav-item"><a href="AddContest1-04.php">新增</a></li>
                                             <li class="nav-item"><a href="ContestEdin1-04.php">編輯</a></li>
                                         </ul>
@@ -177,7 +167,7 @@ if ($conn->connect_error) {
                                     </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="/~HCHJ/Permission.php" >切換使用者</a>
-                                    </li> 
+                                    </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="../logout.php" >登出</a>
                                     </li>                           

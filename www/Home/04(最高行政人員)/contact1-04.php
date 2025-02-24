@@ -85,7 +85,7 @@ $result = mysqli_query($link, $query);
                                         <a href="index-00.php">首頁</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="contact-00.php">個人資料</a>
+                                        <a href="contact1-04.php">個人資料</a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="../changepassword.html">修改密碼</a>
@@ -235,7 +235,7 @@ $result = mysqli_query($link, $query);
                       ?>
 
                       <!-- 頭像區域 -->
-                      <form enctype="multipart/form-data" action="/~HCHJ/Home/contact01-2.php" method="POST"
+                      <form enctype="multipart/form-data" action="/~HCHJ/Home/contact2-04.php" method="POST"
                         class="text-center">
                         <input type="file" id="file-input" name="image" accept=".jpg,.jpeg,.png" style="display: none;"
                           onchange="previewAndConfirm(event)">
