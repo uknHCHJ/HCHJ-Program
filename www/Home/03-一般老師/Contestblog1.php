@@ -141,23 +141,39 @@ $username = "HCHJ";
 $password = "xx435kKHq";
 $dbname = "HCHJ";
 
+// 設定錯誤顯示
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // 建立資料庫連線
 $conn = new mysqli($servername, $username, $password, $dbname);
+
+// 檢查連線是否成功
 if ($conn->connect_error) {
-    die("連線失敗: " . $conn->connect_error);
+    die("資料庫連線失敗：" . $conn->connect_error);
 }
 
 // 設定時區
 date_default_timezone_set('Asia/Taipei');
-$currentDate = date('Y-m-d');  // 獲取當前日期
-// 查詢未過期的比賽資訊
-$sql = "SELECT name, inform, link, image FROM information WHERE display_end_time >= ?";
+$currentDate = date('Y-m-d'); // 取得當前日期
+
+// 準備 SQL 查詢
+$sql = "SELECT name, link FROM information WHERE display_end_time >= ?";
+
+// 執行 SQL 準備語句
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    die("SQL 準備失敗：" . $conn->error);
+}
+
+// 綁定參數
 $stmt->bind_param("s", $currentDate);
+
+// 執行查詢
 $stmt->execute();
 $result = $stmt->get_result();
 
-// 檢查是否有資料
+// 檢查結果
 $competitions = [];
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -166,6 +182,9 @@ if ($result->num_rows > 0) {
 } else {
     echo "目前沒有未過期的比賽資訊。";
 }
+
+// 關閉連線
+$stmt->close();
 $conn->close();
 ?>
     <body>
