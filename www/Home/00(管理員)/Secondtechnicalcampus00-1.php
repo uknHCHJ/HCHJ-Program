@@ -242,8 +242,7 @@ $result = mysqli_query($link, $query);
                         <label for="username">姓名：</label>
                         <input type="text" id="username" name="username" class="form-control" value=<?php echo $username; ?> readonly>
                     </div>
-                    <button type="submit" class="primary-button">確認上傳</button>
-                    <button type="button" class="download-button" onclick="window.location.href='https://depart.moe.edu.tw/ED4500/News.aspx?n=5A930C32CC6C3818&sms=91B3AAE8C6388B96';">更新最新資料</button>                    
+                    <button type="submit" class="primary-button">確認上傳</button>                
                     <button type="button" class="secondary-button" onclick="window.history.back();">返回上一頁</button>
                 </form>
 
