@@ -203,7 +203,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     margin-top: -50px;
                     overflow: hidden;
                     animation: fadeIn 1s ease-in-out;
-                    margin-bottom: 30px;
+                    
                     /* 確保表格區塊與底部區塊之間有間距 */
                 }
 
@@ -541,8 +541,6 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             </div>
                             <div class="client-logo">
                             </div>
-
-
                         </div>
                     </div>
                 </div>
