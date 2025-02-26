@@ -176,7 +176,7 @@ $queryMap = [
     'language'        => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '語言能力證明'",
     'other'           => "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '其他資料'",
     'Proof-of-service'=> "SELECT file_name, file_content FROM portfolio WHERE student_id = '$userId' AND category = '服務證明'",
-    'read'            => "SELECT file_name, file_content, read_content FROM portfolio WHERE student_id = '$userId' AND category = '讀書計畫'"
+    'read'            => ""
 ];
 
 // 處理專業證照查詢條件
@@ -210,6 +210,24 @@ if (!empty($_POST['autobiography_files'])) {
             FROM portfolio
             WHERE student_id = '$userId'
               AND category = '自傳'
+              AND file_name IN ($autoInCondition)
+        ";
+    }
+}
+
+// 處理讀書計畫查詢條件
+if (!empty($_POST['read_files'])) {
+    $selectedAutobiographies = $_POST['read_files'];
+    $escapedAutobiographies = array_map(function($file) use ($conn) {
+        return "'" . $conn->real_escape_string($file) . "'";
+    }, $selectedAutobiographies);
+    $autoInCondition = implode(',', $escapedAutobiographies);
+    if (!empty($autoInCondition)) {
+        $queryMap['read'] = "
+            SELECT file_name, file_content, autobiography_content
+            FROM portfolio
+            WHERE student_id = '$userId'
+              AND category = '讀書計畫'
               AND file_name IN ($autoInCondition)
         ";
     }
@@ -314,17 +332,17 @@ foreach ($options as $option) {
             while ($row = $result->fetch_assoc()) {
                 $fileName = $row['file_name'];
                 $fileContent = $row['file_content'];
-                $readContent = $row['read_content'];
+                $autobiographyContent = $row['autobiography_content'];
                 $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                 if ($ext === 'docx') {
                     try {
                         $content = extractDocxText($fileContent);
                         $section->addText($content, $autobiographyTextStyle, $autobiographyParagraphStyle);
                     } catch (Exception $e) {
-                        $section->addText("讀取 DOCX 讀書計畫檔案失敗： " . $e->getMessage(), ['italic' => true, 'color' => 'FF0000'], $autobiographyParagraphStyle);
+                        $section->addText("讀取 DOCX 自讀書計畫檔案失敗： " . $e->getMessage(), ['italic' => true, 'color' => 'FF0000'], $autobiographyParagraphStyle);
                     }
                 } else {
-                    $section->addText($readContent, $autobiographyTextStyle, $autobiographyParagraphStyle);
+                    $section->addText($autobiographyContent, $autobiographyTextStyle, $autobiographyParagraphStyle);
                 }
             }
         } else {
@@ -332,6 +350,7 @@ foreach ($options as $option) {
         }
         continue;
     }
+
     // 專題資料：僅輸出一頁，顯示標題與提示文字
     elseif ($option === 'topics') {
         $section = createSectionWithFooter($phpWord);
@@ -384,9 +403,9 @@ foreach ($options as $option) {
         }
         continue;
     }
-    // 其他選項（包含成績單、學歷證明、實習證明、語言能力證明、其他資料、服務證明、讀書計畫）
+    // 其他選項（包含成績單、學歷證明、實習證明、語言能力證明、其他資料、服務證明）
     // 和競賽證明用相同表格版面，每頁 3 筆資料
-    elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language', 'other', 'Proof-of-service', 'read'])) {
+    elseif (in_array($option, ['transcript', 'diploma', 'internship', 'language', 'other', 'Proof-of-service'])) {
         $result = $conn->query($queryMap[$option]);
         if ($result && $result->num_rows > 0) {
             $data = $result->fetch_all(MYSQLI_ASSOC);
