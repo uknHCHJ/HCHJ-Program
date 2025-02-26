@@ -24,7 +24,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="schoolimages/ukn.png">
     <!-- Place favicon.ico in the root directory -->
 
     <!-- ========================= CSS here ========================= -->
@@ -66,7 +66,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index-02.php">
+                        <a class="navbar-brand" href="index-01.php">
                             <img src="schoolimages/uknlogo.png" alt="Logo">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -79,53 +79,54 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                <li class="nav-item"><a href="index-02.php">首頁</a></li>
-                                </li>
 
+
+                                <li class="nav-item">
+                                    <a class="page-scroll" href="index-01.php">首頁</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">個人資料</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="contact02-1.php">查看個人資料</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                        </li>
                                         <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">學生管理</a>
+                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-item dd-menu">志願序</a>
                                     <ul class="sub-menu">
-                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">學生志願序統計</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序統計</a></li>
-                                        <li class="nav-item"><a href="settime02-1.php">志願序開放時間編輯</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                        </li>
+                                        </a>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">二技校園網</a>
+                                    <a class="nav-item dd-menu">備審管理區</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Schoolnetwork1-02.php">首頁</a></li>
-                                        <li class="nav-item"><a href="AddSchool1-02.php">新增校園</a></li>
-                                        <li class="nav-item"><a href="SchoolEdit1-02.php">編輯詳細資料</a></li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
+                                        </li>
+                                        </a>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-item dd-menu">比賽資訊</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="Contestblog-02.php">查看</a></li>
-                                        <li class="nav-item"><a href="AddContest1-02.php">新增</a></li>
-                                        <li class="nav-item"><a href="ContestEdin1-02.php">編輯</a></li>
-                                    </ul>
+                                    <a class="page-scroll" href="/~HCHJ/Home/Schoolnetwork1-01.php">二技校園介紹網</a>
                                 </li>
-
-
                                 <li class="nav-item">
                                     <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Permission.php">切換使用者</a>
+                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="../logout.php">登出</a>
-                                </li>
+                            </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->
                 </div>
@@ -187,13 +188,11 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     /* 固定表格寬度，讓欄位自動調整 */
                 }
 
+                /* 表格容器的樣式調整 */
                 .table-container {
                     width: 100%;
-                    /* 使表格容器適應寬度 */
-                    max-width: 1100px;
-                    /* 設定表格最大寬度，防止超出 */
+                    max-width: 100%;
                     margin: 0 auto;
-                    /* 讓表格容器居中 */
                     padding: 20px;
                     background-color: white;
                     justify-content: center;
@@ -202,14 +201,24 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     border-radius: 10px;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                     margin-top: -50px;
-                    /* 上移表格 */
-                    overflow-x: auto;
-                    /* 讓表格在需要時橫向滾動 */
+                    overflow: hidden;
+                    animation: fadeIn 1s ease-in-out;
+                    margin-bottom: 30px;
+                    /* 確保表格區塊與底部區塊之間有間距 */
                 }
+
+                /* 確保底部區塊不受影響 */
+                .footer {
+                    clear: both;
+                    /* 清除浮動影響 */
+                }
+
 
                 table {
                     width: 100%;
                     border-collapse: collapse;
+                    table-layout: auto;
+                    /* 讓表格自動調整每一列的寬度 */
                 }
 
                 th,
@@ -303,6 +312,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 }
             </style>
 
+
             <div id="loading">
                 <p>正在載入資料...</p>
             </div>
@@ -343,9 +353,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         .catch(error => {
                             console.error('錯誤:', error);
                             document.getElementById('loading').style.display = 'none';
-
                         });
-                    // 防止未保存變更就離開
+
                     window.addEventListener('beforeunload', function (event) {
                         if (window.isDataChanged) {
                             event.preventDefault();
@@ -353,25 +362,28 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         }
                     });
                 });
-                // 啟用編輯模式
+
                 function enableEditMode(button) {
                     if (window.isEditing) return;
                     window.isEditing = true;
                     renderTable(window.studentData);
 
                     button.disabled = true;
-                    document.getElementById('saveChangesButton').style.display = 'inline-block'; // 顯示「保存變更」按鈕
+                    document.getElementById('saveChangesButton').style.display = 'inline-block';
                 }
+
                 function renderTable(data) {
                     var table = document.getElementById('data-table');
                     var tbody = table.getElementsByTagName('tbody')[0];
 
                     tbody.innerHTML = '';
 
+                    document.getElementById('edit-header').style.display = window.isEditing ? '' : 'none';
+
                     if (data.length === 0 || data[0] === "查無資料") {
                         var row = tbody.insertRow();
                         var cell = row.insertCell(0);
-                        cell.colSpan = 6;
+                        cell.colSpan = 7;
                         cell.textContent = '您還未填選志願';
                         cell.style.textAlign = 'center';
                         cell.style.color = 'gray';
@@ -381,19 +393,14 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                     data.forEach(function (item, index) {
                         var row = tbody.insertRow();
 
-                        var preferenceCell = row.insertCell(0);
-                        preferenceCell.textContent = index + 1;
-                        item.preference_rank = index + 1;
-
+                        row.insertCell(0).textContent = index + 1;
                         row.insertCell(1).textContent = item.school_name;
                         row.insertCell(2).textContent = item.department_name;
                         row.insertCell(3).textContent = item.time;
+                        row.insertCell(4).textContent = item.student_count || '0';
 
-                        var studentCountCell = row.insertCell(4);
-                        studentCountCell.textContent = item.student_count || '0';
-
-                        var editCell = row.insertCell(5);
                         if (window.isEditing) {
+                            var editCell = row.insertCell(5);
                             var container = document.createElement('div');
                             container.className = 'action-buttons';
 
@@ -414,14 +421,47 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                             container.appendChild(downArrow);
 
                             editCell.appendChild(container);
-                        } else {
-                            editCell.style.display = 'none'; // 隱藏單元格
+
+                            var deleteCell = row.insertCell(6);
+                            var deleteButton = document.createElement('button');
+                            deleteButton.textContent = '刪除';
+                            deleteButton.className = 'btn btn-sm btn-danger';
+                            deleteButton.onclick = function () {
+                                deleteItem(index, item);
+                            };
+                            deleteCell.appendChild(deleteButton);
                         }
                     });
                 }
 
+                function deleteItem(index, item) {
+                    if (confirm("確定要刪除此志願嗎？")) {
+                        fetch('delete_show2.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                preference_rank: item.preference_rank,
+                                school_name: item.school_name,
+                                department_name: item.department_name
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    window.studentData.splice(index, 1);
+                                    window.isDataChanged = true;
+                                    renderTable(window.studentData);
+                                } else {
+                                    alert('刪除失敗: ' + data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('刪除失敗:', error);
+                                alert('刪除失敗，請稍後再試。');
+                            });
+                    }
+                }
 
-                // 移動項目位置
                 function moveItem(index, direction) {
                     var newIndex = index + direction;
 
@@ -430,46 +470,42 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         window.studentData[index] = window.studentData[newIndex];
                         window.studentData[newIndex] = temp;
 
-                        // 更新 preference_rank
                         window.studentData[index].preference_rank = index + 1;
                         window.studentData[newIndex].preference_rank = newIndex + 1;
 
-                        window.isDataChanged = true; // 記錄變更
+                        window.isDataChanged = true;
                         renderTable(window.studentData);
                     }
                 }
 
-                // 保存變更
                 function saveChanges() {
-                    console.log(window.studentData);  // 確保顯示資料包含 preference_rank
-
-                    // 傳送到後端
                     fetch('optional_update.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             preferences: window.studentData.map(item => ({
-                                preference_rank: item.preference_rank,  // 志願序
-                                school_name: item.school_name,          // 學校名稱
-                                department_name: item.department_name   // 科系名稱
+                                preference_rank: item.preference_rank,
+                                school_name: item.school_name,
+                                department_name: item.department_name
                             }))
-                        }),
+                        })
                     })
                         .then((response) => response.json())
                         .then((data) => {
                             alert('變更已保存！');
-                            console.log('後端回應:', data);
 
-                            // 保存後隱藏「保存變更」按鈕
                             document.getElementById('saveChangesButton').style.display = 'none';
+                            window.isEditing = false;
+                            document.getElementById('editButton').disabled = false;
+                            renderTable(window.studentData);
                         })
                         .catch((error) => {
                             console.error('保存失敗:', error);
                             alert('變更保存失敗，請稍後再試。');
                         });
                 }
-
             </script>
+
             <!-- 按鈕區 -->
             <div style="text-align: center; margin-top: 20px;">
                 <button type="button" class="btn btn-secondary" style="background-color:#4CAF50; color: white;"
@@ -486,15 +522,44 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 </button>
             </div>
 
+
+            <section class="client-logo-section pt-100">
+                <div class="container">
+                    <div class="client-logo-wrapper">
+                        <div class="client-logo-carousel d-flex align-items-center justify-content-between">
+                            <div class="client-logo">
+                            </div>
+                            <div class="client-logo">
+                            </div>
+                            <div class="client-logo">
+                            </div>
+                            <div class="client-logo">
+                            </div>
+                            <div class="client-logo">
+                            </div>
+                            <div class="client-logo">
+                            </div>
+                            <div class="client-logo">
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ========================= client-logo-section end ========================= -->
+
+
+
             <!-- ========================= footer start ========================= -->
             <footer class="footer pt-100">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                                <a href="index-04.html" class="logo mb-30"><img src="schoolimages/uknlogo.png"
+                                <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png"
                                         alt="logo"></a>
-                                <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                                <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-4 col-md-6">
@@ -542,7 +607,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
             <!-- ========================= footer end ========================= -->
 
 
-            <!-- ========================= scroll-top ========================= -->
+            <!-- ========================= 卷軸 ========================= -->
             <a href="#" class="scroll-top">
                 <i class="lni lni-arrow-up"></i>
             </a>
