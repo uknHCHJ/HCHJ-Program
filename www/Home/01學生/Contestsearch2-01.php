@@ -46,7 +46,11 @@ $conn->close();
 
     <!-- 返回搜尋頁面的按鈕 -->
     <div style="margin-top: 20px;">
+<<<<<<< HEAD
         <a href="Contestsearch1-01.php"><button style="padding: 10px 15px; font-size: 16px;">返回搜尋頁面</button></a>
+=======
+        <a href="Contestsearch1-02.php"><button style="padding: 10px 15px; font-size: 16px;" >返回搜尋頁面</button></a>
+>>>>>>> 2d03ffce05d7d4203a20420be50209578b51b2d9
     </div>
 </body>
 
