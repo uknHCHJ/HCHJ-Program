@@ -24,15 +24,17 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <title>搜尋結果</title>
 </head>
+
 <body>
     <h1>搜尋結果</h1>
 
     <?php if ($result->num_rows > 0): ?>
-        <?php while($row = $result->fetch_assoc()): ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
             <div style="border:1px solid #ddd; padding: 10px; margin: 10px 0;">
                 <h3><?= htmlspecialchars($row['name']) ?></h3>
                 <a href="<?= htmlspecialchars($row['link']) ?>" target="_blank">查看詳細資料</a>
@@ -44,7 +46,12 @@ $conn->close();
 
     <!-- 返回搜尋頁面的按鈕 -->
     <div style="margin-top: 20px;">
+<<<<<<< HEAD
+        <a href="Contestsearch1-01.php"><button style="padding: 10px 15px; font-size: 16px;">返回搜尋頁面</button></a>
+=======
         <a href="Contestsearch1-02.php"><button style="padding: 10px 15px; font-size: 16px;" >返回搜尋頁面</button></a>
+>>>>>>> 2d03ffce05d7d4203a20420be50209578b51b2d9
     </div>
 </body>
+
 </html>
