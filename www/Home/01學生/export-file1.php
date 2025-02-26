@@ -174,7 +174,7 @@ $username = $userData['name'];
     // 判斷除了自傳與競賽證明之外的核取方塊是否全部已勾選
     let allSelected = true;
     checkboxes.forEach(function(chk) {
-      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications'&& chk.value !== 'read') {
         if (!chk.checked) {
           allSelected = false;
         }
@@ -183,16 +183,16 @@ $username = $userData['name'];
     
     // 如果全部已選則取消選取，否則全部選取
     checkboxes.forEach(function(chk) {
-      if (chk.value !== 'autobiography' && chk.value !== 'certifications') {  // 修改這裡，排除的應為自傳與競賽證明
+      if (chk.value !== 'autobiography' && chk.value !== 'certifications'&& chk.value !== 'read') {  // 修改這裡，排除的應為自傳與競賽證明
         chk.checked = !allSelected;
       }
     });
 
     // 根據操作後的狀態更新按鈕文字
     if (allSelected) {
-      selectAllBtn.innerText = "全選(自傳、專業證照除外)";
+      selectAllBtn.innerText = "全選(自傳、專業證照、讀書計畫除外)";
     } else {
-      selectAllBtn.innerText = "取消全選(自傳、專業證照除外)";
+      selectAllBtn.innerText = "取消全選(自傳、專業證照、讀書計畫除外)";
     }
   });
 });
@@ -358,8 +358,74 @@ $username = $userData['name'];
               <input type="checkbox" name="options[]" value="Proof-of-service"> 服務證明
             </li>
             <li class="list-group-item" data-value="read">
-              <input type="checkbox" name="options[]" value="read"> 讀書計畫
-            </li>
+  <input type="checkbox" id="read-checkbox" name="options[]" value="read"> 讀書計畫
+  <div id="read-container" style="display: none; margin-top: 10px;">
+    <div class="read-wrapper">
+      <button type="button" id="read-select-all" class="read-button">全選</button>
+      <div id="read-options" class="read-options"></div>
+    </div>
+    <div id="read-output" style="margin-top: 10px; font-weight: bold;"></div>
+  </div>
+</li>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  var readCheckbox = document.getElementById('read-checkbox');
+  var readContainer = document.getElementById('read-container');
+  var readOptionsDiv = document.getElementById('read-options');
+  var readOutputDiv = document.getElementById('read-output');
+  var readSelectAllBtn = document.getElementById('read-select-all');
+
+  // 當勾選「讀書計畫」時載入資料
+  readCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+      readContainer.style.display = 'block';
+      fetch('get-read.php?type=read')
+        .then(response => response.json())
+        .then(data => {
+          readOptionsDiv.innerHTML = ''; // 清空現有選項
+          data.forEach(item => {
+            var label = document.createElement('label');
+            var optCheckbox = document.createElement('input');
+            optCheckbox.type = 'checkbox';
+            optCheckbox.name = 'read_files[]';
+            // 假設回傳的 JSON 中有一個欄位（例如 filename 或 title），請依實際資料調整
+            optCheckbox.value = item.filename; 
+            optCheckbox.addEventListener('change', updateReadOutput);
+            label.appendChild(optCheckbox);
+            label.appendChild(document.createTextNode(' ' + item.filename));
+            readOptionsDiv.appendChild(label);
+          });
+        })
+        .catch(error => console.error('取得讀書計畫清單錯誤:', error));
+    } else {
+      readContainer.style.display = 'none';
+      readOptionsDiv.innerHTML = '';
+      readOutputDiv.innerText = '';
+    }
+  });
+
+  // 更新下方顯示已選取的讀書計畫
+  function updateReadOutput() {
+    var selectedReads = [];
+    readOptionsDiv.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
+      if (chk.checked) {
+        selectedReads.push(chk.value);
+      }
+    });
+    readOutputDiv.innerText = selectedReads.length > 0 ? '選取的讀書計畫：' + selectedReads.join(', ') : '';
+  }
+
+  // 全選 / 取消全選按鈕功能
+  readSelectAllBtn.addEventListener('click', function() {
+    var checkboxes = readOptionsDiv.querySelectorAll('input[type="checkbox"]');
+    var allChecked = Array.from(checkboxes).every(chk => chk.checked);
+    checkboxes.forEach(chk => chk.checked = !allChecked);
+    updateReadOutput();
+    readSelectAllBtn.innerText = allChecked ? '全選' : '取消全選';
+  });
+});
+  </script>
+  
             <li class="list-group-item fixed-item" data-value="topics">
               <input type="checkbox" name="options[]" value="topics"> 專題資料
             </li>
@@ -412,6 +478,36 @@ $username = $userData['name'];
     border-radius: 4px;
     cursor: pointer;
   }
+
+  /* 參考專業證照的樣式，可自行調整 */
+.read-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.read-button {
+  margin-right: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.read-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.read-options label {
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 </style>
 <!-- ========================= client-logo-section start ========================= -->
 <section class="client-logo-section pt-100">

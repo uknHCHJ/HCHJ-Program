@@ -203,9 +203,7 @@ if ($conn->connect_error) {
                             <h2 class="text-white">備審素材區</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item" aria-current="page"><a href="index-03.php">首頁</a></li>
-                                      </ol>
+                                    
                                 </nav>
                             </div>
                         </div>
@@ -536,25 +534,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="client-logo-wrapper">
                     <div class="client-logo-carousel d-flex align-items-center justify-content-between">
                         <div class="client-logo">
-                            <img src="schoolimages/uknim.jpg" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknbm.jpg" alt="">
                         </div> 
                         <div class="client-logo">
-                            <img src="schoolimages/uknanime.jpg" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknbaby.jpg" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknenglish.jpg" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/ukneyes.jpg" alt="">
                         </div>
                         <div class="client-logo">
-                            <img src="schoolimages/uknnurse.jpg" alt="">
                         </div>
                     </div>
                 </div>
@@ -568,8 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="row">
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="footer-widget mb-60 wow fadeInLeft" data-wow-delay=".2s">
-                        <a href="index-03.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
-                            <p class="mb-30 footer-desc">©康寧大學資訊管理科製作</p>
+                        <a href="index-01.php" class="logo mb-30"><img src="schoolimages/uknlogo.png" alt="logo"></a>
+                            <p class="mb-30 footer-desc">©康寧大學資訊管理科五年孝班 洪羽白、陳子怡、黃瑋晴、簡琨諺 共同製作</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6">

@@ -59,8 +59,8 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
         </div>
     </div>
     <!-- preloader end -->
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
+ <!-- ========================= header start ========================= -->
+ <header class="header navbar-area">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
