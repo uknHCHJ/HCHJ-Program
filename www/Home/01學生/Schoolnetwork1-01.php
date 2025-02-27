@@ -233,7 +233,7 @@ if (!isset($_SESSION['user'])) {
                 <button type="button" class="portfolio-btn" onclick="filterSchools('east')"
                     data-filter="east">東部</button>
             </div>
-
+            <a href="https://ent19.jctv.ntut.edu.tw/tgujoinInsQ/">二技科系證照加分查詢</a>
             <div class="grid-container">
                 <div class="no-results" style="display: none;">無搜尋結果</div>
                 <?php
