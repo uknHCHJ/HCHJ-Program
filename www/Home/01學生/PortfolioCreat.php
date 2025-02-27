@@ -1,6 +1,4 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 session_start();
 
 // 資料庫連線設置
