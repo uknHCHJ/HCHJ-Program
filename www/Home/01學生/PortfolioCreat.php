@@ -106,42 +106,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             echo "檔案上傳成功！";
             //郵件
-            // 構造 SQL，使用 PDO 的 prepared statement
+            // 獲取使用者選擇的資料類型
+            $selectedCategory = isset($_POST['selected_category']) ? $_POST['selected_category'] : '未指定資料類型';
+
+            // 查詢老師 email
             $sql = "SELECT email FROM user WHERE name IN (SELECT name FROM user WHERE grade LIKE :grade AND class LIKE :class AND id != :currentUserId AND FIND_IN_SET('2', Permissions)) LIMIT 1";
             $stmt = $pdo->prepare($sql);
-            // 設定 LIKE 條件參數（包含萬用字元）
             $likeGrade = "%$grade%";
             $likeClass = "%$class%";
-            // 綁定參數
             $stmt->bindParam(':grade', $likeGrade);
             $stmt->bindParam(':class', $likeClass);
             $stmt->bindParam(':currentUserId', $student_id, PDO::PARAM_INT);
-            // 執行查詢
             $stmt->execute();
-            // 取得查詢結果
             $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
+
             if (!$teacher) {
                 echo "❌ 找不到老師的 email";
                 exit;
             }
+
             $teacheremail = $teacher['email'];
             if (empty($teacheremail)) {
                 echo "❌ SQL 查詢成功，但 email 為空！請檢查資料庫內容。";
                 exit;
             }
+
+            // 郵件標題與內容
             $subject = "學生 " . $studentName . " 已上傳備審檔案";
-            $message = "<h2>學生 " . $studentName . " 已上傳檔案至系統，請老師查收</h2>";
-            // 利用 "姓名 <信箱>" 格式來呈現寄件人資訊，讓老師能直接看到學生姓名
+            $message = "<h2>學生 $studentName 已上傳檔案至系統，請老師查收</h2>
+            <p><strong>檔案類型：</strong> $selectedCategory</p>";
+
+            // 設定郵件標頭
             $headers = "From: $studentname \r\n";
             $headers .= "Reply-To: $studentemail \r\n";
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-            // 使用 mail() 傳送郵件
+            // 發送郵件
             if (mail($teacheremail, $subject, $message, $headers)) {
                 echo "✅ 郵件已發送給 {$teacheremail}！";
             } else {
                 echo "❌ 郵件發送失敗！請確認 mail() 設定。";
             }
+
             header("Location: Portfolio1.php");
             exit;
         } else {
