@@ -444,7 +444,7 @@ $username = $userData['name'];
   var sortable = new Sortable(document.getElementById('sortable-list'), {
   animation: 150,
   ghostClass: 'sortable-ghost',
-  filter: ".fixed-item", // 禁止 .fixed-item 被拖動
+  filter: ".fixed-item", // 禁止拖動
   onMove: function(evt) {
     return !evt.related.classList.contains('fixed-item'); // 禁止移動「讀書計畫」
   }

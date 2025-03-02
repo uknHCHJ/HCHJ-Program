@@ -439,23 +439,7 @@ foreach ($options as $option) {
         continue;
     }
     // 其他選項輸出Word
-    else {
-        $section = createSectionWithFooter($phpWord);
-        if (isset($optionNames[$option])) {
-            $section->addTitle($optionNames[$option], 1);
-        }
-        $section->addTextBreak(1);
-        $sql = $queryMap[$option];
-        if ($sql == "") continue;
-        $result = $conn->query($sql);
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $section->addText("檔案名稱：" . $row['file_name'], ['size' => 12], ['alignment' => Jc::CENTER]);
-            }
-        } else {
-            $section->addText("查無資料：{$optionNames[$option]}", ['size' => 12], ['alignment' => Jc::CENTER]);
-        }
-    }
+   
 }
 
 $conn->close();
