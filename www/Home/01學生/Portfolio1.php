@@ -146,53 +146,53 @@ if ($conn->connect_error) {
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                             <ul id="nav" class="navbar-nav ml-auto">
-
-
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="index-01.php">首頁</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">個人資料</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">志願序</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
-                                        </li>
-                                        </a>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-item dd-menu">備審管理區</a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
-                                        </li>
-                                        <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
-                                        </li>
-                                        </a>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/Home/Schoolnetwork1-01.php">二技校園介紹網</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
-                                </li>
+                               
+                            
+                            <li class="nav-item">
+                            <a class="page-scroll" href="index-01.php" >首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">個人資料</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/contact01-1.php">查看個人資料</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/changepassword.html">修改密碼</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Contestblog1-01.php">比賽資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">志願序</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item dd-menu">備審管理區</a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item"><a href="/~HCHJ/Home/Portfolio1.php">備審素材區</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/AutobiographyCreat1.php">自傳/讀書心得填寫</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/export-file1.php">匯出備審</a>
+                                    </li>
+                                    </a>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/Home/Schoolnetwork1-01.php">二技校園介紹網</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll">目前登入使用者：<?php echo $userId; ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="page-scroll" href="/~HCHJ/logout.php">登出</a>
+                            </li>
                             </ul>
                         </div> <!-- navbar collapse -->
                     </nav> <!-- navbar -->

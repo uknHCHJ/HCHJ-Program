@@ -175,7 +175,6 @@ if (!isset($_SESSION['user'])) {
         die("連接資料庫失敗: " . $conn->connect_error);
     }
 
-    // 讀取 Secondskill 表資料
     $sql = "SELECT MIN(id) AS id, school_name, school_id, address, official_site FROM test GROUP BY school_name";
     $result = $conn->query($sql);
 
@@ -252,17 +251,18 @@ if (!isset($_SESSION['user'])) {
         </section>
 
         <script>
+            // 篩選學校區域的函式
             function filterSchools(region) {
                 let items = document.querySelectorAll('.grid-item');
                 items.forEach(item => {
                     if (region === '*' || item.classList.contains(region)) {
-                        item.style.display = 'block';
+                        item.style.display = 'block';// 顯示符合條件的項目
                     } else {
-                        item.style.display = 'none';
+                        item.style.display = 'none';// 隱藏不符合條件的項目
                     }
                 });
             }
-
+            // 搜尋學校名稱的函式
             function searchSchools() {
                 let input = document.getElementById("searchBox").value.toLowerCase();
                 let items = document.querySelectorAll(".grid-item");
@@ -294,14 +294,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     buttons.forEach(button => {
         button.addEventListener("click", function () {
-            // 1️⃣ 先移除所有按鈕的 active 樣式
+            // 1️ 先移除所有按鈕的 active 樣式
             buttons.forEach(btn => btn.classList.remove("active"));
             this.classList.add("active"); // 為點擊的按鈕添加 active 樣式
 
-            // 2️⃣ 取得篩選條件
+            // 2 取得篩選條件
             const filter = this.getAttribute("data-filter");
 
-            // 3️⃣ 檢查是否點擊的是 "全部"
+            // 3️ 檢查是否點擊的是 "全部"
             if (filter === "*") {
                 // "全部" 被選中時，所有項目恢復成白色
                 gridItems.forEach(item => {
@@ -312,10 +312,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 其他分類，符合條件的變藍色，不符合的變回白色
                 gridItems.forEach(item => {
                     if (item.classList.contains(filter.substring(1))) {
-                        item.style.backgroundColor = "#3498DB"; // ✅ 被選中的變藍色
+                        item.style.backgroundColor = "#3498DB"; // 被選中的變藍色
                         item.style.color = "white"; // 文字變白色
                     } else {
-                        item.style.backgroundColor = "white"; // ❌ 其他變回白色
+                        item.style.backgroundColor = "white"; // 其他變回白色
                         item.style.color = "black"; // 文字變黑色
                     }
                 });

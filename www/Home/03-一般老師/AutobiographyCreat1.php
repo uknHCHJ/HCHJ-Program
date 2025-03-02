@@ -260,15 +260,18 @@ if ($conn->connect_error) {
 <!-- 前端 JavaScript -->
 <script>
 function toggleFields() {
+    // 取得「類別」選擇的值
     const category = document.getElementById('category').value;
+    // 根據選擇的類別顯示或隱藏對應的輸入欄位
     document.getElementById('autobiographyFields').style.display = category === 'autobiography' ? 'block' : 'none';
     document.getElementById('studyPlanFields').style.display = category === 'studyPlan' ? 'block' : 'none';
 }
 
 function confirmUpload() {
+    // 取得目前選擇的類別
     const category = document.getElementById('category').value;
     let title, content;
-    
+    // 根據類別選擇適當的標題與內容欄位
     if (category === 'autobiography') {
         title = document.getElementById('title').value.trim();
         content = document.getElementById('content').value.trim();
@@ -276,12 +279,12 @@ function confirmUpload() {
         title = document.getElementById('planTitle').value.trim();
         content = document.getElementById('planContent').value.trim();
     }
-    
+    // 檢查標題與內容是否填寫完整
     if (!title || !content) {
         alert('請輸入名稱及內容');
         return false;
     }
-    
+    // 確認是否要提交表單
     return confirm(`您確定要提交${category === 'autobiography' ? '自傳' : '讀書計畫'}：「${title}」？`);
 }
 </script>

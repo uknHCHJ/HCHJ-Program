@@ -384,7 +384,7 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                                             </select>
                                         </div>
 
-                                        <!-- 新增兩個按鈕 -->
+                                        
                                         <div class="mb-3">
                                             <button onclick="add()" class="btn btn-success w-100">添加到清單</button>
                                         </div>
@@ -414,13 +414,13 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                             const currentTime = new Date();
                             const openTime = new Date(data.open_time);
                             const closeTime = new Date(data.close_time);
-                            const timeStatus = document.getElementById('timeStatus');
-                            const formContent = document.getElementById('formContent');
-                            const formTitle = document.getElementById('formTitle');
+                            const timeStatus = document.getElementById('timeStatus'); //時間狀態
+                            const formContent = document.getElementById('formContent'); //志願序區塊
+                            const formTitle = document.getElementById('formTitle'); // 時間
 
                             // 檢查是否有設定時間
                             if (!data.open_time || !data.close_time) {
-                                timeStatus.innerHTML = '此功能尚未開放';
+                                timeStatus.innerHTML = '填選志願功能尚未開放';
                                 formTitle.style.display = 'none'; // 隱藏標題
                             } else if (currentTime < openTime) {
                                 timeStatus.innerHTML = '填選志願功能尚未開放';
@@ -429,7 +429,7 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                                 timeStatus.innerHTML = '填選志願功能尚未開放';
                                 formTitle.style.display = 'none'; // 隱藏標題
                             } else {
-                                timeStatus.innerHTML = '選擇你的志願';
+                                timeStatus.innerHTML = '';
                                 formContent.style.display = 'block';  // 顯示志願填寫表單
                                 fetchSchools();
                             }
@@ -550,9 +550,9 @@ $isFifthYear = ($grade == 5);  // 如果年級是 5，則表示是五年級
                         const deleteBtn = document.createElement('button');
                         deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
                         deleteBtn.textContent = '刪除';
-                        deleteBtn.onclick = () => deletePreference(index);  // 刪除該志願項目
+                        deleteBtn.onclick = () => deletePreference(index); 
 
-                        li.appendChild(deleteBtn);  // 確保刪除按鈕在項目的末尾
+                        li.appendChild(deleteBtn);
                         preferenceList.appendChild(li);
                     });
                 }

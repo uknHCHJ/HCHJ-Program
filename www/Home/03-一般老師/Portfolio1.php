@@ -255,15 +255,16 @@ if ($conn->connect_error) {
 </div>
 
 <script>
-
+// 確認使用者是否確定上傳資料
 function confirmUpload() {
     return confirm("確定要上傳這份資料嗎？");
 }
+// 監聽表單提交事件，處理檔案名稱
     document.getElementById("uploadForm").addEventListener("submit", function(event) {
     const fileInput = document.getElementById("file");
     const fileNameInput = document.getElementById("customFileName");
     
-    if (fileInput.files.length > 0) {
+    if (fileInput.files.length > 0) {// 確保使用者有選擇檔案
         let file = fileInput.files[0];
         let customFileName = fileNameInput.value.trim();
         
@@ -278,12 +279,12 @@ function confirmUpload() {
     }
 });
 document.addEventListener('DOMContentLoaded', () => {
-    const categorySelect = document.getElementById("category");
+    const categorySelect = document.getElementById("category");// 類別選擇
     const subCategoryDiv = document.getElementById("sub_category_div");
     const certificateDiv = document.getElementById("certificate_div");
     const subCategorySelect = document.getElementById("sub_category");
     const certificateSelect = document.getElementById("certificate");
-    const certificateNameInput = document.getElementById("certificate_name");
+    const certificateNameInput = document.getElementById("certificate_name");// 隱藏輸入框儲存證照名稱
 
     // 定義可選擇的機構 (organization)
     const subCategories = ["ACM", "Adobe", "全球學習與測評發展中心(GLAD)", "Microsoft", "中華民國電腦教育發展協會(MOCC)", "勞動部勞動力發展署", "台灣醫學資訊協會",  "美國教育測驗服務社(ETS)","財團法人中華民國電腦技能基金會(TQC)", "財團法人語言訓練測驗中心"];
@@ -309,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 將選擇的機構填入隱藏欄位 (請確保 hidden input 已放在 form 內)
+    // 監聽「機構」選擇變更事件，將選擇的機構填入隱藏欄位
     subCategorySelect.addEventListener("change", () => {
         document.getElementById("selectedOrganization").value = subCategorySelect.value;
     });
@@ -338,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 監聽「證照」選擇變更事件，填入隱藏欄位
+    // 監聽「證照」選擇變更事件，將選擇的證照名稱填入隱藏欄位
     certificateSelect.addEventListener("change", () => {
         certificateNameInput.value = certificateSelect.options[certificateSelect.selectedIndex].text;
     });
@@ -461,15 +462,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll(".portfolio-btn");
     const items = document.querySelectorAll(".portfolio-item");
-
+    // 為每個按鈕添加點擊事件監聽器
     buttons.forEach(button => {
         button.addEventListener("click", function () {
-            // 移除所有按钮的 active 类
+            // 移除所有按鈕的 active 樣式
             buttons.forEach(btn => btn.classList.remove("active"));
             this.classList.add("active");
 
             const filter = this.getAttribute("data-filter");
-
+            // 過濾並顯示符合條件的項目
             items.forEach(item => {
                 if (filter === "*" || item.classList.contains(filter.substring(1))) {
                     item.style.display = "block"; // 顯示符合條件的項目
@@ -480,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
+    // 上傳確認函式
    function confirmUpload() {
     const studentId = document.querySelector('input[name="student_id"]').value;
     const category = document.getElementById("category").value;
@@ -506,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('您已經上傳過相同類別的相同檔案名稱，請選擇不同的檔案或變更檔名。');
             return false;
         }
+        // 確認是否繼續上傳
         return confirm(`您確定要上傳檔案：${file.name}？`);
     })
     .catch(error => {
