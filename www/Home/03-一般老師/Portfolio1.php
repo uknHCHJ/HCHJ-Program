@@ -222,6 +222,7 @@ if ($conn->connect_error) {
             <option value="讀書計畫">讀書計畫</option>
             <option value="服務證明">服務證明</option>
             <option value="其他資料">其他資料</option>
+            <option value="備審(最終版)">備審(最終版)</option>
         </select>
         
         <div id="sub_category_div" style="display: none;">
@@ -363,6 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button type="button" class="portfolio-btn" data-filter=".reading-plan">讀書計畫</button>
                     <button type="button" class="portfolio-btn" data-filter=".Proof-of-service">服務證明</button>
                     <button type="button" class="portfolio-btn" data-filter=".other-information">其他資料</button>
+                    <button type="button" class="portfolio-btn" data-filter=".Preparation-for-review">備審(最終版)</button>
                 </div>
 
                 <div class="row grid">
@@ -394,7 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         "專題資料" => "Topics",
                         "讀書計畫" => "reading-plan",
                         "服務證明" => "Proof-of-service",
-                        "其他資料" => "other-information"
+                        "其他資料" => "other-information",
+                        "備審(最終版)" => "Preparation-for-review"
                     ];
 
                     $category_data_count = array_fill_keys(array_keys($category_map), 0);
