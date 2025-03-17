@@ -18,7 +18,8 @@ $buttons = [
     ['name' => '語言能力證明', 'url' => "language-02.php?grade=$grade&class=$realClass"],
     ['name' => '其他資料', 'url' => "other-02.php?grade=$grade&class=$realClass"],
     ['name' => '服務證明', 'url' => "Proof-of-service-02.php?grade=$grade&class=$realClass"],
-    ['name' => '讀書計畫', 'url' => "read-02.php?grade=$grade&class=$realClass"]
+    ['name' => '讀書計畫', 'url' => "read-02.php?grade=$grade&class=$realClass"],
+    ['name' => '備審資料最終版', 'url' => "Review-information-02.php?grade=$grade&class=$realClass"]
 ];
 
 // **回傳 JSON 給前端**
