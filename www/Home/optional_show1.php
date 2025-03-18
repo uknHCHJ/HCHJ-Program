@@ -191,7 +191,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                 /* 表格容器的樣式調整 */
                 .table-container {
                     width: 100%;
-                    max-width: 100%;
+                    max-width: 100 %;
                     margin: 0 auto;
                     padding: 20px;
                     background-color: white;

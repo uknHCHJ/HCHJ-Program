@@ -54,7 +54,7 @@ try {
     }
     $stmtDelete->close(); // 關閉刪除語句
 
-    // 直接使用 INSERT ... ON DUPLICATE KEY UPDATE 來處理資料更新
+    //將資料插入資料表裡面，如有舊資料會覆蓋掉
     $sqlInsert = 'INSERT INTO Preferences (student_user, preference_rank, school_name, department_name)
                   VALUES (?, ?, ?, ?)
                   ON DUPLICATE KEY UPDATE
