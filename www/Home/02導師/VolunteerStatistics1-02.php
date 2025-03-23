@@ -102,7 +102,7 @@ $userId = $userData['user'];
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
                                         <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
                                         <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
                                         <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
@@ -135,7 +135,6 @@ $userId = $userData['user'];
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
-
     </header>
     <!-- ========================= header end ========================= -->
 
@@ -147,7 +146,7 @@ $userId = $userData['user'];
                 <div class="col-xl-12">
                     <div class="banner-content">
                         <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序總覽</h2>
-                        
+
                     </div>
                 </div>
             </div>
@@ -159,6 +158,7 @@ $userId = $userData['user'];
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         <style>
             body {
@@ -205,12 +205,52 @@ $userId = $userData['user'];
             td.student-name {
                 text-align: left;
             }
+
+            .chart-wrapper {
+                text-align: center;
+            }
+        </style>
+
+        <style>
+            /* 使用 Flexbox 來讓圓餅圖並排顯示並置中 */
+            .charts-container {
+                display: flex;
+                justify-content: center;
+                /* 讓兩個圖表置中 */
+                gap: 20px;
+                /* 兩個圖表之間的間距 */
+               
+                text-align: center;
+                /* 可選，讓內部內容在垂直方向也居中 */
+            }
+
+            /* 每個圖表容器 */
+            .chart-container,
+            .chart-wrapper {
+                width: 400px;
+                /* 設定固定寬度 */
+                height: 400px;
+                /* 設定固定高度 */
+            }
+
+            /* 確保圓餅圖canvas大小正確 */
+            canvas {
+                width: 100% !important;
+                height: 100% !important;
+            }
         </style>
     </head>
 
     <body>
-     
+        <div class="charts-container">
+            <div class="chart-container">
+                <canvas id="schoolChart"></canvas>
+            </div>
 
+            <div class="chart-wrapper">
+                <canvas id="departmentChart"></canvas>
+            </div>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -226,8 +266,118 @@ $userId = $userData['user'];
         </table>
 
         <script>
-            let tableData = [];
+            let departmentChart = null; // 用來儲存科系圓餅圖的變數
 
+            function fetchSchoolData() {
+                fetch('Chart02-2.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error("Error:", data.error);
+                            return;
+                        }
+                        if (data.message) {
+                            console.log("Message:", data.message);
+                            return;
+                        }
+                        if (data.length === 0) {
+                            console.log("No data available for the chart.");
+                            return;
+                        }
+                        renderPieChart(data);
+                    })
+                    .catch(error => console.error("Fetch error:", error));
+            }
+
+            function renderPieChart(data) {
+                const ctx = document.getElementById('schoolChart').getContext('2d');
+
+                const schoolNames = data.map(item => item.School);
+                const studentCounts = data.map(item => item.StudentCount);
+                const colors = schoolNames.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: schoolNames,
+                        datasets: [{
+                            data: studentCounts,
+                            backgroundColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        },
+                        onClick: function (event, elements) {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const selectedSchool = schoolNames[index];
+
+                                // 點擊學校後載入對應的科系圓餅圖
+                                fetchDepartmentData(selectedSchool);
+                            }
+                        }
+                    }
+                });
+            }
+
+            function fetchDepartmentData(schoolName) {
+                fetch(`Chart02-2.php?school=${encodeURIComponent(schoolName)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+                        renderDepartmentPieChart(data, schoolName);
+                    })
+                    .catch(error => console.error('Error fetching department data:', error));
+            }
+
+            function renderDepartmentPieChart(data, schoolName) {
+                const ctx = document.getElementById('departmentChart').getContext('2d');
+
+                const departmentNames = data.map(item => item.Department);
+                const studentCounts = data.map(item => item.StudentCount);
+                const colors = departmentNames.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+
+                // **先銷毀舊的圖表**
+                if (departmentChart !== null) {
+                    departmentChart.destroy();
+                }
+
+                // **建立新的科系圓餅圖**
+                departmentChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: departmentNames,
+                        datasets: [{
+                            data: studentCounts,
+                            backgroundColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            title: {
+                                display: true,
+                                text: `學校: ${schoolName} 的科系分布`
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 初始化學校圓餅圖
+            fetchSchoolData();
+        </script>
+
+        <script>
             function fetchData() {
                 fetch('VolunteerStatistics2-02.php')
                     .then(response => response.json())
@@ -336,12 +486,7 @@ $userId = $userData['user'];
         }
     </style>
 
-
     </html>
-
-
-
-
     </script>
     <!-- ========================= client-logo-section end ========================= -->
 
