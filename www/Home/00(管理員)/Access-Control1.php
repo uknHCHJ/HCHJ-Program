@@ -93,6 +93,8 @@ $username=$userData['name'];
                                         <ul class="sub-menu">
                                             <li class="nav-item"><a href="Schoolnetwork1-00.php">首頁</a></li>
                                             <li class="nav-item"><a href="Secondtechnicalcampus00-1.php">新增校園科系</a></li>
+                                            <li class="nav-item"><a href="new-school1.php">新增各科系名額</a></li>
+                                            
                                         </ul>
                                     </li>
                                     <li class="nav-item">

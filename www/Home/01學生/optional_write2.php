@@ -170,7 +170,7 @@ if ($row1 && $row1['apply_type'] === '申請入學') {
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white">二技志願選填</h2>
+                        <h2 class="text-white">二技志願選填(申請入學)</h2>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
                                 
