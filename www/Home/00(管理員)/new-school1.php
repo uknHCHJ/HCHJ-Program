@@ -26,12 +26,12 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 $username=$userData['name']; 
 
 // 用 mysqli_query 直接撈學校
-$sql1 = "SELECT school_id, school_name FROM School";
-$res1 = mysqli_query($link, $sql1) or die("SQL 錯誤:".mysqli_error($link));
+//$sql1 = "SELECT school_id, name FROM school";
+//$res1 = mysqli_query($link, $sql1) or die("SQL 錯誤:".mysqli_error($link));
 
 // 再撈科系
-$sql2 = "SELECT dept_id, dept_name FROM departments ORDER BY dept_name";
-$res2 = mysqli_query($link, $sql2) or die("SQL 錯誤:".mysqli_error($link));
+//$sql2 = "SELECT dept_id, dept_name FROM departments ORDER BY dept_name";
+//$res2 = mysqli_query($link, $sql2) or die("SQL 錯誤:".mysqli_error($link));
 
 
 ?>
