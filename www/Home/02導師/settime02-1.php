@@ -102,7 +102,7 @@ $userId = $userData['user'];
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
                                         <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
                                         <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
                                         <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
@@ -147,7 +147,7 @@ $userId = $userData['user'];
                 <div class="col-xl-12">
                     <div class="banner-content">
                         <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序開放時間編輯</h2>
-                        
+
                     </div>
                 </div>
             </div>
@@ -286,12 +286,19 @@ $userId = $userData['user'];
             <!-- 顯示當前設定時間 -->
             <div id="current-time">
                 <h2>當前設定時間</h2>
+                <p id="current-type"></p>
                 <p id="current-start-time"></p>
                 <p id="current-end-time"></p>
                 <p id="no-time-set" style="color: red; font-weight: bold;"></p>
             </div>
 
             <form id="timeForm">
+                <label>志願類型：</label><br>
+                <input type="radio" id="application" name="type" value="申請入學" checked>
+                <label for="application">申請入學</label><br>
+                <input type="radio" id="technical" name="type" value="技優甄審">
+                <label for="technical">技優甄審</label><br><br>
+
                 <label for="startTime">開始時間：</label>
                 <input type="datetime-local" id="startTime" name="startTime"><br><br>
 
@@ -308,27 +315,31 @@ $userId = $userData['user'];
                 fetch('get_time2-02.php')
                     .then(response => response.json())
                     .then(data => {
-                        if (data.open_time && data.close_time) {
+                        if (data.open_time && data.close_time && data.type) {
                             const currentTime = new Date();
                             const startTime = new Date(data.open_time);
                             const endTime = new Date(data.close_time);
 
-                            // 設定開始時間選擇器的 min 為當前時間
                             document.getElementById('startTime').min = new Date().toISOString().slice(0, 16);
 
-                            // 若設定的時間已經結束
                             if (currentTime > endTime) {
                                 document.getElementById('no-time-set').textContent = '您還未設定時間';
                                 document.getElementById('startTime').value = '';
                                 document.getElementById('endTime').value = '';
                             } else {
-                                // 顯示當前的設定時間
+                                document.getElementById('current-type').textContent = `志願類型: ${data.type}`;
                                 document.getElementById('current-start-time').textContent = `開始時間: ${data.open_time}`;
                                 document.getElementById('current-end-time').textContent = `結束時間: ${data.close_time}`;
                                 document.getElementById('no-time-set').textContent = '';
                             }
+
+                            // 設定 radio 選擇
+                            if (data.type === '技優甄審') {
+                                document.getElementById('technical').checked = true;
+                            } else {
+                                document.getElementById('application').checked = true;
+                            }
                         } else {
-                            // 若沒有設定過時間
                             document.getElementById('no-time-set').textContent = '您還未設定時間';
                             document.getElementById('startTime').value = '';
                             document.getElementById('endTime').value = '';
@@ -336,7 +347,6 @@ $userId = $userData['user'];
                     })
                     .catch(error => console.error('Error fetching time:', error));
 
-                // 當使用者選擇開始時間時，動態設定結束時間的 min
                 document.getElementById('startTime').addEventListener('input', function () {
                     document.getElementById('endTime').min = this.value;
                 });
@@ -347,9 +357,10 @@ $userId = $userData['user'];
 
                 const startTime = document.getElementById('startTime').value;
                 const endTime = document.getElementById('endTime').value;
+                const type = document.querySelector('input[name="type"]:checked').value;
 
                 const errorElement = document.getElementById('error');
-                errorElement.textContent = ''; // 清空之前的錯誤訊息
+                errorElement.textContent = '';
 
                 if (!startTime || !endTime) {
                     errorElement.textContent = '請輸入完整的開始與結束時間';
@@ -361,7 +372,7 @@ $userId = $userData['user'];
                     return;
                 }
 
-                const data = JSON.stringify({ startTime, endTime });
+                const data = JSON.stringify({ startTime, endTime, applyType: type });
 
                 fetch('settime02-2.php', {
                     method: 'POST',
@@ -372,7 +383,7 @@ $userId = $userData['user'];
                     .then(result => {
                         alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
                         if (result.success) {
-                            // 設定成功後刷新顯示當前時間
+                            document.getElementById('current-type').textContent = `志願類型: ${type}`;
                             document.getElementById('current-start-time').textContent = `開始時間: ${startTime}`;
                             document.getElementById('current-end-time').textContent = `結束時間: ${endTime}`;
                             document.getElementById('no-time-set').textContent = '';
@@ -381,7 +392,6 @@ $userId = $userData['user'];
                     .catch(error => alert('發生錯誤，請稍後再試！'));
             });
         </script>
-
     </body>
 
     </html>
