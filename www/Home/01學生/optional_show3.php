@@ -40,18 +40,18 @@ $query = "SELECT DISTINCT
             p.created_at AS time,
             (
                 SELECT COUNT(*) 
-                FROM Preferences p2 
+                FROM Apply p2 
                 WHERE p2.school_name = p.school_name 
                 AND p2.department_name = p.department_name
             ) AS student_count,
-            test.skilled_num
-        FROM Preferences p
+            test.Application_num
+        FROM Apply p
         LEFT JOIN test ON p.school_name = test.school_name AND p.department_name = test.department
-        WHERE student_user = '109534209'
+        WHERE student_user = '$userId'
         AND (student_user, created_at) IN (
             SELECT student_user, MAX(created_at) 
-            FROM Preferences 
-            WHERE student_user = '109534209'
+            FROM Apply 
+            WHERE student_user = '$userId'
             GROUP BY student_user
         )
         ORDER BY preference_rank ASC";

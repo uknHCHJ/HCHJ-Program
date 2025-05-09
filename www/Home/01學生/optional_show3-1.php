@@ -335,7 +335,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
 
                     document.getElementById('loading').style.display = 'flex';
 
-                    fetch('optional_show2.php?user=' + encodeURIComponent(userValue))
+                    fetch('optional_show3.php?user=' + encodeURIComponent(userValue))
                         .then(response => response.json())
                         .then(data => {
                             window.studentData = data;
@@ -423,7 +423,7 @@ $userId = $userData['user']; // 例如從 SESSION 中獲取 user_id
                         } else {
                             editCell.style.display = 'none'; // 隱藏單元格
                         }
-                        row.insertCell(6).textContent = item.skilled_num;
+                        row.insertCell(6).textContent = item.Application_num;
                     });
                 }
 

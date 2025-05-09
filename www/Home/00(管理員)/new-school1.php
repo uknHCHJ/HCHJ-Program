@@ -26,12 +26,12 @@ $userId = $userData['user']; // 從 SESSION 中獲取 user_id
 $username=$userData['name']; 
 
 // 用 mysqli_query 直接撈學校
-//$sql1 = "SELECT school_id, name FROM school";
-//$res1 = mysqli_query($link, $sql1) or die("SQL 錯誤:".mysqli_error($link));
+$sql1 = "SELECT DISTINCT school_id, school_name FROM test";
+$res1 = mysqli_query($link, $sql1) or die("SQL 錯誤:".mysqli_error($link));
 
 // 再撈科系
-//$sql2 = "SELECT dept_id, dept_name FROM departments ORDER BY dept_name";
-//$res2 = mysqli_query($link, $sql2) or die("SQL 錯誤:".mysqli_error($link));
+$sql2 = "SELECT DISTINCT department_id, department FROM test ";
+$res2 = mysqli_query($link, $sql2) or die("SQL 錯誤:".mysqli_error($link));
 
 
 ?>
@@ -119,7 +119,7 @@ $username=$userData['name'];
         <div class="row">
             <div class="col-xl-12">
                 <div class="banner-content">
-                    <h2 class="text-white">新增各科系名額(技優甄審)</h2>
+                    <h2 class="text-white">新增各科系名額</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                         </nav>
@@ -133,7 +133,7 @@ $username=$userData['name'];
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-9 mx-auto">
                 <div class="section-title text-center mb-55">
-                    <span class="wow fadeInDown" data-wow-delay=".2s">新增各科系名額(技優甄審)</span>
+                    <span class="wow fadeInDown" data-wow-delay=".2s">新增各科系名額</span>
                 </div>
             </div>
         </div>
@@ -141,13 +141,13 @@ $username=$userData['name'];
 
 <section id="service" class="service-section pt-130 pb-100">
 
-       <form id="extra-form" action="your_action.php" method="POST" class="mt-4">
+       <form id="extra-form" action="new-school2.php" method="POST" class="mt-4">
   <!-- 選擇學校 -->
   <div class="form-group mb-3">
     <label for="school-select">選擇學校：</label>
     <select id="school-select" name="school_id" class="form-select" required>
       <option value="">請選擇學校...</option>
-      <?php foreach($schools as $s): ?>
+      <?php foreach($res1 as $s): ?>
         <option value="<?= $s['school_id'] ?>">
           <?= htmlspecialchars($s['school_name'], ENT_QUOTES) ?>
         </option>
@@ -160,16 +160,20 @@ $username=$userData['name'];
     <label for="dept-select">選擇科系：</label>
     <select id="dept-select" name="dept_id" class="form-select" required>
       <option value="">請選擇科系...</option>
-      <?php foreach($departments as $d): ?>
-        <option value="<?= $d['dept_id'] ?>">
-          <?= htmlspecialchars($d['dept_name'], ENT_QUOTES) ?>
+      <?php foreach($res2 as $d): ?>
+        <option value="<?= $d['department_id'] ?>">
+          <?= htmlspecialchars($d['department'], ENT_QUOTES) ?>
         </option>
       <?php endforeach; ?>
     </select>
   </div>
+  <label for="skilled_num">技優甄審招生名額：</label>
+  <input type="number" id="skilled_num" name="skilled_num" min="0" placeholder="請輸入技優名額"><br><br>
 
-  <!-- 送出按鈕 -->
-  <button type="submit" class="btn btn-success">送出</button>
+  <label for="Application_num">申請入學招生名額：</label>
+  <input type="number" id="Application_num" name="Application_num" min="0" placeholder="請輸入申請名額"><br><br>
+
+  <button type="submit">送出</button>
 </form>
 
  <!-- ========================= client-logo-section start ========================= -->

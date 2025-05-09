@@ -37,14 +37,11 @@ if (!isset($userId)) {
     die("userId 未定義");
 }
 
-// $sql1 = "SELECT apply_type FROM set_time WHERE `user` = '".$userId."'";
-
 $sql1 = "SELECT set_time.user,apply_type FROM set_time
 left join user on set_time.user = user.user
 where user.grade =$grade 
 and user.class='$class'
 and user.Permissions like '%2%4%'";
-
 $res1 = mysqli_query($link, $sql1);
 
 if (!$res1) {
@@ -55,10 +52,10 @@ $row1 = mysqli_fetch_assoc($res1);
 $skill=false;
 if ($row1 && $row1['apply_type'] === '申請入學') {
     // echo "符合 apply_type";
-    $skill=false;
+    $skill=true;
 } else {
     // echo "不符合 apply_type";
-    $skill=true;
+    $skill=false;
 }
 
 ?>
@@ -124,7 +121,7 @@ if ($row1 && $row1['apply_type'] === '申請入學') {
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願(技優)</a>
+                                <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願(技優)</a>
                                     </li>
                                     <li class="nav-item"><a href="/~HCHJ/Home/optional_write2.php">選填志願(申請入學)</a>
                                     </li>
@@ -613,7 +610,7 @@ if ($row1 && $row1['apply_type'] === '申請入學') {
                         return;
                     }
 
-                    fetch("addPreference.php", {
+                    fetch("addApply.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -637,7 +634,7 @@ if ($row1 && $row1['apply_type'] === '申請入學') {
                         .then((data) => {
                             if (data.success) {
                                 alert("志願序送出成功");
-                                window.location.href = "optional_show1.php";
+                                window.location.href = "optional_show3-1.php";
                             } else {
                                 alert("儲存失敗: " + data.message);
                             }

@@ -156,9 +156,13 @@ if ($conn->connect_error) {
                             <li class="nav-item">
                                 <a class="nav-item dd-menu">志願序</a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write1.php">選填志願(技優)</a>
                                     </li>
-                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序</a>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_write2.php">選填志願(申請入學)</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show1.php">查看志願序(技優)</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/~HCHJ/Home/optional_show3-1.php">查看志願序(申請入學)</a>
                                     </li>
                                     </a>
                                 </ul>
