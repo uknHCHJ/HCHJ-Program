@@ -200,8 +200,9 @@ $conn->close();
                                     <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
                                     <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽(技優)</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics3-01.php">志願序總覽(申請)</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序(技優)</a></li>
                                         <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
                                     </ul>
                                 </li>

@@ -431,8 +431,9 @@ if ($row1 && $row1['apply_type'] === '申請入學') {
                                             <button onclick="add()" class="btn btn-success w-100">添加到清單</button>
                                         </div>
 
-                                        <h2>你的志願序(最多5個)</h2>
-                                        <ul id="preferenceList" class="list-group mb-3"></ul>
+                                        <h2>你的志願序</h2>
+                                        <ul id="preferenceList" class="list-group mb-3" style="max-height: 500px; overflow-y: auto;"></ul>
+
 
                                         <button onclick="submit()" class="btn btn-primary w-100">送出志願</button>
                                     </div>
@@ -529,11 +530,6 @@ if ($row1 && $row1['apply_type'] === '申請入學') {
                     // 檢查志願是否已經被選過
                     if (preferences.some(p => p.preference_rank === preference)) {
                         alert('此志願已經選擇過，請選擇其他的志願');
-                        return;
-                    }
-
-                    if (preferences.length >= maxPreferences) {
-                        alert('最多只能選擇5個志願');
                         return;
                     }
 

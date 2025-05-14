@@ -29,7 +29,7 @@ $userId = $userData['user'];
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>志願序總覽</title>
+    <title>志願序總覽(技優)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -102,9 +102,10 @@ $userId = $userData['user'];
                                 <li class="nav-item">
                                     <a class="nav-item dd-menu">學生管理</a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽</a></li>
-                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序</a></li>
+                                    <li class="nav-item"><a href="student02-1.php">學生備審管理</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02.php">志願序總覽(技優)</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics3-01.php">志願序總覽(申請)</a></li>
+                                        <li class="nav-item"><a href="VolunteerStatistics1-02(2).php">繳交志願序(技優)</a></li>
                                         <li class="nav-item"><a href="settime02-1.php">志願序開放時間</a></li>
                                     </ul>
                                 </li>
@@ -145,7 +146,7 @@ $userId = $userData['user'];
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序總覽</h2>
+                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序總覽(技優)</h2>
 
                     </div>
                 </div>
@@ -257,6 +258,7 @@ $userId = $userData['user'];
                     <th>學校</th>
                     <th>科系</th>
                     <th>人數</th>
+                    <th>錄取名額</th>
                     <th>選擇的學生</th>
                 </tr>
             </thead>
@@ -398,6 +400,7 @@ $userId = $userData['user'];
                             <td>${row.School}</td>
                             <td>${row.Department}</td>
                             <td>${row.StudentCount}</td>
+                            <td>${row.SkillesNum}</td>
                             <td class="student-name">${row.Students || '無'}</td>
                         `;
                             tableBody.appendChild(tr);

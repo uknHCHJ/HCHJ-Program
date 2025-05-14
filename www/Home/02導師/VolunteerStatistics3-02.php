@@ -22,25 +22,27 @@ if ($conn->connect_error) {
 
 // 調整 SQL 查詢
 $sql = "SELECT 
-        p.school_name AS School, 
-        p.department_name AS Department, 
-        COUNT(u.name) AS StudentCount, 
-        GROUP_CONCAT(u.name SEPARATOR ', ') AS Students,
-        t.skilled_num AS SkillesNum
-    FROM Preferences p
-    JOIN user u ON p.student_user = u.user
-    LEFT JOIN (
-        SELECT 
-            t.skilled_num,
-            s.name AS school_name,
-            d.department_name AS department_name
-        FROM test t
-        JOIN school s ON t.school_name = s.name
-        JOIN Department d ON t.department = d.department_name
-    ) t ON p.school_name = t.school_name AND p.department_name = t.department_name
-    WHERE u.class = ? AND u.grade = ? AND (u.Permissions = 1 OR u.Permissions = 9)
-    GROUP BY p.school_name, p.department_name, t.skilled_num
-    ORDER BY p.school_name, p.department_name";
+    a.school_name AS School, 
+    a.department_name AS Department, 
+    COUNT(u.name) AS StudentCount, 
+    GROUP_CONCAT(u.name SEPARATOR ', ') AS Students,
+    t.Application_num AS Quota
+FROM Apply a
+JOIN user u ON a.student_user = u.user
+LEFT JOIN (
+    SELECT 
+        t.Application_num,
+        s.name AS school_name,
+        d.department_name AS department_name
+    FROM test t
+    JOIN school s ON t.school_name = s.name
+    JOIN Department d ON t.department = d.department_name
+) t ON a.school_name = t.school_name AND a.department_name = t.department_name
+WHERE u.class = ? AND u.grade = ?
+    AND (u.Permissions = 1 OR u.Permissions = 9)
+GROUP BY a.school_name, a.department_name, t.Application_num
+ORDER BY a.school_name, a.department_name;
+";
 
 // 準備查詢語句並綁定參數
 $stmt = $conn->prepare($sql);

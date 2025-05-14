@@ -29,7 +29,7 @@ $userId = $userData['user'];
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>志願序開放時間編輯</title>
+    <title>志願序總覽(申請)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -136,7 +136,6 @@ $userId = $userData['user'];
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
-
     </header>
     <!-- ========================= header end ========================= -->
 
@@ -147,7 +146,7 @@ $userId = $userData['user'];
             <div class="row">
                 <div class="col-xl-12">
                     <div class="banner-content">
-                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序開放時間編輯</h2>
+                        <h2 class="text-white" style="text-align: left; margin-left: 20px;">志願序總覽(申請)</h2>
 
                     </div>
                 </div>
@@ -160,242 +159,338 @@ $userId = $userData['user'];
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>志願序開放時間編輯</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         <style>
-            /* 設置時間區塊分開顯示 */
-            .time-block {
-                margin-bottom: 20px;
-            }
-
-            /* 增加區塊樣式設計 */
-            #current-time,
-            #no-time-set {
-                padding: 15px;
-                background-color: #f1f1f1;
-                border-radius: 8px;
-                margin-bottom: 20px;
-                font-size: 16px;
-            }
-
-            #current-time h2,
-            #no-time-set {
-                font-size: 18px;
-                color: #333;
-            }
-
-            #no-time-set {
-                color: #d9534f;
-                font-weight: bold;
-            }
-
-            #timeForm {
-                margin-top: 20px;
-            }
-
-            .time-settings-container {
-                max-width: 500px;
-                margin: 50px auto;
-                padding: 30px;
-                background-color: #f9f9f9;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                font-family: 'Arial', sans-serif;
-            }
-
-            .time-settings-container h1 {
-                font-size: 26px;
-                color: #333;
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
                 text-align: center;
-                margin-bottom: 20px;
+                margin: 20px;
             }
 
-            .time-settings-container label {
-                font-weight: bold;
-                color: #555;
-                margin-top: 15px;
-                display: block;
-                font-size: 16px;
+            h1 {
+                color: #333;
             }
 
-            .time-settings-container input[type="datetime-local"] {
-                width: 100%;
+            table {
+                width: 80%;
+                margin: 20px auto;
+                border-collapse: collapse;
+                background: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            th,
+            td {
                 padding: 12px;
-                margin-top: 8px;
-                border: 2px solid #ddd;
-                border-radius: 8px;
-                font-size: 16px;
-                background-color: #f9f9f9;
-                transition: all 0.3s ease;
-            }
-
-            .time-settings-container input[type="datetime-local"]:focus {
-                border-color: #007bff;
-                background-color: #e6f0ff;
-                outline: none;
-            }
-
-            .time-settings-container button {
-                width: 100%;
-                background-color: #28a745;
-                color: white;
-                border: none;
-                padding: 14px;
-                margin-top: 20px;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 18px;
-                transition: background 0.3s ease;
-            }
-
-            .time-settings-container button:hover {
-                background-color: #218838;
-            }
-
-            .time-settings-container .error {
-                color: red;
-                margin-top: 10px;
-                font-size: 14px;
+                border: 1px solid #ddd;
                 text-align: center;
             }
 
-            /* 響應式設計，適應不同螢幕尺寸 */
-            @media (max-width: 768px) {
-                .time-settings-container {
-                    width: 80%;
-                    padding: 20px;
-                }
+            th {
+                background-color: #007bff;
+                color: white;
+            }
 
-                .time-settings-container h1 {
-                    font-size: 22px;
-                }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
 
-                .time-settings-container input[type="datetime-local"],
-                .time-settings-container button {
-                    font-size: 14px;
-                    padding: 10px;
-                }
+            tr:hover {
+                background-color: #ddd;
+            }
 
+            td.student-name {
+                text-align: left;
+            }
+
+            .chart-wrapper {
+                text-align: center;
+            }
+        </style>
+
+        <style>
+            /* 使用 Flexbox 來讓圓餅圖並排顯示並置中 */
+            .charts-container {
+                display: flex;
+                justify-content: center;
+                /* 讓兩個圖表置中 */
+                gap: 20px;
+                /* 兩個圖表之間的間距 */
+               
+                text-align: center;
+                /* 可選，讓內部內容在垂直方向也居中 */
+            }
+
+            /* 每個圖表容器 */
+            .chart-container,
+            .chart-wrapper {
+                width: 400px;
+                /* 設定固定寬度 */
+                height: 400px;
+                /* 設定固定高度 */
+            }
+
+            /* 確保圓餅圖canvas大小正確 */
+            canvas {
+                width: 100% !important;
+                height: 100% !important;
             }
         </style>
     </head>
 
     <body>
-        <div class="time-settings-container">
-            <h1>設定選填志願時間</h1>
-
-            <!-- 顯示當前設定時間 -->
-            <div id="current-time">
-                <h2>當前設定時間</h2>
-                <p id="current-type"></p>
-                <p id="current-start-time"></p>
-                <p id="current-end-time"></p>
-                <p id="no-time-set" style="color: red; font-weight: bold;"></p>
+        <div class="charts-container">
+            <div class="chart-container">
+                <canvas id="schoolChart"></canvas>
             </div>
 
-            <form id="timeForm">
-                <label>志願類型：</label><br>
-                <input type="radio" id="application" name="type" value="申請入學" checked>
-                <label for="application">申請入學</label><br>
-                <input type="radio" id="technical" name="type" value="技優甄審">
-                <label for="technical">技優甄審</label><br><br>
-
-                <label for="startTime">開始時間：</label>
-                <input type="datetime-local" id="startTime" name="startTime"><br><br>
-
-                <label for="endTime">結束時間：</label>
-                <input type="datetime-local" id="endTime" name="endTime"><br><br>
-
-                <button type="submit">保存</button>
-                <div id="error" class="error"></div>
-            </form>
+            <div class="chart-wrapper">
+                <canvas id="departmentChart"></canvas>
+            </div>
         </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>學校</th>
+                    <th>科系</th>
+                    <th>人數</th>
+                    <th>錄取名額</th>
+                    <th>選擇的學生</th>
+                </tr>
+            </thead>
+            <tbody id="data-body">
+                <!-- 資料將由 JavaScript 動態插入 -->
+            </tbody>
+        </table>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                fetch('get_time2-02.php')
+            let departmentChart = null; // 用來儲存科系圓餅圖的變數
+
+            function fetchSchoolData() {
+                fetch('Chart3-2.php')
                     .then(response => response.json())
                     .then(data => {
-                        if (data.open_time && data.close_time && data.type) {
-                            const currentTime = new Date();
-                            const startTime = new Date(data.open_time);
-                            const endTime = new Date(data.close_time);
-
-                            document.getElementById('startTime').min = new Date().toISOString().slice(0, 16);
-
-                            if (currentTime > endTime) {
-                                document.getElementById('no-time-set').textContent = '您還未設定時間';
-                                document.getElementById('startTime').value = '';
-                                document.getElementById('endTime').value = '';
-                            } else {
-                                document.getElementById('current-type').textContent = `志願類型: ${data.type}`;
-                                document.getElementById('current-start-time').textContent = `開始時間: ${data.open_time}`;
-                                document.getElementById('current-end-time').textContent = `結束時間: ${data.close_time}`;
-                                document.getElementById('no-time-set').textContent = '';
-                            }
-
-                            // 設定 radio 選擇
-                            if (data.type === '技優甄審') {
-                                document.getElementById('technical').checked = true;
-                            } else {
-                                document.getElementById('application').checked = true;
-                            }
-                        } else {
-                            document.getElementById('no-time-set').textContent = '您還未設定時間';
-                            document.getElementById('startTime').value = '';
-                            document.getElementById('endTime').value = '';
+                        if (data.error) {
+                            console.error("Error:", data.error);
+                            return;
                         }
+                        if (data.message) {
+                            console.log("Message:", data.message);
+                            return;
+                        }
+                        if (data.length === 0) {
+                            console.log("No data available for the chart.");
+                            return;
+                        }
+                        renderPieChart(data);
                     })
-                    .catch(error => console.error('Error fetching time:', error));
+                    .catch(error => console.error("Fetch error:", error));
+            }
 
-                document.getElementById('startTime').addEventListener('input', function () {
-                    document.getElementById('endTime').min = this.value;
+            function renderPieChart(data) {
+                const ctx = document.getElementById('schoolChart').getContext('2d');
+
+                const schoolNames = data.map(item => item.School);
+                const studentCounts = data.map(item => item.StudentCount);
+                const colors = schoolNames.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: schoolNames,
+                        datasets: [{
+                            data: studentCounts,
+                            backgroundColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        },
+                        onClick: function (event, elements) {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const selectedSchool = schoolNames[index];
+
+                                // 點擊學校後載入對應的科系圓餅圖
+                                fetchDepartmentData(selectedSchool);
+                            }
+                        }
+                    }
                 });
-            });
+            }
 
-            document.getElementById('timeForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const startTime = document.getElementById('startTime').value;
-                const endTime = document.getElementById('endTime').value;
-                const type = document.querySelector('input[name="type"]:checked').value;
-
-                const errorElement = document.getElementById('error');
-                errorElement.textContent = '';
-
-                if (!startTime || !endTime) {
-                    errorElement.textContent = '請輸入完整的開始與結束時間';
-                    return;
-                }
-
-                if (new Date(endTime) < new Date(startTime)) {
-                    errorElement.textContent = '結束時間不能早於開始時間';
-                    return;
-                }
-
-                const data = JSON.stringify({ startTime, endTime, applyType: type });
-
-                fetch('settime02-2.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: data
-                })
+            function fetchDepartmentData(schoolName) {
+                fetch(`Chart3-2.php?school=${encodeURIComponent(schoolName)}`)
                     .then(response => response.json())
-                    .then(result => {
-                        alert(result.success ? '設定成功！' : '設定失敗：' + result.message);
-                        if (result.success) {
-                            document.getElementById('current-type').textContent = `志願類型: ${type}`;
-                            document.getElementById('current-start-time').textContent = `開始時間: ${startTime}`;
-                            document.getElementById('current-end-time').textContent = `結束時間: ${endTime}`;
-                            document.getElementById('no-time-set').textContent = '';
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
                         }
+                        renderDepartmentPieChart(data, schoolName);
                     })
-                    .catch(error => alert('發生錯誤，請稍後再試！'));
-            });
+                    .catch(error => console.error('Error fetching department data:', error));
+            }
+
+            function renderDepartmentPieChart(data, schoolName) {
+                const ctx = document.getElementById('departmentChart').getContext('2d');
+
+                const departmentNames = data.map(item => item.Department);
+                const studentCounts = data.map(item => item.StudentCount);
+                const colors = departmentNames.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+
+                // **先銷毀舊的圖表**
+                if (departmentChart !== null) {
+                    departmentChart.destroy();
+                }
+
+                // **建立新的科系圓餅圖**
+                departmentChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: departmentNames,
+                        datasets: [{
+                            data: studentCounts,
+                            backgroundColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            title: {
+                                display: true,
+                                text: `學校: ${schoolName} 的科系分布`
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 初始化學校圓餅圖
+            fetchSchoolData();
+        </script>
+
+        <script>
+            function fetchData() {
+                fetch('VolunteerStatistics3-02.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!Array.isArray(data)) {
+                            console.error('Unexpected data format:', data);
+                            document.getElementById('data-body').innerHTML = '<tr><td colspan="4">No data available</td></tr>';
+                            return;
+                        }
+
+                        const tableBody = document.getElementById('data-body');
+                        tableBody.innerHTML = '';
+                        tableData = data;
+
+                        data.forEach(row => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                            <td>${row.School}</td>
+                            <td>${row.Department}</td>
+                            <td>${row.StudentCount}</td>
+                            <td>${row.Quota}</td>
+                            <td class="student-name">${row.Students || '無'}</td>
+                        `;
+                            tableBody.appendChild(tr);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            function exportToExcel() {
+                if (tableData.length === 0) {
+                    alert("無資料可匯出");
+                    return;
+                }
+
+                let sheetData = [];
+                let schoolRow = ["學校"]; // 第一列：學校名稱
+                let departmentRow = ["科系"]; // 第二列：科系名稱
+                let maxStudentCount = 0; // 紀錄最多學生數，確保所有學生列數對齊
+                let studentRows = [];
+
+                tableData.forEach((row, index) => {
+                    // 填入學校與科系資料
+                    schoolRow.push(row.School);
+                    departmentRow.push(row.Department);
+
+                    let students = row.Students ? row.Students.split(',') : ['無'];
+                    maxStudentCount = Math.max(maxStudentCount, students.length);
+
+                    students.forEach((student, studentIndex) => {
+                        // 確保 `studentRows` 陣列有足夠的列
+                        if (!studentRows[studentIndex]) {
+                            studentRows[studentIndex] = Array(tableData.length + 1).fill(''); // 預留空間
+                        }
+                        // **修正索引**，確保學生姓名對齊學校與科系
+                        studentRows[studentIndex][index + 1] = student;
+                    });
+                });
+
+                // 組合表格資料
+                sheetData.push(schoolRow); // 第一列：學校
+                sheetData.push(departmentRow); // 第二列：科系
+
+                // 填充學生資料，確保所有學生列數對齊
+                for (let i = 0; i < maxStudentCount; i++) {
+                    sheetData.push(studentRows[i] || Array(tableData.length + 1).fill(''));
+                }
+
+                let ws = XLSX.utils.aoa_to_sheet(sheetData);
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "志願統計");
+                XLSX.writeFile(wb, "志願選擇統計.xlsx");
+            }
+            fetchData();
         </script>
     </body>
+    <button class="export-btn" onclick="exportToExcel()">📊 匯出 Excel</button>
+
+    <style>
+        .export-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            /* 藍色漸變 */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            /* ✅ 調整底部間距，避免貼著下方區塊 */
+            display: inline-block;
+            /* 讓按鈕不會占滿整行 */
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #004494);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .export-btn:active {
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+    </style>
 
     </html>
+    </script>
     <!-- ========================= client-logo-section end ========================= -->
 
 
